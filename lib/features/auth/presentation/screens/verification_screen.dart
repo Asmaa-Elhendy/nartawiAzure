@@ -48,7 +48,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTitleWidget(context,width),
+                buildTitleWidget(context,width,'Verification'),
                 SizedBox(height:height*.04,),
                 Text("Enter Verification Code",style: TextStyle(
                   fontSize: 16,

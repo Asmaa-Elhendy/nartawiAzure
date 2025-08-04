@@ -1,0 +1,7 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/theme/colors.dart';
+
+Widget BuildTappedTitle(String title,double width){
+  return Text(title,style: TextStyle(color: AppColors.primary,fontSize:width*.038,fontWeight: FontWeight.w600 ),);
+}

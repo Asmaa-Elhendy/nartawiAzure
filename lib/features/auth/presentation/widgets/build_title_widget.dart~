@@ -35,4 +35,3 @@ Widget buildFooterInfo(BuildContext context,String leftText,String rightText,voi
     ],
   );
 }
-

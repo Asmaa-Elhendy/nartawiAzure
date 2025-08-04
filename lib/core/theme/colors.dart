@@ -13,10 +13,14 @@ class AppColors {
   static const textSecondary = Color(0xFF6E7582);
   static const dividerAndIconColor=Color(0xffBDBDBD);
   static final blueBorder=primary.withValues(alpha: 0.48);
-  static final backgrounHome= Color(0xff30303052);
+  static final backgrounHome=Color(0xFFeef3f5);
 // Add more as needed
   static const Color darkBlue = Color(0xFF095BA8);
   static const Color lightBlue = Color(0xFF00A0DC);
+  static final  Color secondaryColorWithOpacity8=Color(0xFFdbedf4);
+  static final Secondary48=secondary.withValues(alpha: 0.48);
+  static const shadowColor= Color(0xffced3d4);
+
 
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.centerLeft,

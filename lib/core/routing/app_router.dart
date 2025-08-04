@@ -5,6 +5,7 @@ import '../../features/auth/presentation/screens/reset_password.dart';
 import '../../features/auth/presentation/screens/sign_up.dart';
 import '../../features/auth/presentation/screens/verification_screen.dart';
 import '../../features/home/presentation/screens/home.dart';
+import '../../features/home/presentation/screens/mainscreen.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
 // Import other screens as needed
@@ -28,6 +29,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ResetPasswordScreen());
       case '/home':
         return MaterialPageRoute(builder: (_) => const HomeScreen());
+      case '/main':
+        return MaterialPageRoute(builder: (_) => const MainScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

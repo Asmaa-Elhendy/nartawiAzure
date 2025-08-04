@@ -59,7 +59,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildTitleWidget(context,width),
+                  buildTitleWidget(context,width,'Forget Password'),
                   SizedBox(height:height*.04,),
                   buildCustomeFullTextField('Enter Mobile Number or Email', 'Enter Enter Mobile Number or Email', _emailController, true,height),
                   SizedBox(height:height*.08,),

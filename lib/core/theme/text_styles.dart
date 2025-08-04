@@ -11,6 +11,7 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w600,
     color: AppColors.textLight,
+    fontFamily: 'Poppins',
   );
   static const TextStyle TitlePage =  TextStyle(fontSize: 16,color: AppColors.textLight,fontWeight: FontWeight.w400);
   static const TextStyle heading1 = TextStyle(
