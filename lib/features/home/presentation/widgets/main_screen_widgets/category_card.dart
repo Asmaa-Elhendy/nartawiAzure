@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import '../../../../core/theme/colors.dart';
+import '../../../../../core/theme/colors.dart';
 
 class CategoryCard extends StatefulWidget {
   double screenWidth;

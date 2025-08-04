@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/category_card.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/custom_search_bar.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/store_card.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../widgets/build_carous_slider.dart';
-import '../widgets/build_tapped_blue_title.dart';
+import '../widgets/main_screen_widgets/build_carous_slider.dart';
+import '../widgets/main_screen_widgets/build_tapped_blue_title.dart';
+import '../widgets/main_screen_widgets/product_card.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -86,7 +87,42 @@ String? imageUrl=null;
              BuildStretchTitleHome(screenWidth, "Popular Products")
            ]),
      ),
-
+     GridView.count(
+       crossAxisCount: 2, // عدد الأعمدة
+       shrinkWrap: true, // مهم جدًا لو بتحطه جوه ScrollView
+       physics: NeverScrollableScrollPhysics(), // يمنع الـ Grid من الاسكرول لو فيه ScrollView أكبر
+       padding: const EdgeInsets.all(16),
+       crossAxisSpacing: 12,
+       mainAxisSpacing: 12,
+       childAspectRatio:0.48,
+       children: [
+         ProductCard(
+           screenWidth: screenWidth,
+           screenHeight: screenHeight,
+           icon: 'assets/images/home/main_page/product.jpg',
+           title: 'Bottle',
+         ),
+         ProductCard(
+           screenWidth: screenWidth,
+           screenHeight: screenHeight,
+           icon: 'assets/images/home/main_page/product.jpg',
+           title: 'Gallon',
+         ),
+         ProductCard(
+           screenWidth: screenWidth,
+           screenHeight: screenHeight,
+           icon: 'assets/images/home/main_page/product.jpg',
+           title: 'Alkaline',
+         ),
+         ProductCard(
+           screenWidth: screenWidth,
+           screenHeight: screenHeight,
+           icon: 'assets/images/home/main_page/product.jpg',
+           title: 'Coupon',
+         ),
+         // أضف المزيد من العناصر حسب الحاجة
+       ],
+     ),
 
    ],
     );

@@ -257,8 +257,8 @@ class _HomeScreenState extends State<HomeScreen>
       // ✅ أضف ده
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        width: screenWidth * .13,
-        height: screenHeight * .07,
+        width: screenWidth * .123,//edit float action button size
+        height: screenHeight * .064,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
           shape: BoxShape.rectangle,
