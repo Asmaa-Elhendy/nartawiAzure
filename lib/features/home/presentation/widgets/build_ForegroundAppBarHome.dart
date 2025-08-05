@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
 
 import '../../../../core/theme/colors.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
  double screenHeight;
  double screenWidth;
- BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth});
+ String title;
+ bool is_returned;
+ BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth,required this.title,required this.is_returned});
 
   @override
   State<BuildForegroundappbarhome> createState() => _BuildForegroundappbarhomeState();
@@ -27,11 +30,25 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text("NARTAWI",
-              style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16)),
+           Row(mainAxisAlignment: MainAxisAlignment.start,
+             children: [
+               widget.is_returned?  GestureDetector(
+                 onTap: (){
+                   Navigator.pop(context);
+                 },
+                 child: Iconify(
+                   MaterialSymbols.arrow_back_ios,
+                   size: 16,
+                   color: AppColors.whiteColor,
+                 ),
+               ):SizedBox(),
+               Text(widget.title,
+                  style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16)),
+             ],
+           ),
           SizedBox(
             width: widget.screenWidth * .45,
             child: Row(

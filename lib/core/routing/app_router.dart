@@ -4,7 +4,7 @@ import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
 import '../../features/auth/presentation/screens/sign_up.dart';
 import '../../features/auth/presentation/screens/verification_screen.dart';
-import '../../features/home/presentation/screens/all_suppliers_screen.dart';
+import '../../features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
 import '../../features/home/presentation/screens/home.dart';
 import '../../features/home/presentation/screens/mainscreen.dart';
 import '../../features/splash/onboarding.dart';

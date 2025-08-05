@@ -285,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>
           buildBackgroundAppbar(screenWidth),
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
-            screenWidth: screenWidth,
+            screenWidth: screenWidth,title: 'NARTAWI',is_returned: false,
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,

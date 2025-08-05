@@ -112,7 +112,7 @@ Widget BuildRoundedIconOnProduct({
           child: Icon(
               Icons.add, // استبدلها بالأيقونة اللي تحبها
               size: height*.032,
-              color: Colors.green,
+              color: AppColors.greenColor,
             ),
         )
 
