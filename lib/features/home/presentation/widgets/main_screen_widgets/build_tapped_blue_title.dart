@@ -8,11 +8,13 @@ Widget BuildTappedTitle(String title,double width){
 }
 
 
-Widget BuildStretchTitleHome(double screenWidth,String mainTitle){
+Widget BuildStretchTitleHome(double screenWidth,String mainTitle,onTap){
   return   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(mainTitle,style: AppTextStyles.LabelInTextField,),
-      BuildTappedTitle('View All',screenWidth),
+      GestureDetector(
+          onTap: onTap,
+          child: BuildTappedTitle('View All',screenWidth)),
     ],
   );
 }

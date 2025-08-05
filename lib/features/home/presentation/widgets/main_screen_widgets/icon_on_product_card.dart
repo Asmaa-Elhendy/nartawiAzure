@@ -37,9 +37,18 @@ Widget BuildIconOnProduct(double width,double height,bool isPlus){
   );
 }
 
-Widget BuildRoundedIconOnProduct(
-    {required BuildContext context,required double width, required double height,required bool isPlus,required int price,
-      required VoidCallback onIncrease,required VoidCallback onDecrease,required TextEditingController quantityCntroller,onTextfieldChanged,onDone}){
+Widget BuildRoundedIconOnProduct({
+  required BuildContext context,
+  required double width, 
+  required double height,
+  required bool isPlus,
+  int price = 0, 
+  required VoidCallback onIncrease,
+  required VoidCallback onDecrease,
+  required TextEditingController quantityCntroller,
+  ValueChanged<String>? onTextfieldChanged,
+  VoidCallback? onDone,
+}){
   return Container(
 
     width: isPlus?width*.22:width*.15, // الحجم العرض
@@ -58,7 +67,7 @@ Widget BuildRoundedIconOnProduct(
     ),
     child: Center(
       child:
-      isPlus?
+    //  isPlus?
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -108,21 +117,22 @@ Widget BuildRoundedIconOnProduct(
         )
 
         ],
-      ):
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-
-          Center(
-            child: Padding(
-              padding:  EdgeInsets.symmetric(horizontal: width*.01),
-              child: Text('$price',style: TextStyle(fontWeight: FontWeight.w700),),
-            ),
-          ),
-
-
-        ],
       )
+            //:
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //
+      //     Center(
+      //       child: Padding(
+      //         padding:  EdgeInsets.symmetric(horizontal: width*.01),
+      //         child: Text('$price',style: TextStyle(fontWeight: FontWeight.w700),),
+      //       ),
+      //     ),
+      //
+      //
+      //   ],
+      // )
     ),
   );
 }

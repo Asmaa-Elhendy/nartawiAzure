@@ -68,7 +68,10 @@ String? imageUrl=null;
                                  )
                                ],
                              ),
-                             BuildStretchTitleHome(screenWidth, "Featured Stores"),
+                             BuildStretchTitleHome(screenWidth, "Featured Stores",(){
+                               Navigator.pushNamed(context, '/allSuppliers');
+
+                             }),
                              SizedBox(
                                height: screenHeight * 0.18, // Adjust height as needed
                                child: ListView(
@@ -83,7 +86,7 @@ String? imageUrl=null;
                                  ],
                                ),
                              ),
-                             BuildStretchTitleHome(screenWidth, "Popular Categories"),
+                             BuildStretchTitleHome(screenWidth, "Popular Categories",(){}),
                              SizedBox(
                                height: screenHeight * 0.15, // Adjust height as needed
                                child: ListView(
@@ -98,7 +101,7 @@ String? imageUrl=null;
                                  ],
                                ),
                              ),
-                             BuildStretchTitleHome(screenWidth, "Popular Products")
+                             BuildStretchTitleHome(screenWidth, "Popular Products",(){})
                            ]),
                      ],
                    ),

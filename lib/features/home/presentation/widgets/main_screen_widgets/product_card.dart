@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../bloc/product_quantity/product_quantity_bloc.dart';
+import '../../bloc/product_quantity/product_quantity_event.dart';
+import '../../bloc/product_quantity/product_quantity_state.dart';
 import 'icon_on_product_card.dart';
 
 class ProductCard extends StatefulWidget {
@@ -22,159 +26,201 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
-  int price=100;
-  TextEditingController quantityController = TextEditingController(text: '1');
+  late final TextEditingController _quantityController;
+  late final ProductQuantityBloc _quantityBloc;
 
   @override
-  onIncrease(){
-    int current = int.tryParse(quantityController.text) ?? 1;
-    quantityController.text = (current + 1).toString();
-    price=100*current;
-        setState(() {
-
-        });
+  void initState() {
+    super.initState();
+    _quantityController = TextEditingController(text: '1');
+    _quantityBloc = ProductQuantityBloc(
+      calculateProductPrice: CalculateProductPrice(),
+      basePrice: 100.0,
+    );
   }
 
-  onDecrease(){
-    int current = int.tryParse(quantityController.text) ?? 1;
-   if(current>1){
-     quantityController.text = (current -1).toString();
-   }
-   price=100*current;
-    setState(() {
-
-    });
-  }
-
-  onTextfieldChanged(String value){
-    if(quantityController.text.isNotEmpty){
-
-      int current=int.parse(value);
-
-      price=100*current;
-      quantityController.text=current.toString();
-    }
-
-    setState(() {
-
-    });
-  }
-  ondone(){
-     if(quantityController.text.isEmpty){
-       quantityController.text='1';
-     }
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    _quantityBloc.close();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: widget.screenHeight * .02),
-      child: Container(
-        width: widget.screenWidth * .24,
-        //height: widget.screenHeight*.37,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: AppColors.secondaryColorWithOpacity8,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowColor, // ظل خفيف
-              offset: Offset(0, 2),
-              blurRadius: 20,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  child: Image.asset(
-                    widget.icon,
-                    width: double.infinity,
-                    height: widget.screenHeight * 0.2,
-                    fit: BoxFit.cover, // تغطية كاملة
+    return BlocProvider.value(
+      value: _quantityBloc,
+      child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
+        builder: (context, state) {
+          // Update controller when state changes
+          if (_quantityController.text != state.quantity) {
+            _quantityController.text = state.quantity;
+          }
+
+          return Padding(
+            padding: EdgeInsets.only(bottom: widget.screenHeight * .02),
+            child: Container(
+              width: widget.screenWidth * .24,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.secondaryColorWithOpacity8,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.shadowColor,
+                    offset: Offset(0, 2),
+                    blurRadius: 20,
+                    spreadRadius: 0,
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: widget.screenHeight * .01,
-                    horizontal: widget.screenWidth * .02,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              ),
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      ProductTitle(widget.screenHeight, widget.screenWidth),
-                      Padding(
-                        padding:  EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
-                        child: Text("Hand Pump Dispenser",style: TextStyle(color: AppColors.primary,fontSize: widget.screenWidth*.028,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis,),
-                      ),
-                      Text(
-                        'company hand pump dispenser-pure natural...',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: widget.screenWidth*.028,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                      ClipRRect(
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        child: Image.asset(
+                          widget.icon,
+                          width: double.infinity,
+                          height: widget.screenHeight * 0.2,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       Padding(
-                        padding:  EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
-                        child: Text("QAR 20.00",style: TextStyle(color: AppColors.primary,fontSize: widget.screenWidth*.038,fontWeight: FontWeight.w600),overflow: TextOverflow.ellipsis,),
-                      ),
-                      Text(
-                        'one-time purchase',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: widget.screenWidth*.028,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                        padding: EdgeInsets.symmetric(
+                          vertical: widget.screenHeight * .01,
+                          horizontal: widget.screenWidth * .02,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProductTitle(widget.screenHeight, widget.screenWidth),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
+                              child: Text(
+                                "Hand Pump Dispenser",
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: widget.screenWidth*.028,
+                                  fontWeight: FontWeight.w600
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              'company hand pump dispenser-pure natural...',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: widget.screenWidth*.028,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                            // Static price display
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
+                              child: Text(
+                                "QAR 100.00",
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: widget.screenWidth*.038,
+                                  fontWeight: FontWeight.w600
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'one-time purchase',
+                              style: TextStyle(
+                                fontSize: widget.screenWidth*.028,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                            // Quantity controls and dynamic price display
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Quantity controls
+                                  BuildRoundedIconOnProduct(
+                                    context: context,
+                                    width: widget.screenWidth,
+                                    height: widget.screenHeight,
+                                    isPlus: true,
+                                    price: 0, // Not used for the controls
+                                    onIncrease: () => context.read<ProductQuantityBloc>().add(IncreaseQuantity()),
+                                    onDecrease: () => context.read<ProductQuantityBloc>().add(DecreaseQuantity()),
+                                    quantityCntroller: _quantityController,
+                                    onTextfieldChanged: (value) => context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
+                                    onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
+                                  ),
+                                  // Dynamic price display
+                                  Container(
+
+                                    width: widget.screenWidth * .15,
+                                    height: widget.screenHeight * .045,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: AppColors.backgrounHome,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '${(state.price).toStringAsFixed(2)}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: widget.screenWidth * 0.034,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
-                   Padding(
-                     padding:  EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
-                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: [
-                         BuildRoundedIconOnProduct(context: context,width:widget.screenWidth,height:  widget.screenHeight,isPlus:  true,price: price,onIncrease: onIncrease,onDecrease: onDecrease,quantityCntroller: quantityController,onTextfieldChanged: onTextfieldChanged,onDone: ondone),
-                         BuildRoundedIconOnProduct(context: context,width:widget.screenWidth,height:  widget.screenHeight,isPlus:  false,price: price,onIncrease: (){},onDecrease: (){},quantityCntroller: quantityController)
-                       ],
-                     ),
-                   )
                     ],
                   ),
-                ),
-
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: widget.screenWidth * .02,vertical: widget.screenHeight*.01
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  BuildIconOnProduct(
-                    widget.screenWidth,
-                    widget.screenHeight,
-                    true,
-                  ),
-                  BuildIconOnProduct(
-                    widget.screenWidth,
-                    widget.screenHeight,
-                    false,
+                  // Top-right icons (add to cart and favorite)
+                  Positioned(
+                    top: widget.screenHeight * 0.01,
+                    right: widget.screenWidth * 0.02,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BuildIconOnProduct(
+                          widget.screenWidth,
+                          widget.screenHeight,
+                          false, // Heart icon
+                        ),
+                        SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
+                        BuildIconOnProduct(
+                          widget.screenWidth,
+                          widget.screenHeight,
+                          true, // Plus icon
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 }
+
 Widget ProductTitle(double screenHeight,double screenWidth){
   return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
