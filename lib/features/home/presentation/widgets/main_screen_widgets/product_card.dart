@@ -22,7 +22,49 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  int price=100;
+  TextEditingController quantityController = TextEditingController(text: '1');
+
   @override
+  onIncrease(){
+    int current = int.tryParse(quantityController.text) ?? 1;
+    quantityController.text = (current + 1).toString();
+    price=100*current;
+        setState(() {
+
+        });
+  }
+
+  onDecrease(){
+    int current = int.tryParse(quantityController.text) ?? 1;
+   if(current>1){
+     quantityController.text = (current -1).toString();
+   }
+   price=100*current;
+    setState(() {
+
+    });
+  }
+
+  onTextfieldChanged(String value){
+    if(quantityController.text.isNotEmpty){
+
+      int current=int.parse(value);
+
+      price=100*current;
+      quantityController.text=current.toString();
+    }
+
+    setState(() {
+
+    });
+  }
+  ondone(){
+     if(quantityController.text.isEmpty){
+       quantityController.text='1';
+     }
+  }
+
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(bottom: widget.screenHeight * .02),
@@ -96,8 +138,8 @@ class _ProductCardState extends State<ProductCard> {
                      padding:  EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                         BuildRoundedIconOnProduct(widget.screenWidth, widget.screenHeight, true),
-                         BuildRoundedIconOnProduct(widget.screenWidth, widget.screenHeight, false)
+                         BuildRoundedIconOnProduct(context: context,width:widget.screenWidth,height:  widget.screenHeight,isPlus:  true,price: price,onIncrease: onIncrease,onDecrease: onDecrease,quantityCntroller: quantityController,onTextfieldChanged: onTextfieldChanged,onDone: ondone),
+                         BuildRoundedIconOnProduct(context: context,width:widget.screenWidth,height:  widget.screenHeight,isPlus:  false,price: price,onIncrease: (){},onDecrease: (){},quantityCntroller: quantityController)
                        ],
                      ),
                    )
