@@ -45,12 +45,12 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
               child: SizedBox(height: screenHeight*.8,
                 child: ListView(
                   children: [
-                    BuildCardSupplier(screenHeight, screenWidth,true),
-                    BuildCardSupplier(screenHeight, screenWidth,false),
-                    BuildCardSupplier(screenHeight, screenWidth,true),
-                    BuildCardSupplier(screenHeight, screenWidth,false),
-                    BuildCardSupplier(screenHeight, screenWidth,true),
-                    BuildCardSupplier(screenHeight, screenWidth,false),
+                    BuildCardSupplier(context,screenHeight, screenWidth,true),
+                    BuildCardSupplier(context,screenHeight, screenWidth,false),
+                    BuildCardSupplier(context,screenHeight, screenWidth,true),
+                    BuildCardSupplier(context,screenHeight, screenWidth,false),
+                    BuildCardSupplier(context,screenHeight, screenWidth,true),
+                    BuildCardSupplier(context,screenHeight, screenWidth,false),
                   ],
 
                 ),
