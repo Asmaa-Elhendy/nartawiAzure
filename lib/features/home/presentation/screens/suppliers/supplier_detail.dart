@@ -5,6 +5,7 @@ import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
 import '../../widgets/main_screen_widgets/product_card.dart';
+import '../../widgets/main_screen_widgets/suppliers/tab_bar_view.dart';
 
 class SupplierDetails extends StatefulWidget {
   const SupplierDetails({super.key});
@@ -47,48 +48,14 @@ class _SupplierDetailsState extends State<SupplierDetails> {
             child:Padding(
               padding:  EdgeInsets.only(top: screenHeight*.04),
 
-              child: SingleChildScrollView(
-                child: Column(//k
-                  children: [
-                    BuildFullCardSupplier(context, screenHeight, screenWidth, false),
-                    GridView.count(
-                      crossAxisCount: 2, // عدد الأعمدة
-                      shrinkWrap: true, // مهم جدًا لو بتحطه جوه ScrollView
-                      physics: NeverScrollableScrollPhysics(), // يمنع الـ Grid من الاسكرول لو فيه ScrollView أكبر
-                      padding: const EdgeInsets.all(16),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio:0.48,
-                      children: [
-                        ProductCard(
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                          icon: 'assets/images/home/main_page/product.jpg',
-                          title: 'Bottle',
-                        ),
-                        ProductCard(
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                          icon: 'assets/images/home/main_page/product.jpg',
-                          title: 'Gallon',
-                        ),
-                        ProductCard(
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                          icon: 'assets/images/home/main_page/product.jpg',
-                          title: 'Alkaline',
-                        ),
-                        ProductCard(
-                          screenWidth: screenWidth,
-                          screenHeight: screenHeight,
-                          icon: 'assets/images/home/main_page/product.jpg',
-                          title: 'Coupon',
-                        ),
-                        // أضف المزيد من العناصر حسب الحاجة
-                      ],
-                    ),
-                  ],
-                ),
+              child: Column(
+                children: [
+                  BuildFullCardSupplier(context, screenHeight, screenWidth, false),
+                  Expanded(
+
+                      child: StackOver(width: screenWidth,height: screenHeight,)),
+
+                ],
               ),
             ))]));
 

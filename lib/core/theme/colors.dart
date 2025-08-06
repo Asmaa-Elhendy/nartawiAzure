@@ -6,12 +6,12 @@ class AppColors {
   static final primaryWithOpacity = primary.withAlpha(204); // 80
   static final fillColorTextFilled=Color(0xffFCFCFC);//Colors.black.withValues(alpha: 0.08);
  static const textIntExtFieldAndIconsHome=Color(0xff737373);
- static const textFieldBorderColor=Color(0xffBDBDBD);
+ static const BorderAnddividerAndIconColor=Color(0xffBDBDBD);
   static const whiteColor=Colors.white;
   static const textDark = Color(0xFF03045E);
   static const textLight = Color(0xFF303030);
   static const textSecondary = Color(0xFF6E7582);
-  static const dividerAndIconColor=Color(0xffBDBDBD);
+  //static const BorderAnddividerAndIconColor=Color(0xffBDBDBD);
   static final blueBorder=primary.withValues(alpha: 0.48);
   static final backgrounHome=Color(0xFFeef3f5);
 // Add more as needed
@@ -24,6 +24,7 @@ class AppColors {
   static final greenLight=Color(0xffdaf0e3);
   static const orangeColor=Color(0xffF9B908);
   static final orangeLight=orangeColor.withValues(alpha: 0.16);
+  static const tabViewBackground=Color(0xffe6eaec);
 
 
   static const LinearGradient primaryGradient = LinearGradient(

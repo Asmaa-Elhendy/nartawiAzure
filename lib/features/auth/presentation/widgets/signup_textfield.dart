@@ -44,7 +44,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
         decoration: BoxDecoration(
           color: AppColors.fillColorTextFilled,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.textFieldBorderColor),
+          border: Border.all(color: AppColors.BorderAnddividerAndIconColor),
         ),
         child: Row(
           children: [
@@ -66,7 +66,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
             const VerticalDivider(
               thickness: 1,
               width: 1,
-              color: AppColors.dividerAndIconColor,
+              color: AppColors.BorderAnddividerAndIconColor,
               indent: 10,
               endIndent: 10,
             ),
@@ -124,7 +124,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
             child: const Iconify(
               MaterialSymbols.lock_outline,
               size: 18,
-              color: AppColors.dividerAndIconColor,
+              color: AppColors.BorderAnddividerAndIconColor,
             ),
           )
               : null,
@@ -132,7 +132,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
               ? IconButton(
             icon: Icon(
               _obscureText ?Icons.visibility_off: Icons.visibility ,
-              color: AppColors.dividerAndIconColor,
+              color: AppColors.BorderAnddividerAndIconColor,
             ),
             onPressed: () {
               setState(() {
@@ -150,7 +150,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.textFieldBorderColor),
+            borderSide: const BorderSide(color: AppColors.BorderAnddividerAndIconColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),

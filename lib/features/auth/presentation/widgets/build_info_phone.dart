@@ -16,7 +16,7 @@ Widget buildInfoPhoneInfo(double width){
           size: 18,
           color: AppColors.textSecondary,
         ),SizedBox(width: width*.01,),
-        Text('8-digit Qatar phone number',style: TextStyle(color: AppColors.dividerAndIconColor),),
+        Text('8-digit Qatar phone number',style: TextStyle(color: AppColors.BorderAnddividerAndIconColor),),
       ],
     ),
   );

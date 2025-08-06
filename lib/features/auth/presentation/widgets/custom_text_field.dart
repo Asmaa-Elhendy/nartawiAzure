@@ -54,7 +54,7 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
               ? IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility_off: Icons.visibility ,
-                    color: AppColors.dividerAndIconColor,
+                    color: AppColors.BorderAnddividerAndIconColor,
                   ),
                   onPressed: () {
                     setState(() {
@@ -72,7 +72,7 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50),
-            borderSide: const BorderSide(color: AppColors.textFieldBorderColor),
+            borderSide: const BorderSide(color: AppColors.BorderAnddividerAndIconColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50),

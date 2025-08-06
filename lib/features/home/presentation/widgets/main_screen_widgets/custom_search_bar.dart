@@ -9,18 +9,19 @@ class CustomSearchBar extends StatelessWidget {
   final VoidCallback? onSearch;
   final double height;
   final double width;
+  final bool fromSupplierDetail;
 
   const CustomSearchBar({
     Key? key,
     required this.controller,
-    this.onSearch,required this.height,required this.width
+    this.onSearch,required this.height,required this.width,this.fromSupplierDetail=false
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height*.06,
-      width: width,
+      height:fromSupplierDetail?height*.07 :height*.06,
+      width: fromSupplierDetail?width*.75:width,
 
       child: TextField(
         controller: controller,

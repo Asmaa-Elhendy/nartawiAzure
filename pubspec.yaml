@@ -90,6 +90,7 @@ flutter:
     - assets/images/home/main_page/person.png
     - assets/images/home/main_page/product.jpg
     - assets/images/home/main_page/company.png
+    - assets/images/home/main_page/supplier_detail/filter.svg
   fonts:
     - family: Poppins
       fonts:

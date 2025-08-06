@@ -74,7 +74,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       children: <Widget>[
         Expanded(
           child: Divider(
-            color:AppColors.dividerAndIconColor, // Customize divider color
+            color:AppColors.BorderAnddividerAndIconColor, // Customize divider color
             thickness: 1.0,    // Customize divider thickness
           ),
         ),
@@ -82,12 +82,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Text(
             text,
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400,color: AppColors.dividerAndIconColor,),
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400,color: AppColors.BorderAnddividerAndIconColor,),
           ),
         ),
         Expanded(
           child: Divider(
-            color:AppColors.dividerAndIconColor,
+            color:AppColors.BorderAnddividerAndIconColor,
             thickness: 1.0,
           ),
         ),
