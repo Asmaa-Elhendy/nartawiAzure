@@ -184,6 +184,7 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/core/theme/colors.dart';
 
 import '../custom_search_bar.dart';
 import '../product_card.dart';
@@ -200,8 +201,39 @@ class TabBarFirstPage extends StatefulWidget {
 
 class _TabBarFirstPageState extends State<TabBarFirstPage> {
   final Set<String> selectedFilters = {};
+  final Set<String> tags = {'small bottles','gallons','under QAE 50','spring water'};
+
   OverlayEntry? _overlayEntry;
   final GlobalKey _searchBarKey = GlobalKey();
+
+  generate_tags(double width,double height) {
+    return tags.map((tag) => get_chip(tag,width,height)).toList();
+  }
+  get_chip(name,double width,double height) {
+    return Container(
+    //  width: width*.2,
+      padding: EdgeInsets.symmetric(
+        horizontal: width * .03,
+        vertical: height * .008,
+      ),      decoration: BoxDecoration(
+        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(      mainAxisSize: MainAxisSize.min, // <<< يجعل الـ Row يأخذ أقل مساحة ممكنة
+        children: [
+          Text(//maxLines: 2,
+            name,
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: width*.031,
+              fontWeight: FontWeight.w600,
+            ),
+          ),SizedBox(width: width*.01,),
+          Icon(Icons.close,color: AppColors.whiteColor,size: width*.04,)
+        ],
+      ),
+    );
+  }
 
   void _toggleFilterMenu() {//k
     if (_overlayEntry == null) {
@@ -264,6 +296,21 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
               ],
             ),
           ),
+    Wrap(
+    spacing: 8.0, // gap between adjacent chips
+    runSpacing: 4.0, // gap between lines
+    children: <Widget>[...generate_tags(screenWidth,screenHeight)],
+    ),
+
+    //       GridView.count(
+    //         crossAxisCount: 3,childAspectRatio: 2.9,
+    //         shrinkWrap: true,
+    //         physics: NeverScrollableScrollPhysics(),
+    //         padding: const EdgeInsets.all(16),
+    //         crossAxisSpacing: 5,
+    //         mainAxisSpacing: 5,
+    // children: <Widget>[...generate_tags(screenWidth,screenHeight)],
+    // ),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,

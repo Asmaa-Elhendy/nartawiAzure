@@ -5,7 +5,7 @@ class AppColors {
   static const secondary = Color(0xFF00A0DC);
   static final primaryWithOpacity = primary.withAlpha(204); // 80
   static final fillColorTextFilled=Color(0xffFCFCFC);//Colors.black.withValues(alpha: 0.08);
- static const textIntExtFieldAndIconsHome=Color(0xff737373);
+ static const greyDarktextIntExtFieldAndIconsHome=Color(0xff737373);
  static const BorderAnddividerAndIconColor=Color(0xffBDBDBD);
   static const whiteColor=Colors.white;
   static const textDark = Color(0xFF03045E);

@@ -5,7 +5,7 @@ class AppTextStyles {
   static const TextStyle textInTextField = TextStyle(
     fontSize: 14,
 
-    color: AppColors.textIntExtFieldAndIconsHome,
+    color: AppColors.greyDarktextIntExtFieldAndIconsHome,
   );
   static const TextStyle LabelInTextField = TextStyle(
     fontSize: 15,

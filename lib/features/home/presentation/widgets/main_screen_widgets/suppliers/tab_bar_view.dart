@@ -60,7 +60,7 @@ class _StackOverState extends State<StackOver>
                   color: AppColors.whiteColor,
                 ),indicatorSize: TabBarIndicatorSize.tab,dividerColor: Colors.transparent,
                 labelStyle: TextStyle(fontWeight: FontWeight.w600,color: AppColors.primary),
-                unselectedLabelColor: AppColors.textIntExtFieldAndIconsHome,
+                unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
 
                 tabs: [
                   // first tab [you can add an icon using the icon property]

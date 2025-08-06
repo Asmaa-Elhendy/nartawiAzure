@@ -104,7 +104,7 @@ Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double scr
                       style: TextStyle(
                         fontSize: screenWidth*0.037,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.textIntExtFieldAndIconsHome,
+                        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                       ),
                     ),
                   ],

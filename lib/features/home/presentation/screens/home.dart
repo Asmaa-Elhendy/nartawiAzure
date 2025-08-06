@@ -37,23 +37,23 @@ class _HomeScreenState extends State<HomeScreen>
     icons = [
       Icon(
         Icons.format_list_numbered,
-        color: AppColors.textIntExtFieldAndIconsHome,
+        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
         size: screenWidth * .06,
       ),
       Iconify(
         Mdi.coupon_outline,
-        color: AppColors.textIntExtFieldAndIconsHome,
+        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
         size: screenWidth * .06,
       ),
       SizedBox(),
       Iconify(
         Mdi.heart_outline,
-        color: AppColors.textIntExtFieldAndIconsHome,
+        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
         size: screenWidth * .06,
       ),
       Iconify(
         Carbon.user_profile,
-        color: AppColors.textIntExtFieldAndIconsHome,
+        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
         size: screenWidth * .06,
       ),
     ];
@@ -96,23 +96,23 @@ class _HomeScreenState extends State<HomeScreen>
         icons = [
           Icon(
             Icons.format_list_numbered,
-            color: AppColors.textIntExtFieldAndIconsHome,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             size: screenWidth * .06,
           ),
           Iconify(
             Mdi.coupon_outline,
-            color: AppColors.textIntExtFieldAndIconsHome,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             size: screenWidth * .06,
           ),
           SizedBox(),
           Iconify(
             Mdi.heart_outline,
-            color: AppColors.textIntExtFieldAndIconsHome,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             size: screenWidth * .06,
           ),
           Iconify(
             Carbon.user_profile,
-            color: AppColors.textIntExtFieldAndIconsHome,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             size: screenWidth * .06,
           ),
         ];
@@ -137,23 +137,23 @@ class _HomeScreenState extends State<HomeScreen>
           icons = [
             Image.asset(
               "assets/images/onboaring/Logo.png",
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               width: screenWidth * .08,
             ),
             Iconify(
               Mdi.coupon_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             SizedBox(),
             Iconify(
               Mdi.heart_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Iconify(
               Carbon.user_profile,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
           ];
@@ -166,23 +166,23 @@ class _HomeScreenState extends State<HomeScreen>
           icons = [
             Icon(
               Icons.format_list_numbered,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Image.asset(
               "assets/images/onboaring/Logo.png",
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               width: screenWidth * .08,
             ),
             SizedBox(),
             Iconify(
               Mdi.heart_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Iconify(
               Carbon.user_profile,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
           ];
@@ -195,23 +195,23 @@ class _HomeScreenState extends State<HomeScreen>
           icons = [
             Icon(
               Icons.format_list_numbered,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Iconify(
               Mdi.coupon_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             SizedBox(),
             Image.asset(
               "assets/images/onboaring/Logo.png",
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               width: screenWidth * .08,
             ),
             Iconify(
               Carbon.user_profile,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
           ];
@@ -225,23 +225,23 @@ class _HomeScreenState extends State<HomeScreen>
           icons = [
             Icon(
               Icons.format_list_numbered,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Iconify(
               Mdi.coupon_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             SizedBox(),
             Iconify(
               Mdi.heart_outline,
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               size: screenWidth * .06,
             ),
             Image.asset(
               "assets/images/onboaring/Logo.png",
-              color: AppColors.textIntExtFieldAndIconsHome,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
               width: screenWidth * .08,
             ),
           ];

@@ -28,9 +28,9 @@ class CustomSearchBar extends StatelessWidget {
 
         decoration: InputDecoration(
           hintText: 'search for water products...',
-          hintStyle: TextStyle(color: AppColors.textIntExtFieldAndIconsHome,fontSize: 13,),
+          hintStyle: TextStyle(color: AppColors.greyDarktextIntExtFieldAndIconsHome,fontSize: 13,),
           prefixIcon: IconButton(
-            icon: const Icon(Icons.search,color: AppColors.textIntExtFieldAndIconsHome,),
+            icon: const Icon(Icons.search,color: AppColors.greyDarktextIntExtFieldAndIconsHome,),
             onPressed: onSearch,
           ),
           border: OutlineInputBorder(
