@@ -158,7 +158,7 @@ class _ProductCardState extends State<ProductCard> {
                                   ),
                                   // Dynamic price display
                                   Container(
-
+                                    padding: EdgeInsets.all(widget.screenHeight*.005),
                                     width: widget.screenWidth * .15,
                                     height: widget.screenHeight * .045,
                                     decoration: BoxDecoration(
@@ -177,8 +177,8 @@ class _ProductCardState extends State<ProductCard> {
                                         '${(state.price).toStringAsFixed(2)}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
-                                          fontSize: widget.screenWidth * 0.034,
-                                        ),
+                                          fontSize: widget.screenWidth * 0.036,
+                                        ),overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   )
@@ -194,19 +194,21 @@ class _ProductCardState extends State<ProductCard> {
                   Positioned(
                     top: widget.screenHeight * 0.01,
                     right: widget.screenWidth * 0.02,
+                    left: widget.screenWidth * 0.02,
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    //  mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         BuildIconOnProduct(
                           widget.screenWidth,
                           widget.screenHeight,
-                          false, // Heart icon
+                          true, // plus icon
                         ),
-                        SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
+                  //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
                         BuildIconOnProduct(
                           widget.screenWidth,
                           widget.screenHeight,
-                          true, // Plus icon
+                          false, // heart icon
                         ),
                       ],
                     ),

@@ -20,8 +20,8 @@ class AppColors {
   static final  Color secondaryColorWithOpacity8=Color(0xFFdbedf4);
   static final Secondary48=secondary.withValues(alpha: 0.48);
   static const shadowColor= Color(0xffced3d4);
-  static const greenColor=Color(0xff27AE60);
-  static final greenLight=greenColor.withValues(alpha: 0.16);
+  static const greenColor=Color(0xff27ae60);
+  static final greenLight=Color(0xffdaf0e3);
   static const orangeColor=Color(0xffF9B908);
   static final orangeLight=orangeColor.withValues(alpha: 0.16);
 

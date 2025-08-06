@@ -36,8 +36,15 @@ class _StoreCardState extends State<StoreCard> {
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: ClipOval(
-                  child: Image.network(
-                    widget.imageUrl ?? '',
+                  child:
+                  widget.imageUrl==null||widget.imageUrl==''?
+                      Image.asset(
+                          'assets/images/home/main_page/person.png'
+                        //  fit: BoxFit.cover,
+                      )
+                  :
+                  Image.network(
+                    widget.imageUrl! ,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset(

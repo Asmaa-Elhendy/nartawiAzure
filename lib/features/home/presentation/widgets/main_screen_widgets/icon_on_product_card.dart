@@ -52,7 +52,7 @@ Widget BuildRoundedIconOnProduct({
 }){
   return Container(
 
-    width: isPlus?width*.22:width*.15, // الحجم العرض
+    width: isPlus?width*.2:width*.15, // الحجم العرض
     height: height*.045, // الحجم الارتفاع
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
@@ -76,7 +76,7 @@ Widget BuildRoundedIconOnProduct({
               onTap: onDecrease,
               child: Iconify(
                       Ic.baseline_minus, // استبدلها بالأيقونة اللي تحبها
-              size: height*.032,
+              size: height*.03,
               color: Colors.red,
                         ),
             ),
@@ -87,7 +87,7 @@ Widget BuildRoundedIconOnProduct({
           //   ),
           // ),
           Container(
-            width: width * 0.07,
+            width: width * 0.08,
             height: height * 0.04,
             alignment: Alignment.center,
             child: TextField(
@@ -95,7 +95,7 @@ Widget BuildRoundedIconOnProduct({
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(fontWeight: FontWeight.w700),
+              style: TextStyle(fontWeight: FontWeight.w700,   fontSize: width * 0.036,overflow: TextOverflow.ellipsis),
               onChanged: onTextfieldChanged,
               onEditingComplete: onDone,
               onSubmitted: (value){
@@ -112,7 +112,7 @@ Widget BuildRoundedIconOnProduct({
           onTap: onIncrease,
           child: Icon(
               Icons.add, // استبدلها بالأيقونة اللي تحبها
-              size: height*.032,
+              size: height*.03,
               color: AppColors.greenColor,
             ),
         )

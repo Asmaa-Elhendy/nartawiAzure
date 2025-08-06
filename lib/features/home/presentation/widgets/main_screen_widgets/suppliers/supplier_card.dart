@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 
 import '../../../../../../core/theme/colors.dart';
 
@@ -15,7 +16,7 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
       padding:  EdgeInsets.only(bottom: screenHeight*.035),
       child: Container(
         height: screenHeight*.133,
-        padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.02),
+        padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.01),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppColors.whiteColor,
@@ -55,36 +56,21 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
               ),
             ),
             SizedBox(width: screenWidth*.03,),
-            Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width:screenWidth*.65,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SizedBox( width:screenWidth*.7,
+              child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Company A',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.04),),
                       BuildFeaturedOrSponsered(screenHeight, screenWidth, isFeatured?'Featured':'Sponsored')
                     ],
                   ),
-                ),
 
-                SizedBox(
-                  width:screenWidth*.65,
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Iconify(
-                            MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-                            size: screenHeight*.03,
-                            color: Colors.amber,
-                          ),
-                          //  SizedBox(width: screenWidth*.01,),
-                          Text('5.0',style: TextStyle(fontSize: screenWidth*.035,fontWeight: FontWeight.w500))
-                        ],
-
-                      ),
+                      BuildRowRating(screenWidth, screenHeight),
                       Container(
-                        padding: EdgeInsetsGeometry.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.02),
+                        padding: EdgeInsetsGeometry.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.01),
                         //   width:  screenWidth * .28,
                         height: screenHeight * .047,
                         decoration: BoxDecoration(
@@ -107,9 +93,9 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
                       )
 
                     ],
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             )
           ],
         ),
