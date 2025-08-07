@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tabbar_second_page.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 import '../../../../../../core/theme/colors.dart';
@@ -89,17 +90,7 @@ class _StackOverState extends State<StackOver>
                 children: [
                   // first tab bar view widget
                 TabBarFirstPage(),
-
-                  // second tab bar view widget
-                  Center(
-                    child: Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                TabBarSecondPage()
                 ],
               ),
             ),

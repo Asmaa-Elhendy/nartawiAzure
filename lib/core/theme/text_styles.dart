@@ -14,6 +14,7 @@ class AppTextStyles {
     fontFamily: 'Poppins',
   );
   static const TextStyle TitlePage =  TextStyle(fontSize: 16,color: AppColors.textLight,fontWeight: FontWeight.w400);
+  static const TextStyle titleRating=TextStyle(fontSize: 13,fontWeight: FontWeight.w400);
   static const TextStyle heading1 = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,

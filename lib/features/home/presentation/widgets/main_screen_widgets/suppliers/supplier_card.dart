@@ -61,7 +61,7 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Company A',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.04),),
+                      Text('Company A',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.0375),),
                       BuildFeaturedOrSponsered(screenHeight, screenWidth, isFeatured?'Featured':'Sponsored')
                     ],
                   ),

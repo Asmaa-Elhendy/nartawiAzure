@@ -213,7 +213,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     return Container(
     //  width: width*.2,
       padding: EdgeInsets.symmetric(
-        horizontal: width * .03,
+        horizontal: width * .015,
         vertical: height * .008,
       ),      decoration: BoxDecoration(
         color: AppColors.greyDarktextIntExtFieldAndIconsHome,
@@ -228,8 +228,18 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
               fontSize: width*.031,
               fontWeight: FontWeight.w600,
             ),
-          ),SizedBox(width: width*.01,),
-          Icon(Icons.close,color: AppColors.whiteColor,size: width*.04,)
+          ),
+          InkWell(
+            onTap: () {
+              tags.remove(name);
+              setState(() {
+
+              });
+            },
+              child: Padding(
+                padding:  EdgeInsets.only(right:width*.01,left: width*.02),
+                child: Icon(Icons.close,color: AppColors.whiteColor,size: width*.042,),
+              ))
         ],
       ),
     );
