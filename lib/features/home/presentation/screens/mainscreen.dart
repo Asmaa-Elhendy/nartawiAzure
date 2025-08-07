@@ -86,7 +86,9 @@ String? imageUrl=null;
                                  ],
                                ),
                              ),
-                             BuildStretchTitleHome(screenWidth, "Popular Categories",(){}),
+                             BuildStretchTitleHome(screenWidth, "Popular Categories",(){
+                               Navigator.pushNamed(context, '/popularCategories');
+                             }),
                              SizedBox(
                                height: screenHeight * 0.15, // Adjust height as needed
                                child: ListView(

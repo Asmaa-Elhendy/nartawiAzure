@@ -286,7 +286,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: screenWidth * 0.04,
-              vertical: screenHeight * 0.02,
+            //  vertical: screenHeight * 0.02,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

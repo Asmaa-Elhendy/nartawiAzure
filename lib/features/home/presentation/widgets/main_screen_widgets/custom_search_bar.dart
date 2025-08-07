@@ -19,36 +19,39 @@ class CustomSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height:fromSupplierDetail?height*.07 :height*.06,
-      width: fromSupplierDetail?width*.75:width,
+    return Padding(
+      padding:  EdgeInsets.only(bottom: height*.01),
+      child: Container(
+        height:fromSupplierDetail?height*.07 :height*.06,
+        width: fromSupplierDetail?width*.75:width,
 
-      child: TextField(
-        controller: controller,
+        child: TextField(
+          controller: controller,
 
-        decoration: InputDecoration(
-          hintText: 'search for water products...',
-          hintStyle: TextStyle(color: AppColors.greyDarktextIntExtFieldAndIconsHome,fontSize: 13,),
-          prefixIcon: IconButton(
-            icon: const Icon(Icons.search,color: AppColors.greyDarktextIntExtFieldAndIconsHome,),
-            onPressed: onSearch,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30.0),
-            borderSide: const BorderSide(
-              color: AppColors.primary, // Change this to your desired color
-              width: 1,
+          decoration: InputDecoration(
+            hintText: 'search for water products...',
+            hintStyle: TextStyle(color: AppColors.greyDarktextIntExtFieldAndIconsHome,fontSize: 13,),
+            prefixIcon: IconButton(
+              icon: const Icon(Icons.search,color: AppColors.greyDarktextIntExtFieldAndIconsHome,),
+              onPressed: onSearch,
             ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            borderSide: const BorderSide(
-              color: AppColors.primary, // Color when the field is focused
-              width: 1,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+              borderSide: const BorderSide(
+                color: AppColors.primary, // Change this to your desired color
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: const BorderSide(
+                color: AppColors.primary, // Color when the field is focused
+                width: 1,
+              ),
             ),
           ),
         ),

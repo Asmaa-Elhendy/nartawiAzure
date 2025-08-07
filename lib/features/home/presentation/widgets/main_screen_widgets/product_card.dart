@@ -246,7 +246,7 @@ Widget ProductTitle(double screenHeight,double screenWidth){
             ),
             child: Image.asset(
               "assets/images/home/main_page/company.png",
-              height: screenHeight * .03,
+              height: screenHeight * .03,//
               fit: BoxFit.cover,
             ),
           ),SizedBox(width: screenWidth*.02,),
