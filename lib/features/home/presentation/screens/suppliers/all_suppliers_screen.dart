@@ -42,8 +42,9 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding:  EdgeInsets.only(top: screenHeight*.04,right: screenWidth*.03,left:screenWidth*.03 ),
-              child: SizedBox(height: screenHeight*.8,
-                child: ListView(
+              child: Container(height: screenHeight*.8,
+                padding: EdgeInsets.zero,
+                child: ListView(padding:  EdgeInsets.zero,
                   children: [
                     BuildCardSupplier(context,screenHeight, screenWidth,true),
                     BuildCardSupplier(context,screenHeight, screenWidth,false),

@@ -15,7 +15,7 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
     child: Padding(
       padding:  EdgeInsets.only(bottom: screenHeight*.035),
       child: Container(
-        height: screenHeight*.133,
+        height: screenHeight*.133,//ss
         padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.01),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),

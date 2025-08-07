@@ -95,7 +95,7 @@ Widget BuildRoundedIconOnProduct({
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(fontWeight: FontWeight.w700,   fontSize: width * 0.036,overflow: TextOverflow.ellipsis),
+              style: TextStyle(fontWeight: FontWeight.w700,   fontSize: width * 0.034,overflow: TextOverflow.ellipsis),
               onChanged: onTextfieldChanged,
               onEditingComplete: onDone,
               onSubmitted: (value){

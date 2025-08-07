@@ -177,7 +177,7 @@ class _ProductCardState extends State<ProductCard> {
                                         '${(state.price).toStringAsFixed(2)}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
-                                          fontSize: widget.screenWidth * 0.036,
+                                          fontSize: widget.screenWidth * 0.034,
                                         ),overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
