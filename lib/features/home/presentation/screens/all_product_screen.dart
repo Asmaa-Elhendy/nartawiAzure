@@ -48,7 +48,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          TabBarFirstPage(),
+                          TabBarFirstPage(fromAllProducts:true),
 
                         ],
                       ),

@@ -193,8 +193,8 @@ import 'filter_overlay.dart';
 
 
 class TabBarFirstPage extends StatefulWidget {
-  const TabBarFirstPage({super.key});
-
+  bool fromAllProducts;
+  TabBarFirstPage({this.fromAllProducts=false});
   @override
   State<TabBarFirstPage> createState() => _TabBarFirstPageState();
 }
@@ -281,36 +281,42 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SingleChildScrollView(
-      child: Column(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: screenWidth * 0.04,
-            //  vertical: screenHeight * 0.02,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              horizontal: screenWidth * 0.04,),
+              //  vertical: screenHeight * 0.02,
+               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomSearchBar(
-                  key: _searchBarKey,
-                  controller: TextEditingController(),
-                  height: screenHeight,
-                  width: screenWidth,
-                  fromSupplierDetail: true,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomSearchBar(
+                      key: _searchBarKey,
+                      controller: TextEditingController(),
+                      height: screenHeight,
+                      width: screenWidth,
+                      fromSupplierDetail: true,
+                    ),
+                    BuildFilterButton(
+                      screenWidth,
+                      screenHeight,
+                      _toggleFilterMenu,
+
+                    ),
+                  ],
                 ),
-                BuildFilterButton(
-                  screenWidth,
-                  screenHeight,
-                  _toggleFilterMenu,
+                Wrap(
+                  spacing: 8.0, // gap between adjacent chips
+                  runSpacing: 4.0, // gap between lines
+                  children: <Widget>[...generate_tags(screenWidth,screenHeight)],
                 ),
+                BuildCompareButton(screenWidth, screenHeight, (){}),
               ],
             ),
           ),
-          Wrap(
-            spacing: 8.0, // gap between adjacent chips
-            runSpacing: 4.0, // gap between lines
-            children: <Widget>[...generate_tags(screenWidth,screenHeight)],
-          ),
+
 
           //       GridView.count(
           //         crossAxisCount: 3,childAspectRatio: 2.9,
