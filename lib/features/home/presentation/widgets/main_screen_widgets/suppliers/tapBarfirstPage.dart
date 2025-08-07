@@ -317,16 +317,6 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
             ),
           ),
 
-
-          //       GridView.count(
-          //         crossAxisCount: 3,childAspectRatio: 2.9,
-          //         shrinkWrap: true,
-          //         physics: NeverScrollableScrollPhysics(),
-          //         padding: const EdgeInsets.all(16),
-          //         crossAxisSpacing: 5,
-          //         mainAxisSpacing: 5,
-          // children: <Widget>[...generate_tags(screenWidth,screenHeight)],
-          // ),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
@@ -341,25 +331,26 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
                 title: 'Bottle',
+                  fromAllProducts:widget.fromAllProducts
               ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
                 title: 'Gallon',
-              ),
+                fromAllProducts:widget.fromAllProducts ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
                 title: 'Alkaline',
-              ),
+                fromAllProducts:widget.fromAllProducts ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
                 title: 'Coupon',
-              ),
+                fromAllProducts:widget.fromAllProducts ),
               // أضف المزيد من العناصر حسب الحاج
             ],
           ),

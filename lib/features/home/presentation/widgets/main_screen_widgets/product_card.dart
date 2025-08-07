@@ -6,6 +6,7 @@ import '../../../../../core/theme/colors.dart';
 import '../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../bloc/product_quantity/product_quantity_event.dart';
 import '../../bloc/product_quantity/product_quantity_state.dart';
+import 'checked_box_container.dart';
 import 'icon_on_product_card.dart';
 
 class ProductCard extends StatefulWidget {
@@ -13,12 +14,14 @@ class ProductCard extends StatefulWidget {
   double screenHeight;
   String icon;
   String title;
+  bool fromAllProducts;
 
   ProductCard({
     required this.screenWidth,
     required this.screenHeight,
     required this.icon,
     required this.title,
+    this.fromAllProducts=false
   });
 
   @override
@@ -213,6 +216,11 @@ class _ProductCardState extends State<ProductCard> {
                       ],
                     ),
                   ),
+                widget.fromAllProducts?  Positioned(
+                    top: widget.screenHeight * 0.01+widget.screenHeight*.138,
+                    left: widget.screenWidth * 0.02,
+                    child: CustomCheckboxExample(widget.screenWidth,widget.screenHeight),
+                  ):SizedBox(),
                 ],
               ),
             ),
