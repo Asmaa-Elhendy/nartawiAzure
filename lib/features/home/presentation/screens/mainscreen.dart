@@ -102,8 +102,11 @@ String? imageUrl=null;
                                    // Add more cards
                                  ],
                                ),
-                             ),
-                             BuildStretchTitleHome(screenWidth, "Popular Products",(){})
+                             ),SizedBox(height: screenHeight*.01,),
+                             BuildStretchTitleHome(screenWidth, "Popular Products",(){
+                               Navigator.pushNamed(context, '/allProducts');
+
+                             })
                            ]),
                      ],
                    ),

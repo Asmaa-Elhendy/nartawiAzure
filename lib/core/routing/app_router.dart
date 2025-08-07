@@ -4,6 +4,7 @@ import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
 import '../../features/auth/presentation/screens/sign_up.dart';
 import '../../features/auth/presentation/screens/verification_screen.dart';
+import '../../features/home/presentation/screens/all_product_screen.dart';
 import '../../features/home/presentation/screens/popular_categories_screen.dart';
 import '../../features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
 import '../../features/home/presentation/screens/home.dart';
@@ -40,6 +41,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SupplierDetails());
       case '/popularCategories':
         return MaterialPageRoute(builder: (_) => const PopularCategoriesScreen());
+      case '/allProducts':
+        return MaterialPageRoute(builder: (_) => const AllProductScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

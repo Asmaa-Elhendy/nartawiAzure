@@ -36,18 +36,18 @@ class CustomSearchBar extends StatelessWidget {
               onPressed: onSearch,
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(24.0),
 
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30.0),
+              borderRadius: BorderRadius.circular(24.0),
               borderSide: const BorderSide(
                 color: AppColors.primary, // Change this to your desired color
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(24.0),
               borderSide: const BorderSide(
                 color: AppColors.primary, // Color when the field is focused
                 width: 1,
