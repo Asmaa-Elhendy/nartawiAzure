@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
@@ -43,6 +44,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PopularCategoriesScreen());
       case '/allProducts':
         return MaterialPageRoute(builder: (_) => const AllProductScreen());
+      case '/productDetail':
+        return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

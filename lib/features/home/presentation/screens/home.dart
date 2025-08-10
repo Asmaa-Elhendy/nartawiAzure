@@ -289,7 +289,8 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            child: PageView(
+            child:
+            PageView(
               controller: pageController,
 
               children: [

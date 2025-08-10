@@ -49,10 +49,11 @@ Widget BuildRoundedIconOnProduct({
   required TextEditingController quantityCntroller,
   ValueChanged<String>? onTextfieldChanged,
   VoidCallback? onDone,
+  bool fromDetailedScreen=false
 }){
   return Container(
-
-    width: isPlus?width*.2:width*.15, // الحجم العرض
+    padding: fromDetailedScreen?EdgeInsets.symmetric(horizontal: width*.02):EdgeInsets.zero,
+    width:fromDetailedScreen?width*.6:isPlus?width*.2:width*.15, // الحجم العرض
     height: height*.045, // الحجم الارتفاع
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
@@ -70,7 +71,7 @@ Widget BuildRoundedIconOnProduct({
       child:
     //  isPlus?
       Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment:fromDetailedScreen? MainAxisAlignment.spaceBetween: MainAxisAlignment.center,
         children: [
             GestureDetector(
               onTap: onDecrease,
