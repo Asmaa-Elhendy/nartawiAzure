@@ -33,7 +33,7 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            BuildSupplierRatingCard(screenWidth, screenHeight, items),
+            BuildSupplierRatingCard(screenWidth, screenHeight, items,'Rating Summary'),
             Padding(
               padding: EdgeInsets.symmetric(
                 vertical: screenHeight * 0.02,

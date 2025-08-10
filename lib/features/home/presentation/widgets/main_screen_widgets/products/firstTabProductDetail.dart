@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
-
 import '../../../../../../core/theme/colors.dart';
+
 Widget BuildFirstTabProductDetail(double screenWidth,double screenHeight){
   return  Column(
     children: [
-      SizedBox(height: screenHeight*.03,),
+      SizedBox(height: screenHeight*.02,),
       Row(
         children: [
           Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Size : 5 Gallons')),

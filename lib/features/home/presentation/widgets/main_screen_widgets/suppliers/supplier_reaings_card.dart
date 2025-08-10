@@ -4,13 +4,15 @@ import '../../../../../../core/theme/colors.dart';
 import '../../../../../../core/theme/text_styles.dart';
 import 'build_row_of_stars_ratings.dart';
 
-Widget BuildSupplierRatingCard(double screenWidth,double screenHeight,List items){
+Widget BuildSupplierRatingCard(double screenWidth,double screenHeight,List items,String mainTitle,{bool isFromProductDetail=false}){
   return  Container(
     //   height: screenHeight*.3,
     width: screenWidth,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(16),
-      color: AppColors.whiteColor,
+      color: isFromProductDetail?
+          AppColors.tabViewBackground
+          :AppColors.whiteColor,
     ),
     child: Padding(
       padding: EdgeInsets.only(
@@ -23,7 +25,7 @@ Widget BuildSupplierRatingCard(double screenWidth,double screenHeight,List items
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'Rating Summary',
+            mainTitle,
             style: TextStyle(
               fontSize: screenWidth * .04,
               fontWeight: FontWeight.w600,
