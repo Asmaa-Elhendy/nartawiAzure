@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../widgets/background_home_Appbar.dart';
+import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';
 import '../widgets/main_screen_widgets/build_tapped_blue_title.dart';
 import '../widgets/main_screen_widgets/products/product_card.dart';
@@ -34,7 +37,26 @@ String? imageUrl=null;
     return Scaffold(
       extendBodyBehindAppBar: true, // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
       backgroundColor: Colors.transparent, // في حالة الصورة في الخلفية
-      body: Padding(
+      body:
+      Stack(
+        children: [
+        Container(
+        width: screenWidth,
+        height: screenHeight,
+        color: AppColors.backgrounHome,
+      ),
+        buildBackgroundAppbar(screenWidth),
+        BuildForegroundappbarhome(
+          screenHeight: screenHeight,
+          screenWidth: screenWidth,
+          title: 'NARTAWI',
+          is_returned: false,
+        ),
+        Positioned.fill(
+          top: MediaQuery.of(context).padding.top + screenHeight * .1,
+          child:
+
+      Padding(
         padding:  EdgeInsets.only(top: screenHeight*.04,bottom: screenHeight*.1),
         child: SingleChildScrollView(
           child: Padding(
@@ -69,7 +91,9 @@ String? imageUrl=null;
                                ],
                              ),
                              BuildStretchTitleHome(screenWidth, "Featured Stores",(){
-                               Navigator.pushNamed(context, '/allSuppliers');
+                          //     Navigator.pushNamed(context, '/allSuppliers');
+                               Navigator.of(context).push(MaterialPageRoute(builder: (_) => AllSuppliersScreen()));
+
 
                              }),
                              SizedBox(
@@ -155,6 +179,8 @@ String? imageUrl=null;
           ),
         ),
       ),
+
+        )])
     );
 
   }
