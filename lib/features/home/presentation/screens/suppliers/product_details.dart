@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/price_widget.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tab_bar_view.dart';
 
 
 import '../../../../../core/theme/colors.dart';
@@ -24,13 +26,16 @@ class ProductDetailScreen extends StatefulWidget {
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends State<ProductDetailScreen>
+  with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   late final TextEditingController _quantityController;
   late final ProductQuantityBloc _quantityBloc;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
     _quantityController = TextEditingController(text: '1');
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
@@ -38,6 +43,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }  @override
   void dispose() {
+    _tabController.dispose();
+
     _quantityController.dispose();
     _quantityBloc.close();
     super.dispose();
@@ -64,6 +71,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 screenHeight: screenHeight,
                 screenWidth: screenWidth,title: 'Product Details',is_returned: true,
               ),
+              //positioned.fill
               Positioned.fill(
                   top: MediaQuery.of(context).padding.top + screenHeight * .1,
                   child:
@@ -194,6 +202,64 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                   ],
                                                 ),
                                               ),
+                                              Container(
+                                                padding: EdgeInsets.symmetric(vertical: screenHeight*.004,horizontal: screenWidth*.004),
+                                                margin: EdgeInsets.symmetric(horizontal: screenWidth*.04),
+                                                height: screenHeight*.05,
+                                                // width: widget.width-widget.width*.04,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.tabViewBackground,
+                                                  borderRadius: BorderRadius.circular(
+                                                    8,
+                                                  ),
+
+                                                ),
+                                                child:
+                                              TabBar(
+                                                controller: _tabController,
+                                                // give the indicator a decoration (color and border radius)
+                                                indicator: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(
+                                                    8,
+                                                  ),
+
+                                                  color: AppColors.whiteColor,
+                                                ),indicatorSize: TabBarIndicatorSize.tab,dividerColor: Colors.transparent,
+                                                labelStyle: TextStyle(fontWeight: FontWeight.w600,color: AppColors.primary),
+                                                unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
+
+                                                tabs: [
+                                                  // first tab [you can add an icon using the icon property]
+                                                  SizedBox(
+                                                    width:screenWidth*.5,
+                                                    child: Tab(
+                                                      text: 'Product Details',
+
+                                                    ),
+                                                  ),
+
+                                                  // second tab [you can add an icon using the icon property]
+                                                  SizedBox(
+                                                    width:screenWidth*.5,
+                                                    child: Tab(
+                                                      text: 'Reviews',
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                        ),
+                                              SizedBox(
+                                                height: screenHeight * 0.3, // or any height you want
+
+                                                child: TabBarView(
+                                                  controller: _tabController,
+                                                  children: [
+                                                    BuildFirstTabProductDetail(screenWidth, screenHeight)  // first tab bar view widget
+                                                  ,
+                                                  Text('2')
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -223,6 +289,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         ],
                                       ),
                                     ),
+
 
 
 

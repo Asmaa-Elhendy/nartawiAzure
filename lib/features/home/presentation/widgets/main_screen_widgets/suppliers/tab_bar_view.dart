@@ -40,6 +40,9 @@ class _StackOverState extends State<StackOver>
           children: [
             // give the tab bar a height [can change height to preferred height]
             Container(
+              //add new padding for tapbar:
+              padding: EdgeInsets.symmetric(vertical: widget.height*.004,horizontal:  widget.width*.004),
+
               margin: EdgeInsets.symmetric(horizontal: widget.width*.04),
               height: widget.height*.05,
              // width: widget.width-widget.width*.04,
