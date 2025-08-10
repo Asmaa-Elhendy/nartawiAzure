@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/suppliers/supplier_detail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 
 import '../../../../../../core/theme/colors.dart';
@@ -9,7 +10,8 @@ import '../../../../../../core/theme/colors.dart';
 Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenWidth,bool isFeatured){
   return  GestureDetector(
     onTap: (){
-      Navigator.pushNamed(context, '/supplierDetail');
+      // Navigator.pushNamed(context, '/supplierDetail');
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => SupplierDetails()));
 
     },
     child: Padding(

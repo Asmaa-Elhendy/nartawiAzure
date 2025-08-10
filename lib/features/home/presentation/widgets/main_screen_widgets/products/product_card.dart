@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../bloc/product_quantity/product_quantity_event.dart';
@@ -53,7 +54,9 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.pushNamed(context, '/productDetail');
+        // Navigator.pushNamed(context, '/productDetail');
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
+
       },
       child: BlocProvider.value(
         value: _quantityBloc,

@@ -568,6 +568,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     } else {
       if (index != 2) {
         setState(() => _tabIndex = index);
+
       }
 
       switch (_tabIndex) {

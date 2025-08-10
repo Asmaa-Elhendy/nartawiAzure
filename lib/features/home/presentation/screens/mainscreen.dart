@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/all_product_screen.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/popular_categories_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
@@ -111,7 +113,9 @@ String? imageUrl=null;
                                ),
                              ),
                              BuildStretchTitleHome(screenWidth, "Popular Categories",(){
-                               Navigator.pushNamed(context, '/popularCategories');
+                               // Navigator.pushNamed(context, '/popularCategories');
+                               Navigator.of(context).push(MaterialPageRoute(builder: (_) => PopularCategoriesScreen()));
+
                              }),
                              SizedBox(
                                height: screenHeight * 0.15, // Adjust height as needed
@@ -128,7 +132,8 @@ String? imageUrl=null;
                                ),
                              ),SizedBox(height: screenHeight*.01,),
                              BuildStretchTitleHome(screenWidth, "Popular Products",(){
-                               Navigator.pushNamed(context, '/allProducts');
+                               // Navigator.pushNamed(context, '/allProducts');
+                               Navigator.of(context).push(MaterialPageRoute(builder: (_) => AllProductScreen()));
 
                              })
                            ]),
