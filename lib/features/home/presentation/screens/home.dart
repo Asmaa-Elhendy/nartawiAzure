@@ -9,6 +9,7 @@ import 'package:newwwwwwww/features/home/presentation/screens/mainscreen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Appbar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../../core/theme/colors.dart';
+import '../navigation_bar_methods.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,16 +63,185 @@ class _HomeScreenState extends State<HomeScreen>
       color: AppColors.whiteColor,
       width: screenWidth * .12,
     );
-
+    onTabTapped(screenWidth,_tabIndex);
     super.initState();
+  }
+  void onTabTapped(double screenWidth,int index) {
+    log(icons[index].toString());
+    log((myTitle.value == index).toString());
+    //pageController.jumpToPage(index);
+    if (myTitle.value == index) {
+      myTitle.value = 12;
+      setState(() {
+        _tabIndex = 2;
+      });
+
+      // originalTabs=['Orders','Coupons','Home','Favourites','Profile'];
+      icons = [
+        Icon(
+          Icons.format_list_numbered,
+          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          size: screenWidth * .06,
+        ),
+        Iconify(
+          Mdi.coupon_outline,
+          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          size: screenWidth * .06,
+        ),
+        SizedBox(),
+        Iconify(
+          Mdi.heart_outline,
+          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          size: screenWidth * .06,
+        ),
+        Iconify(
+          Carbon.user_profile,
+          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          size: screenWidth * .06,
+        ),
+      ];
+      logoCenter = Image.asset(
+        "assets/images/onboaring/Logo.png",
+        color: AppColors.whiteColor,
+        width: screenWidth * .12,
+      );
+    }
+    else {
+      if (index == 2) {
+      } else {
+        setState(() => _tabIndex = index);
+      }
+      log('index is     ' + _tabIndex.toString());
+      if (_tabIndex == 0) {
+        logoCenter = Icon(
+          Icons.format_list_numbered,
+          color: AppColors.whiteColor,
+          size: screenWidth * .06,
+        );
+        icons = [
+          Image.asset(
+            "assets/images/onboaring/Logo.png",
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            width: screenWidth * .08,
+          ),
+          Iconify(
+            Mdi.coupon_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          SizedBox(),
+          Iconify(
+            Mdi.heart_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Iconify(
+            Carbon.user_profile,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+        ];
+      } else if (_tabIndex == 1) {
+        logoCenter = Iconify(
+          Mdi.coupon_outline,
+          color: AppColors.whiteColor,
+          size: screenWidth * .06,
+        );
+        icons = [
+          Icon(
+            Icons.format_list_numbered,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Image.asset(
+            "assets/images/onboaring/Logo.png",
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            width: screenWidth * .08,
+          ),
+          SizedBox(),
+          Iconify(
+            Mdi.heart_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Iconify(
+            Carbon.user_profile,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+        ];
+      } else if (_tabIndex == 3) {
+        logoCenter = Iconify(
+          Mdi.heart_outline,
+          color: AppColors.whiteColor,
+          size: screenWidth * .06,
+        );
+        icons = [
+          Icon(
+            Icons.format_list_numbered,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Iconify(
+            Mdi.coupon_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          SizedBox(),
+          Image.asset(
+            "assets/images/onboaring/Logo.png",
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            width: screenWidth * .08,
+          ),
+          Iconify(
+            Carbon.user_profile,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+        ];
+      }
+      else if (_tabIndex == 4) {
+        logoCenter = Iconify(
+          Carbon.user_profile,
+          color: AppColors.whiteColor,
+          size: screenWidth * .06,
+        );
+        icons = [
+          Icon(
+            Icons.format_list_numbered,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Iconify(
+            Mdi.coupon_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          SizedBox(),
+          Iconify(
+            Mdi.heart_outline,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            size: screenWidth * .06,
+          ),
+          Image.asset(
+            "assets/images/onboaring/Logo.png",
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            width: screenWidth * .08,
+          ),
+        ];
+      }
+      //}
+
+      setState(() {});
+    }
   }
 
   late Widget logoCenter;
   late double screenWidth;
   late List<Widget> icons;
-
   @override
   Widget build(BuildContext context) {
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
