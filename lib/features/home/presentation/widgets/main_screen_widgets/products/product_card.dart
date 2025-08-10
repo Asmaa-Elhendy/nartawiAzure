@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import '../../../../../core/theme/colors.dart';
-import '../../bloc/product_quantity/product_quantity_bloc.dart';
-import '../../bloc/product_quantity/product_quantity_event.dart';
-import '../../bloc/product_quantity/product_quantity_state.dart';
-import 'checked_box_container.dart';
+import '../../../../../../core/theme/colors.dart';
+import '../../../bloc/product_quantity/product_quantity_bloc.dart';
+import '../../../bloc/product_quantity/product_quantity_event.dart';
+import '../../../bloc/product_quantity/product_quantity_state.dart';
+import '../checked_box_container.dart';
 import 'icon_on_product_card.dart';
 
 class ProductCard extends StatefulWidget {

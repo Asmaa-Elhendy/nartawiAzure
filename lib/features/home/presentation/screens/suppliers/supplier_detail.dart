@@ -4,7 +4,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
-import '../../widgets/main_screen_widgets/product_card.dart';
+import '../../widgets/main_screen_widgets/products/product_card.dart';
 import '../../widgets/main_screen_widgets/suppliers/tab_bar_view.dart';
 
 class SupplierDetails extends StatefulWidget {

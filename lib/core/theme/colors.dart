@@ -25,6 +25,9 @@ class AppColors {
   static const orangeColor=Color(0xffF9B908);
   static final orangeLight=orangeColor.withValues(alpha: 0.16);
   static const tabViewBackground=Color(0xffe6eaec);
+  static const backgroundCardAlert=Color(0xfff2f2f2);
+  static const backgroundAlert= Color(0xfffcfcfc);
+
 
 
   static const LinearGradient primaryGradient = LinearGradient(

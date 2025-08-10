@@ -10,7 +10,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';
 import '../widgets/main_screen_widgets/build_tapped_blue_title.dart';
-import '../widgets/main_screen_widgets/product_card.dart';
+import '../widgets/main_screen_widgets/products/product_card.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

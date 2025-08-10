@@ -5,10 +5,11 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../../../core/theme/colors.dart';
 
 
-Widget BuildInfoButton(
+Widget BuildInfoAndAddToCartButton(
     double width,
     double height,
     String title,
+    bool info,
     void Function()? fun,
     ) {
   return Padding(
@@ -24,18 +25,20 @@ Widget BuildInfoButton(
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Iconify(
+          info?  Iconify(
               MaterialSymbols.info_outline,
               size: 18,
               color: AppColors.whiteColor,
-            ),SizedBox(
+            ):SizedBox()
+            ,
+            info?  SizedBox(
               width: width*.02,
-            ),
+            ):SizedBox(),
             Text(
               title,
               style: TextStyle(
                 color: AppColors.whiteColor,
-                fontSize: 16,
+                fontSize: width*.036,
                 fontWeight: FontWeight.w500,
               ),
             ),

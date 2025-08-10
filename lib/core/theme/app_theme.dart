@@ -5,12 +5,13 @@ import 'colors.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
+    dialogBackgroundColor: AppColors.backgroundAlert,
     fontFamily: 'Poppins',
     primaryColor: AppColors.primary,
     scaffoldBackgroundColor: Colors.white,
     textTheme: AppTextStyles.textTheme,
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xfffcfcfc),
       elevation: 1,
       iconTheme: IconThemeData(color: AppColors.primary),
     ),
@@ -18,6 +19,8 @@ class AppTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
+    dialogBackgroundColor: AppColors.backgroundAlert,
+
     fontFamily: 'Poppins',
     brightness: Brightness.dark,
     textTheme: AppTextStyles.textTheme,

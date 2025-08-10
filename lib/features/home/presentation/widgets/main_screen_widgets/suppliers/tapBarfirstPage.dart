@@ -187,7 +187,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
 import '../custom_search_bar.dart';
-import '../product_card.dart';
+import '../products/product_card.dart';
 import 'build_filter_button.dart';
 import 'filter_overlay.dart';
 
@@ -312,7 +312,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                   runSpacing: 4.0, // gap between lines
                   children: <Widget>[...generate_tags(screenWidth,screenHeight)],
                 ),
-                BuildCompareButton(screenWidth, screenHeight, (){}),
+                widget.fromAllProducts?  BuildCompareButton(screenWidth, screenHeight,context):SizedBox()
               ],
             ),
           ),

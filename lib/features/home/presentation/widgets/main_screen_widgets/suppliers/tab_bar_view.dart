@@ -3,7 +3,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 import '../../../../../../core/theme/colors.dart';
-import '../product_card.dart';
+import '../products/product_card.dart';
 
 class StackOver extends StatefulWidget {
   @override
