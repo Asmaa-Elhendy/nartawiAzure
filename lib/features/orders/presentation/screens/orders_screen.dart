@@ -3,6 +3,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/all_orders_screen.dart';
+import '../widgets/order_card.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -80,7 +81,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                             ),
                             Container(
                               padding: EdgeInsets.symmetric(vertical: screenHeight*.004,horizontal: screenWidth*.004),
-                              margin: EdgeInsets.symmetric(horizontal: screenWidth*.04),
+                              margin: EdgeInsets.symmetric(horizontal: screenWidth*.04,vertical: screenHeight*.03),
                               height: screenHeight*.05,
                               // width: widget.width-widget.width*.04,
                               decoration: BoxDecoration(
@@ -132,7 +133,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                   SizedBox(
                                     width:screenWidth*.25,
                                     child: Tab(
-                                      text: 'Cancelled',
+                                      text: 'Canceled',
 
                                     ),
                                   ),
@@ -144,11 +145,43 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                 controller: _tabController,
 
                                 children: [
-                                  AllOrdersScreen()  // first tab bar view widget
+                                  Container(
+                                    child:ListView(
+                                      padding: EdgeInsetsGeometry.zero,
+                                      children: [
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Cancelled','Pending Payment'),
+                                      ],),
+                                  ) // first tab bar view widget
                                   ,
-                                  Text('a'),
-                                  Text('a'),
-                                  Text('a')
+                                  Container(
+                                    child:ListView(
+                                      padding: EdgeInsetsGeometry.zero,
+                                      children: [
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Paid'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
+                                      ],),
+                                  ),
+                                  Container(
+                                    child:ListView(
+                                      padding: EdgeInsetsGeometry.zero,
+                                      children: [
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Pending Payment'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Pending Payment'),
+                                      ],),
+                                  ),
+                                  Container(
+                                    child:ListView(
+                                      padding: EdgeInsetsGeometry.zero,
+                                      children: [
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Paid'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
+                                      ],),
+                                  )
                                 ],
                               ),
                             ),
