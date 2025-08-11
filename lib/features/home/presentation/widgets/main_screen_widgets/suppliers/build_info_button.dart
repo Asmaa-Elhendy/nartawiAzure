@@ -11,6 +11,7 @@ Widget BuildInfoAndAddToCartButton(
     String title,
     bool info,
     void Function()? fun,
+{bool fromOrderDetail=false}
     ) {
   return Padding(
     padding:  EdgeInsets.symmetric(vertical: height*.01),
@@ -18,27 +19,34 @@ Widget BuildInfoAndAddToCartButton(
       onTap: fun,
       child: Container(
         //  width:  widget.width * .38,
-        height: height * .05,
+        height:        fromOrderDetail==true?height*.07: height * .05,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          info?  Iconify(
+        fromOrderDetail==true?
+          Iconify(
+          MaterialSymbols.star_outline_rounded,  // This uses the Material Symbols "star" icon
+          size:width*.052,
+          color: AppColors.whiteColor,
+        )
+            :info?  Iconify(
               MaterialSymbols.info_outline,
-              size: 18,
+          size:width*.052,
               color: AppColors.whiteColor,
             ):SizedBox()
             ,
             info?  SizedBox(
               width: width*.02,
             ):SizedBox(),
+            SizedBox(width: width*.02,),
             Text(
               title,
               style: TextStyle(
                 color: AppColors.whiteColor,
-                fontSize: width*.036,
+                fontSize: width*.034,
                 fontWeight: FontWeight.w500,
               ),
             ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/delivery_information_report.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payment_information_report.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/reason_for_cancelation.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/seller_information_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -111,6 +113,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                             OrderDeliveryCard(screenWidth, screenHeight),
                             OrderPaymentCard(screenWidth, screenHeight,widget.paymentStatus),
                             OrderSellerInformationCard(screenWidth, screenHeight),
+                           widget.orderStatus=='Delivered'?
+                           BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Leave Review', false, (){},fromOrderDetail: true):
+                           widget.orderStatus=='Canceled'?
+                           ReasonForCancellationCard(screenWidth, screenHeight)
+                          : SizedBox(),
                             SizedBox(height: screenHeight*.04)
 
 

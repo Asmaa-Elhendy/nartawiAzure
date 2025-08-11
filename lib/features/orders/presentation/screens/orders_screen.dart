@@ -150,7 +150,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                       children: [
                                         BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
                                         BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Cancelled','Pending Payment'),
+                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
                                       ],),
                                   ) // first tab bar view widget
                                   ,
