@@ -55,7 +55,7 @@
     Widget build(BuildContext context) {
       final screenHeight = MediaQuery.of(context).size.height;
       final screenWidth = MediaQuery.of(context).size.width;
-      return Scaffold(
+      return  Scaffold(
           extendBody: true,
           backgroundColor: Colors.transparent, // في حالة الصورة في الخلفية
 

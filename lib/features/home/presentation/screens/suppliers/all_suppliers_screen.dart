@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/presentation/screens/home.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_card.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
@@ -13,18 +14,22 @@ class AllSuppliersScreen extends StatefulWidget {
 
 class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
   final TextEditingController _SearchController = TextEditingController();
+  final GlobalKey<NavigatorState> _nestedNavigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void dispose() {
     _SearchController.dispose();
     super.dispose();
   }
   String? imageUrl=null;
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-     backgroundColor: AppColors.whiteColor, // في حالة الصورة في الخلفية
+    return
+      Scaffold(
+           backgroundColor: AppColors.whiteColor, // في حالة الصورة في الخلفية
       body:
       Stack(
         children: [
@@ -62,7 +67,7 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
       ),
 
 
-    );
+          );
 
   }
 }

@@ -93,6 +93,10 @@ flutter:
     - assets/images/home/main_page/supplier_detail/filter.svg
     - assets/images/home/main_page/supplier_detail/empty-state.svg
     - assets/images/home/main_page/compare.svg
+    - assets/images/orders/calendar.svg
+    - assets/images/orders/order.jpg
+    - assets/images/orders/hugeicons_reload.svg
+    - assets/images/orders/hugeicons_view.svg
   fonts:
     - family: Poppins
       fonts:

@@ -11,6 +11,7 @@ import '../../features/home/presentation/screens/suppliers/all_suppliers_screen.
 import '../../features/home/presentation/screens/home.dart';
 import '../../features/home/presentation/screens/mainscreen.dart';
 import '../../features/home/presentation/screens/suppliers/supplier_detail.dart';
+import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
 // Import other screens as needed
@@ -46,6 +47,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AllProductScreen());
       case '/productDetail':
         return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
+      case '/ordersScreen':
+        return MaterialPageRoute(builder: (_) => const OrdersScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

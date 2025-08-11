@@ -8,6 +8,7 @@ import 'package:newwwwwwww/features/auth/presentation/widgets/buildFloadtActionB
 import 'package:newwwwwwww/features/home/presentation/screens/mainscreen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Appbar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import 'package:newwwwwwww/features/orders/presentation/screens/orders_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
@@ -707,7 +708,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         Widget page;
         switch (index) {
           case 0:
-            page = const Center(child: Text("Person Tab"));
+            page = const OrdersScreen();
             break;
           case 1:
             page = const Center(child: Text("Favorite Tab"));

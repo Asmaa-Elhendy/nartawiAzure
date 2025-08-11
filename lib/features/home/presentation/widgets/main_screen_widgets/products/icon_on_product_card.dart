@@ -78,7 +78,7 @@ Widget BuildRoundedIconOnProduct({
               child: Iconify(
                       Ic.baseline_minus, // استبدلها بالأيقونة اللي تحبها
               size: height*.03,
-              color: Colors.red,
+              color: AppColors.redColor,
                         ),
             ),
           // Center(

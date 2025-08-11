@@ -12,12 +12,15 @@ Widget buildTitleWidget(BuildContext context,double width,String title){
         onTap: (){
           Navigator.pop(context);
         },
-        child: Iconify(
-          MaterialSymbols.arrow_back_ios,
-          size: 18,
-          color: AppColors.textLight,
+        child: Padding(
+          padding:  EdgeInsets.only(right: width*.025),
+          child: Iconify(
+            MaterialSymbols.arrow_back_ios,
+            size: 18,
+            color: AppColors.textLight,
+          ),
         ),
-      ),SizedBox(width: width*.02,),
+      ),
       Text(title,style:AppTextStyles.TitlePage,)
     ],
   );
