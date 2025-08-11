@@ -1,55 +1,67 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/theme/colors.dart';
+import '../screens/order_details.dart';
 
 Widget BuildOrderButtons(
+  BuildContext context,
   double screenWidth,
   double screenHeight,
-  String status,
+  String orderStatus,
+  String paymentStatus
 ) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
-          child: Container(
-            padding: EdgeInsetsGeometry.symmetric(
-              vertical: screenHeight * .01,
-              horizontal:status=='Pending'?screenWidth*.006: screenWidth * .015,
-            ),
-            height: screenHeight * .055,
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
+          child: InkWell(
+            onTap: (){
+              Navigator.push
+                (context, MaterialPageRoute(builder: (context)=>
+                  OrderDetailScreen(orderStatus: orderStatus,paymentStatus: paymentStatus,)));
 
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/images/orders/hugeicons_view.svg',
-                  color: AppColors.whiteColor,
-                  width: screenWidth * .05,
-                  // height: screenHeight*.1,
+            },
+            child: Padding(
+              padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
+              child: Container(
+                padding: EdgeInsetsGeometry.symmetric(
+                  vertical: screenHeight * .01,
+                  horizontal:orderStatus=='Pending'?screenWidth*.006: screenWidth * .015,
                 ),
-                SizedBox(width: screenWidth * .01),
-                Flexible(
-                  child: Text(
-                    'View Details',
-                    style: TextStyle(
+                height: screenHeight * .055,
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/images/orders/hugeicons_view.svg',
                       color: AppColors.whiteColor,
-                      fontSize: screenWidth * .029,
-                      fontWeight: FontWeight.w600,
-                    ),        overflow: TextOverflow.visible, // To avoid overflow text
-maxLines: 1,
-                  ),
+                      width: screenWidth * .05,
+                      // height: screenHeight*.1,
+                    ),
+                    SizedBox(width: screenWidth * .01),
+                    Flexible(
+                      child: Text(
+                        'View Details',
+                        style: TextStyle(
+                          color: AppColors.whiteColor,
+                          fontSize: screenWidth * .029,
+                          fontWeight: FontWeight.w600,
+                        ),        overflow: TextOverflow.visible, // To avoid overflow text
+                    maxLines: 1,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+
 
       Expanded(
         child: Padding(
@@ -57,7 +69,7 @@ maxLines: 1,
           child: Container(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: screenHeight * .01,
-              horizontal:status=='Pending'?screenWidth*.006:screenWidth * .015,
+              horizontal:orderStatus=='Pending'?screenWidth*.006:screenWidth * .015,
             ),
             height: screenHeight * .055,
             decoration: BoxDecoration(
@@ -92,7 +104,7 @@ maxLines: 1,
           ),
         ),
       ),
-      status == 'Pending'
+      orderStatus == 'Pending'
           ? Expanded(
               child: Padding(
                 padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
