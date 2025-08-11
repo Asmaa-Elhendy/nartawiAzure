@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/delivery_information_report.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payment_information_report.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/seller_information_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -109,6 +110,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                             OrderSummaryCard(screenWidth,screenHeight),
                             OrderDeliveryCard(screenWidth, screenHeight),
                             OrderPaymentCard(screenWidth, screenHeight,widget.paymentStatus),
+                            OrderSellerInformationCard(screenWidth, screenHeight),
                             SizedBox(height: screenHeight*.04)
 
 

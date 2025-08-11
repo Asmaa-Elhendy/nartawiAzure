@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/core/theme/text_styles.dart';
-import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
-
 import '../../../../core/theme/colors.dart';
+import 'order_image_network_widget.dart';
 
-Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentStatus) {
+Widget OrderSellerInformationCard(double screenWidth, double screenHeight) {
+  String imageUrl='';
+
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .02,
@@ -32,7 +32,7 @@ Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentSt
         // Title
         Center(
           child: Text(
-            'Payment Summary',
+            'Seller Information',
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: screenWidth * .04,
@@ -44,30 +44,24 @@ Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentSt
 
         // Item 1
 
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Payment Method', style: AppTextStyles.textSummaryStyle),
-                Text(
-                paymentStatus=='Paid'?  'eWallet':'Cash On Delivery',
-                  style: TextStyle(
-                    color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
+                Padding(
+                  padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl),
+                      SizedBox(width: screenWidth*.03,),
+
+                      Center(child: Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),)),
+
+                    ],
                   ),
                 ),
-              ],
-            ),
-            BuildPaymentStatus(screenWidth, screenHeight, paymentStatus,fromOrderDetail: true)
-          ],
-        ),
+
 
 
       ],
     ),
   );
 }
+

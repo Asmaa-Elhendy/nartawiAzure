@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/orders_buttons.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
 import '../../../../core/theme/colors.dart';
+import 'order_image_network_widget.dart';
 import 'order_status_widget.dart';
 
 
@@ -61,34 +62,9 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                child: Row(mainAxisAlignment: MainAxisAlignment.start,
                  crossAxisAlignment: CrossAxisAlignment.start,
                  children: [
-                   Container(
-                                 //    width: screenWidth*.1,
-                      height: screenHeight * .09,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.transparent
-                      ),
-                      child: ClipOval(
-                        child:
-                        imageUrl==null||imageUrl==''?
-                        Image.asset(
-                            'assets/images/orders/order.jpg',
-                         fit: BoxFit.cover,
-                        )
-                            :
-                        Image.network(
-                          imageUrl! ,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                                'assets/images/orders/order.jpg'
-                              //  fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                   SizedBox(width: screenWidth*.02,),
+                   BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl),
+
+                   SizedBox(width: screenWidth*.03,),
                    Column(
                      crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.start,
