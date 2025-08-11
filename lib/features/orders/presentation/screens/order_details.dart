@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/delivery_information_report.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -103,7 +104,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                                 BuildOrderStatus(screenHeight, screenWidth, widget.orderStatus,fromOrderDetail: true)
                               ],
                             ),
-                            OrderSummaryCard(screenWidth,screenHeight)
+                            SizedBox(height: screenHeight*.01,),
+                            OrderSummaryCard(screenWidth,screenHeight),
+                            OrderDeliveryCard(screenWidth, screenHeight)
 
 
                           ],

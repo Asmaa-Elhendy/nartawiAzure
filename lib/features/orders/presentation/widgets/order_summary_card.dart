@@ -5,6 +5,9 @@ import '../../../../core/theme/colors.dart';
 
 Widget OrderSummaryCard(double screenWidth, double screenHeight) {
   return Container(
+    margin: EdgeInsets.symmetric(
+      vertical: screenHeight * .0,
+    ),
     padding: EdgeInsets.symmetric(
       vertical: screenHeight * .02,
       horizontal: screenWidth * .03,
@@ -12,14 +15,14 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight) {
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(16),
       color: AppColors.whiteColor,
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.shadowColor,
-          offset: Offset(0, 2),
-          blurRadius: 8,
-          spreadRadius: 0,
-        ),
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: AppColors.shadowColor,
+      //     offset: Offset(0, 2),
+      //     blurRadius: 8,
+      //     spreadRadius: 0,
+      //   ),
+      // ],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +187,7 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight) {
                     horizontal: screenWidth*.03,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: AppColors.backgrounHome,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(mainAxisSize: MainAxisSize.min,
