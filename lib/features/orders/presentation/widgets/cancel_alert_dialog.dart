@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/custom_text_field_alert.dart';
 
 import '../../../../core/theme/colors.dart';
 
@@ -22,7 +23,7 @@ class _CancelAlertDialogState extends State<CancelAlertDialog> {
         width: MediaQuery.of(context).size.width * 0.94, // 90% screen width
         height: MediaQuery.of(context).size.height * 0.5, // adjust height
         child: Padding(
-          padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.05),
+          padding:  EdgeInsets.symmetric(vertical: screenHeight*.02,horizontal: screenWidth*.05),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment:CrossAxisAlignment.start,
@@ -57,35 +58,8 @@ class _CancelAlertDialogState extends State<CancelAlertDialog> {
                     fontSize: screenWidth * .04,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    vertical: screenHeight * .02,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * .035,
-                    horizontal: screenWidth * .03,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome, // 👈 Border color
-                      width: .5, // 👈 Optional: Border thickness
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsetsGeometry.symmetric(horizontal: screenWidth*.01),
-                      labelText: 'please provide a reason for cancellation this order', // Optional: A label for the text field
-                      border: InputBorder.none, // Removes the default underline border
-                      labelStyle: TextStyle(
-                        fontSize: screenWidth * .036,color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                        fontWeight: FontWeight.w300,),
-                    ),
-                    keyboardType: TextInputType.multiline, // Enables multi-line input on the soft keyboard
-                    minLines: 1, // Optional: Sets the initial minimum number of lines
-                    maxLines: 5, // Optional: Limits the maximum number of visible lines before scrolling
-                    // or maxLines: null, // Allows the text field to expand indefinitely based on content
-                  ),
+                CustomTextFieldAlert(
+                    'please provide a reason for cancellation this order'
                 ),
                 CancelOrderWidget(context, screenWidth, screenHeight)
               ],

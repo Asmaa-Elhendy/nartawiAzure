@@ -11,6 +11,7 @@ import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/order_card.dart';
 import '../widgets/order_status_widget.dart';
+import '../widgets/review_alert_dialog.dart';
 
 class OrderDetailScreen extends StatefulWidget {
 String orderStatus;
@@ -114,7 +115,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                             OrderPaymentCard(screenWidth, screenHeight,widget.paymentStatus),
                             OrderSellerInformationCard(screenWidth, screenHeight),
                            widget.orderStatus=='Delivered'?
-                           BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Leave Review', false, (){},fromOrderDetail: true):
+                           BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Leave Review', false, (){
+                             showDialog(
+                               context: context,
+                               builder: (ctx) =>
+                                   ReviewAlertDialog(),
+                             );
+                           },fromOrderDetail: true):
                            widget.orderStatus=='Canceled'?
                            ReasonForCancellationCard(screenWidth, screenHeight)
                           : SizedBox(),
