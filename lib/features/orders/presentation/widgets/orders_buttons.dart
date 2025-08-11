@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_alert_dialog.dart';
 import '../../../../core/theme/colors.dart';
 import '../screens/order_details.dart';
 
@@ -65,7 +66,8 @@ Widget BuildOrderButtons(
 
       Expanded(
         child: Padding(
-          padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
+          padding: EdgeInsetsGeometry.only(right: screenWidth * .01,left:  orderStatus == 'Pending'
+              ?0:screenWidth*.01),
           child: Container(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: screenHeight * .01,
@@ -75,7 +77,7 @@ Widget BuildOrderButtons(
             decoration: BoxDecoration(
               border: Border.all(
                 color: AppColors.blueBorder, // 👈 Border color
-                width: 1.5, // 👈 Optional: Border thickness
+                width: .7, // 👈 Optional: Border thickness
               ),
               borderRadius: BorderRadius.circular(8),
             ),
@@ -106,35 +108,45 @@ Widget BuildOrderButtons(
       ),
       orderStatus == 'Pending'
           ? Expanded(
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
-                child: Container(
-                  padding: EdgeInsetsGeometry.symmetric(
-                    vertical: screenHeight * .01,
-                    horizontal: screenWidth * .015,
-                  ),
-                  height: screenHeight * .055,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppColors.blueBorder, // 👈 Border color
-                      width: 1.5, // 👈 Optional: Border thickness
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: AppColors.secondary,
-                              fontSize: screenWidth * .029,
-                              fontWeight: FontWeight.w600,
+              child: InkWell(
+                onTap: (){
+                  showDialog(
+                    context: context,
+                    builder: (ctx) =>
+                    CancelAlertDialog(),
+                  );
 
+                },
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
+                  child: Container(
+                    padding: EdgeInsetsGeometry.symmetric(
+                      vertical: screenHeight * .01,
+                      horizontal: screenWidth * .015,
+                    ),
+                    height: screenHeight * .055,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: AppColors.greyDarktextIntExtFieldAndIconsHome, // 👈 Border color
+                        width: .5, // 👈 Optional: Border thickness
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                                fontSize: screenWidth * .029,
+                                fontWeight: FontWeight.w600,
+
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
