@@ -4,9 +4,9 @@ import '../../../../core/theme/colors.dart';
 
 
 
-Widget BuildPaymentStatus(double screenWidth,double screenHeight,String status){
+Widget BuildPaymentStatus(double screenWidth,double screenHeight,String status,{bool fromOrderDetail=false}){
   return Container(
-    width: screenWidth*.38,
+    width: fromOrderDetail?screenWidth*.3:screenWidth*.38,
     padding: EdgeInsetsGeometry.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.015),
     //   width:  screenWidth * .28,
     height: screenHeight * .047,
@@ -19,7 +19,7 @@ Widget BuildPaymentStatus(double screenWidth,double screenHeight,String status){
     ),
     child: Center(
       child: Text(
-        status,
+        status=='Paid'?'Paid':'Unpaid',
         style: TextStyle(
           color:status=='Paid'? AppColors.greenColor:AppColors.orangeColor,
           fontSize: screenWidth*.035,
