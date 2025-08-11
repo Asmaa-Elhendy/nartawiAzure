@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/order_card.dart';
+import '../widgets/order_status_widget.dart';
 
 class OrderDetailScreen extends StatefulWidget {
 String orderStatus;
@@ -77,18 +79,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              'Order #3',
-                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
-                            ),
-                            Row(
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset("assets/images/orders/calendar.svg",
-                                  width: screenWidth * .042,color: AppColors.textLight,),
-                                SizedBox(width: screenWidth*.02,),
-                                Text('May 3, 2025 At 10.00 AM',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.04),)
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Order #3',
+                                      style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
+                                    ),SizedBox(height: screenHeight*.01,),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset("assets/images/orders/calendar.svg",
+                                          width: screenWidth * .042,color: AppColors.textLight,),
+                                        SizedBox(width: screenWidth*.02,),
+                                        Text('May 3, 2025 At 10.00 AM',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.036),)
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                BuildOrderStatus(screenHeight, screenWidth, widget.orderStatus,fromOrderDetail: true)
                               ],
                             ),
+                            OrderSummaryCard(screenWidth,screenHeight)
+
+
                           ],
                         ),
                       ),

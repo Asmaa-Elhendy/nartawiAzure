@@ -146,7 +146,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                 children: [
                                   Container(
                                     child:ListView(
-                                      padding: EdgeInsetsGeometry.zero,
+                                      padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06),
                                       children: [
                                         BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
                                         BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),

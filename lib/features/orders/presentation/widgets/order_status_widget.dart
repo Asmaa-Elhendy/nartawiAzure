@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/colors.dart';
-Widget BuildOrderStatus(double screenHeight,double screenWidth,String title) {
+Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{bool fromOrderDetail=false}) {
   return Container(
-    width: screenWidth*.38,
+    width:fromOrderDetail? screenWidth*.3:screenWidth*.38,
     padding: EdgeInsets.symmetric(
-        vertical: screenHeight * .01, horizontal: screenWidth * .02),
+        vertical:fromOrderDetail?screenHeight*.025: screenHeight * .01, horizontal: screenWidth * .02),
     decoration: BoxDecoration(
       color: title == 'Delivered' ? AppColors.greenLight :title=='Pending'?AppColors.orangeLight :AppColors.redLight,
       borderRadius: BorderRadius.circular(8),

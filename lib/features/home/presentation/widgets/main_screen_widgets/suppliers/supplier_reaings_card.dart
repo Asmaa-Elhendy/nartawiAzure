@@ -59,7 +59,7 @@ Widget BuildSupplierRatingCard(double screenWidth,double screenHeight,List items
                         thickness: 1,
                         width: screenWidth * .04,
                       ),
-                    ),
+                    ),//j
                   ),
                 ),
 
