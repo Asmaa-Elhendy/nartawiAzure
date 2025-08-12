@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 
 
-Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHeight){
+Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHeight,String leftTitle,String rightTitle){
   return  Row(
     children: [
       Expanded(
@@ -29,7 +29,7 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
                 children: [
 
                   Text(
-                    'Keep Order',
+                    leftTitle,
                     style: TextStyle(
                       color: AppColors.whiteColor,
                       fontSize: screenWidth * .029,
@@ -68,7 +68,7 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
                 children: [
 
                   Text(
-                    'Cancel Order',
+                   rightTitle,
                     style: TextStyle(
                       color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                       fontSize: screenWidth * .029,

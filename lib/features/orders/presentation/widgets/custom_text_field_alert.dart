@@ -16,11 +16,12 @@ class _CustomTextFieldAlertState extends State<CustomTextFieldAlert> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return  Container(
-      margin: EdgeInsets.symmetric(
-        vertical: screenHeight * .02,
+      height: screenHeight*.1,
+      margin: EdgeInsets.only(
+        bottom: screenHeight * .015,
       ),
       padding: EdgeInsets.symmetric(
-        vertical: screenHeight * .03,
+      //  vertical: screenHeight * .03,
         horizontal: screenWidth * .01,
       ),
       decoration: BoxDecoration(
@@ -32,7 +33,7 @@ class _CustomTextFieldAlertState extends State<CustomTextFieldAlert> {
       ),
       child: TextField(
         decoration: InputDecoration(
-          contentPadding: EdgeInsetsGeometry.symmetric(horizontal: screenWidth*.01),
+          contentPadding: EdgeInsetsGeometry.symmetric(horizontal: screenWidth*.01,vertical: 0),
           labelText: widget.label, // Optional: A label for the text field
           border: InputBorder.none, // Removes the default underline border
           labelStyle: TextStyle(
