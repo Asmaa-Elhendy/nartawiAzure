@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{bool fromOrderDetail=false}) {
   return Container(
-    width:fromOrderDetail? screenWidth*.3:screenWidth*.38,
+    width:fromOrderDetail? screenWidth*.3:screenWidth*.36,
     padding: EdgeInsets.symmetric(
         vertical:fromOrderDetail?screenHeight*.025: screenHeight * .01, horizontal: screenWidth * .02),
     decoration: BoxDecoration(
@@ -19,7 +19,7 @@ Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{boo
           title=='Pending'?AppColors.orangeColor:
           AppColors
               .redColor,
-          fontSize: screenWidth * .035,
+          fontSize: screenWidth * .034,
         ),
       ),
     ),

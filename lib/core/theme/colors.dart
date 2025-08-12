@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+//16 pixel:036  , 14 pixel:034
 class AppColors {
   static const primary = Color(0xFF095BA8);
+  static final primaryLight=primary.withValues(alpha: 0.16);
   static const secondary = Color(0xFF00A0DC);
   static final primaryWithOpacity = primary.withAlpha(204); // 80
   static final fillColorTextFilled=Color(0xffFCFCFC);//Colors.black.withValues(alpha: 0.08);
@@ -11,10 +12,8 @@ class AppColors {
   static const textDark = Color(0xFF03045E);
   static const textLight = Color(0xFF303030);
   static const textSecondary = Color(0xFF6E7582);
-  //static const BorderAnddividerAndIconColor=Color(0xffBDBDBD);
   static final blueBorder=primary.withValues(alpha: 0.48);
   static final backgrounHome=Color(0xFFeef3f5);
-// Add more as needed
   static const Color darkBlue = Color(0xFF095BA8);
   static const Color lightBlue = Color(0xFF00A0DC);
   static final  Color secondaryColorWithOpacity8=Color(0xFFdbedf4);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imageUrl){
+Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imageUrl,String localUrl){
   return   Container(
     //    width: screenWidth*.1,
     height: screenHeight * .09,
@@ -12,7 +12,7 @@ Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imag
       child:
       imageUrl==null||imageUrl==''?
       Image.asset(
-        'assets/images/orders/order.jpg',
+       localUrl,
         fit: BoxFit.cover,
       )
           :

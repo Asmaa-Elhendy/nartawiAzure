@@ -5,6 +5,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/auth/presentation/widgets/buildFloadtActionButton.dart';
+import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/mainscreen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Appbar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -711,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             page = const OrdersScreen();
             break;
           case 1:
-            page = const Center(child: Text("Favorite Tab"));
+            page = const CouponsScreen();
             break;
           case 2:
             page = const MainScreen();

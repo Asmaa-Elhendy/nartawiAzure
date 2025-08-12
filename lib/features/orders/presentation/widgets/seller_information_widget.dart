@@ -49,7 +49,7 @@ Widget OrderSellerInformationCard(double screenWidth, double screenHeight) {
                   child: Row(mainAxisAlignment: MainAxisAlignment.start,
                     // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl),
+                      BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl, 'assets/images/orders/order.jpg'),
                       SizedBox(width: screenWidth*.03,),
 
                       Center(child: Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),)),

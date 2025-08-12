@@ -5,6 +5,7 @@ import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
 import '../../features/auth/presentation/screens/sign_up.dart';
 import '../../features/auth/presentation/screens/verification_screen.dart';
+import '../../features/coupons/presentation/screens/coupons_screen.dart';
 import '../../features/home/presentation/screens/all_product_screen.dart';
 import '../../features/home/presentation/screens/popular_categories_screen.dart';
 import '../../features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
@@ -52,6 +53,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const OrdersScreen());
       case '/orderDetail':
         return MaterialPageRoute(builder: (_) =>  OrderDetailScreen(orderStatus: '', paymentStatus: '',));
+      case '/couponsScreen':
+        return MaterialPageRoute(builder: (_) =>  CouponsScreen());
+
     // Add more routes here
       default:
         return MaterialPageRoute(

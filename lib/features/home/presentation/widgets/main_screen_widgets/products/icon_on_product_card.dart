@@ -49,7 +49,7 @@ Widget BuildRoundedIconOnProduct({
   required TextEditingController quantityCntroller,
   ValueChanged<String>? onTextfieldChanged,
   VoidCallback? onDone,
-  bool fromDetailedScreen=false
+  bool fromDetailedScreen=false,
 }){
   return Container(
     padding: fromDetailedScreen?EdgeInsets.symmetric(horizontal: width*.02):EdgeInsets.zero,

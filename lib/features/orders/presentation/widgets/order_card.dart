@@ -35,7 +35,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Order #3',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.04),),
+                Text('Order #3',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
                 BuildOrderStatus(screenHeight, screenWidth, orderStatus)
               ],
             ),
@@ -49,7 +49,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                      SvgPicture.asset("assets/images/orders/calendar.svg",
                          width: screenWidth * .042,color: AppColors.textLight,),
                      SizedBox(width: screenWidth*.02,),
-                     Text('May 3, 2025',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.04),)
+                     Text('May 3, 2025',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.036),)
                    ],
                  ),
                   BuildPaymentStatus(screenWidth,screenHeight,paymentStatus)
@@ -62,7 +62,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                child: Row(mainAxisAlignment: MainAxisAlignment.start,
                  crossAxisAlignment: CrossAxisAlignment.start,
                  children: [
-                   BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl),
+                   BuildNetworkOrderImage(screenWidth, screenHeight, imageUrl, 'assets/images/orders/order.jpg'),
 
                    SizedBox(width: screenWidth*.03,),
                    Column(
