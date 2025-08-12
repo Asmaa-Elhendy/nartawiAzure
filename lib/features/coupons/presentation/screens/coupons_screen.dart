@@ -3,7 +3,6 @@ import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import '../../../orders/presentation/widgets/order_card.dart';
 import '../widgets/coupon_card.dart';
 
 class CouponsScreen extends StatefulWidget {
@@ -13,7 +12,8 @@ class CouponsScreen extends StatefulWidget {
   State<CouponsScreen> createState() => _CouponsScreenState();
 }
 
-class _CouponsScreenState extends State<CouponsScreen>  with SingleTickerProviderStateMixin {
+class _CouponsScreenState extends State<CouponsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late final ProductQuantityBloc _quantityBloc;
 
@@ -52,7 +52,7 @@ class _CouponsScreenState extends State<CouponsScreen>  with SingleTickerProvide
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Coupons',
-            is_returned: false,//edit back from orders
+            is_returned: false, //edit back from orders
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
@@ -76,21 +76,30 @@ class _CouponsScreenState extends State<CouponsScreen>  with SingleTickerProvide
                         children: [
                           Text(
                             'Your Coupons',
-                            style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: screenWidth * .045,
+                            ),
                           ),
 
                           Padding(
-                            padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * .01,
+                            ),
                             child: Text(
                               'Manage your water coupon bundles and delivery preferences',
-                              style: TextStyle(fontWeight: FontWeight.w500,fontSize: screenWidth*.036,
-                                  color: AppColors.greyDarktextIntExtFieldAndIconsHome),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: screenWidth * .036,
+                                color: AppColors
+                                    .greyDarktextIntExtFieldAndIconsHome,
+                              ),
                             ),
                           ),
                           CouponeCard(),
 
                           CouponeCard(),
-                          SizedBox(height: screenHeight*.04,)
+                          SizedBox(height: screenHeight * .04),
                         ],
                       ),
                     ),

@@ -58,7 +58,7 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
               height: screenHeight * .055,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: AppColors.greyDarktextIntExtFieldAndIconsHome, // 👈 Border color
+                  color: rightTitle=='Dispute'?AppColors.blueBorder:AppColors.greyDarktextIntExtFieldAndIconsHome, // 👈 Border color
                   width: .5, // 👈 Optional: Border thickness
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -70,7 +70,7 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
                   Text(
                    rightTitle,
                     style: TextStyle(
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                      color:rightTitle=='Dispute'?AppColors.primary: AppColors.greyDarktextIntExtFieldAndIconsHome,
                       fontSize: screenWidth * .029,
                       fontWeight: FontWeight.w600,
                     ), overflow: TextOverflow.visible, // To avoid overflow text
