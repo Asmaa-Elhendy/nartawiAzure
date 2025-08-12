@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
 import '../../../../core/theme/colors.dart';
 import 'cancel_order_buttons.dart';
 import 'custom_text_field_alert.dart';
@@ -111,19 +110,6 @@ Widget buildReviewCard(
           fontSize: screenWidth * .04,
         ),
       ),
-      // RatingBar.builder(
-      //   initialRating: 3,glow: false,
-      //   minRating: 1,
-      //   direction: Axis.horizontal,
-      //   allowHalfRating: true,
-      //   itemCount: 5,
-      //   itemSize: screenWidth*.07,
-      //   itemPadding: EdgeInsets.symmetric(horizontal:screenWidth*.01),
-      //   itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber,),
-      //   onRatingUpdate: (rating) {
-      //     print(rating);
-      //   },
-      // ),
       RatingBar(
         initialRating: 3,
         maxRating: 5,glow: false,
