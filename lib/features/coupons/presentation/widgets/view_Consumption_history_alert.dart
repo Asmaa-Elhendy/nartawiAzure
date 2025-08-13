@@ -7,9 +7,9 @@ import 'coupon_status_widget.dart';
 import 'oulined_icon_button.dart';
 
 class ViewConsumptionHistoryAlert extends StatefulWidget {
-  const ViewConsumptionHistoryAlert({super.key});
-
-  @override
+bool disbute;
+ViewConsumptionHistoryAlert({required this.disbute}) ;
+@override
   State<ViewConsumptionHistoryAlert> createState() =>
       _ViewConsumptionHistoryAlertState();
 }
@@ -25,7 +25,7 @@ class _ViewConsumptionHistoryAlertState
       insetPadding: EdgeInsets.all(16), // controls distance from screen edges
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.94, // 90% screen width
-        height: MediaQuery.of(context).size.height * 0.5, // adjust height
+        height:widget.disbute?screenHeight*.6 :screenHeight* 0.5, // adjust height
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: screenHeight * .02,
@@ -83,21 +83,11 @@ class _ViewConsumptionHistoryAlertState
                       ),
                     ),
                     SizedBox(height: screenHeight * .01),
-                    Text(
-                      'Marked On March 5, 2025',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: screenWidth * .036,
-                      ),
-                    ),
+                    customCouponAlertSubTitle(   'Marked On March 5, 2025', screenWidth, screenHeight),
+
                     SizedBox(height: screenHeight * .02),
-                    Text(
-                      'Marked By',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: screenWidth * .036,
-                      ),
-                    ),
+                    customCouponAlertTitle(  'Marked By', screenWidth, screenHeight),
+
                     Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: screenHeight * .01,
@@ -106,18 +96,29 @@ class _ViewConsumptionHistoryAlertState
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            'Company 1',
-                            style: TextStyle(
-                              fontSize: screenWidth * .036,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          customCouponAlertSubTitle('Company 1', screenWidth, screenHeight),
                           CouponStatus(screenHeight, screenWidth, 'Vendor'),
                         ],
                       ),
                     ),
-                    BuildOutlinedIconButton(
+                widget.disbute?
+                    Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Divider(color: AppColors.backgrounHome,),
+
+                        customCouponAlertTitle('Dispute Reason', screenWidth, screenHeight),
+                        SizedBox(height: screenHeight * .01),
+                       customCouponAlertSubTitle( 'Never Received Water', screenWidth, screenHeight),
+                        customCouponAlertTitle('Resolution', screenWidth, screenHeight),
+                        SizedBox(height: screenHeight * .01),
+                        customCouponAlertSubTitle( 'Returned', screenWidth, screenHeight)
+
+
+                      ],
+                    )
+
+
+                    :BuildOutlinedIconButton(
                       screenWidth,
                       screenHeight,
                       'Show Delivery Photos',
@@ -127,7 +128,21 @@ class _ViewConsumptionHistoryAlertState
                 ),
               ),
 
-              CancelOrderWidget(
+         widget.disbute?
+         CancelOrderWidget(
+             context,
+             screenWidth,
+             screenHeight,
+             'Dispute Resolved',//send to api
+             'Dispute',
+                 (){
+               Navigator.pop(context);
+
+             },(){
+           Navigator.pop(context);
+         }
+         )
+             : CancelOrderWidget(
                 context,
                 screenWidth,
                 screenHeight,

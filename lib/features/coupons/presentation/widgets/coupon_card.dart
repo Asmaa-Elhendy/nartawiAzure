@@ -14,8 +14,8 @@ import 'custom_text.dart';
 import 'label_rounded_icon.dart';
 
 class CouponeCard extends StatefulWidget {
-  const CouponeCard({super.key});
-
+bool disbute;
+CouponeCard({this.disbute=false});
   @override
   State<CouponeCard> createState() => _CouponeCardState();
 }
@@ -368,7 +368,7 @@ class _CouponeCardState extends State<CouponeCard> {
             () {
               showDialog(
                 context: context,
-                builder: (ctx) => ViewConsumptionHistoryAlert(),
+                builder: (ctx) => ViewConsumptionHistoryAlert(disbute:widget.disbute),
               );
             },
             fromCouponsScreen: true,

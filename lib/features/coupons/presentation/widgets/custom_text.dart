@@ -10,3 +10,13 @@ Widget customCouponSecondaryTitle(String title,double width,double height){
 Widget customCouponPrimaryTitle(String title,double width,double height){
   return  Text(title,style: TextStyle(fontWeight: FontWeight.w700,fontSize: width*.036),);
 }
+
+Widget customCouponAlertTitle(String title,double width,double height){
+  return  Text(title,style: TextStyle(fontWeight: FontWeight.w600,fontSize: width*.036),);
+}
+
+
+
+Widget customCouponAlertSubTitle(String title,double width,double height){
+return  Text(title,style: TextStyle(fontWeight: FontWeight.w400,fontSize: width*.036),);
+}
