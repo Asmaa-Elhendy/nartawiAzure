@@ -63,7 +63,7 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Company A',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.0375),),
+                      Text('Company A',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
                       BuildFeaturedOrSponsered(screenHeight, screenWidth, isFeatured?'Featured':'Sponsored')
                     ],
                   ),
@@ -87,8 +87,8 @@ Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenW
                             'View Details',
                             style: TextStyle(
                               color: AppColors.primary,
-                              fontSize: screenWidth*.035,
-                              fontWeight: FontWeight.w600,
+                              fontSize: screenWidth*.034,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -118,7 +118,7 @@ Widget BuildFeaturedOrSponsered(double screenHeight,double screenWidth,String ti
       style: TextStyle(
         fontWeight: FontWeight.w600,
         color:title=='Featured'? AppColors.greenColor: AppColors.orangeColor,
-        fontSize: screenWidth*.035,
+        fontSize: screenWidth*.034,
       ),
     ),
   );

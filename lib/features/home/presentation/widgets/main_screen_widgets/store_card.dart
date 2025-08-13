@@ -58,7 +58,7 @@ class _StoreCardState extends State<StoreCard> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.008),
-              child: Text('Company A',style: TextStyle(fontSize: widget.screenWidth*.038,fontWeight: FontWeight.w500,),overflow: TextOverflow.ellipsis,),
+              child: Text('Company A',style: TextStyle(fontSize: widget.screenWidth*.036,fontWeight: FontWeight.w500,),overflow: TextOverflow.ellipsis,),
             ),
 
             Row(mainAxisAlignment: MainAxisAlignment.center,

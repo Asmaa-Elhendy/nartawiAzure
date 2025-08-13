@@ -24,12 +24,17 @@ class _CouponeCardState extends State<CouponeCard> {
   String imageUrl = '';
   bool _isSwitched = false; // Initial state of the switch
   late final ProductQuantityBloc _quantityBloc;
+  late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityController;
   late final TextEditingController _quantityTwoController;
 
   @override
   void initState() {
     _quantityBloc = ProductQuantityBloc(
+      calculateProductPrice: CalculateProductPrice(),
+      basePrice: 100.0,
+    );
+    _quantityTwoBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: 100.0,
     );
@@ -43,6 +48,7 @@ class _CouponeCardState extends State<CouponeCard> {
   void dispose() {
     _quantityController.dispose();
     _quantityBloc.close();
+    _quantityTwoBloc.close();
     _quantityTwoController.dispose();
     super.dispose();
   }
@@ -255,6 +261,7 @@ class _CouponeCardState extends State<CouponeCard> {
                 if (_quantityController.text != state.quantity) {
                   _quantityController.text = state.quantity;
                 }
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -304,12 +311,12 @@ class _CouponeCardState extends State<CouponeCard> {
           ),
 
           BlocProvider.value(
-            value: _quantityBloc,
+            value: _quantityTwoBloc,
             child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
               builder: (context, state) {
                 // Update controller when state changes
-                if (_quantityController.text != state.quantity) {
-                  _quantityController.text = state.quantity;
+                if (_quantityTwoController.text != state.quantity) {
+                  _quantityTwoController.text = state.quantity;
                 }
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -44,7 +44,7 @@ class _CategoryCardState extends State<CategoryCard> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.008),
-            child: Text(widget.title,style: TextStyle(color: AppColors.primary,fontSize: widget.screenWidth*.034,fontWeight: FontWeight.w500),),
+            child: Text(widget.title,style: TextStyle(color: AppColors.primary,fontSize: widget.screenWidth*.032,fontWeight: FontWeight.w500),),
           )
         ],
       ),

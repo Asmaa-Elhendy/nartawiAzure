@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_photos.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import '../../../../core/theme/colors.dart';
 import 'coupon_status_widget.dart';
@@ -67,7 +68,7 @@ class _ViewConsumptionHistoryAlertState
                     color: Color(0xffECEBEA), // 👈 Border color
                     width: 1, // 👈 Optional: Border thickness
                   ),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -132,6 +133,15 @@ class _ViewConsumptionHistoryAlertState
                 screenHeight,
                 'Done',
                 'Dispute',
+                  (){
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (ctx) => ShowDeliveryPhotos(),
+                    );
+                  },(){
+                Navigator.pop(context);
+              }
               ),
             ],
           ),

@@ -47,6 +47,7 @@ dependencies:
 
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -98,6 +99,7 @@ flutter:
     - assets/images/orders/order.jpg
     - assets/images/orders/hugeicons_reload.svg
     - assets/images/orders/hugeicons_view.svg
+    - assets/images/coupons/dlivery.png
   fonts:
     - family: Poppins
       fonts:

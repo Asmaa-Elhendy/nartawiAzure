@@ -25,7 +25,7 @@ Widget BuildVerifiedWidget(double screenHeight,double screenWidth){
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.greenColor,
-              fontSize: screenWidth*.035,
+              fontSize: screenWidth*.034,
             ),
           ),
         ],

@@ -61,7 +61,7 @@ Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double scr
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Company A',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.04),),
+                        Text('Company A',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
                         Container(
                           width: screenWidth*.1, // الحجم العرض
                           height: screenHeight*.045, // الحجم الارتفاع
@@ -101,7 +101,7 @@ Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double scr
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: screenWidth*0.037,
+                        fontSize: screenWidth*0.036,
                         fontWeight: FontWeight.w400,
                         color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                       ),

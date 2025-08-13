@@ -98,7 +98,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                           ),
                           CouponeCard(),
 
-                          CouponeCard(),
+                          CouponeCard(disbute:true),
                           SizedBox(height: screenHeight * .04),
                         ],
                       ),

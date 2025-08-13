@@ -83,7 +83,10 @@ class _ReviewAlertDialogState extends State<ReviewAlertDialog> {
                   screenWidth,
                   screenHeight,
                   'Leave Review',
-                  'Cancel',
+                  'Cancel',(){    Navigator.pop(context);},
+                    (){
+                      Navigator.pop(context);
+                    }
                 ),
               ],
             ),

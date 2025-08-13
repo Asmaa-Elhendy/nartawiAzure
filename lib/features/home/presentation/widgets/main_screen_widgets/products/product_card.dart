@@ -135,7 +135,7 @@ class _ProductCardState extends State<ProductCard> {
                                   "QAR 100.00",
                                   style: TextStyle(
                                     color: AppColors.primary,
-                                    fontSize: widget.screenWidth*.038,
+                                    fontSize: widget.screenWidth*.036,
                                     fontWeight: FontWeight.w600
                                   ),
                                 ),
@@ -244,7 +244,7 @@ Widget ProductTitle(double screenHeight,double screenWidth){
               fit: BoxFit.cover,
             ),
           ),SizedBox(width: screenWidth*.02,),
-          Text('Company',style: TextStyle(fontSize: 12,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,)
+          Text('Company',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,)
         ],
       ),
       Row(mainAxisAlignment: MainAxisAlignment.center,

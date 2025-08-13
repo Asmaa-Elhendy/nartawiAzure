@@ -132,7 +132,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                           color: widget.currentIndex == 2
                               ? AppColors.darkBlue
                               : AppColors.greyDarktextIntExtFieldAndIconsHome,
-                          fontSize: screenWidth * 0.03,
+                          fontSize: screenWidth * 0.032,
                           fontWeight: widget.currentIndex == 2
                               ? FontWeight.bold
                               : FontWeight.normal,

@@ -61,7 +61,11 @@ class _CancelAlertDialogState extends State<CancelAlertDialog> {
                 CustomTextFieldAlert(
                     'please provide a reason for cancellation this order'
                 ),
-                CancelOrderWidget(context, screenWidth, screenHeight,'Keep Order','Cancel Order')
+                CancelOrderWidget(context, screenWidth, screenHeight,'Keep Order','Cancel Order',(){
+                  Navigator.pop(context);
+                },(){
+                  Navigator.pop(context);
+                })
               ],
             ),
           ),

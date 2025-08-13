@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 
 
-Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHeight,String leftTitle,String rightTitle){
+Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHeight,String leftTitle,String rightTitle,GestureTapCallback leftOnTap,GestureTapCallback rightOnTap){
   return  Row(
     children: [
       Expanded(
         child: InkWell(
-          onTap: (){
-            Navigator.pop(context);
-          },
+          onTap: leftOnTap,
           child: Padding(
             padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
             child: Container(
@@ -47,9 +45,7 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
         child: Padding(
           padding: EdgeInsetsGeometry.only(right: screenWidth * .01,left:  screenWidth*.01),
           child: InkWell(
-            onTap: (){
-              Navigator.pop(context);
-            },
+            onTap:rightOnTap,
             child: Container(
               padding: EdgeInsetsGeometry.symmetric(
                 vertical: screenHeight * .01,
