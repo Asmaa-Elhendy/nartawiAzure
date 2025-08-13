@@ -16,7 +16,7 @@ class _CustomTextFieldAlertState extends State<CustomTextFieldAlert> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return  Container(
-      height: screenHeight*.1,
+      height: screenHeight*.13,
       margin: EdgeInsets.only(
         bottom: screenHeight * .015,
       ),
@@ -34,11 +34,21 @@ class _CustomTextFieldAlertState extends State<CustomTextFieldAlert> {
       child: TextField(
         decoration: InputDecoration(
           contentPadding: EdgeInsetsGeometry.symmetric(horizontal: screenWidth*.01,vertical: 0),
-          labelText: widget.label, // Optional: A label for the text field
+            label: Text(
+              widget.label,
+              maxLines: 2, // 👈 عدد الأسطر المسموح بيها
+              overflow: TextOverflow.visible,
+              style: TextStyle(
+                fontSize: screenWidth * .034,
+                color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          // labelText: widget.label, // Optional: A label for the text field
           border: InputBorder.none, // Removes the default underline border
-          labelStyle: TextStyle(
-            fontSize: screenWidth * .036,color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-            fontWeight: FontWeight.w300,),
+          // labelStyle: TextStyle(
+          //   fontSize: screenWidth * .036,color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          //   fontWeight: FontWeight.w300,overflow: TextOverflow.visible,),
             hintStyle: TextStyle(
           fontSize: screenWidth * .03,
           fontWeight: FontWeight.w300,)

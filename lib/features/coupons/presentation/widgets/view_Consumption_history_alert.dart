@@ -4,6 +4,7 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_p
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import '../../../../core/theme/colors.dart';
 import 'coupon_status_widget.dart';
+import 'dispute_alert.dart';
 import 'oulined_icon_button.dart';
 
 class ViewConsumptionHistoryAlert extends StatefulWidget {
@@ -116,8 +117,6 @@ class _ViewConsumptionHistoryAlertState
 
                       ],
                     )
-
-
                     :BuildOutlinedIconButton(
                       screenWidth,
                       screenHeight,
@@ -140,6 +139,11 @@ class _ViewConsumptionHistoryAlertState
 
              },(){
            Navigator.pop(context);
+           showDialog(
+             context: context,
+             builder: (ctx) =>
+                 DisputeAlertDialog(),
+           );
          }
          )
              : CancelOrderWidget(
@@ -156,6 +160,11 @@ class _ViewConsumptionHistoryAlertState
                     );
                   },(){
                 Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (ctx) =>
+                      DisputeAlertDialog(),
+                );
               }
               ),
             ],
