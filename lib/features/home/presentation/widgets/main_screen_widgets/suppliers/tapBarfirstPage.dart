@@ -330,26 +330,26 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
-                title: 'Bottle',
+
                   fromAllProducts:widget.fromAllProducts
               ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
-                title: 'Gallon',
+
                 fromAllProducts:widget.fromAllProducts ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
-                title: 'Alkaline',
+
                 fromAllProducts:widget.fromAllProducts ),
               ProductCard(
                 screenWidth: screenWidth,
                 screenHeight: screenHeight,
                 icon: 'assets/images/home/main_page/product.jpg',
-                title: 'Coupon',
+
                 fromAllProducts:widget.fromAllProducts ),
               // أضف المزيد من العناصر حسب الحاج
             ],

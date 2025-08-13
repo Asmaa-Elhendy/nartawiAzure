@@ -280,12 +280,14 @@
                                               screenWidth,
                                               screenHeight,
                                               true, // plus icon
+                                              false
                                             ),
                                             //      SizedBox(width: screenWidth * 0.02), // Spacing between icons
                                             BuildIconOnProduct(
                                               screenWidth,
                                               screenHeight,
                                               false, // heart icon
+                                              false
                                             ),
                                           ],
                                         ),

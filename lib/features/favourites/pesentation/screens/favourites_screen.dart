@@ -4,6 +4,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../orders/presentation/widgets/order_card.dart';
+import '../widgets/favourite_product_card.dart';
 
 class FavouritesScreen extends StatefulWidget {
   const FavouritesScreen({super.key});
@@ -125,9 +126,15 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                               child:ListView(
                                 padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
                                 children: [
-                                  BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
-                                  BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                  BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
+                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                                    icon: 'assets/images/home/main_page/product.jpg',
+                                    ),
+                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight, icon: 'assets/images/home/main_page/product.jpg',
+
+                ),
+                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight, icon: 'assets/images/home/main_page/product.jpg',
+
+                ),
                                 ],),
                             ) // first tab bar view widget
                             ,

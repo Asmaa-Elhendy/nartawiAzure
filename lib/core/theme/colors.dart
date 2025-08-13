@@ -28,7 +28,7 @@ class AppColors {
   static const backgroundAlert= Color(0xfffcfcfc);
   static const redColor=Color(0xffF95A2C);
   static const redLight=Color(0xfffce2db);
-
+  static const favouriteProductCard=Color(0xffecebea);
 
 
   static const LinearGradient primaryGradient = LinearGradient(

@@ -5,7 +5,7 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
-Widget BuildIconOnProduct(double width,double height,bool isPlus){
+Widget BuildIconOnProduct(double width,double height,bool isPlus,bool isFavourite){
 
   return Container(
     width: width*.1, // الحجم العرض
@@ -28,7 +28,13 @@ Widget BuildIconOnProduct(double width,double height,bool isPlus){
         Icons.add, // استبدلها بالأيقونة اللي تحبها
         size: height*.03,
         color: AppColors.primary,
-      ):Iconify(
+      ):isFavourite?
+      Iconify(
+        Mdi.heart,
+        color: AppColors.redColor,
+        size:height*.03,
+      ):
+      Iconify(
         Mdi.heart_outline,
         color: AppColors.primary,
         size:height*.03,
@@ -53,7 +59,7 @@ Widget BuildRoundedIconOnProduct({
 }){
   return Container(
     padding: fromDetailedScreen?EdgeInsets.symmetric(horizontal: width*.02):EdgeInsets.zero,
-    width:fromDetailedScreen?width*.6:isPlus?width*.2:width*.15, // الحجم العرض
+    width:fromDetailedScreen?width*.6:isPlus?width*.21:width*.15, // الحجم العرض
     height: height*.045, // الحجم الارتفاع
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
@@ -88,7 +94,7 @@ Widget BuildRoundedIconOnProduct({
           //   ),
           // ),
           Container(
-            width: width * 0.08,
+            width: width * 0.07,
             height: height * 0.04,
             alignment: Alignment.center,
             child: TextField(

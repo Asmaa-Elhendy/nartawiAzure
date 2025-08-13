@@ -155,25 +155,25 @@ String? imageUrl=null;
                    screenWidth: screenWidth,
                    screenHeight: screenHeight,
                    icon: 'assets/images/home/main_page/product.jpg',
-                   title: 'Bottle',
+
                  ),
                  ProductCard(
                    screenWidth: screenWidth,
                    screenHeight: screenHeight,
                    icon: 'assets/images/home/main_page/product.jpg',
-                   title: 'Gallon',
+
                  ),
                  ProductCard(
                    screenWidth: screenWidth,
                    screenHeight: screenHeight,
                    icon: 'assets/images/home/main_page/product.jpg',
-                   title: 'Alkaline',
+
                  ),
                  ProductCard(
                    screenWidth: screenWidth,
                    screenHeight: screenHeight,
                    icon: 'assets/images/home/main_page/product.jpg',
-                   title: 'Coupon',
+
                  ),
                  // أضف المزيد من العناصر حسب الحاجة
                ],

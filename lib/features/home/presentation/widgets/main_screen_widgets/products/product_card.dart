@@ -15,14 +15,13 @@ class ProductCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
   String icon;
-  String title;
   bool fromAllProducts;
 
   ProductCard({
     required this.screenWidth,
     required this.screenHeight,
     required this.icon,
-    required this.title,
+
     this.fromAllProducts=false
   });
 
@@ -191,12 +190,14 @@ class _ProductCardState extends State<ProductCard> {
                             widget.screenWidth,
                             widget.screenHeight,
                             true, // plus icon
+                            false
                           ),
                     //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
                           BuildIconOnProduct(
                             widget.screenWidth,
                             widget.screenHeight,
-                            false, // heart icon
+                            false,
+                            false// heart icon
                           ),
                         ],
                       ),
