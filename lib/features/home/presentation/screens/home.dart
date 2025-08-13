@@ -11,6 +11,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Ap
 import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import 'package:newwwwwwww/features/orders/presentation/screens/orders_screen.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../favourites/pesentation/screens/favourites_screen.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 // class HomeScreen extends StatefulWidget {
@@ -718,7 +719,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             page = const MainScreen();
             break;
           case 3:
-            page = const Center(child: Text("Face Tab"));
+            page = const FavouritesScreen();
             break;
           case 4:
             page = const Center(child: Text("Balance Tab"));

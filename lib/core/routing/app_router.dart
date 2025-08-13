@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/favourites/pesentation/screens/favourites_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
@@ -55,7 +56,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  OrderDetailScreen(orderStatus: '', paymentStatus: '',));
       case '/couponsScreen':
         return MaterialPageRoute(builder: (_) =>  CouponsScreen());
-
+      case '/favouritesScreen':
+        return MaterialPageRoute(builder: (_) =>  FavouritesScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

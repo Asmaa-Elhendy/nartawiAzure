@@ -8,9 +8,9 @@ import '../../../../../../core/theme/colors.dart';
 import 'build_row_raing.dart';
 
 
-Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double screenWidth,bool isFeatured){
+Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double screenWidth,bool isFeatured,{bool fromFavouritesScreen=false}){
   return  Padding(
-    padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04),
+    padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04,vertical: fromFavouritesScreen?screenHeight*.01:0),
     child: Container(
      // height: screenHeight*.3,
       padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.02),
@@ -78,8 +78,8 @@ Widget BuildFullCardSupplier(BuildContext context,double screenHeight,double scr
                           ),
                           child: Center(
                         child:Iconify(
-                              Mdi.heart_outline,
-                              color: AppColors.primary,
+                            fromFavouritesScreen?Mdi.heart:  Mdi.heart_outline,
+                              color:  fromFavouritesScreen?AppColors.redColor:AppColors.primary,
                               size:screenHeight*.03,
                             ),
                           ),
