@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../../core/utils/components/background_logo.dart';
-import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
-import '../../../auth/presentation/widgets/build_info_phone.dart';
-import '../../../auth/presentation/widgets/signup_textfield.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 

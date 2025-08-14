@@ -3,8 +3,10 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
+import '../../../coupons/presentation/widgets/dispute_alert.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../widgets/add_new_address_alert.dart';
 import '../widgets/address_card.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
@@ -93,7 +95,13 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                         padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
                         children: [
 
-                          BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Add New Address', false, (){},fromDelivery: true),
+                          BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Add New Address', false, (){
+                            showDialog(
+                              context: context,
+                              builder: (ctx) =>
+                                  AddAddressAlertDialog(),
+                            );
+                          },fromDelivery: true),
                           OutlineAuthButton(screenWidth,screenHeight, 'Use Current Location', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/current_location.svg'),
                           OutlineAuthButton(screenWidth,screenHeight, 'Open Google Map', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/google maps.svg'),
                           BuildCardAddress(context, screenHeight, screenWidth),
