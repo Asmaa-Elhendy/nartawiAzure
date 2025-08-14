@@ -16,6 +16,7 @@ import '../../features/home/presentation/screens/mainscreen.dart';
 import '../../features/home/presentation/screens/suppliers/supplier_detail.dart';
 import '../../features/orders/presentation/screens/order_details.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
+import '../../features/profile/presentation/screens/delivery_address.dart';
 import '../../features/profile/presentation/screens/edit_profile.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
@@ -64,6 +65,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  ProfileScreen());
       case '/editProfileScreen':
         return MaterialPageRoute(builder: (_) =>  EditProfileScreen());
+      case '/deliveryAddress':
+        return MaterialPageRoute(builder: (_) =>  DeliveryAddressScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

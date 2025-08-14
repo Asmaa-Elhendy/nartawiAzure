@@ -13,7 +13,7 @@ Widget BuildInfoAndAddToCartButton(
     String title,
     bool info,
     void Function()? fun,
-{bool fromOrderDetail=false,bool fromCouponsScreen=false}
+{bool fromOrderDetail=false,bool fromCouponsScreen=false,bool fromDelivery=false}
     ) {
   return Padding(
     padding:  EdgeInsets.symmetric(vertical: height*.01),
@@ -21,14 +21,15 @@ Widget BuildInfoAndAddToCartButton(
       onTap: fun,
       child: Container(
         //  width:  widget.width * .38,
-        height:        fromOrderDetail==true?height*.07: height * .05,
+        height:        fromOrderDetail==true?height*.07: height * .06,
         decoration: BoxDecoration(
           gradient: AppColors.primaryGradient,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            fromCouponsScreen?
+          fromDelivery?SizedBox():
+          fromCouponsScreen?
             Iconify(
               IconParkSolid.history_query,  // This uses the Material Symbols "star" icon
               size:width*.052,
@@ -54,7 +55,7 @@ Widget BuildInfoAndAddToCartButton(
               title,
               style: TextStyle(
                 color: AppColors.whiteColor,
-                fontSize: width*.034,
+                fontSize:fromDelivery?width*.036: width*.034,
                 fontWeight: FontWeight.w500,
               ),
             ),

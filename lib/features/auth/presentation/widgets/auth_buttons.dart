@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/tabler.dart';
 
 import '../../../../core/theme/colors.dart';
 
@@ -79,18 +82,18 @@ Widget CustomLoginButtons(
   );
 }
 
-Widget OutlineAuthButton(double height, String title, void Function()? fun) {
+Widget OutlineAuthButton(double width,double height, String title, void Function()? fun,{bool fromDelivery=false,String icon=''}) {
   return Padding(
     padding: EdgeInsets.symmetric(
       //   horizontal: widget.width * .04,
-      vertical: height * .02,
+      vertical:fromDelivery?height*.01: height * .02,
     ),
-    child: Row(
+    child: Row(//f
       children: [
         Expanded(
           child: Container(
             //  width:  widget.width * .38,
-            height: height * .07,
+            height:fromDelivery?height*.06: height * .07,
             decoration: BoxDecoration(
               border: Border.all(
                 color: AppColors.blueBorder, // 👈 Border color
@@ -101,13 +104,24 @@ Widget OutlineAuthButton(double height, String title, void Function()? fun) {
             child: InkWell(
               onTap: fun,
               child: Center(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    fromDelivery?
+                    SvgPicture.asset(
+                     icon,
+                      // height: screenHeight*.1,
+                    )
+                        :SizedBox(),
+                   SizedBox(width: fromDelivery? width*.02:0),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: width*.036,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -44,6 +44,7 @@ dependencies:
   flutter_bloc: ^8.1.4
   equatable: ^2.0.5
   flutter_rating_bar: ^4.0.1
+  image_picker: ^1.1.2
 
 
 
@@ -105,6 +106,9 @@ flutter:
     - assets/images/profile/gps.svg
     - assets/images/profile/logout.svg
     - assets/images/profile/settings.svg
+    - assets/images/profile/delivery/current_location.svg
+    - assets/images/profile/delivery/google maps.svg
+    - assets/images/profile/delivery/home.svg
   fonts:
     - family: Poppins
       fonts:

@@ -7,6 +7,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import 'delivery_address.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -115,7 +116,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                             BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/edit.svg','Edit Profile',(){
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreen()));
                             }),
-                            BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/gps.svg','Delivery Address',(){}),
+                            BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/gps.svg','Delivery Address',(){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DeliveryAddressScreen()));
+
+                            }),
                             BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/settings.svg','Settings',(){}),
                             BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/logout.svg','Log Out',(){})
 

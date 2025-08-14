@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../../core/utils/components/background_logo.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
-import '../../../auth/presentation/widgets/build_info_phone.dart';
-import '../../../auth/presentation/widgets/signup_textfield.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../widgets/address_card.dart';
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class DeliveryAddressScreen extends StatefulWidget {
+  const DeliveryAddressScreen({super.key});
 
   @override
-  State<EditProfileScreen> createState() => _EditProfileScreenState();
+  State<DeliveryAddressScreen> createState() => _DeliveryAddressScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen>
+class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _passwordController = TextEditingController();
@@ -69,7 +68,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Profile',
+            title: 'Delivery Addresses',
             is_returned: true, //edit back from orders
           ),
           Positioned.fill(
@@ -79,43 +78,35 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 top: screenHeight * .04,// edit top height under appbar
                 bottom: screenHeight * .1,
               ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04),
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04),
 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
 
 
-                      SizedBox(height: screenHeight*.7,
-                        child: ListView(
-                          padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
-                          children: [
+                    SizedBox(height: screenHeight*.7,
+                      child: ListView(
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
+                        children: [
 
-                            buildCustomeFullTextField('First Name', 'Enter First Name', _firstNameController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Middle Name', 'Enter Middle Name', _middleNameController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Last Name', 'Enter Last Name', _lastNameController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Email Address', 'Ex: abc@example.com', _emailController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Phone Number', 'Enter Phone Number', _phoneNumberController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Emergency Phone Number', 'Enter Emergency phone number', _emergencyphonenumberController, false,screenHeight,fromEditProfile: true),
-                            SizedBox(height: screenHeight*.01,),
-                          ],),
-                      ),
-                    ],
-                  ),
+                          BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Add New Address', false, (){},fromDelivery: true),
+                          OutlineAuthButton(screenWidth,screenHeight, 'Use Current Location', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/current_location.svg'),
+                          OutlineAuthButton(screenWidth,screenHeight, 'Open Google Map', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/google maps.svg'),
+                          BuildCardAddress(context, screenHeight, screenWidth),
+                          BuildCardAddress(context, screenHeight, screenWidth,work: true)
+
+                        ],),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
         ],
-      ),
-    );
+      ),);
   }
 }

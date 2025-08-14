@@ -64,7 +64,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   buildCustomeFullTextField('Enter Mobile Number or Email', 'Enter Enter Mobile Number or Email', _emailController, true,height),
                   SizedBox(height:height*.08,),
                   AuthButton(width,height,'Send',_handleSend),
-                  OutlineAuthButton(height, 'Back To Login', _handleBackToLogin)
+                  OutlineAuthButton(width,height, 'Back To Login', _handleBackToLogin)
 
                 ],
               ),
