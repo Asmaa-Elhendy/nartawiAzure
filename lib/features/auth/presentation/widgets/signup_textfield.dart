@@ -9,6 +9,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 class SignUpTextField extends StatefulWidget {
   final String hintText;
   final String label;
+  final bool fromEditProfile;
 
   final TextEditingController? controller;
   final bool required;
@@ -17,9 +18,9 @@ class SignUpTextField extends StatefulWidget {
     Key? key,
     required this.hintText,
     this.label = '',
-
     this.controller,
-    required this.required
+    required this.required,
+    this.fromEditProfile=false
   }) : super(key: key);
 
   @override
@@ -40,7 +41,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
     if (isPhoneField) {
       // Phone field with country code and divider
       return Container(
-        height: height * .07,
+        height: widget.fromEditProfile?height*.06: height * .07,
         decoration: BoxDecoration(
           color: AppColors.fillColorTextFilled,
           borderRadius: BorderRadius.circular(8),
@@ -103,7 +104,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
 
     // Default text field (for password, email, etc.)
     return Container(
-      height: height * .07,
+      height: widget.fromEditProfile?height*.06:height * .07,
       child: TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: widget.controller,

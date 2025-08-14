@@ -10,6 +10,7 @@ import 'package:newwwwwwww/features/home/presentation/screens/mainscreen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Appbar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import 'package:newwwwwwww/features/orders/presentation/screens/orders_screen.dart';
+import 'package:newwwwwwww/features/profile/presentation/screens/profile.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../favourites/pesentation/screens/favourites_screen.dart';
 import '../widgets/bottom_navigation_bar.dart';
@@ -722,7 +723,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             page = const FavouritesScreen();
             break;
           case 4:
-            page = const Center(child: Text("Balance Tab"));
+            page = const ProfileScreen();
             break;
           default:
             page = const SizedBox();

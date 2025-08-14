@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/favourites/pesentation/screens/favourites_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
+import 'package:newwwwwwww/features/profile/presentation/screens/profile.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
@@ -15,6 +16,7 @@ import '../../features/home/presentation/screens/mainscreen.dart';
 import '../../features/home/presentation/screens/suppliers/supplier_detail.dart';
 import '../../features/orders/presentation/screens/order_details.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
+import '../../features/profile/presentation/screens/edit_profile.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
 // Import other screens as needed
@@ -58,6 +60,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CouponsScreen());
       case '/favouritesScreen':
         return MaterialPageRoute(builder: (_) =>  FavouritesScreen());
+      case '/profileScreen':
+        return MaterialPageRoute(builder: (_) =>  ProfileScreen());
+      case '/editProfileScreen':
+        return MaterialPageRoute(builder: (_) =>  EditProfileScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

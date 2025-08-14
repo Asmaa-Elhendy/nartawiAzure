@@ -8,7 +8,7 @@ class AppTextStyles {
     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
   );
   static const TextStyle LabelInTextField = TextStyle(
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: FontWeight.w600,
     color: AppColors.textLight,
     fontFamily: 'Poppins',

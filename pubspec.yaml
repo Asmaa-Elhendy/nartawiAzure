@@ -100,6 +100,11 @@ flutter:
     - assets/images/orders/hugeicons_reload.svg
     - assets/images/orders/hugeicons_view.svg
     - assets/images/coupons/dlivery.png
+    - assets/images/profile/img.png
+    - assets/images/profile/edit.svg
+    - assets/images/profile/gps.svg
+    - assets/images/profile/logout.svg
+    - assets/images/profile/settings.svg
   fonts:
     - family: Poppins
       fonts:
