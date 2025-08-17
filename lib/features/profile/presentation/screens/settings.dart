@@ -79,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               ),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04),
+                  padding:  EdgeInsets.only(left: screenWidth*.04,right: screenWidth*.04,bottom: screenHeight*.04),
 
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,15 @@ class _SettingsScreenState extends State<SettingsScreen>
                         'Notification Preferences',
                         style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.04),
                       ),
-                      SettingCard()
+                      SettingCard(title: 'Low Coupon Alerts', description: 'Get notified when your coupon balance is running low', quantityLabel: 'Coupons'),
+
+                      SettingCard(title: 'Wallet Balance Alerts', description: 'Get alerts when your wallet balance is low', quantityLabel: 'QAR'),
+
+                      SettingCard(title: 'Order Updates', description: 'Receive notifications about your order status', quantityLabel: '',isIncrease: false,),
+
+                      SettingCard(title: 'Refill Updates', description: 'Get notified when your bottles have been refilled', quantityLabel: '',isIncrease: false,)
+
+
 
 
                     ],

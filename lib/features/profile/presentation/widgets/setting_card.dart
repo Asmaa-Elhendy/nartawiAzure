@@ -4,15 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/quantity_increase_Decrease.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
-import '../../../coupons/presentation/widgets/label_rounded_icon.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
 
 
 class SettingCard extends StatefulWidget {
-  bool disbute;
-  SettingCard({this.disbute=false});
+ String title;
+ String description;
+  String quantityLabel;
+  bool isIncrease;
+  SettingCard({required  this.title,required this.description,required this.quantityLabel,this.isIncrease=true});
+
   @override
   State<SettingCard> createState() => _SettingCardState();
 }
@@ -51,20 +54,20 @@ class _SettingCardState extends State<SettingCard> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: screenHeight * .01),
       padding: EdgeInsets.symmetric(
-        vertical: screenHeight * .02,
+        vertical: screenHeight * .01,
         horizontal: screenWidth * .03,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         color: AppColors.whiteColor,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            offset: Offset(0, 2),
-            blurRadius: 20,
-            spreadRadius: 0,
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: AppColors.shadowColor,
+        //     offset: Offset(0, 2),
+        //     blurRadius: 20,
+        //     spreadRadius: 0,
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +80,7 @@ class _SettingCardState extends State<SettingCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 customCouponPrimaryTitle(
-                  'Low Coupon Alerts',
+                  widget.title,
                   screenWidth,
                   screenHeight,
                 ),
@@ -96,7 +99,7 @@ class _SettingCardState extends State<SettingCard> {
               ],
             ),
           ),
-          customCouponAlertSubTitle('Get notified when your coupon balance is running low', screenWidth, screenHeight),
+          customCouponAlertSubTitle(widget.description, screenWidth, screenHeight),
 
 
           BlocProvider.value(
@@ -115,7 +118,9 @@ class _SettingCardState extends State<SettingCard> {
                       padding: EdgeInsets.symmetric(
                         vertical: screenHeight * .02,
                       ),
-                      child: Row(
+                      child:
+                      widget.isIncrease?
+                      Row(
                         children: [
                           Expanded(
                             child: IncreaseDecreaseQuantity(
@@ -139,11 +144,11 @@ class _SettingCardState extends State<SettingCard> {
                                   .read<ProductQuantityBloc>()
                                   .add(QuantityEditingComplete()),
                               fromDetailedScreen: true,
-                              title: 'Days',
+                              title: widget.quantityLabel,
                             ),
                           ),
                         ],
-                      ),
+                      ):SizedBox(),
                     ),
                   ],
                 );

@@ -27,13 +27,13 @@ Widget IncreaseDecreaseQuantity({
       borderRadius: BorderRadius.circular(20),
       color: AppColors.backgrounHome, // لون الخلفية
       shape: BoxShape.rectangle, // يجعله دائري
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        ),
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: Colors.black.withOpacity(0.1),
+      //     blurRadius: 4,
+      //     offset: Offset(0, 2),
+      //   ),
+      // ],
     ),
     child: Center(
         child:
@@ -76,7 +76,7 @@ Widget IncreaseDecreaseQuantity({
                   ),
                 ),
                 SizedBox(width: width*.01,),
-                Text(title),
+                Text(title,style: TextStyle(fontWeight: FontWeight.w700,fontSize: width*.034),),
               ],
             ),
 
