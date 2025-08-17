@@ -18,6 +18,7 @@ import '../../features/orders/presentation/screens/order_details.dart';
 import '../../features/orders/presentation/screens/orders_screen.dart';
 import '../../features/profile/presentation/screens/delivery_address.dart';
 import '../../features/profile/presentation/screens/edit_profile.dart';
+import '../../features/profile/presentation/screens/settings.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
 // Import other screens as needed
@@ -67,6 +68,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  EditProfileScreen());
       case '/deliveryAddress':
         return MaterialPageRoute(builder: (_) =>  DeliveryAddressScreen());
+      case '/settingsScreen':
+        return MaterialPageRoute(builder: (_) =>  SettingsScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

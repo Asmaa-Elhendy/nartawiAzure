@@ -9,6 +9,7 @@ import '../../../home/presentation/bloc/product_quantity/product_quantity_event.
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../orders/presentation/widgets/order_image_network_widget.dart';
+import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
 import 'coupon_status_widget.dart';
 import 'custom_text.dart';
 import 'label_rounded_icon.dart';
@@ -272,7 +273,7 @@ class _CouponeCardState extends State<CouponeCard> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: LabledBuildRoundedIconOnProduct(
+                            child: IncreaseDecreaseQuantity(
                               context: context,
                               width: screenWidth,
                               height: screenHeight,
@@ -328,7 +329,7 @@ class _CouponeCardState extends State<CouponeCard> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: LabledBuildRoundedIconOnProduct(
+                            child: IncreaseDecreaseQuantity(
                               context: context,
                               width: screenWidth,
                               height: screenHeight,

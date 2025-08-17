@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/edit_profile.dart';
+import 'package:newwwwwwww/features/profile/presentation/screens/settings.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/impact_wallet_widget.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/profile_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/single_settings_profile.dart';
@@ -120,7 +121,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>DeliveryAddressScreen()));
 
                             }),
-                            BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/settings.svg','Settings',(){}),
+                            BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/settings.svg','Settings',(){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
+                            }),
                             BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/logout.svg','Log Out',(){})
 
                           ],),
