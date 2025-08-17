@@ -31,8 +31,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
         height: MediaQuery.of(context).size.height * 0.67, // adjust height
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: screenHeight*.02,horizontal: screenWidth*.05),
-          child: SingleChildScrollView(
-            child: Column(
+          child: SingleChildScrollView(child: Column(
               crossAxisAlignment:CrossAxisAlignment.start,
               children: [
                 Row(

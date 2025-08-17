@@ -11,23 +11,23 @@ Widget AuthButton(
   String title,
   void Function()? fun,
 ) {
-  return Padding(
-    padding: EdgeInsets.symmetric(
-      //   horizontal: widget.width * .04,
-      vertical: height * .02,
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Container(
-            //  width:  widget.width * .38,
-            height: height * .07,
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: InkWell(
-              onTap: fun,
+  return InkWell(
+    onTap: fun,
+    child: Padding(
+      padding: EdgeInsets.symmetric(
+        //   horizontal: widget.width * .04,
+        vertical: height * .02,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              //  width:  widget.width * .38,
+              height: height * .07,
+              decoration: BoxDecoration(
+                gradient: AppColors.primaryGradient,
+                borderRadius: BorderRadius.circular(10),
+              ),
               child: Center(
                 child: Text(
                   title,
@@ -40,8 +40,8 @@ Widget AuthButton(
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
@@ -54,18 +54,18 @@ Widget CustomLoginButtons(
 ) {
   return Row(
     children: [
-      Container(
-        width: width * .23,
-        height: height * .05,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.blueBorder, // Border color
-            width: 2, // Border width
+      InkWell(
+        onTap: fun,
+        child: Container(
+          width: width * .23,
+          height: height * .05,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: AppColors.blueBorder, // Border color
+              width: 2, // Border width
+            ),
+            borderRadius: BorderRadius.circular(40),
           ),
-          borderRadius: BorderRadius.circular(40),
-        ),
-        child: InkWell(
-          onTap: fun,
           child: Center(
             child: Text(
               title,
@@ -83,26 +83,26 @@ Widget CustomLoginButtons(
 }
 
 Widget OutlineAuthButton(double width,double height, String title, void Function()? fun,{bool fromDelivery=false,String icon=''}) {
-  return Padding(
-    padding: EdgeInsets.symmetric(
-      //   horizontal: widget.width * .04,
-      vertical:fromDelivery?height*.01: height * .02,
-    ),
-    child: Row(//f
-      children: [
-        Expanded(
-          child: Container(
-            //  width:  widget.width * .38,
-            height:fromDelivery?height*.06: height * .07,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.blueBorder, // 👈 Border color
-                width: 1.5,               // 👈 Optional: Border thickness
+  return InkWell(
+    onTap: fun,
+    child: Padding(
+      padding: EdgeInsets.symmetric(
+        //   horizontal: widget.width * .04,
+        vertical:fromDelivery?height*.01: height * .02,
+      ),
+      child: Row(//f
+        children: [
+          Expanded(
+            child: Container(
+              //  width:  widget.width * .38,
+              height:fromDelivery?height*.06: height * .07,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.blueBorder, // 👈 Border color
+                  width: 1.5,               // 👈 Optional: Border thickness
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: InkWell(
-              onTap: fun,
               child: Center(
                 child: Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -126,8 +126,8 @@ Widget OutlineAuthButton(double width,double height, String title, void Function
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }
