@@ -20,6 +20,8 @@ class BuildForegroundappbarhome extends StatefulWidget {
 class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return   Positioned(
       top: MediaQuery
           .of(context)
@@ -36,10 +38,13 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                  onTap: (){
                    Navigator.pop(context);
                  },
-                 child: Iconify(
-                   MaterialSymbols.arrow_back_ios,
-                   size: 16,
-                   color: AppColors.whiteColor,
+                 child: Padding(
+                   padding:  EdgeInsets.only(right: screenWidth*.02),
+                   child: Iconify(
+                     MaterialSymbols.arrow_back_ios,
+                     size: 16,
+                     color: AppColors.whiteColor,
+                   ),
                  ),
                ):SizedBox(),
                Text(widget.title,
