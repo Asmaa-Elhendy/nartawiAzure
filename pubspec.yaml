@@ -109,6 +109,8 @@ flutter:
     - assets/images/profile/delivery/current_location.svg
     - assets/images/profile/delivery/google maps.svg
     - assets/images/profile/delivery/home.svg
+    - assets/images/profile/impact/drop-Frame.svg
+
   fonts:
     - family: Poppins
       fonts:

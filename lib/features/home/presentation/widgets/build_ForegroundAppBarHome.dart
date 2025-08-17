@@ -55,7 +55,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
              ],
            ),
           SizedBox(
-            width: widget.screenWidth * .4,
+            width: widget.screenWidth * .38,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

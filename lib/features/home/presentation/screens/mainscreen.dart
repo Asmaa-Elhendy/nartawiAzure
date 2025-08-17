@@ -10,7 +10,6 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../../core/theme/text_styles.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';

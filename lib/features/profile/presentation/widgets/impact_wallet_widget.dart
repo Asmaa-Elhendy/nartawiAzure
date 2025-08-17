@@ -4,7 +4,7 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dar
 
 import '../../../../core/theme/colors.dart';
 
-Widget ImpactWalletWidget(double screenWidth, double screenHeight) {
+Widget ImpactWalletWidget(double screenWidth, double screenHeight,Function()? myImpactFun,Function()? myeWalletFun) {
   return Container(
 
     padding: EdgeInsets.symmetric(
@@ -23,17 +23,20 @@ Widget ImpactWalletWidget(double screenWidth, double screenHeight) {
         Row(
           children: [
             Expanded(
-              child: SizedBox(//height: screenHeight*.1,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('My Impact ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
-                      customCouponAlertSubTitle('1', screenWidth, screenHeight)   ,
-                      SizedBox(height: screenHeight*.01),
-                      customCouponAlertSubTitle('Bottles Donated', screenWidth, screenHeight)
-                    ],
+              child: InkWell(
+                onTap: myImpactFun,
+                child: SizedBox(//height: screenHeight*.1,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('My Impact ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
+                        customCouponAlertSubTitle('1', screenWidth, screenHeight)   ,
+                        SizedBox(height: screenHeight*.01),
+                        customCouponAlertSubTitle('Bottles Donated', screenWidth, screenHeight)
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -51,15 +54,18 @@ Widget ImpactWalletWidget(double screenWidth, double screenHeight) {
 
             Expanded(
               child: SizedBox(//height: screenHeight*.1,
-                child: Center(
-                  child: Column(mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text('My e-Wallet ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
-                      customCouponAlertSubTitle('QAR 840.00', screenWidth, screenHeight)   ,
-                      SizedBox(height: screenHeight*.01),
-                      customCouponAlertSubTitle('Available Balance', screenWidth, screenHeight)
-                    ],
+                child: InkWell(
+                  onTap: myeWalletFun,
+                  child: Center(
+                    child: Column(mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('My e-Wallet ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
+                        customCouponAlertSubTitle('QAR 840.00', screenWidth, screenHeight)   ,
+                        SizedBox(height: screenHeight*.01),
+                        customCouponAlertSubTitle('Available Balance', screenWidth, screenHeight)
+                      ],
+                    ),
                   ),
                 ),
               ),

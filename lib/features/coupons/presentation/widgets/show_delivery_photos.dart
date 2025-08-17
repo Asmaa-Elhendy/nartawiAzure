@@ -95,7 +95,8 @@ class _ShowDeliveryPhotosState
               ),
              Padding(
                padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
-               child: Text('portsaid,23july',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w700),),
+               child: Text(''
+                   'portsaid,23july',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w700),),
              ),
               Text('23 dec ,2025  at 6:00 pm',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),),
             SizedBox(height: screenHeight*.01,),
