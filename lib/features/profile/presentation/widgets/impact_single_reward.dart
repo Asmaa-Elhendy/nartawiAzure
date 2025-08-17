@@ -13,7 +13,6 @@ Widget ImpactSngleReward(
         size: screenWidth  * .06,
         color: AppColors.primary
         ,
-        ,
       ),SizedBox(width: screenWidth*.02,),
       Expanded(
         child: Column(

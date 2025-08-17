@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/edit_profile.dart';
+import 'package:newwwwwwww/features/profile/presentation/screens/my_ewallet_screen.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/my_impact.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/settings.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/impact_wallet_widget.dart';
@@ -115,7 +116,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                               padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
                               child: ImpactWalletWidget(screenWidth, screenHeight,(){
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>MyImpactScreen()));
-                              },(){}),
+                              },(){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>MyeWalletScreen()));
+
+                              }),
                             ),
                             BuildSingleSeetingProfile(screenWidth, screenHeight,'assets/images/profile/edit.svg','Edit Profile',(){
                               Navigator.push(context, MaterialPageRoute(builder: (context)=>EditProfileScreen()));

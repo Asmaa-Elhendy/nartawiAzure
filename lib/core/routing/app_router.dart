@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/favourites/pesentation/screens/favourites_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
+import 'package:newwwwwwww/features/profile/presentation/screens/my_ewallet_screen.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/my_impact.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/profile.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
@@ -73,6 +74,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  SettingsScreen());
       case '/myImpactScreen':
         return MaterialPageRoute(builder: (_) =>  MyImpactScreen());
+      case '/myeWalletScreen':
+        return MaterialPageRoute(builder: (_) =>  MyeWalletScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/profile/presentation/widgets/impact_first_card.dart';
-import 'package:newwwwwwww/features/profile/presentation/widgets/impact_second_card.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/profile/presentation/widgets/filter_date_widget.dart';
+import 'package:newwwwwwww/features/profile/presentation/widgets/transaction_card.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../widgets/e_wallet_card.dart';
 
-class MyImpactScreen extends StatefulWidget {
-  const MyImpactScreen({super.key});
+class MyeWalletScreen extends StatefulWidget {
+  const MyeWalletScreen({super.key});
 
   @override
-  State<MyImpactScreen> createState() => _MyImpactScreenState();
+  State<MyeWalletScreen> createState() => _MyeWalletScreenState();
 }
 
-class _MyImpactScreenState extends State<MyImpactScreen>
+class _MyeWalletScreenState extends State<MyeWalletScreen>
     with SingleTickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -47,7 +49,7 @@ class _MyImpactScreenState extends State<MyImpactScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'My Impact',
+            title: 'My e-Wallet',
             is_returned: true, //edit back from orders
           ),
           Positioned.fill(
@@ -59,15 +61,32 @@ class _MyImpactScreenState extends State<MyImpactScreen>
               ),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding:  EdgeInsets.only(left: screenWidth*.06,bottom:  screenHeight*.04,right: screenWidth*.06,),
+                  padding: EdgeInsets.only(
+                    left: screenWidth * .06,
+                    bottom: screenHeight * .04,
+                    right: screenWidth * .06,
+                  ),
 
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
-                      impactFirstCard(screenWidth, screenHeight),
-                      impactSecondCard(screenWidth, screenHeight)
+                      eWalletCard(context, screenWidth, screenHeight),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * .02,
+                        ),
+                        child: customCouponAlertTitle(
+                          'Transaction History',
+                          screenWidth,
+                          screenHeight,
+                        ),
+                      ),
+                      buildFilterDateWidget(screenHeight, screenWidth),
+                      SizedBox(height:screenHeight*.01),
+                      TransactionCard(screenHeight, screenWidth),
+                      TransactionCard(screenHeight, screenWidth),
+                      TransactionCard(screenHeight, screenWidth)
 
                     ],
                   ),

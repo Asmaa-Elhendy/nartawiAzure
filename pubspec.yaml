@@ -110,6 +110,9 @@ flutter:
     - assets/images/profile/delivery/google maps.svg
     - assets/images/profile/delivery/home.svg
     - assets/images/profile/impact/drop-Frame.svg
+    - assets/images/profile/e_wallet/Qr.svg
+    - assets/images/profile/e_wallet/top-up.svg
+    - assets/images/profile/e_wallet/transfer.svg
 
   fonts:
     - family: Poppins
