@@ -39,10 +39,10 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                    Navigator.pop(context);
                  },
                  child: Padding(
-                   padding:  EdgeInsets.only(right: screenWidth*.02),
+                   padding:  EdgeInsets.only(right: screenWidth*.02,left: screenWidth*.02),
                    child: Iconify(
                      MaterialSymbols.arrow_back_ios,
-                     size: 16,
+                     size: screenWidth*.05,
                      color: AppColors.whiteColor,
                    ),
                  ),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import 'add_transfer_alert.dart';
 import 'outline_button_e_wallet.dart';
 
 Widget eWalletCard(
@@ -59,7 +60,13 @@ Widget eWalletCard(
           leftIcon: 'assets/images/profile/e_wallet/top-up.svg',
           rightIcon: 'assets/images/profile/e_wallet/transfer.svg',
           fun1: (){},
-          fun2: (){}
+          fun2: (){
+            showDialog(
+              context: context,
+              builder: (ctx) =>
+                  TransferAlertDialog(),
+            );
+          }
         ),
       ],
     ),
