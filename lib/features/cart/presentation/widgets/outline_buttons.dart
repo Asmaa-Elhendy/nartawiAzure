@@ -17,43 +17,7 @@ Widget RowOutlineButtons(
     child: Row(
       children: [
         Expanded(
-          child: InkWell(
-            onTap: leftFun,
-            child: Padding(
-              padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
-              child: Container(
-                padding: EdgeInsetsGeometry.symmetric(
-                  vertical: screenHeight * .01,
-                  horizontal: screenWidth * .015,
-                ),
-                height: screenHeight * .055,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.blueBorder,
-                    // 👈 Border color
-                    width: .5, // 👈 Optional: Border thickness
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        leftTitle,
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: screenWidth * .036,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+          child:  OutlineButton(  leftFun, leftTitle, screenWidth, screenHeight)),
         Expanded(
           child: InkWell(
             onTap: rightFun,
@@ -90,6 +54,105 @@ Widget RowOutlineButtons(
                 ),
               ),
             ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget OutlineButton(void Function()? leftFun,String leftTitle,double screenWidth,double screenHeight){
+  return InkWell(
+    onTap: leftFun,
+    child: Padding(
+      padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
+      child: Container(
+        padding: EdgeInsetsGeometry.symmetric(
+          vertical: screenHeight * .01,
+          horizontal: screenWidth * .015,
+        ),
+        height: screenHeight * .055,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.blueBorder,
+            // 👈 Border color
+            width: .5, // 👈 Optional: Border thickness
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                leftTitle,
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: screenWidth * .036,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget OutlineButtonWithoutFlexible(void Function()? leftFun,String leftTitle,double screenWidth,double screenHeight){
+  return   Container(
+    padding: EdgeInsetsGeometry.symmetric(
+      vertical: screenHeight * .01,
+      horizontal: screenWidth * .015,
+    ),
+    height: screenHeight * .055,
+    decoration: BoxDecoration(
+      border: Border.all(
+        color: AppColors.blueBorder,
+        // 👈 Border color
+        width: .5, // 👈 Optional: Border thickness
+      ),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'View Details',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontSize: screenWidth * .036,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget viewStoreWithoutFlexible(void Function()? leftFun,String leftTitle,double screenWidth,double screenHeight){
+  return   Container(
+    padding: EdgeInsetsGeometry.symmetric(
+      vertical: screenHeight * .01,
+      horizontal: screenWidth * .015,
+    ),
+    height: screenHeight * .055,
+    decoration: BoxDecoration(
+      border: Border.all(
+        color: AppColors.blueBorder,
+        // 👈 Border color
+        width: .5, // 👈 Optional: Border thickness
+      ),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'View Details',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontSize: screenWidth * .036,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],

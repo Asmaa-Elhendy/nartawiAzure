@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/delivery_address_cart.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/outline_buttons.dart';
-import 'package:newwwwwwww/features/orders/presentation/widgets/delivery_information_report.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
-import 'package:newwwwwwww/features/orders/presentation/widgets/seller_information_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
-import '../../../orders/presentation/widgets/cancel_alert_dialog.dart';
-import '../../../profile/presentation/widgets/address_card.dart';
+import '../widgets/cart_store_card.dart';
 
 class CartScreen extends StatefulWidget {
-
-
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
-class _CartScreenState extends State<CartScreen>  with SingleTickerProviderStateMixin {
+class _CartScreenState extends State<CartScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
@@ -34,6 +31,11 @@ class _CartScreenState extends State<CartScreen>  with SingleTickerProviderState
   }
 
   String? imageUrl = null;
+  List<String> products = [
+    'assets/images/home/main_page/product.jpg',
+    'assets/images/home/main_page/product.jpg',
+    'assets/images/home/main_page/product.jpg',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -82,16 +84,66 @@ class _CartScreenState extends State<CartScreen>  with SingleTickerProviderState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            CartStoreCard(context,screenWidth,screenHeight),
 
-                            OrderSummaryCard(screenWidth,screenHeight),
-                            OrderDeliveryCartWidget(context, screenWidth, screenHeight),
-                            BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Proceed To Checkout', false, (){
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: screenHeight * .02,
+                              ),
+                              child: Column(
+                                children: products
+                                    .map(
+                                      (p) => FavouriteProductCard(
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                        icon: p,
+                                        fromCartScreen: true,
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
 
-                            }),
-                            RowOutlineButtons(context, screenWidth, screenHeight,   'Continue Shopping','Clear Cart',(){},(){}),
-                            SizedBox(height: screenHeight*.04)
-
-
+                              //
+                              // SizedBox(
+                              //               height:screenHeight*.45,
+                              //               child:ListView(shrinkWrap: true,
+                              //                 children: [
+                              //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                              //                     icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                              //                   ),
+                              //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                              //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                              //                   ), FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                              //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                              //                   ),
+                              //
+                              //
+                              //                 ],),
+                              //             ),
+                            ),
+                            OrderSummaryCard(screenWidth, screenHeight),
+                            OrderDeliveryCartWidget(
+                              context,
+                              screenWidth,
+                              screenHeight,
+                            ),
+                            BuildInfoAndAddToCartButton(
+                              screenWidth,
+                              screenHeight,
+                              'Proceed To Checkout',
+                              false,
+                              () {},
+                            ),
+                            RowOutlineButtons(
+                              context,
+                              screenWidth,
+                              screenHeight,
+                              'Continue Shopping',
+                              'Clear Cart',
+                              () {},
+                              () {},
+                            ),
+                            SizedBox(height: screenHeight * .04),
                           ],
                         ),
                       ),

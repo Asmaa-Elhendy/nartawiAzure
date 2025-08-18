@@ -9,16 +9,20 @@ import '../../../home/presentation/bloc/product_quantity/product_quantity_event.
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/price_widget.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/products/icon_on_product_card.dart';
+import '../../../home/presentation/widgets/main_screen_widgets/products/product_card.dart';
+import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
 
 class FavouriteProductCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
   String icon;
+  bool fromCartScreen;
 
   FavouriteProductCard({
     required this.screenWidth,
     required this.screenHeight,
     required this.icon,
+    this.fromCartScreen = false,
   });
 
   @override
@@ -28,6 +32,8 @@ class FavouriteProductCard extends StatefulWidget {
 class _FavouriteProductCardState extends State<FavouriteProductCard> {
   late final TextEditingController _quantityController;
   late final ProductQuantityBloc _quantityBloc;
+  late final ProductQuantityBloc _quantityTwoBloc;
+  late final TextEditingController _quantityTwoController;
 
   @override
   void initState() {
@@ -37,21 +43,29 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       calculateProductPrice: CalculateProductPrice(),
       basePrice: 100.0,
     );
+    _quantityTwoBloc = ProductQuantityBloc(
+      calculateProductPrice: CalculateProductPrice(),
+      basePrice: 100.0,
+    );
+    _quantityTwoController = TextEditingController(text: '1');
   }
 
   @override
   void dispose() {
     _quantityController.dispose();
     _quantityBloc.close();
+    _quantityBloc.close();
+    _quantityTwoBloc.close();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         // Navigator.pushNamed(context, '/productDetail');
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
-
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
       },
       child: BlocProvider.value(
         value: _quantityBloc,
@@ -61,23 +75,22 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
             if (_quantityController.text != state.quantity) {
               _quantityController.text = state.quantity;
             }
-
+            double containerHeight = widget.fromCartScreen
+                ? widget.screenHeight * .33
+                : widget.screenHeight * .28;
             return Padding(
-              padding: EdgeInsets.only(bottom: widget.screenHeight * .02,left: widget.screenWidth*.06,right: widget.screenWidth*.06),
+              padding: EdgeInsets.only(
+                bottom: widget.screenHeight * .02,
+                left: widget.fromCartScreen ? 0 : widget.screenWidth * .06,
+                right: widget.fromCartScreen ? 0 : widget.screenWidth * .06,
+              ),
               child: Container(
-                width: widget.screenWidth ,
-                height: widget.screenHeight*.28,
+                width: widget.screenWidth,
+                height: containerHeight,
+                //from cart can be coupon or product (weekly sent bundles)
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: AppColors.favouriteProductCard,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: AppColors.shadowColor,
-                  //     offset: Offset(0, 2),
-                  //     blurRadius: 20,
-                  //     spreadRadius: 0,
-                  //   ),
-                  // ],
                 ),
                 child: Column(
                   children: [
@@ -88,61 +101,87 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                         Stack(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20)),
-                              child:
-                              Image.asset(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomLeft: Radius.circular(20),
+                              ),
+                              child: Image.asset(
                                 widget.icon,
-                                 width: widget.screenWidth * .31, // match or be smaller than container
-                                height: widget.screenHeight*.28,
+                                width: widget.screenWidth * .31,
+                                // match or be smaller than container
+                                height: containerHeight,
+                                //height according container
                                 fit: BoxFit.cover,
-                             ),
-                            ),
-                            Positioned(
-                              top: widget.screenHeight * 0.01,
-                              right: widget.screenWidth * 0.01,
-                              left: widget.screenWidth * 0.01,
-                              child: Row(
-                                //  mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  BuildIconOnProduct(
-                                    widget.screenWidth,
-                                    widget.screenHeight,
-                                    true, // plus icon
-                                      true
-                                  ),
-                                  //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                                  BuildIconOnProduct(
-                                    widget.screenWidth,
-                                    widget.screenHeight,
-                                    false, // heart icon
-                                    true
-                                  ),
-                                ],
                               ),
                             ),
+                            widget.fromCartScreen
+                                ? Positioned(
+                                    top: widget.screenHeight * 0.01,
+                                    left: widget.screenWidth * 0.01,
+                                    child: BuildIconOnProduct(
+                                      isDelete: true,
+                                      widget.screenWidth,
+                                      widget.screenHeight,
+                                      true, // plus icon
+                                      true,
+                                    ),
+                                  )
+                                : Positioned(
+                                    top: widget.screenHeight * 0.01,
+                                    right: widget.screenWidth * 0.01,
+                                    left: widget.screenWidth * 0.01,
+                                    child: Row(
+                                      //  mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        BuildIconOnProduct(
+                                          widget.screenWidth,
+                                          widget.screenHeight,
+                                          true, // plus icon
+                                          true,
+                                        ),
+                                        //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
+                                        BuildIconOnProduct(
+                                          widget.screenWidth,
+                                          widget.screenHeight,
+                                          false, // heart icon
+                                          true,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                           ],
                         ),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(
-                              bottom:widget.screenHeight * .01 ,
+                              bottom: widget.screenHeight * .01,
                               top: widget.screenHeight * .02,
-                              right: widget.screenWidth*.03,
-                              left: widget.screenWidth*.03
-
+                              right: widget.screenWidth * .03,
+                              left: widget.screenWidth * .03,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ProductTitle(widget.screenHeight, widget.screenWidth),
+                                widget.fromCartScreen
+                                    ? SizedBox()
+                                    : ProductTitle(
+                                        widget.screenHeight,
+                                        widget.screenWidth,
+                                      ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: widget.screenHeight * .01),
+                                  padding: EdgeInsets.only(
+                                    top: widget.fromCartScreen
+                                        ? 0
+                                        : widget.screenWidth * .01,
+                                    bottom: widget.screenHeight * .01,
+                                  ),
                                   child: Text(
                                     "Hand Pump Dispenser",
                                     style: TextStyle(
                                       color: AppColors.primary,
-                                      fontSize: widget.screenWidth * .028,
+                                      fontSize: widget.screenWidth * .03, //.028
                                       fontWeight: FontWeight.w600,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -159,7 +198,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: widget.screenHeight * .01),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: widget.screenHeight * .01,
+                                  ),
                                   child: Text(
                                     "QAR 100.00",
                                     style: TextStyle(
@@ -178,35 +219,148 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(vertical: widget.screenHeight * .01,horizontal: widget.screenWidth*.01),
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: widget.screenHeight * .01,
+                                    horizontal: widget.screenWidth * .01,
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       BuildRoundedIconOnProduct(
+                                        fromCartScreen: widget.fromCartScreen,
                                         context: context,
                                         width: widget.screenWidth,
                                         height: widget.screenHeight,
                                         isPlus: true,
                                         price: 0,
-                                        onIncrease: () => context.read<ProductQuantityBloc>().add(IncreaseQuantity()),
-                                        onDecrease: () => context.read<ProductQuantityBloc>().add(DecreaseQuantity()),
+                                        onIncrease: () => context
+                                            .read<ProductQuantityBloc>()
+                                            .add(IncreaseQuantity()),
+                                        onDecrease: () => context
+                                            .read<ProductQuantityBloc>()
+                                            .add(DecreaseQuantity()),
                                         quantityCntroller: _quantityController,
-                                        onTextfieldChanged: (value) => context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
-                                        onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
+                                        onTextfieldChanged: (value) => context
+                                            .read<ProductQuantityBloc>()
+                                            .add(QuantityChanged(value)),
+                                        onDone: () => context
+                                            .read<ProductQuantityBloc>()
+                                            .add(QuantityEditingComplete()),
                                       ),
-                                      BuildPriceContainer(widget.screenWidth, widget.screenHeight, state)
+                                      BuildPriceContainer(
+                                        widget.screenWidth,
+                                        widget.screenHeight,
+                                        state,
+                                      ),
                                     ],
                                   ),
-                                )
+                                ),
+                                widget.fromCartScreen
+                                    ? //not always when coupon only not product in cart screen
+                                      Text(
+                                        "Weekly Sent Bundles",
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          fontSize: widget.screenWidth * .036,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      )
+                                    : SizedBox(),
+                                widget.fromCartScreen
+                                    ? BlocProvider.value(
+                                        value: _quantityTwoBloc,
+                                        child:
+                                            BlocBuilder<
+                                              ProductQuantityBloc,
+                                              ProductQuantityState
+                                            >(
+                                              builder: (context, state) {
+                                                // Update controller when state changes
+                                                if (_quantityTwoController
+                                                        .text !=
+                                                    state.quantity) {
+                                                  _quantityTwoController.text =
+                                                      state.quantity;
+                                                }
+                                                return Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                        top:
+                                                            widget
+                                                                .screenHeight *
+                                                            0.01,
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: IncreaseDecreaseQuantity(
+                                                              context: context,
+                                                              width: widget
+                                                                  .screenWidth,
+                                                              height: widget
+                                                                  .screenHeight,
+                                                              isPlus: true,
+                                                              price: 0,
+                                                              // Not used for the controls
+                                                              onIncrease: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    IncreaseQuantity(),
+                                                                  ),
+                                                              onDecrease: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    DecreaseQuantity(),
+                                                                  ),
+                                                              quantityCntroller:
+                                                                  _quantityTwoController,
+                                                              onTextfieldChanged:
+                                                                  (
+                                                                    value,
+                                                                  ) => context
+                                                                      .read<
+                                                                        ProductQuantityBloc
+                                                                      >()
+                                                                      .add(
+                                                                        QuantityChanged(
+                                                                          value,
+                                                                        ),
+                                                                      ),
+                                                              onDone: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    QuantityEditingComplete(),
+                                                                  ),
+                                                              fromDetailedScreen:
+                                                                  true,
+                                                              title: '',
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                      )
+                                    : SizedBox(),
                               ],
                             ),
                           ),
                         ),
                       ],
-                    )
-
-
-
+                    ),
                   ],
                 ),
               ),
@@ -216,49 +370,4 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       ),
     );
   }
-}
-
-Widget ProductTitle(double screenHeight,double screenWidth){
-  return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Row(
-        children: [
-          Container(
-            //   width: widget.screenWidth * .04,
-            // الحجم العرض
-            height: screenHeight * .03,
-            // الحجم الارتفاع
-            decoration: BoxDecoration(
-              color: AppColors.backgrounHome, // لون الخلفية
-              shape: BoxShape.circle, // يجعله دائري
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Image.asset(
-              "assets/images/home/main_page/company.png",
-              height: screenHeight * .03,//
-              fit: BoxFit.cover,
-            ),
-          ),SizedBox(width: screenWidth*.02,),
-          Text('Company',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,)
-        ],
-      ),
-      Row(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Iconify(
-            MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-            size: screenHeight*.025,
-            color: Colors.amber,
-          ),
-          SizedBox(width: screenWidth*.01,),
-          Text('5.0',style: TextStyle(fontSize: screenWidth*.03,fontWeight: FontWeight.w500))
-        ],
-      ),
-    ],
-  );
 }

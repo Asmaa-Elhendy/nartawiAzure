@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 
-Widget BuildRowRating(double screenWidth,double screenHeight ){
+Widget BuildRowRating(double screenWidth,double screenHeight ,
+    {String title = ''}){
   return  Row(crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
@@ -12,7 +13,7 @@ Widget BuildRowRating(double screenWidth,double screenHeight ){
         color: Colors.amber,
       ),
       //  SizedBox(width: screenWidth*.01,),
-      Text('5.0',style: TextStyle(fontSize: screenWidth*.034,fontWeight: FontWeight.w500))
+      Text(title==''?'5.0':title,style: TextStyle(fontSize: screenWidth*.034,fontWeight: FontWeight.w500))
     ],
 
   );

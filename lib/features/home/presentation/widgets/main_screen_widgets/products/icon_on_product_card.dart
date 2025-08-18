@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
-Widget BuildIconOnProduct(double width,double height,bool isPlus,bool isFavourite){
-
+Widget BuildIconOnProduct(
+  double width,
+  double height,
+  bool isPlus,
+  bool isFavourite, {
+  bool isDelete = false,
+}) {
   return Container(
-    width: width*.1, // الحجم العرض
-    height: height*.045, // الحجم الارتفاع
+    width: width * .1, // الحجم العرض
+    height: height * .045, // الحجم الارتفاع
     decoration: BoxDecoration(
       color: AppColors.backgrounHome, // لون الخلفية
       shape: BoxShape.circle, // يجعله دائري
@@ -22,45 +28,57 @@ Widget BuildIconOnProduct(double width,double height,bool isPlus,bool isFavourit
       ],
     ),
     child: Center(
-      child: isPlus?
-
-      Icon(
-        Icons.add, // استبدلها بالأيقونة اللي تحبها
-        size: height*.03,
+      child:
+      isDelete?Iconify(
+        MaterialSymbols.delete_outline_rounded,
+        size: height * .03,
         color: AppColors.primary,
-      ):isFavourite?
-      Iconify(
-        Mdi.heart,
-        color: AppColors.redColor,
-        size:height*.03,
       ):
-      Iconify(
-        Mdi.heart_outline,
-        color: AppColors.primary,
-        size:height*.03,
-      ),
+      isPlus
+          ? Icon(
+              Icons.add, // استبدلها بالأيقونة اللي تحبها
+              size: height * .03,
+              color: AppColors.primary,
+            )
+          : isFavourite
+          ? Iconify(Mdi.heart, color: AppColors.redColor, size: height * .03)
+          : Iconify(
+              Mdi.heart_outline,
+              color: AppColors.primary,
+              size: height * .03,
+            ),
     ),
   );
 }
 
-
 Widget BuildRoundedIconOnProduct({
   required BuildContext context,
-  required double width, 
+  required double width,
   required double height,
   required bool isPlus,
-  int price = 0, 
+  int price = 0,
   required VoidCallback onIncrease,
   required VoidCallback onDecrease,
   required TextEditingController quantityCntroller,
   ValueChanged<String>? onTextfieldChanged,
   VoidCallback? onDone,
-  bool fromDetailedScreen=false,
-}){
+  bool fromDetailedScreen = false,
+  bool fromCartScreen = false,
+}) {
   return Container(
-    padding: fromDetailedScreen?EdgeInsets.symmetric(horizontal: width*.02):EdgeInsets.zero,
-    width:fromDetailedScreen?width*.6:isPlus?width*.21:width*.15, // الحجم العرض
-    height: height*.045, // الحجم الارتفاع
+    padding: fromDetailedScreen || fromCartScreen
+        ? EdgeInsets.symmetric(horizontal: width * .02)
+        : EdgeInsets.zero,
+    width: fromDetailedScreen
+        ? width * .6
+        : isPlus
+        ? fromCartScreen
+              ? width * .28
+              : width * .21
+        : width * .15,
+    // الحجم العرض
+    height: height * .045,
+    // الحجم الارتفاع
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       color: AppColors.backgrounHome, // لون الخلفية
@@ -75,58 +93,63 @@ Widget BuildRoundedIconOnProduct({
     ),
     child: Center(
       child:
-    //  isPlus?
-      Row(
-        mainAxisAlignment:fromDetailedScreen? MainAxisAlignment.spaceBetween: MainAxisAlignment.center,
-        children: [
-            GestureDetector(
-              onTap: onDecrease,
-              child: Iconify(
-                      Ic.baseline_minus, // استبدلها بالأيقونة اللي تحبها
-              size: height*.03,
-              color: AppColors.redColor,
-                        ),
-            ),
-          // Center(
-          //   child: Padding(
-          //     padding:  EdgeInsets.symmetric(horizontal: width*.014),
-          //     child: Text('$quantity',style: TextStyle(fontWeight: FontWeight.w700),),
-          //   ),
-          // ),
-          Container(
-            width: width * 0.07,
-            height: height * 0.04,
-            alignment: Alignment.center,
-            child: TextField(
-              controller: quantityCntroller,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: TextStyle(fontWeight: FontWeight.w700,   fontSize: width * 0.034,overflow: TextOverflow.ellipsis),
-              onChanged: onTextfieldChanged,
-              onEditingComplete: onDone,
-              onSubmitted: (value){
-              FocusScope.of(context).unfocus();
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
+          //  isPlus?
+          Row(
+            mainAxisAlignment: fromDetailedScreen || fromCartScreen
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: onDecrease,
+                child: Iconify(
+                  Ic.baseline_minus, // استبدلها بالأيقونة اللي تحبها
+                  size: height * .03,
+                  color: AppColors.redColor,
+                ),
               ),
-            ),
+              // Center(
+              //   child: Padding(
+              //     padding:  EdgeInsets.symmetric(horizontal: width*.014),
+              //     child: Text('$quantity',style: TextStyle(fontWeight: FontWeight.w700),),
+              //   ),
+              // ),
+              Container(
+                width: width * 0.07,
+                height: height * 0.04,
+                alignment: Alignment.center,
+                child: TextField(
+                  controller: quantityCntroller,
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: width * 0.034,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onChanged: onTextfieldChanged,
+                  onEditingComplete: onDone,
+                  onSubmitted: (value) {
+                    FocusScope.of(context).unfocus();
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: onIncrease,
+                child: Icon(
+                  Icons.add, // استبدلها بالأيقونة اللي تحبها
+                  size: height * .03,
+                  color: AppColors.greenColor,
+                ),
+              ),
+            ],
           ),
-        GestureDetector(
-          onTap: onIncrease,
-          child: Icon(
-              Icons.add, // استبدلها بالأيقونة اللي تحبها
-              size: height*.03,
-              color: AppColors.greenColor,
-            ),
-        )
-
-        ],
-      )
-            //:
+      //:
       // Row(
       //   mainAxisAlignment: MainAxisAlignment.center,
       //   children: [
