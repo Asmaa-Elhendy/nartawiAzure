@@ -55,7 +55,7 @@ Widget BuildInfoAndAddToCartButton(
               title,
               style: TextStyle(
                 color: AppColors.whiteColor,
-                fontSize:fromDelivery?width*.036: width*.034,
+                fontSize:fromDelivery?width*.036: width*.035,
                 fontWeight: FontWeight.w500,
               ),
             ),

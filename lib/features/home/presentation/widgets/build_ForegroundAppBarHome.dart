@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/cart/presentation/screens/cart_screen.dart';
 
 import '../../../../core/theme/colors.dart';
 
@@ -63,8 +64,13 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     size: widget.screenWidth * .05, color: AppColors.whiteColor),
                 Icon(Icons.notifications,
                     color: AppColors.whiteColor, size: widget.screenWidth * .05),
-                Icon(Icons.shopping_cart_outlined,
-                    color: AppColors.whiteColor, size: widget.screenWidth * .05),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
+                  },
+                  child: Icon(Icons.shopping_cart_outlined,
+                      color: AppColors.whiteColor, size: widget.screenWidth * .05),
+                ),
                 SvgPicture.asset("assets/images/home/Language.svg",
                     width: widget.screenWidth * .05),
                 SvgPicture.asset("assets/images/home/headphone.svg",

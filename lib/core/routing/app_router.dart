@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/cart/presentation/screens/cart_screen.dart';
 import 'package:newwwwwwww/features/favourites/pesentation/screens/favourites_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
 import 'package:newwwwwwww/features/profile/presentation/screens/my_ewallet_screen.dart';
@@ -76,6 +77,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  MyImpactScreen());
       case '/myeWalletScreen':
         return MaterialPageRoute(builder: (_) =>  MyeWalletScreen());
+      case '/cartScreen':
+        return MaterialPageRoute(builder: (_) =>  CartScreen());
     // Add more routes here
       default:
         return MaterialPageRoute(

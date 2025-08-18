@@ -8,23 +8,23 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import '../../../../../../core/theme/colors.dart';
 
 
-Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false}){
+Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false}){
   return  GestureDetector(
     onTap: (){
 
     },
     child: Padding(
-      padding:  EdgeInsets.symmetric(vertical: screenHeight*.02),
+      padding:  EdgeInsets.symmetric(vertical: fromCart?screenHeight*.01:screenHeight*.02),
       child: Container(
       //  height: screenHeight*.133,//ss
-        padding:  EdgeInsets.symmetric(vertical: screenHeight*.03,horizontal: screenWidth*.04),
+        padding:  EdgeInsets.symmetric(vertical: screenHeight*.03,horizontal:screenWidth*.04),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           border: work?Border.all(
             color: AppColors.BorderAnddividerAndIconColor, // 👈 Border color
             width:0.5,               // 👈 Optional: Border thickness
           ):Border.all(color: Colors.transparent, width: 0),
-          color: work?Colors.transparent:AppColors.whiteColor,
+          color: work?Colors.transparent:fromCart?AppColors.backgrounHome:AppColors.whiteColor,
           // boxShadow: [
           //   BoxShadow(
           //     color:AppColors.shadowColor, // ظل خفيف
@@ -43,27 +43,32 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
                 fontWeight: FontWeight.w600,fontSize: screenWidth*.04,color:work?AppColors.textLight: AppColors.primary),),
             SizedBox(height: screenHeight*.02,),
             Row(crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-              SvgPicture.asset(
-              'assets/images/profile/delivery/home.svg',
-              height: screenHeight * .055,
-            ),
-              SizedBox(width: screenWidth*.04),
-               Column(crossAxisAlignment: CrossAxisAlignment.start,
-                 mainAxisAlignment: MainAxisAlignment.start,
-                 children: [
-                   Text('Delivering to Home',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
+              Row(crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                  'assets/images/profile/delivery/home.svg',
+                  height: screenHeight * .055,
+                              ),
+                  SizedBox(width: screenWidth*.04),
+                   Column(crossAxisAlignment: CrossAxisAlignment.start,
+                     mainAxisAlignment: MainAxisAlignment.start,
+                     children: [
+                       Text('Delivering to Home',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
 
-                   Text('portsaid,23july',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
+                       Text('portsaid,23july',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
 
-                 ],
-               ),
-                SizedBox(width: screenWidth*.3,),
+                     ],
+                   ),
+                ],
+              ),
+              //  SizedBox(width:fromCart?screenWidth*.2: screenWidth*.3,),
            work?SizedBox():     Iconify(
                   MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-                  size: screenHeight*.038,
+                  size: screenHeight*.035,
                   color: AppColors.primary,
                 ),
               ],
