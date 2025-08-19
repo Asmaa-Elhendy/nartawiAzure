@@ -16,19 +16,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/onboaring/illastorator-man.png',
       'description':
-      'pick your favorite water brand, coupon bundle, and delivery address',
+      'Pick Your Favorite Water Brand, Coupon Bundle, And Delivery Address',
     },
     {
       'image': 'assets/images/onboaring/illastorator-phone.png',
       'description':
-      'confirm your order and checkout-all in few taps',
+      'Confirm Your Order And Checkout—All in Few Taps',
     },
     {
       'image': 'assets/images/onboaring/illastorator-woman.png',
       'description':
-      'stay refreshed.your water arrives straight to your door every week,stay goodbye to paper coupons',
+      'Stay refreshed. Your water Arrives Straight To Your Door Every Week. Say Goodbye To Paper Coupons',
     },
   ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Pre-cache images for smoother onboarding experience
+    for (var data in onboardingData) {
+      precacheImage(AssetImage(data['image']!), context);
+    }
+    // Also pre-cache the logo and background
+    precacheImage(const AssetImage('assets/images/onboaring/Logo.png'), context);
+    precacheImage(const AssetImage('assets/images/splash/background.png'), context);
+  }
 
   void _goToNextPage() {
     if (_currentPage < onboardingData.length - 1) {
@@ -43,12 +55,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width=MediaQuery.of(context).size.width;
-    double height=MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+    final double height = MediaQuery.of(context).size.height;
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        // ✅ Background Image
+        // Background Image
         Image.asset(
           "assets/images/splash/background.png",
           fit: BoxFit.cover,
@@ -77,8 +90,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       );
                     },
                   ),
-                ),  Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: width*.04,vertical: height*.01),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.04, vertical: height * 0.01),
                   child: Row(
                     children: [
                       Expanded(
@@ -86,15 +100,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onPressed: _goToNextPage,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            padding:  EdgeInsets.symmetric(vertical: height*.02),
+                            padding: EdgeInsets.symmetric(vertical: height * 0.02),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: Text(
-                             'Let\'s Get Started'
-                               ,
-                            style: const TextStyle(
+                          child: const Text(
+                            "Let's Get Started",
+                            style: TextStyle(
                               color: AppColors.secondary,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -111,11 +124,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardingData.length,
-                          (index) => buildDot(index,height,width),
+                          (index) => buildDot(index, height, width),
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 10),
               ],
             ),
@@ -125,12 +137,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget buildDot(int index,double height,double width) {
+  Widget buildDot(int index, double height, double width) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      height: height*.009,
-      width: _currentPage == index ? width*.1 : width*.06,
+      height: height * 0.009,
+      width: _currentPage == index ? width * 0.1 : width * 0.06,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(_currentPage != index ? 1 : 0.5),
         borderRadius: BorderRadius.circular(4),
@@ -145,37 +157,41 @@ class OnboardingContent extends StatelessWidget {
   final double width;
   final double height;
 
-
   const OnboardingContent({
     super.key,
     required this.imagePath,
     required this.description,
     required this.width,
-    required this.height
+    required this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(top:this.height*.05, left: width*.02, right: width*.02, bottom: height*.05),
+      padding: EdgeInsets.only(
+        top: height * 0.05,
+        left: width * 0.02,
+        right: width * 0.02,
+        bottom: height * 0.05,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset("assets/images/onboaring/Logo.png", width: width*.2),
+          Image.asset("assets/images/onboaring/Logo.png", width: width * 0.2),
           const SizedBox(height: 15),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
               description,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
+              style:  TextStyle(
+                fontSize: width*.055,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
             ),
           ),
-           SizedBox(height: height*.03),
+          SizedBox(height: height * 0.03),
           Image.asset(imagePath, height: 200, width: 250),
         ],
       ),
