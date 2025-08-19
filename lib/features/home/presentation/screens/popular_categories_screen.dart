@@ -9,52 +9,58 @@ class PopularCategoriesScreen extends StatefulWidget {
   const PopularCategoriesScreen({super.key});
 
   @override
-  State<PopularCategoriesScreen> createState() => _PopularCategoriesScreenState();
+  State<PopularCategoriesScreen> createState() =>
+      _PopularCategoriesScreenState();
 }
 
 class _PopularCategoriesScreenState extends State<PopularCategoriesScreen> {
-  final TextEditingController _SearchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void dispose() {
-    _SearchController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
-  String? imageUrl=null;
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    return  Scaffold(
-        extendBody: true,
-        backgroundColor: Colors.transparent, // في حالة الصورة في الخلفية
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final screenWidth = mediaQuery.size.width;
+    final topPadding = mediaQuery.padding.top;
 
-        // ✅ أضف ده
-        body: Stack(
-            children: [
-              Container(
-                width: screenWidth,
-                height: screenHeight,
-                color: AppColors.backgrounHome,
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          Container(
+            width: screenWidth,
+            height: screenHeight,
+            color: AppColors.backgrounHome,
+          ),
+          buildBackgroundAppbar(screenWidth),
+          BuildForegroundappbarhome(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+            title: 'Popular Categories',
+            is_returned: true,
+          ),
+          Positioned.fill(
+            top: topPadding + screenHeight * .1,
+            child: Padding(
+              padding: EdgeInsets.only(top: screenHeight * .03,bottom: screenHeight*.09),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TabBarFirstPage(),
+                  ],
+                ),
               ),
-              buildBackgroundAppbar(screenWidth),
-              BuildForegroundappbarhome(
-                screenHeight: screenHeight,
-                screenWidth: screenWidth,title: 'Popular Categories',is_returned: true,
-              ),
-              Positioned.fill(
-                  top: MediaQuery.of(context).padding.top + screenHeight * .1,
-                  child:Padding(
-                    padding:  EdgeInsets.only(top: screenHeight*.04),
-
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          TabBarFirstPage(),
-
-                        ],
-                      ),
-                    ),
-                  ))]));
-
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
