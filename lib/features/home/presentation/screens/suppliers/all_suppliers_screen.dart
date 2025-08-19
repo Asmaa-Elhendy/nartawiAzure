@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/home.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_card.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
@@ -13,61 +12,96 @@ class AllSuppliersScreen extends StatefulWidget {
 }
 
 class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
-  final TextEditingController _SearchController = TextEditingController();
-  final GlobalKey<NavigatorState> _nestedNavigatorKey = GlobalKey<NavigatorState>();
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoadingMore = false;
+  List<bool> _suppliersData = List.generate(10, (index) => index.isEven);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100 &&
+        !_isLoadingMore) {
+      _loadMoreSuppliers();
+    }
+  }
+
+  Future<void> _loadMoreSuppliers() async {
+    setState(() => _isLoadingMore = true);
+
+    // محاكاة تحميل بيانات جديدة
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      _suppliersData.addAll(List.generate(5, (index) => index.isEven));
+      _isLoadingMore = false;
+    });
+  }
 
   @override
   void dispose() {
-    _SearchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
-  String? imageUrl=null;
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    return
-      Scaffold(
-           backgroundColor: AppColors.whiteColor, // في حالة الصورة في الخلفية
-      body:
-      Stack(
+    final mediaQuery = MediaQuery.of(context);
+    final screenHeight = mediaQuery.size.height;
+    final screenWidth = mediaQuery.size.width;
+    final paddingTop = mediaQuery.padding.top;
+
+    return Scaffold(
+      backgroundColor: AppColors.whiteColor,
+      body: Stack(
         children: [
-          Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: AppColors.whiteColor,
-          ),
+          const SizedBox.expand(),
           buildBackgroundAppbar(screenWidth),
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
-            screenWidth: screenWidth,title: 'Water Suppliers',is_returned: true,
+            screenWidth: screenWidth,
+            title: 'Water Suppliers',
+            is_returned: true,
           ),
           Positioned.fill(
-            top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            top: paddingTop + screenHeight * .1,
             child: Padding(
-              padding:  EdgeInsets.only(top: screenHeight*.04,right: screenWidth*.03,left:screenWidth*.03 ),
-              child: Container(height: screenHeight*.8,
+              padding: EdgeInsets.only(
+                top: screenHeight * .04,
+                right: screenWidth * .03,
+                left: screenWidth * .03,
+                bottom: screenHeight*.09
+              ),
+              child: ListView.builder(
+                controller: _scrollController,
                 padding: EdgeInsets.zero,
-                child: ListView(padding:  EdgeInsets.zero,
-                  children: [
-                    BuildCardSupplier(context,screenHeight, screenWidth,true),
-                    BuildCardSupplier(context,screenHeight, screenWidth,false),
-                    BuildCardSupplier(context,screenHeight, screenWidth,true),
-                    BuildCardSupplier(context,screenHeight, screenWidth,false),
-                    BuildCardSupplier(context,screenHeight, screenWidth,true),
-                    BuildCardSupplier(context,screenHeight, screenWidth,false),
-                  ],
-
-                ),
+                itemCount: _suppliersData.length + (_isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index < _suppliersData.length) {
+                    return BuildCardSupplier(
+                      context,
+                      screenHeight,
+                      screenWidth,
+                      _suppliersData[index],
+                    );
+                  } else {
+                    // Loader في أسفل الصفحة
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ),
         ],
       ),
-
-
-          );
-
+    );
   }
 }
