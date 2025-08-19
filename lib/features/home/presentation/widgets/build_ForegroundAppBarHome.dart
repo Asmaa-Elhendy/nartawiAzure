@@ -12,7 +12,8 @@ class BuildForegroundappbarhome extends StatefulWidget {
  double screenWidth;
  String title;
  bool is_returned;
- BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth,required this.title,required this.is_returned});
+ String disabled;
+ BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth,required this.title,required this.is_returned,this.disabled=''});
 
   @override
   State<BuildForegroundappbarhome> createState() => _BuildForegroundappbarhomeState();
@@ -66,7 +67,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     color: AppColors.whiteColor, size: widget.screenWidth * .05),
                 InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
+                 widget.disabled=='cart'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
                   },
                   child: Icon(Icons.shopping_cart_outlined,
                       color: AppColors.whiteColor, size: widget.screenWidth * .05),

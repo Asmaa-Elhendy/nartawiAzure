@@ -123,31 +123,28 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
 
                           children: [
                             Container(
-                              child:ListView(
-                                padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
-                                children: [
-                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
-                                    icon: 'assets/images/home/main_page/product.jpg',
-                                    ),
-                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight, icon: 'assets/images/home/main_page/product.jpg',
-
-                ),
-                                  FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight, icon: 'assets/images/home/main_page/product.jpg',
-
-                ),
-                                ],),
+                              child: ListView.builder(
+                        padding: EdgeInsets.only(bottom: screenHeight * 0.06),
+                        itemCount: 3,
+                        itemBuilder: (context, index) => FavouriteProductCard(
+                          screenWidth: screenWidth,
+                          screenHeight: screenHeight,
+                          icon: 'assets/images/home/main_page/product.jpg',
+                        ),
                             ) // first tab bar view widget
-                            ,
+                            ,),
                             Container(
-                              child:ListView(
-                                padding: EdgeInsetsGeometry.zero,
-                                children: [
-                                  BuildFullCardSupplier(context, screenHeight, screenWidth,true,fromFavouritesScreen: true),
-
-                                  BuildFullCardSupplier(context, screenHeight, screenWidth,false,fromFavouritesScreen: true),
-                                  BuildFullCardSupplier(context, screenHeight, screenWidth,true,fromFavouritesScreen: true),
-                                  BuildFullCardSupplier(context, screenHeight, screenWidth,false,fromFavouritesScreen: true),
-                                ],),
+                              child: // Stores Tab
+                              ListView.builder(
+                                itemCount: 4,
+                                itemBuilder: (context, index) => BuildFullCardSupplier(
+                                  context,
+                                  screenHeight,
+                                  screenWidth,
+                                  index.isEven,
+                                  fromFavouritesScreen: true,
+                                ),
+                              ),
                             ),
 
                           ],
