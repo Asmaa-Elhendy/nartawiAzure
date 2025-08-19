@@ -23,7 +23,7 @@ class CustomBottomNav extends StatefulWidget {
 ValueNotifier<int> myTitle = ValueNotifier<int>(12);
 
 class _CustomBottomNavState extends State<CustomBottomNav> {
-@override
+  @override
   void initState() {
     // TODO: implement initState
 

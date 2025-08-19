@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -110,9 +111,9 @@ class _ProductCardState extends State<ProductCard> {
                                 child: Text(
                                   "Hand Pump Dispenser",
                                   style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontSize: widget.screenWidth*.028,
-                                    fontWeight: FontWeight.w600
+                                      color: AppColors.primary,
+                                      fontSize: widget.screenWidth*.028,
+                                      fontWeight: FontWeight.w600
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -133,9 +134,9 @@ class _ProductCardState extends State<ProductCard> {
                                 child: Text(
                                   "QAR 100.00",
                                   style: TextStyle(
-                                    color: AppColors.primary,
-                                    fontSize: widget.screenWidth*.036,
-                                    fontWeight: FontWeight.w600
+                                      color: AppColors.primary,
+                                      fontSize: widget.screenWidth*.036,
+                                      fontWeight: FontWeight.w600
                                   ),
                                 ),
                               ),
@@ -183,26 +184,26 @@ class _ProductCardState extends State<ProductCard> {
                       right: widget.screenWidth * 0.02,
                       left: widget.screenWidth * 0.02,
                       child: Row(
-                      //  mainAxisSize: MainAxisSize.min,
+                        //  mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           BuildIconOnProduct(
-                            widget.screenWidth,
-                            widget.screenHeight,
-                            true, // plus icon
-                            false
+                              widget.screenWidth,
+                              widget.screenHeight,
+                              true, // plus icon
+                              false
                           ),
-                    //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
+                          //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
                           BuildIconOnProduct(
-                            widget.screenWidth,
-                            widget.screenHeight,
-                            false,
-                            false// heart icon
+                              widget.screenWidth,
+                              widget.screenHeight,
+                              false,
+                              false// heart icon
                           ),
                         ],
                       ),
                     ),
-                  widget.fromAllProducts?  Positioned(
+                    widget.fromAllProducts?  Positioned(
                       top: widget.screenHeight * 0.01+widget.screenHeight*.138,
                       left: widget.screenWidth * 0.02,
                       child: CustomCheckboxExample(widget.screenWidth,widget.screenHeight),

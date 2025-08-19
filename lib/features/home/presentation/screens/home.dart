@@ -782,10 +782,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       //     Positioned.fill(
       //       top: MediaQuery.of(context).padding.top + screenHeight * .1,
       //       child:
-            IndexedStack(
-              index: _tabIndex,
-              children: List.generate(_tabCount, (index) => _buildTabNavigator(index)),
-            ),
+      IndexedStack(
+        index: _tabIndex,
+        children: List.generate(_tabCount, (index) => _buildTabNavigator(index)),
+      ),
       //     ),
       //   ],
       // ),
