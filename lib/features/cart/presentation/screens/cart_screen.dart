@@ -61,7 +61,7 @@ class _CartScreenState extends State<CartScreen>
             screenWidth: screenWidth,
             title: 'Your Cart',
             is_returned: true,
-            disabled:'cart'
+            disabledCart:'cart'
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,

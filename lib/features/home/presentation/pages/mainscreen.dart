@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/all_product_screen.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/popular_categories_screen.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
+import 'package:newwwwwwww/features/home/presentation/pages/popular_categories_screen.dart';
+import 'package:newwwwwwww/features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
@@ -15,6 +14,7 @@ import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';
 import '../widgets/main_screen_widgets/build_tapped_blue_title.dart';
 import '../widgets/main_screen_widgets/products/product_card.dart';
+import 'all_product_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

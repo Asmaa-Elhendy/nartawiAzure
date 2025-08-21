@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/suppliers/supplier_detail.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
-
 import '../../../../../../core/theme/colors.dart';
 
 

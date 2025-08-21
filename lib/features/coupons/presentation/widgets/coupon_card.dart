@@ -10,7 +10,7 @@ import '../../../home/presentation/bloc/product_quantity/product_quantity_state.
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../orders/presentation/widgets/order_image_network_widget.dart';
 import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
-import 'coupon_status_widget.dart';
+import '../../../../core/components/coupon_status_widget.dart';
 import 'custom_text.dart';
 
 class CouponeCard extends StatefulWidget {

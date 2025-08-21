@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/edit_profile.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/my_ewallet_screen.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/my_impact.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/settings.dart';
+import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
+import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
+import 'package:newwwwwwww/features/profile/presentation/pages/my_impact.dart';
+import 'package:newwwwwwww/features/profile/presentation/pages/settings.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/impact_wallet_widget.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/profile_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/single_settings_profile.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import 'delivery_address.dart';

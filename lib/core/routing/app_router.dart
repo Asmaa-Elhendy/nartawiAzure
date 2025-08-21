@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/cart/presentation/screens/cart_screen.dart';
-import 'package:newwwwwwww/features/favourites/pesentation/screens/favourites_screen.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/my_ewallet_screen.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/my_impact.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/profile.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
 import '../../features/auth/presentation/screens/sign_up.dart';
 import '../../features/auth/presentation/screens/verification_screen.dart';
+import '../../features/cart/presentation/screens/cart_screen.dart';
 import '../../features/coupons/presentation/screens/coupons_screen.dart';
-import '../../features/home/presentation/screens/all_product_screen.dart';
-import '../../features/home/presentation/screens/popular_categories_screen.dart';
-import '../../features/home/presentation/screens/suppliers/all_suppliers_screen.dart';
-import '../../features/home/presentation/screens/home.dart';
-import '../../features/home/presentation/screens/mainscreen.dart';
-import '../../features/home/presentation/screens/suppliers/supplier_detail.dart';
-import '../../features/orders/presentation/screens/order_details.dart';
-import '../../features/orders/presentation/screens/orders_screen.dart';
-import '../../features/profile/presentation/screens/delivery_address.dart';
-import '../../features/profile/presentation/screens/edit_profile.dart';
-import '../../features/profile/presentation/screens/settings.dart';
+import '../../features/favourites/pesentation/screens/favourites_screen.dart';
+import '../../features/home/presentation/pages/all_product_screen.dart';
+import '../../features/home/presentation/pages/home.dart';
+import '../../features/home/presentation/pages/mainscreen.dart';
+import '../../features/home/presentation/pages/popular_categories_screen.dart';
+import '../../features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
+import '../../features/home/presentation/pages/suppliers/product_details.dart';
+import '../../features/home/presentation/pages/suppliers/supplier_detail.dart';
+import '../../features/notification/presentation/pages/notification_screen.dart';
+import '../../features/orders/presentation/pages/order_details.dart';
+import '../../features/orders/presentation/pages/orders_screen.dart';
+import '../../features/profile/presentation/pages/delivery_address.dart';
+import '../../features/profile/presentation/pages/edit_profile.dart';
+import '../../features/profile/presentation/pages/my_ewallet_screen.dart';
+import '../../features/profile/presentation/pages/my_impact.dart';
+import '../../features/profile/presentation/pages/profile.dart';
+import '../../features/profile/presentation/pages/settings.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
-// Import other screens as needed
+// Import other pages as needed
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -79,6 +80,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  MyeWalletScreen());
       case '/cartScreen':
         return MaterialPageRoute(builder: (_) =>  CartScreen());
+      case '/notificationScreen':
+        return MaterialPageRoute(builder: (_) =>  NotificationScreen());
+
     // Add more routes here
       default:
         return MaterialPageRoute(

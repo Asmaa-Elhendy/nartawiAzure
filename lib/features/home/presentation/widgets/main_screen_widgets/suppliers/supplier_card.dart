@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/suppliers/supplier_detail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 
 import '../../../../../../core/theme/colors.dart';
+import '../../../pages/suppliers/supplier_detail.dart';
 
 
 Widget BuildCardSupplier(BuildContext context,double screenHeight,double screenWidth,bool isFeatured){

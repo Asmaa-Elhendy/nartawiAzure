@@ -5,14 +5,11 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/auth/presentation/widgets/buildFloadtActionButton.dart';
-import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/mainscreen.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/background_home_Appbar.dart';
-import 'package:newwwwwwww/features/home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import 'package:newwwwwwww/features/orders/presentation/screens/orders_screen.dart';
-import 'package:newwwwwwww/features/profile/presentation/screens/profile.dart';
+import 'package:newwwwwwww/features/orders/presentation/pages/orders_screen.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../coupons/presentation/screens/coupons_screen.dart';
 import '../../../favourites/pesentation/screens/favourites_screen.dart';
+import '../../../profile/presentation/pages/profile.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
 // class HomeScreen extends StatefulWidget {
@@ -495,6 +492,7 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import '../../../../core/theme/colors.dart';
 import '../widgets/bottom_navigation_bar.dart';
 import '../widgets/background_home_Appbar.dart';
+import 'mainscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

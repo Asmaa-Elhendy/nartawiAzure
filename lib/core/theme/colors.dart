@@ -17,6 +17,7 @@ class AppColors {
   static const Color darkBlue = Color(0xFF095BA8);
   static const Color lightBlue = Color(0xFF00A0DC);
   static final  Color secondaryColorWithOpacity8=Color(0xFFdbedf4);
+  static final  Color secondaryColorWithOpacity16=secondary.withValues(alpha: 0.16);
   static final Secondary48=secondary.withValues(alpha: 0.48);
   static const shadowColor= Color(0xffced3d4);
   static const greenColor=Color(0xff27ae60);

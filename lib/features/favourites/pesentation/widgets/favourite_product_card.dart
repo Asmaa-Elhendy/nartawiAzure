@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:newwwwwwww/features/home/presentation/screens/suppliers/product_details.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
+import '../../../home/presentation/pages/suppliers/product_details.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/price_widget.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/products/icon_on_product_card.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/products/product_card.dart';

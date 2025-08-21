@@ -3,7 +3,7 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dar
 import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_photos.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import '../../../../core/theme/colors.dart';
-import 'coupon_status_widget.dart';
+import '../../../../core/components/coupon_status_widget.dart';
 import 'dispute_alert.dart';
 import 'oulined_icon_button.dart';
 

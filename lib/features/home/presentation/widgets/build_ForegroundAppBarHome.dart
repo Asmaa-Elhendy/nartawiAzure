@@ -3,17 +3,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:newwwwwwww/features/cart/presentation/screens/cart_screen.dart';
-
+import 'package:newwwwwwww/features/notification/presentation/pages/notification_screen.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../cart/presentation/screens/cart_screen.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
  double screenHeight;
  double screenWidth;
  String title;
  bool is_returned;
- String disabled;
- BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth,required this.title,required this.is_returned,this.disabled=''});
+ String disabledCart;
+ String disabledNotification;
+ BuildForegroundappbarhome({required this.screenHeight,required this.screenWidth,required this.title,
+   required this.is_returned,this.disabledCart='',this.disabledNotification=''});
 
   @override
   State<BuildForegroundappbarhome> createState() => _BuildForegroundappbarhomeState();
@@ -63,11 +65,17 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
               children: [
                 Iconify(GameIcons.water_gallon,
                     size: widget.screenWidth * .05, color: AppColors.whiteColor),
-                Icon(Icons.notifications,
-                    color: AppColors.whiteColor, size: widget.screenWidth * .05),
                 InkWell(
                   onTap: (){
-                 widget.disabled=='cart'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
+                    widget.disabledNotification=='notification'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
+
+                  },
+                  child: Icon(Icons.notifications,
+                      color: AppColors.whiteColor, size: widget.screenWidth * .05),
+                ),
+                InkWell(
+                  onTap: (){
+                 widget.disabledCart=='cart'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
                   },
                   child: Icon(Icons.shopping_cart_outlined,
                       color: AppColors.whiteColor, size: widget.screenWidth * .05),
