@@ -1,12 +1,19 @@
   import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
   import 'core/routing/app_router.dart';
   import 'core/theme/app_theme.dart';
+import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
+import 'features/notification/presentation/bloc/notification_bloc/event.dart';
 
   void main() {
-    WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-
-    runApp(const MyApp());
+    runApp(
+      BlocProvider(
+        create: (_) => NotificationBloc()..add(LoadNotifications()),
+        child: const MyApp(),
+      ),
+    );
   }
+
 
   class MyApp extends StatelessWidget {
     const MyApp({super.key});

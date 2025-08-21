@@ -53,5 +53,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       }).toList();
       emit(state.copyWith(notifications: updatedNotifications));
     });
+    // bloc.dart
+    on<SetAllAsRead>((event, emit) {
+      final updated = state.notifications
+          .map((n) => n.copyWith(isRead: true))
+          .toList();
+      emit(state.copyWith(notifications: updated));
+    });
+
+
   }
 }

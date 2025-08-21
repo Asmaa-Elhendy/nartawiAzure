@@ -21,7 +21,7 @@ class ToggleSelectAll extends NotificationEvent {
 }
 
 class ToggleNotificationCheck extends NotificationEvent {
-  final String id;
+  final int id;
   final bool isChecked;
 
   const ToggleNotificationCheck(this.id, this.isChecked);
@@ -29,3 +29,8 @@ class ToggleNotificationCheck extends NotificationEvent {
   @override
   List<Object?> get props => [id, isChecked];
 }
+
+// event.dart
+class SetAllAsRead extends NotificationEvent {}
+
+

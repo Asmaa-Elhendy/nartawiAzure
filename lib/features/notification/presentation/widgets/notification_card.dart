@@ -70,7 +70,7 @@ class NotificationCard extends StatelessWidget {
                         onChanged: (value) {
                           context.read<NotificationBloc>().add(
                             ToggleNotificationCheck(
-                              notification.id.toString(),
+                              notification.id,
                               value ?? false,
                             ),
                           );
