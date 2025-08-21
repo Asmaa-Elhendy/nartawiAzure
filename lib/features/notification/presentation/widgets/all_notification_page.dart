@@ -20,26 +20,23 @@ class AllNotificationPage extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Show CancelOrderWidget only if all notifications are selected
-            if (state.notifications.isNotEmpty &&
-                state.notifications.every((n) => n.isChecked))
+            /// Show CancelOrderWidget if at least one notification is selected
+            if (state.notifications.any((n) => n.isChecked))
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * .04),
                 child: CancelOrderWidget(
                   context,
                   screenWidth,
                   screenHeight,
-                  'Set All As Read',
+                  'Set As Read',
                   'Clear Selection',
                       () {
-                    // Set all as read
-                    context.read<NotificationBloc>().add(SetAllAsRead());
+                    // Set as read for selected notifications
+                        context.read<NotificationBloc>().add(SetSelectedAsRead());
                   },
                       () {
                     // Clear selection
-                    context
-                        .read<NotificationBloc>()
-                        .add(ToggleSelectAll(false));
+                        context.read<NotificationBloc>().add(ClearSelection());
                   },
                 ),
               ),

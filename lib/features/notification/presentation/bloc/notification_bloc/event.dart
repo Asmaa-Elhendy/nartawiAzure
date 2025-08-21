@@ -33,4 +33,6 @@ class ToggleNotificationCheck extends NotificationEvent {
 // event.dart
 class SetAllAsRead extends NotificationEvent {}
 
+class SetSelectedAsRead extends NotificationEvent {}
+class ClearSelection extends NotificationEvent {}
 

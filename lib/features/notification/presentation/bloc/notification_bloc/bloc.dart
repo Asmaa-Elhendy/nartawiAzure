@@ -61,6 +61,27 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       emit(state.copyWith(notifications: updated));
     });
 
+    // تعيين الإشعارات المحددة كـ مقروءة
+    on<SetSelectedAsRead>((event, emit) {
+      final updatedNotifications = state.notifications.map((n) {
+        if (n.isChecked) {
+          return n.copyWith(isRead: true, isChecked: false);
+        }
+        return n;
+      }).toList();
+
+      emit(state.copyWith(notifications: updatedNotifications));
+    });
+
+// مسح التحديد
+    on<ClearSelection>((event, emit) {
+      final updatedNotifications = state.notifications.map((n) {
+        return n.copyWith(isChecked: false);
+      }).toList();
+
+      emit(state.copyWith(notifications: updatedNotifications));
+    });
+
 
   }
 }
