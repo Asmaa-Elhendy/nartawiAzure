@@ -7,7 +7,9 @@ import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../widgets/cart_store_card.dart';
+import '../widgets/payment_method_alert.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -133,7 +135,13 @@ class _CartScreenState extends State<CartScreen>
                               screenHeight,
                               'Proceed To Checkout',
                               false,
-                              () {},
+                              () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) =>
+                                      PaymentMethodAlert(),
+                                );
+                              },
                             ),
                             RowOutlineButtons(
                               context,
