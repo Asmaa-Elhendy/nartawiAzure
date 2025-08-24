@@ -36,8 +36,8 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
             ListTile(
               leading: const Icon(CupertinoIcons.photo,color: AppColors.primary,size: 19,),
               title: const Text("Pick From Gallery", style: TextStyle(
-                fontWeight: FontWeight.w400,color: AppColors.primary,
-                fontSize: 14.5,
+                fontWeight: FontWeight.w500,color: AppColors.primary,
+                fontSize: 14.5,fontFamily: 'Poppins'
               ),),
               onTap: () {
                 Navigator.of(context).pop();
@@ -49,7 +49,7 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
                 color: AppColors.primary,size: 19,
               ),
               title: const Text("Pick From Camera", style: TextStyle(
-                fontWeight: FontWeight.w400,color: AppColors.primary,
+                fontWeight: FontWeight.w500,color: AppColors.primary,fontFamily: 'Poppins',
                 fontSize: 14.5,
               )),
               onTap: () {
@@ -84,7 +84,7 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
             Container(
               height: screenHeight * .22,width: screenWidth*.42,
               decoration: BoxDecoration(
-                color: AppColors.backgrounHome,//background home
+                color: AppColors.backgrounHome,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(

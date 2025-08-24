@@ -561,13 +561,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void onTabTapped(int index) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    if (myTitle.value == index) {
+     if (myTitle.value == index) {
       myTitle.value = 12;
       setState(() {
         _tabIndex = 2;
       });
       _initIconsAndLogo();
-    } else {
+    }
+
+    else {
       if (index != 2) {
         setState(() => _tabIndex = index);
 
@@ -754,7 +756,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           shape: BoxShape.rectangle,
           borderRadius: const BorderRadius.all(Radius.circular(40)),
         ),
-        child: BuildFloatActionButton(_tabCount, onTabTapped, logoCenter),
+        child: BuildFloatActionButton(_tabIndex, logoCenter,_navigatorKeys),
       ),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _tabIndex,

@@ -1,6 +1,8 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-Widget BuildFloatActionButton(int _tabCount,onTabTapped,Widget logoCenter){
+Widget BuildFloatActionButton(int _tabIndex,Widget logoCenter,List<GlobalKey<NavigatorState>> _navigatorKeys){
   return FloatingActionButton(
     //backgroundColor: AppColors.primary,
     backgroundColor: Colors.transparent,
@@ -9,8 +11,13 @@ Widget BuildFloatActionButton(int _tabCount,onTabTapped,Widget logoCenter){
       borderRadius: BorderRadius.all(Radius.circular(40)),
     ),
     onPressed: () {
-      final middleTab = (_tabCount / 2).floor(); // 🧠 احسبي النص
-      onTabTapped(middleTab);
+      final middleTab = (_tabIndex / 2).floor(); // 🧠 احسبي النص
+
+    log(_tabIndex.toString());
+
+        _navigatorKeys[_tabIndex].currentState!.popUntil((route) => route.isFirst);
+
+
     },
     child: logoCenter,
   );
