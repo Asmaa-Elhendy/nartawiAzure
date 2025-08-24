@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import '../../../../../core/theme/colors.dart';
 
@@ -37,6 +38,11 @@ class _CategoryCardState extends State<CategoryCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          widget.icon.contains('assets')?
+          SvgPicture.asset(
+           widget. icon,
+            height: widget.screenHeight*.027,
+          ):
           Iconify(
            widget.icon,
             size: widget.screenHeight*.027,

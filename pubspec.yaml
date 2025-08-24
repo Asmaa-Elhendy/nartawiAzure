@@ -113,6 +113,8 @@ flutter:
     - assets/images/profile/e_wallet/Qr.svg
     - assets/images/profile/e_wallet/top-up.svg
     - assets/images/profile/e_wallet/transfer.svg
+    - assets/images/home/main_page/ph.svg
+    - assets/images/home/main_page/bottle.svg
 
   fonts:
     - family: Poppins

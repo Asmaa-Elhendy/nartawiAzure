@@ -71,8 +71,8 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
             child: Padding(
               padding: EdgeInsets.only(
                 top: screenHeight * .04,
-                right: screenWidth * .03,
-                left: screenWidth * .03,
+                right: screenWidth * .037,
+                left: screenWidth * .037,
                 bottom: screenHeight*.09
               ),
               child: ListView.builder(

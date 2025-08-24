@@ -126,7 +126,7 @@ class _MainScreenState extends State<MainScreen> {
                               CategoryCard(
                                 screenWidth: screenWidth,
                                 screenHeight: screenHeight,
-                                icon: Tabler.bottle,
+                                icon: 'assets/images/home/main_page/bottle.svg',
                                 title: 'Bottles',
                               ),
                               CategoryCard(
@@ -138,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                               CategoryCard(
                                 screenWidth: screenWidth,
                                 screenHeight: screenHeight,
-                                icon: MaterialSymbols.water_drop_outline_rounded,
+                                icon: 'assets/images/home/main_page/ph.svg',
                                 title: 'Alkaline',
                               ),
                               CategoryCard(
