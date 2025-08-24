@@ -4,30 +4,35 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../../../core/theme/colors.dart';
 
 Widget BuildFirstTabProductDetail(double screenWidth,double screenHeight){
-  return  Column(
-    children: [
-      SizedBox(height: screenHeight*.02,),
-      Row(
-        children: [
-          Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Size : 5 Gallons')),
-          SizedBox(width: screenWidth*.02),
-          Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH Level:7.8'))
-        ],
-      ),SizedBox(height: screenHeight*.01,),
-      Row(
-        children: [
-          Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Sodium : 15mg/L')),
-          SizedBox(width: screenWidth*.02),
-          Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH 7.5'))
-        ],
-      ),SizedBox(height: screenHeight*.01,),
-      Row(
-        children: [
-          Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Vendor Information : company1 ',isBottom: true))
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Row(
+          children: [
+            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Size : 5 Gallons')),
+            SizedBox(width: screenWidth*.02),
+            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH Level:7.8'))
+          ],
+        ),SizedBox(height: screenHeight*.01,),
+        Row(
+          children: [
+            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Sodium : 15mg/L')),
+            SizedBox(width: screenWidth*.02),
+            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH 7.5'))
+          ],
+        ),SizedBox(height: screenHeight*.01,),
+        Row(
+          children: [
+            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Vendor Information : company1 ',isBottom: true))
 
-        ],
-      )
-    ],
+          ],
+        ),
+        SizedBox(height: screenHeight * 0.06),
+
+      ],
+    ),
   );
 }
 
