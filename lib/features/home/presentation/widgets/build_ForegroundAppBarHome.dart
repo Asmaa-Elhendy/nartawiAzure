@@ -67,7 +67,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     size: widget.screenWidth * .05, color: AppColors.whiteColor),
                 InkWell(
                   onTap: (){
-                    widget.disabledNotification=='notification'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
+                    widget.disabledNotification=='notifications'?null  : Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationScreen()));
 
                   },
                   child: Icon(Icons.notifications,
