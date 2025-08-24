@@ -6,50 +6,93 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
-Widget BuildIconOnProduct(
-  double width,
-  double height,
-  bool isPlus,
-  bool isFavourite, {
-  bool isDelete = false,
-}) {
-  return Container(
-    width: width * .1, // الحجم العرض
-    height: height * .045, // الحجم الارتفاع
-    decoration: BoxDecoration(
-      color: AppColors.backgrounHome, // لون الخلفية
-      shape: BoxShape.circle, // يجعله دائري
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 4,
-          offset: Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Center(
-      child:
-      isDelete?Iconify(
-        MaterialSymbols.delete_outline_rounded,
-        size: height * .03,
-        color: AppColors.primary,
-      ):
-      isPlus
-          ? Icon(
-              Icons.add, // استبدلها بالأيقونة اللي تحبها
-              size: height * .03,
-              color: AppColors.primary,
-            )
-          : isFavourite
-          ? Iconify(Mdi.heart, color: AppColors.redColor, size: height * .03)
-          : Iconify(
-              Mdi.heart_outline,
-              color: AppColors.primary,
-              size: height * .03,
-            ),
-    ),
-  );
+import 'package:flutter/material.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:iconify_flutter/icons/material_symbols.dart';
+import '../../../../../../core/theme/colors.dart';
+
+class BuildIconOnProduct extends StatefulWidget {
+ final double width;
+ final double height;
+ final  bool isPlus;
+ final  bool isFavourite;
+ final bool isDelete;
+
+ const BuildIconOnProduct(
+     this.width,
+     this.height,
+     this.isPlus,
+     this.isFavourite, {
+       this.isDelete = false,   // ✅ default here
+       Key? key,
+     }) : super(key: key);
+
+  @override
+  _BuildIconOnProductState createState() => _BuildIconOnProductState();
 }
+
+class _BuildIconOnProductState extends State<BuildIconOnProduct> {
+  late bool isFavourite;
+
+  @override
+  void initState() {
+    super.initState();
+    isFavourite = widget.isFavourite; // البداية
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widget.width * .1,
+      height: widget.height * .045,
+      decoration: BoxDecoration(
+        color: AppColors.backgrounHome,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: widget.isDelete
+            ? Iconify(
+          MaterialSymbols.delete_outline_rounded,
+          size: widget.height * .03,
+          color: AppColors.primary,
+        )
+            : widget.isPlus
+            ? Icon(
+          Icons.add,
+          size: widget.height * .03,
+          color: AppColors.primary,
+        )
+            : InkWell(
+          onTap: () {
+            setState(() {
+              isFavourite = !isFavourite;
+            });
+          },
+          child: Iconify(
+            isFavourite ? Mdi.heart : Mdi.heart_outline,
+            color: isFavourite
+                ? AppColors.redColor
+                : AppColors.primary,
+            size: widget.height * .03,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
 
 Widget BuildRoundedIconOnProduct({
   required BuildContext context,
