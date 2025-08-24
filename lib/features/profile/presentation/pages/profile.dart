@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: ListView(
                           padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
                           children: [
-                            BuildFullCardProfile(context, screenHeight, screenWidth),
+                            BuildFullCardProfile(),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                 vertical: screenHeight * .02,
