@@ -138,8 +138,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                               ListView.builder(
                                 itemCount: 4,
                                 itemBuilder: (context, index) => BuildFullCardSupplier(
-                                  context,
-                                  screenHeight,
+                                  screenHeight ,
                                   screenWidth,
                                   index.isEven,
                                   fromFavouritesScreen: true,

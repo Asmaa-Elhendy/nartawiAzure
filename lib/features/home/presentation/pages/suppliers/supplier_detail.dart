@@ -51,7 +51,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
 
               child: Column(
                 children: [
-                  BuildFullCardSupplier(context, screenHeight, screenWidth, false),
+                  BuildFullCardSupplier(screenHeight, screenWidth, false),
                   Expanded(
 
                       child: StackOver(width: screenWidth,height: screenHeight,)),
