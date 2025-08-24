@@ -363,7 +363,7 @@ class _CouponeCardState extends State<CouponeCard> {
           BuildInfoAndAddToCartButton(
             screenWidth,
             screenHeight,
-            'View Consumption History',
+            'View Last Consumption',
             false,
             () {
               showDialog(

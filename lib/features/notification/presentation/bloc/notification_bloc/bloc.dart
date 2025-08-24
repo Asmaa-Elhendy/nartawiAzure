@@ -3,31 +3,14 @@ import 'state.dart';
 import 'event.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
-  NotificationBloc() : super(const NotificationState()) {
+  final List<NotificationItem> initialNotifications;
+
+  NotificationBloc({required this.initialNotifications})
+      : super(NotificationState(notifications: initialNotifications)) {
+
     on<LoadNotifications>((event, emit) {
-      // Mock data with title and description
-      emit(NotificationState(
-        notifications: [
-          NotificationItem(
-            id: 1,
-            title: "Welcome!",
-            description: "Welcome to our app. Enjoy your experience.",
-            isRead: false,
-          ),
-          NotificationItem(
-            id: 2,
-            title: "Update Available",
-            description: "A new update is ready to install.",
-            isRead: false,
-          ),
-          NotificationItem(
-            id: 3,
-            title: "Reminder",
-            description: "Don't forget to check your tasks today.",
-            isRead: true,
-          ),
-        ],
-      ));
+      // Instead of hardcoding, use the parameter list
+      emit(NotificationState(notifications: initialNotifications));
     });
 
     on<MarkAllAsRead>((event, emit) {
@@ -53,7 +36,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       }).toList();
       emit(state.copyWith(notifications: updatedNotifications));
     });
-    // bloc.dart
+
     on<SetAllAsRead>((event, emit) {
       final updated = state.notifications
           .map((n) => n.copyWith(isRead: true))
@@ -61,7 +44,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       emit(state.copyWith(notifications: updated));
     });
 
-    // تعيين الإشعارات المحددة كـ مقروءة
     on<SetSelectedAsRead>((event, emit) {
       final updatedNotifications = state.notifications.map((n) {
         if (n.isChecked) {
@@ -73,7 +55,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       emit(state.copyWith(notifications: updatedNotifications));
     });
 
-// مسح التحديد
     on<ClearSelection>((event, emit) {
       final updatedNotifications = state.notifications.map((n) {
         return n.copyWith(isChecked: false);
@@ -81,7 +62,5 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       emit(state.copyWith(notifications: updatedNotifications));
     });
-
-
   }
 }

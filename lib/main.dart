@@ -8,7 +8,7 @@ import 'features/notification/presentation/bloc/notification_bloc/event.dart';
   void main() {
     runApp(
       BlocProvider(
-        create: (_) => NotificationBloc()..add(LoadNotifications()),
+        create: (_) => NotificationBloc(initialNotifications: [])..add(LoadNotifications()),
         child: const MyApp(),
       ),
     );

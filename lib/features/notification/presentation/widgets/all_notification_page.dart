@@ -16,6 +16,7 @@ class AllNotificationPage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return BlocBuilder<NotificationBloc, NotificationState>(
+
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

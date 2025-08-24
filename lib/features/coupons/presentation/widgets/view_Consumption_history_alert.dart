@@ -121,7 +121,12 @@ class _ViewConsumptionHistoryAlertState
                       screenWidth,
                       screenHeight,
                       'Show Delivery Photos',
-                      () {},
+                      () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => ShowDeliveryPhotos(),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -154,10 +159,7 @@ class _ViewConsumptionHistoryAlertState
                 'Dispute',
                   (){
                     Navigator.pop(context);
-                    showDialog(
-                      context: context,
-                      builder: (ctx) => ShowDeliveryPhotos(),
-                    );
+
                   },(){
                 Navigator.pop(context);
                 showDialog(

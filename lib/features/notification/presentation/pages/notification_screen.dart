@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/notification/presentation/widgets/all_notification_page.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../bloc/notification_bloc/bloc.dart';
+import '../bloc/notification_bloc/state.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -13,7 +16,6 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen>
     with SingleTickerProviderStateMixin {
-
   late TabController _tabController;
 
   @override
@@ -127,12 +129,72 @@ class _NotificationScreenState extends State<NotificationScreen>
                           controller: _tabController,
 
                           children: [
-                          AllNotificationPage(),
-                            Text('2'),
-                            Text('2'),
-                            Text('2'),
-                            Text('2'),
-                            Text('2'),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: false),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: true),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: false),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: false),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: true),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: true),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: false),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: true),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: false),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: true),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
+                            BlocProvider(
+                              create: (_) => NotificationBloc(
+                                initialNotifications: [
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: false),
+                                  NotificationItem(id: 2, title: "Order Placed Successfully", description: "Your order #30 has been placed successfully and is being processed.", isRead: false),
+                                  NotificationItem(id: 1, title: "Meeting", description: "Team sync at 10 AM", isRead: true),
+                                  NotificationItem(id: 2, title: "Report", description: "Submit monthly report", isRead: true),
+                                ],
+                              ),
+                              child: AllNotificationPage(),
+                            ),
                           ],
                         ),
                       ),
