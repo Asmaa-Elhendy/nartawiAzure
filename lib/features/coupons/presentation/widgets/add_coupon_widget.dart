@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/all_product_screen.dart';
-
 import '../../../../core/theme/colors.dart';
 
 Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){

@@ -128,10 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.01),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomLoginButtons(width, height, 'Guest', () {}),
-                      CustomLoginButtons(width, height, 'Vendor', () {}),
+                      // CustomLoginButtons(width, height, 'Vendor', () {}),
                     ],
                   ),
                 ),
