@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
+import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_categories_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
@@ -81,7 +82,10 @@ class _MainScreenState extends State<MainScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (_) => CouponsScreen(fromViewButton:true)));
+                              },
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
                                     vertical: screenHeight * .01),

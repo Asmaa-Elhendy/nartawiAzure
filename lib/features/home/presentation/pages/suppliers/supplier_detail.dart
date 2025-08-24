@@ -30,6 +30,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
     return  Scaffold(
         extendBody: true,
         backgroundColor: Colors.transparent, // في حالة الصورة في الخلفية
+        resizeToAvoidBottomInset: true, // مهم عشان يتصرف مع الكيبورد
 
         // ✅ أضف ده
         body: Stack(
@@ -49,14 +50,16 @@ class _SupplierDetailsState extends State<SupplierDetails> {
             child:Padding(
               padding:  EdgeInsets.only(top: screenHeight*.04),
 
-              child: Column(
-                children: [
-                  BuildFullCardSupplier(screenHeight, screenWidth, false),
-                  Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    BuildFullCardSupplier(screenHeight, screenWidth, false),
+                    SizedBox(
+height: screenHeight*.6,
+                        child: StackOver(width: screenWidth,height: screenHeight,)),
 
-                      child: StackOver(width: screenWidth,height: screenHeight,)),
-
-                ],
+                  ],
+                ),
               ),
             ))]));
 

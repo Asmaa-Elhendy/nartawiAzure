@@ -16,7 +16,6 @@ class CustomSearchBar extends StatelessWidget {
     required this.controller,
     this.onSearch,required this.height,required this.width,this.fromSupplierDetail=false
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(

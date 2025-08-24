@@ -714,7 +714,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             page = const OrdersScreen();
             break;
           case 1:
-            page = const CouponsScreen();
+            page =  CouponsScreen();
             break;
           case 2:
             page = const MainScreen();
@@ -745,50 +745,54 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      extendBody: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        width: screenWidth * .123,
-        height: screenHeight * .064,
-        decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
-          shape: BoxShape.rectangle,
-          borderRadius: const BorderRadius.all(Radius.circular(40)),
+    return GestureDetector(
+      onTap:  ()=> FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        extendBody: true,
+        resizeToAvoidBottomInset: false, // 👈 الكيبورد مش هيأثر على FAB
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Container(
+          width: screenWidth * .123,
+          height: screenHeight * .064,
+          decoration: BoxDecoration(
+            gradient: AppColors.primaryGradient,
+            shape: BoxShape.rectangle,
+            borderRadius: const BorderRadius.all(Radius.circular(40)),
+          ),
+          child: BuildFloatActionButton(_tabIndex, logoCenter,_navigatorKeys),
         ),
-        child: BuildFloatActionButton(_tabIndex, logoCenter,_navigatorKeys),
+        bottomNavigationBar: CustomBottomNav(
+          currentIndex: _tabIndex,
+          originalTabs: originalTabs,
+          onTabSelected: onTabTapped,
+          icons: icons,
+        ),
+        body:
+        // Stack(
+        //   children: [
+        //     Container(
+        //       width: screenWidth,
+        //       height: screenHeight,
+        //       color: AppColors.backgrounHome,
+        //     ),
+        //     buildBackgroundAppbar(screenWidth),
+        //     BuildForegroundappbarhome(
+        //       screenHeight: screenHeight,
+        //       screenWidth: screenWidth,
+        //       title: 'NARTAWI',
+        //       is_returned: false,
+        //     ),
+        //     Positioned.fill(
+        //       top: MediaQuery.of(context).padding.top + screenHeight * .1,
+        //       child:
+        IndexedStack(
+          index: _tabIndex,
+          children: List.generate(_tabCount, (index) => _buildTabNavigator(index)),
+        ),
+        //     ),
+        //   ],
+        // ),
       ),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: _tabIndex,
-        originalTabs: originalTabs,
-        onTabSelected: onTabTapped,
-        icons: icons,
-      ),
-      body:
-      // Stack(
-      //   children: [
-      //     Container(
-      //       width: screenWidth,
-      //       height: screenHeight,
-      //       color: AppColors.backgrounHome,
-      //     ),
-      //     buildBackgroundAppbar(screenWidth),
-      //     BuildForegroundappbarhome(
-      //       screenHeight: screenHeight,
-      //       screenWidth: screenWidth,
-      //       title: 'NARTAWI',
-      //       is_returned: false,
-      //     ),
-      //     Positioned.fill(
-      //       top: MediaQuery.of(context).padding.top + screenHeight * .1,
-      //       child:
-      IndexedStack(
-        index: _tabIndex,
-        children: List.generate(_tabCount, (index) => _buildTabNavigator(index)),
-      ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

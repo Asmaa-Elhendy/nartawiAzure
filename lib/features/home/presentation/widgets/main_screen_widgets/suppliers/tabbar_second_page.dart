@@ -35,8 +35,8 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
 
             BuildSupplierRatingCard(screenWidth, screenHeight, items,'Rating Summary'),
             Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: screenHeight * 0.02,
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.02,
               ),
               child: Text('Customer Reviews',style: TextStyle(color: AppColors.textLight,fontWeight: FontWeight.w600,fontSize:screenWidth * .04,),),
             ),
@@ -46,7 +46,7 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
                // height: screenHeight*.1,
               ),
             ),
-
+          SizedBox(height: screenHeight*.09,)
           ],
         ),
       ),

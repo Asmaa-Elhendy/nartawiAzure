@@ -93,7 +93,7 @@ class _StackOverState extends State<StackOver>
                 children: [
                   // first tab bar view widget
                 Padding(
-                  padding:  EdgeInsets.symmetric(vertical:  widget.height * 0.02,),
+                  padding:  EdgeInsets.only(top:  widget.height * 0.02,bottom: widget.height*.09),
                   child: TabBarFirstPage(),
                 ),
                 TabBarSecondPage()

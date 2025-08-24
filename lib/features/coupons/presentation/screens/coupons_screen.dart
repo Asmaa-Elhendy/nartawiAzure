@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/add_coupon_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -6,7 +7,8 @@ import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/coupon_card.dart';
 
 class CouponsScreen extends StatefulWidget {
-  const CouponsScreen({super.key});
+  final bool fromViewButton;
+  CouponsScreen({this.fromViewButton=false});
 
   @override
   State<CouponsScreen> createState() => _CouponsScreenState();
@@ -52,7 +54,7 @@ class _CouponsScreenState extends State<CouponsScreen>
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Coupons',
-            is_returned: false, //edit back from orders
+            is_returned:widget.fromViewButton , //edit back from orders
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
@@ -74,12 +76,18 @@ class _CouponsScreenState extends State<CouponsScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            'Your Coupons',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: screenWidth * .045,
-                            ),
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Your Coupons',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: screenWidth * .045,
+                                ),
+                              ),
+                              AddCoupon(context, screenWidth, screenHeight)
+                            ],
                           ),
 
                           Padding(
