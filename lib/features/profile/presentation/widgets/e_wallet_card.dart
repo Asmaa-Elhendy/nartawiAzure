@@ -37,6 +37,7 @@ Widget eWalletCard(
                 context: context,
                 builder: (ctx) =>  GenerateQrAlert()
               );
+
             },
             fun2: ()async{
               final result = await Navigator.push(
@@ -44,12 +45,23 @@ Widget eWalletCard(
                 MaterialPageRoute(builder: (context) => const QRViewExample()),
               );
 
-              // if (result != null) {
-              //   print("Scanned Result: $result");
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(content: Text("Scanned: $result")),
-              //   );
-              // }
+              if (result != null) {
+                print("Scanned Result: $result");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      backgroundColor: AppColors.backgrounHome,
+                      content: Text("Scanned: $result",style:  TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w400,
+                    fontSize: screenWidth * .035,
+                  ),)),
+                );
+                showDialog(
+                  context: context,
+                  builder: (ctx) =>
+                      TransferAlertDialog(),
+                );
+              }
 
             }
         ),
