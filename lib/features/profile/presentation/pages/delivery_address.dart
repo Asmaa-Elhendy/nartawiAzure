@@ -26,7 +26,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emergencyphonenumberController = TextEditingController();
-  final TextEditingController  _emailController= TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -77,37 +77,78 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * .04,// edit top height under appbar
+                top: screenHeight * .04, // edit top height under appbar
                 bottom: screenHeight * .1,
               ),
               child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: screenWidth*.04),
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * .04),
 
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-
-
-                    SizedBox(height: screenHeight*.7,
+                    SizedBox(
+                      height: screenHeight * .7,
                       child: ListView(
                         physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06,left: 0,right: 0),
+                        padding: EdgeInsetsGeometry.only(
+                          bottom: screenHeight * .06,
+                          left: 0,
+                          right: 0,
+                        ),
                         children: [
-
-                          BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Add New Address', false, (){
-                            showDialog(
-                              context: context,
-                              builder: (ctx) =>
-                                  AddAddressAlertDialog(),
-                            );
-                          },fromDelivery: true),
-                          OutlineAuthButton(screenWidth,screenHeight, 'Use Current Location', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/current_location.svg'),
-                          OutlineAuthButton(screenWidth,screenHeight, 'Open Google Map', (){},fromDelivery: true,icon: 'assets/images/profile/delivery/google maps.svg'),
+                          BuildInfoAndAddToCartButton(
+                            screenWidth,
+                            screenHeight,
+                            'Add New Address',
+                            false,
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AddAddressAlertDialog(),
+                              );
+                            },
+                            fromDelivery: true,
+                          ),
+                          OutlineAuthButton(
+                            screenWidth,
+                            screenHeight,
+                            'Use Current Location',
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) =>
+                                    AddAddressAlertDialog(useGps: true),
+                              );
+                            },
+                            fromDelivery: true,
+                            icon:
+                                'assets/images/profile/delivery/current_location.svg',
+                          ),
+                          OutlineAuthButton(
+                            screenWidth,
+                            screenHeight,
+                            'Open Google Map',
+                            () {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) =>
+                                    AddAddressAlertDialog(useGps: true),
+                              );
+                            },
+                            fromDelivery: true,
+                            icon:
+                                'assets/images/profile/delivery/google maps.svg',
+                          ),
                           BuildCardAddress(context, screenHeight, screenWidth),
-                          BuildCardAddress(context, screenHeight, screenWidth,work: true)
-
-                        ],),
+                          BuildCardAddress(
+                            context,
+                            screenHeight,
+                            screenWidth,
+                            work: true,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -115,6 +156,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
             ),
           ),
         ],
-      ),);
+      ),
+    );
   }
 }

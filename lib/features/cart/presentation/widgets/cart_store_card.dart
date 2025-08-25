@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/cart/presentation/widgets/widget_view_detail_store.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
+import '../../../home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import 'outline_buttons.dart';
 
 
@@ -54,9 +57,24 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                         padding:  EdgeInsets.only(top: screenHeight*.02,bottom: screenHeight*.01),
                         child: BuildRowRating(screenWidth, screenHeight,title: 'New'),
                       ),
-                      viewStoreWithoutFlexible((){}, 'View Store', screenWidth, screenHeight),
+                      viewStoreWithoutFlexible((){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
 
-                      OutlineButtonWithoutFlexible((){}, 'View Details', screenWidth, screenHeight)
+                      }, 'View Store', screenWidth, screenHeight),
+
+                      OutlineButtonWithoutFlexible((){
+                        showGeneralDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            barrierLabel: '',
+                            barrierColor: Colors.black54, // خلفية شفافة
+                            pageBuilder: (ctx, anim1, anim2) {
+                            return  ViewDetailSupplierAlert(ctx,screenWidth,screenHeight);
+                            },
+                        );
+                            }
+
+                      , 'View Details', screenWidth, screenHeight)
 
                     ],
                   ),

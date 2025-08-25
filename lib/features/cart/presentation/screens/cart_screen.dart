@@ -43,126 +43,124 @@ class _CartScreenState extends State<CartScreen>
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
-      backgroundColor: Colors.transparent,
-      // في حالة الصورة في الخلفية
-      body: Stack(
-        children: [
-          Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: AppColors.backgrounHome,
-          ),
-          buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
-            title: 'Your Cart',
-            is_returned: true,
-            disabledCart:'cart'
-          ),
-          Positioned.fill(
-            top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: screenHeight * .04,
-                bottom: screenHeight * .1,
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * .06,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CartStoreCard(context,screenWidth,screenHeight),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
+        backgroundColor: Colors.transparent,
+        // في حالة الصورة في الخلفية
+        body: Stack(
+          children: [
+            Container(
+              width: screenWidth,
+              height: screenHeight,
+              color: AppColors.backgrounHome,
+            ),
+            buildBackgroundAppbar(screenWidth),
+            BuildForegroundappbarhome(
+              screenHeight: screenHeight,
+              screenWidth: screenWidth,
+              title: 'Your Cart',
+              is_returned: true,
+              disabledCart: 'cart',
+            ),
+            Positioned.fill(
+              top: MediaQuery.of(context).padding.top + screenHeight * .1,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: screenHeight * .04,
+                  bottom: screenHeight * .1,
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * .06,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              CartStoreCard(context, screenWidth, screenHeight),
 
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: screenHeight * .02,
-                              ),
-                              child: Column(
-                                children: products
-                                    .map(
-                                      (p) => FavouriteProductCard(
-                                        screenWidth: screenWidth,
-                                        screenHeight: screenHeight,
-                                        icon: p,
-                                        fromCartScreen: true,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenHeight * .02,
+                                ),
+                                child: Column(
+                                  children: products
+                                      .map(
+                                        (p) => FavouriteProductCard(
+                                          screenWidth: screenWidth,
+                                          screenHeight: screenHeight,
+                                          icon: p,
+                                          fromCartScreen: true,
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
 
-                              //
-                              // SizedBox(
-                              //               height:screenHeight*.45,
-                              //               child:ListView(shrinkWrap: true,
-                              //                 children: [
-                              //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
-                              //                     icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
-                              //                   ),
-                              //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
-                              //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
-                              //                   ), FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
-                              //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
-                              //                   ),
-                              //
-                              //
-                              //                 ],),
-                              //             ),
-                            ),
-                            OrderSummaryCard(screenWidth, screenHeight),
-                            OrderDeliveryCartWidget(
-                              context,
-                              screenWidth,
-                              screenHeight,
-                            ),
-                            BuildInfoAndAddToCartButton(
-                              screenWidth,
-                              screenHeight,
-                              'Proceed To Checkout',
-                              false,
-                              () {
-                                showDialog(
-                                  context: context,
-                                  builder: (ctx) =>
-                                      PaymentMethodAlert(),
-                                );
-                              },
-                            ),
-                            RowOutlineButtons(
-                              context,
-                              screenWidth,
-                              screenHeight,
-                              'Continue Shopping',
-                              'Clear Cart',
-                              () {},
-                              () {},
-                            ),
-                            SizedBox(height: screenHeight * .04),
-                          ],
+                                //
+                                // SizedBox(
+                                //               height:screenHeight*.45,
+                                //               child:ListView(shrinkWrap: true,
+                                //                 children: [
+                                //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                                //                     icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                                //                   ),
+                                //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                                //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                                //                   ), FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
+                                //                       icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
+                                //                   ),
+                                //
+                                //
+                                //                 ],),
+                                //             ),
+                              ),
+                              OrderSummaryCard(screenWidth, screenHeight),
+                              OrderDeliveryCartWidget(),
+                              BuildInfoAndAddToCartButton(
+                                screenWidth,
+                                screenHeight,
+                                'Proceed To Checkout',
+                                false,
+                                () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx) => PaymentMethodAlert(),
+                                  );
+                                },
+                              ),
+                              RowOutlineButtons(
+                                context,
+                                screenWidth,
+                                screenHeight,
+                                'Continue Shopping',
+                                'Clear Cart',
+                                () {},
+                                () {},
+                              ),
+                              SizedBox(height: screenHeight * .04),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

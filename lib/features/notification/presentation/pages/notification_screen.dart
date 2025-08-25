@@ -119,7 +119,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                             SizedBox(child: Tab(text: 'Orders')),
                             SizedBox(child: Tab(text: 'Coupons')),
 
-                            SizedBox(child: Tab(text: 'Products')),
+                            SizedBox(child: Tab(text: 'Promos')),
                           ],
                         ),
                       ),

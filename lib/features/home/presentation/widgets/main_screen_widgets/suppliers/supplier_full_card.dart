@@ -11,6 +11,7 @@ class BuildFullCardSupplier extends StatefulWidget {
   final double screenWidth;
   final bool isFeatured;
   final bool fromFavouritesScreen;
+  final bool fromCartScreen;
 
   const BuildFullCardSupplier(
 
@@ -18,6 +19,7 @@ class BuildFullCardSupplier extends StatefulWidget {
      this.screenWidth,
      this.isFeatured,{
     this.fromFavouritesScreen = false,
+        this.fromCartScreen=false
   }) : super();
 
   @override
@@ -26,7 +28,6 @@ class BuildFullCardSupplier extends StatefulWidget {
 
 class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
   bool isExpanded = false;
-
   final String description =
       'Premium Water Supplier With Quality Products And Reliable Delivery Service. This description is long and should show fully when expanded.';
 
@@ -34,7 +35,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: widget.screenWidth * .04,
+          horizontal: widget.fromCartScreen?0:widget.screenWidth * .04,
           vertical: widget.fromFavouritesScreen ? widget.screenHeight * .01 : 0),
       child: Container(
         padding: EdgeInsets.symmetric(

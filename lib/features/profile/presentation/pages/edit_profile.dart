@@ -3,6 +3,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -102,6 +103,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             SizedBox(height: screenHeight*.01,),
                             buildCustomeFullTextField('Emergency Phone Number', 'Enter Emergency phone number', _emergencyphonenumberController, false,screenHeight,fromEditProfile: true),
                             SizedBox(height: screenHeight*.01,),
+                            BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Save', false, (){
+
+                            },fromDelivery: true)
                           ],),
                       ),
                     ],

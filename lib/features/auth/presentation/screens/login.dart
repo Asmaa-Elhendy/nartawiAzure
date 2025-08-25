@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomLoginButtons(width, height, 'Guest', () {}),
+                      CustomLoginButtons(width, height, 'Guest',_handleLogin),
                       // CustomLoginButtons(width, height, 'Vendor', () {}),
                     ],
                   ),
