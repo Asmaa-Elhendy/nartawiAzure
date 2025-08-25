@@ -4,6 +4,9 @@ import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../widgets/add_new_address_alert.dart';
+import '../widgets/change password.dart';
 import '../widgets/setting_card.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -15,33 +18,16 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _middleNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _emergencyphonenumberController = TextEditingController();
-  final TextEditingController  _emailController= TextEditingController();
+
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _firstNameController.dispose();
-    _middleNameController.dispose();
-    _lastNameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    _phoneNumberController.dispose();
-    _emergencyphonenumberController.dispose();
-    _emailController.dispose();
+
     super.dispose();
   }
 
@@ -96,9 +82,20 @@ class _SettingsScreenState extends State<SettingsScreen>
 
                       SettingCard(title: 'Order Updates', description: 'Receive notifications about your order status', quantityLabel: '',isIncrease: false,),
 
-                      SettingCard(title: 'Refill Updates', description: 'Get notified when your bottles have been refilled', quantityLabel: '',isIncrease: false,)
+                      SettingCard(title: 'Refill Updates', description: 'Get notified when your bottles have been refilled', quantityLabel: '',isIncrease: false,),
 
+                      SettingCard(title: 'Promotions & Offers', description: 'Receive notifications about promotions and special offers', quantityLabel: '',isIncrease: false,),
+                     Padding(
+                       padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
+                       child: Text('Security',style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
+                     ),
+                      BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Change Password', false, (){
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => ChangePasswordAlert(),
+                          );
 
+                      },fromDelivery: true)
 
 
                     ],

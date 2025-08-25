@@ -30,8 +30,8 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
                     leftTitle,
                     style: TextStyle(
                       color: AppColors.whiteColor,
-                      fontSize: screenWidth * .029,
-                      fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * .034,//.029
+                      fontWeight: FontWeight.w500,
                     ),        overflow: TextOverflow.visible, // To avoid overflow text
                     maxLines: 1,
                   ),
@@ -67,8 +67,8 @@ Widget CancelOrderWidget(BuildContext context,double screenWidth,double screenHe
                    rightTitle,
                     style: TextStyle(
                       color:rightTitle=='Dispute'?AppColors.primary: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                      fontSize: screenWidth * .029,
-                      fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * .034,
+                      fontWeight: FontWeight.w500,
                     ), overflow: TextOverflow.visible, // To avoid overflow text
                   ),
                 ],

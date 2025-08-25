@@ -121,7 +121,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
           hintStyle: AppTextStyles.textInTextField,
           prefixIcon: isPasswordField
               ? Padding(
-            padding: EdgeInsets.only(left: width * .04, right: width * .02),
+            padding: EdgeInsets.only(left: width * .05, right: width * .02),
             child: const Iconify(
               MaterialSymbols.lock_outline,
               size: 18,
@@ -133,7 +133,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
               ? IconButton(
             icon: Icon(
               _obscureText ?Icons.visibility_off: Icons.visibility ,
-              color: AppColors.BorderAnddividerAndIconColor,
+              color: AppColors.BorderAnddividerAndIconColor,size: width*.05
             ),
             onPressed: () {
               setState(() {
