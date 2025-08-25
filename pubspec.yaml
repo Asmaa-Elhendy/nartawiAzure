@@ -46,12 +46,16 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   image_picker: ^1.2.0
   uuid:
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.0.1
+
 
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -153,3 +157,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/onboaring/Logo.png"
+  adaptive_icon_foreground: "assets/images/onboaring/Logo.png" # foreground نفس اللوجو
+  adaptive_icon_background: "#095BA8"

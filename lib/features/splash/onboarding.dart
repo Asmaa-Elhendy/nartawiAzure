@@ -170,28 +170,30 @@ class OnboardingContent extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         top: height * 0.05,
-        left: width * 0.02,
-        right: width * 0.02,
+        left: width * 0.03,
+        right: width * 0.03,
         bottom: height * 0.05,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Image.asset("assets/images/onboaring/Logo.png", width: width * 0.2),
+          Image.asset("assets/images/onboaring/Logo.png", width: width * 0.18),
           const SizedBox(height: 15),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              description,
-              textAlign: TextAlign.center,
-              style:  TextStyle(
-                fontSize: width*.055,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+          SizedBox(height: height*.16,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Text(
+                description,
+                textAlign: TextAlign.center,
+                style:  TextStyle(
+                  fontSize: width*.05,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
-          SizedBox(height: height * 0.03),
+          SizedBox(height: height * 0.05),
           Image.asset(imagePath, height: 200, width: 250),
         ],
       ),

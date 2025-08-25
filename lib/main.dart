@@ -22,7 +22,7 @@ import 'features/notification/presentation/bloc/notification_bloc/event.dart';
     @override
     Widget build(BuildContext context) {
       return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'NARTAWI',
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,

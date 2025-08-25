@@ -22,6 +22,7 @@ import '../../features/profile/presentation/pages/edit_profile.dart';
 import '../../features/profile/presentation/pages/my_ewallet_screen.dart';
 import '../../features/profile/presentation/pages/my_impact.dart';
 import '../../features/profile/presentation/pages/profile.dart';
+import '../../features/profile/presentation/pages/scan_qr.dart';
 import '../../features/profile/presentation/pages/settings.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
@@ -82,6 +83,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) =>  CartScreen());
       case '/notificationScreen':
         return MaterialPageRoute(builder: (_) =>  NotificationScreen());
+      case '/scanQr':
+        return MaterialPageRoute(builder: (_) =>  QRViewExample());
 
     // Add more routes here
       default:

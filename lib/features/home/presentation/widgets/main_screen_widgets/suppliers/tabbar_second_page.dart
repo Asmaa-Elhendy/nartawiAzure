@@ -46,7 +46,7 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
                // height: screenHeight*.1,
               ),
             ),
-          SizedBox(height: screenHeight*.09,)
+          SizedBox(height: screenHeight*.2,)
           ],
         ),
       ),

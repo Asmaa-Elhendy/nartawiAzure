@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/profile/presentation/widgets/generate_qr_alert.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../pages/scan_qr.dart';
 import 'add_transfer_alert.dart';
 import 'outline_button_e_wallet.dart';
 
@@ -29,8 +32,26 @@ Widget eWalletCard(
             rightTitle: 'Scan QR',
             leftIcon: 'assets/images/profile/e_wallet/Qr.svg',
             rightIcon: 'assets/images/profile/e_wallet/Qr.svg',
-            fun1: (){},
-            fun2: (){}
+            fun1: (){
+              showDialog(
+                context: context,
+                builder: (ctx) =>  GenerateQrAlert()
+              );
+            },
+            fun2: ()async{
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const QRViewExample()),
+              );
+
+              // if (result != null) {
+              //   print("Scanned Result: $result");
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     SnackBar(content: Text("Scanned: $result")),
+              //   );
+              // }
+
+            }
         ),
 
         Column(
