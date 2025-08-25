@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 import 'package:newwwwwwww/features/notification/presentation/pages/notification_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
@@ -15,6 +16,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
   bool is_returned;
   String disabledCart;
   String disabledNotification;
+  String disabledGallon;
 
   BuildForegroundappbarhome({
     required this.screenHeight,
@@ -23,6 +25,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
     required this.is_returned,
     this.disabledCart = '',
     this.disabledNotification = '',
+    this.disabledGallon=''
   });
 
   @override
@@ -78,27 +81,39 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                badges.Badge(
-                  badgeContent: Text(
-                    '25',
-                    style: TextStyle(
+                InkWell(
+                  onTap: () {
+                    widget.disabledGallon == 'Coupons'
+                        ? null
+                        : Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CouponsScreen(fromViewButton: true,),
+                      ),
+                    );
+                  },
+                  child: badges.Badge(
+                    badgeContent: Text(
+                      '25',
+                      style: TextStyle(
+                        color: AppColors.whiteColor,
+                        fontSize: screenWidth * .028,
+                      ),
+                    ),
+                    badgeStyle: badges.BadgeStyle(
+                      badgeColor: AppColors.redColor,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * .006,
+                        vertical: screenHeight * .005,
+                      ),
+                      // 👈 ده اللي يتحكم في حجم البادج
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child:  Iconify(
+                      GameIcons.water_gallon,
+                      size: widget.screenWidth * .05,
                       color: AppColors.whiteColor,
-                      fontSize: screenWidth * .028,
                     ),
-                  ),
-                  badgeStyle: badges.BadgeStyle(
-                    badgeColor: AppColors.redColor,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * .006,
-                      vertical: screenHeight * .005,
-                    ),
-                    // 👈 ده اللي يتحكم في حجم البادج
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child:  Iconify(
-                    GameIcons.water_gallon,
-                    size: widget.screenWidth * .05,
-                    color: AppColors.whiteColor,
                   ),
                 ),
                 InkWell(

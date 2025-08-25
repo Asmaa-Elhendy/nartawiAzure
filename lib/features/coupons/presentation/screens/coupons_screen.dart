@@ -8,6 +8,7 @@ import '../widgets/coupon_card.dart';
 
 class CouponsScreen extends StatefulWidget {
   final bool fromViewButton;
+
   CouponsScreen({this.fromViewButton=false});
 
   @override
@@ -55,6 +56,8 @@ class _CouponsScreenState extends State<CouponsScreen>
             screenWidth: screenWidth,
             title: 'Coupons',
             is_returned:widget.fromViewButton , //edit back from orders
+            disabledGallon: 'Coupons',
+
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
