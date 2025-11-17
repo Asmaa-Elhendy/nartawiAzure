@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/prefered_days_grid.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/refill_outline_button.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/view_Consumption_history_alert.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
@@ -389,6 +390,7 @@ class _CouponeCardState extends State<CouponeCard> {
             },
             fromCouponsScreen: true,
           ),
+          NextRefillButton(screenWidth,screenHeight,'title')
         ],
       ),
     );
