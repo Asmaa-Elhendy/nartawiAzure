@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/prefered_days_grid.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/view_Consumption_history_alert.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
@@ -360,6 +361,21 @@ class _CouponeCardState extends State<CouponeCard> {
               },
             ),
           ),
+          customCouponPrimaryTitle(
+            'Preferred Refill Times /Week',
+            screenWidth,
+            screenHeight,
+          ),
+          Text(
+            'Used As A Guide, Not Mandatory',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: screenWidth * .032,
+              color: AppColors.BorderAnddividerAndIconColor,
+            ),
+          ),
+          SizedBox(height: screenHeight * .03),
+          DaySelectionGrid(),
           BuildInfoAndAddToCartButton(
             screenWidth,
             screenHeight,

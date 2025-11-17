@@ -120,6 +120,8 @@ flutter:
     - assets/images/profile/e_wallet/transfer.svg
     - assets/images/home/main_page/ph.svg
     - assets/images/home/main_page/bottle.svg
+    - assets/images/coupons/mdi_clock-outline.svg
+    - assets/images/coupons/mdi_clock-outline2.svg
 
   fonts:
     - family: Poppins
