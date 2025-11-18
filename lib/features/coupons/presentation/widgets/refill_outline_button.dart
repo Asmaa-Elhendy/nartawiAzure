@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/colors.dart';
+import 'calender_dialog.dart';
 
 
 Widget NextRefillButton(
     double width,
     double height,
-    String title,
+    BuildContext context
     ) {
   return Padding(
     padding: EdgeInsets.symmetric(
@@ -15,7 +16,9 @@ Widget NextRefillButton(
       vertical: height * .01,
     ),
     child: InkWell(
+      onTap: (){
 
+    },
       child: Container(
         //   width:  width,
         height:  height * .06,

@@ -390,7 +390,7 @@ class _CouponeCardState extends State<CouponeCard> {
             },
             fromCouponsScreen: true,
           ),
-          NextRefillButton(screenWidth,screenHeight,'title')
+          NextRefillButton(screenWidth,screenHeight,context)
         ],
       ),
     );

@@ -107,8 +107,8 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
           children: [
             // Radio button
             Container(
-              width: screenWidth * 0.048,
-              height: screenWidth * 0.048,
+              width: screenWidth * 0.045,
+              height: screenWidth * 0.045,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -119,8 +119,8 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
               child: isSelected
                   ? Center(
                 child: Container(
-                  width: screenWidth * 0.028,
-                  height: screenWidth * 0.028,
+                  width: screenWidth * 0.024,
+                  height: screenWidth * 0.024,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primary ,
