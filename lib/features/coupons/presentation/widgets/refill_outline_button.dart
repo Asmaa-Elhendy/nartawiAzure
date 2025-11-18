@@ -16,9 +16,16 @@ Widget NextRefillButton(
       vertical: height * .01,
     ),
     child: InkWell(
-      onTap: (){
-
-    },
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (ctx) => NextRefillCalendarDialog(
+            selectedDays:  [0, 2, 3],// for Sunday, Tuesday, Wednesday
+            remainingRefills:  10,
+            nextRefillDate: DateTime.now(), // أول تاريخ متاح
+          ),
+        );
+      },
       child: Container(
         //   width:  width,
         height:  height * .06,
