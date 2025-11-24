@@ -3,21 +3,39 @@ import 'package:flutter/material.dart';
 import 'day_card.dart';
 
 class DaySelectionGrid extends StatefulWidget {
-  const DaySelectionGrid({Key? key}) : super(key: key);
+  /// الأيام المختارة جاية من فوق (CouponeCard)
+  /// 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+  final Set<int> selectedDays;
+
+  /// يتنادي لما اليوم يتضغط
+  final void Function(int dayIndex) onDayTapped;
+
+  const DaySelectionGrid({
+    Key? key,
+    required this.selectedDays,
+    required this.onDayTapped,
+  }) : super(key: key);
 
   @override
   State<DaySelectionGrid> createState() => _DaySelectionGridState();
 }
 
 class _DaySelectionGridState extends State<DaySelectionGrid> {
-  // Store selected days with their time periods
-  Map<String, DaySelection> selectedDays = {
-    'Sat': DaySelection(isSelected: true, timePeriod: 'Early Morning'),
-    'Mon': DaySelection(isSelected: true, timePeriod: 'Afternoon'),
-    'Wed': DaySelection(isSelected: true, timePeriod: 'Night'),
-  };
+  /// بنخزن لكل day ال timePeriod بس
+  /// DaySelection اللي جاية من day_card.dart
+  final Map<String, DaySelection> _daySelections = {};
 
-  final List<String> daysOfWeek = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  /// ترتيب الأيام لازم يطابق الإندكس
+  /// 0=Sun,1=Mon,...,6=Sat (عشان الكاليندر)
+  final List<String> daysOfWeek = [
+    'Sun',
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +45,7 @@ class _DaySelectionGridState extends State<DaySelectionGrid> {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-     padding: EdgeInsets.all(0),
+      padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: screenWidth * 0.015,
@@ -36,39 +54,44 @@ class _DaySelectionGridState extends State<DaySelectionGrid> {
       ),
       itemCount: daysOfWeek.length,
       itemBuilder: (context, index) {
-        final day = daysOfWeek[index];
-        final selection = selectedDays[day];
-        final isSelected = selection?.isSelected ?? false;
+        final dayLabel = daysOfWeek[index];
 
-        return
-          // In your grid widget, update the DayCard usage:
-          DayCard(
-            day: day,
-            isSelected: isSelected,
-            timePeriod: selection?.timePeriod ?? 'Not Selected',
-            onToggle: () {
-              setState(() {
-                if (isSelected) {
-                  selectedDays.remove(day);
-                } else {
-                  selectedDays[day] = DaySelection(
-                    isSelected: true,
-                    timePeriod: 'Afternoon',
-                  );
-                }
-              });
-            },
-            onTimePeriodChanged: (newTimePeriod) {
-              setState(() {
-                selectedDays[day] = DaySelection(
-                  isSelected: true,
-                  timePeriod: newTimePeriod,
-                );
-              });
-            },
+        // هل اليوم ده متعلم ولا لأ؟ جاية من ال parent
+        final bool isSelected = widget.selectedDays.contains(index);
+
+        // ال timePeriod اللي مخزّن عندنا لليوم ده (لو موجود)
+        final selection = _daySelections[dayLabel];
+
+        // لو متعلم ومفيش اختيار سابق → حط له default timePeriod
+        if (isSelected && selection == null) {
+          _daySelections[dayLabel] = DaySelection(
+            isSelected: true,
+            timePeriod: 'Afternoon',
           );
+        }
+
+        final String timePeriod =
+            _daySelections[dayLabel]?.timePeriod ?? (isSelected ? 'Afternoon' : 'Not Selected');
+
+        return DayCard(
+          day: dayLabel,
+          isSelected: isSelected,
+          timePeriod: timePeriod,
+          onToggle: () {
+            // اللي فوق هو المسؤول عن السماح/المنع (CouponeCard)
+            widget.onDayTapped(index);
+            setState(() {});
+          },
+          onTimePeriodChanged: (newTimePeriod) {
+            setState(() {
+              _daySelections[dayLabel] = DaySelection(
+                isSelected: isSelected,
+                timePeriod: newTimePeriod,
+              );
+            });
+          },
+        );
       },
     );
   }
 }
-

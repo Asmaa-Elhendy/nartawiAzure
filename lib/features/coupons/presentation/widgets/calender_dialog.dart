@@ -25,11 +25,21 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
   List<DateTime> _availableDates = [];
   DateTime? _firstRefillDate;
 
+  // اختيار اليوم في وضع Edit Next Refill (من الأيام المفضلة فقط)
+  DateTime? _tempPreferredDate;
+
+  // وضع طلب ميعاد جديد
+  bool _isRequestMode = false;
+
+  // اليوم المختار في وضع Request New Date (أي يوم مسموح)
+  DateTime? _requestDate;
+
   @override
   void initState() {
     super.initState();
     _focusedDay = widget.nextRefillDate;
     _calculateAvailableDates();
+    _tempPreferredDate = _firstRefillDate;
   }
 
   void _calculateAvailableDates() {
@@ -73,25 +83,42 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
   Color? _getDayColor(DateTime day) {
     DateTime normalizedDay = DateTime(day.year, day.month, day.day);
 
-    // Check if it's the first refill date (primary color)
-    if (_isSameDay(normalizedDay, _firstRefillDate)) {
-      return Color(0xff095BA8).withValues(alpha:0.50); // اللون الأساسي للأول يوم
-    }
-
-    // Check if it's in available dates (light primary)
-    for (var date in _availableDates) {
-      if (_isSameDay(normalizedDay, date)) {
-        return AppColors.secondaryColorWithOpacity16; // لون فاتح للأيام الباقية
+    if (_isRequestMode) {
+      // في وضع Request New Date نظهر بس اليوم المطلوب كـ nextRefillColor
+      if (_requestDate != null && _isSameDay(normalizedDay, _requestDate)) {
+        return AppColors.nextRefillColor;
       }
-    }
+      return null;
+    } else {
+      // في وضع Edit Next Refill:
+      // أول يوم refill هو المؤقت لو موجود، وإلا الأصلي
+      final DateTime? effectiveFirst =
+          _tempPreferredDate ?? _firstRefillDate;
 
-    return null;
+      // Check if it's the first refill date (primary color)
+      if (_isSameDay(normalizedDay, effectiveFirst)) {
+        return AppColors.nextRefillColor; // اللون الأساسي للأول يوم
+      }
+
+      // Check if it's in available dates (light primary)
+      for (var date in _availableDates) {
+        if (_isSameDay(normalizedDay, date)) {
+          return AppColors.secondaryColorWithOpacity16; // لون فاتح للأيام الباقية
+        }
+      }
+      return null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    // التاريخ المعروض في الهيدر حسب المود
+    final DateTime displayedDate = _isRequestMode
+        ? (_requestDate ?? _firstRefillDate ?? widget.nextRefillDate)
+        : (_tempPreferredDate ?? _firstRefillDate ?? widget.nextRefillDate);
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -125,37 +152,34 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
 
             // Date info
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _formatDate(_firstRefillDate ?? widget.nextRefillDate),
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.036,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _formatDate(displayedDate),
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.036,
+                          fontWeight: FontWeight.w700,
                         ),
-                        Text(
-                          _formatMonth(_firstRefillDate ?? widget.nextRefillDate),
-                          style: TextStyle(
-                            fontSize: screenWidth * 0.036,
-                            fontWeight: FontWeight.w700,
-                          ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        _formatMonth(displayedDate),
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.036,
+                          fontWeight: FontWeight.w700,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Icon(Icons.edit_outlined, size: screenWidth * 0.05),
-                ],
-              ),
-
-
-           // SizedBox(height: screenHeight * 0.02),
+                ),
+                Icon(Icons.edit_outlined, size: screenWidth * 0.05),
+              ],
+            ),
 
             SizedBox(
               height: screenHeight * 0.45,
@@ -199,6 +223,34 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                     color: Colors.black,
                   ),
                 ),
+
+                onDaySelected: (selectedDay, focusedDay) {
+                  final normalized = DateTime(
+                    selectedDay.year,
+                    selectedDay.month,
+                    selectedDay.day,
+                  );
+
+                  if (_isRequestMode) {
+                    // وضع Request New Date → نسمح بأي يوم
+                    setState(() {
+                      _requestDate = normalized;
+                      _focusedDay = focusedDay;
+                    });
+                  } else {
+                    // وضع Edit Next Refill → نسمح بس بالأيام المفضلة
+                    final int dayIndex = normalized.weekday % 7; // 0=Sunday
+                    if (widget.selectedDays.contains(dayIndex)) {
+                      setState(() {
+                        _tempPreferredDate = normalized;
+                        _focusedDay = focusedDay;
+                      });
+                    } else {
+                      // يوم مش مفضل → ما نختاروش
+                    }
+                  }
+                },
+
                 calendarBuilders: CalendarBuilders(
                   todayBuilder: (context, day, focusedDay) {
                     Color? bgColor = _getDayColor(day);
@@ -224,10 +276,9 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                             '${day.day}',
                             style: TextStyle(
                               fontSize: screenWidth * 0.034,
-                              color: bgColor != null ? AppColors.primary: Colors.black, //if today text color else text black
-                              // fontWeight: _isSameDay(day, _firstRefillDate)
-                              //     ? FontWeight.bold
-                              //     : FontWeight.w500,
+                              color: bgColor != null
+                                  ? AppColors.primary
+                                  : Colors.black, //if today text color else text black
                             ),
                           ),
                         ),
@@ -236,6 +287,10 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                   },
                   defaultBuilder: (context, day, focusedDay) {
                     Color? bgColor = _getDayColor(day);
+
+                    final DateTime? effectiveFirst = _isRequestMode
+                        ? _requestDate
+                        : (_tempPreferredDate ?? _firstRefillDate);
 
                     return Container(
                       margin: EdgeInsets.all(3),
@@ -248,10 +303,12 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                           '${day.day}',
                           style: TextStyle(
                             fontSize: screenWidth * 0.034,
-                            color: bgColor != null ?AppColors.secondary : Colors.black,//if favourites day else black text
-                            fontWeight: _isSameDay(day, _firstRefillDate)
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                            color: _isSameDay(day, effectiveFirst)
+                                ? AppColors.nextRefillTextColor
+                                : bgColor != null
+                                ? AppColors.secondary
+                                : Colors.black, //if preferred day else black text
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),
@@ -283,12 +340,89 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
             SizedBox(height: screenHeight * 0.02),
 
             // Buttons
-            Row(
+            _isRequestMode
+                ? Row(
               children: [
                 Expanded(
                   child: InkWell(
                     onTap: () {
+                      // Submit في وضع Request New Date
+                      // ما نغيرش first الأساسي → نرجع بدون قيمة
                       Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * .01,
+                        horizontal: screenWidth * .01,
+                      ),
+                      height: screenHeight * .055,
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenWidth * .03,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: screenWidth * 0.02),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      // Cancel → نرجع لوضع العادي بدون تغيير
+                      setState(() {
+                        _isRequestMode = false;
+                        _requestDate = null;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * .01,
+                        horizontal: screenWidth * .01,
+                      ),
+                      height: screenHeight * .055,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors
+                              .greyDarktextIntExtFieldAndIconsHome,
+                          width: .5,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: screenWidth * .03,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+                : Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      // Edit Next Refill → نغيّر first الأساسي برا الديالوج
+                      final DateTime result =
+                          _tempPreferredDate ??
+                              _firstRefillDate ??
+                              widget.nextRefillDate;
+                      Navigator.pop(context, result);
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -317,7 +451,11 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      // Request New Date → ندخل مود الطلب
+                      setState(() {
+                        _isRequestMode = true;
+                        _requestDate = _firstRefillDate;
+                      });
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -327,7 +465,8 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                       height: screenHeight * .055,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          color: AppColors
+                              .greyDarktextIntExtFieldAndIconsHome,
                           width: .5,
                         ),
                         borderRadius: BorderRadius.circular(8),
@@ -346,7 +485,7 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

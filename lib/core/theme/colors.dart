@@ -30,6 +30,8 @@ class AppColors {
   static const redColor=Color(0xffF95A2C);
   static const redLight=Color(0xfffce2db);
   static const favouriteProductCard=Color(0xffecebea);
+  static final nextRefillColor=Color(0xff095BA8).withValues(alpha:0.50);
+  static final nextRefillTextColor=Color(0xff095BA8);
 
 
   static const LinearGradient primaryGradient = LinearGradient(

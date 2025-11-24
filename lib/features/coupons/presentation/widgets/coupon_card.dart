@@ -17,8 +17,10 @@ import 'calender_dialog.dart';
 import 'custom_text.dart';
 
 class CouponeCard extends StatefulWidget {
-bool disbute;
-CouponeCard({this.disbute=false});
+  bool disbute;
+
+  CouponeCard({Key? key, this.disbute = false}) : super(key: key);
+
   @override
   State<CouponeCard> createState() => _CouponeCardState();
 }
@@ -26,10 +28,15 @@ CouponeCard({this.disbute=false});
 class _CouponeCardState extends State<CouponeCard> {
   String imageUrl = '';
   bool _isSwitched = false; // Initial state of the switch
+
   late final ProductQuantityBloc _quantityBloc;
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityController;
   late final TextEditingController _quantityTwoController;
+
+  /// الأيام اللي المستخدم اختارها كـ Preferred days
+  /// 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  final Set<int> _selectedPreferredDays = {};
 
   @override
   void initState() {
@@ -42,12 +49,11 @@ class _CouponeCardState extends State<CouponeCard> {
       basePrice: 100.0,
     );
     _quantityController = TextEditingController(text: '1');
-
     _quantityTwoController = TextEditingController(text: '1');
-
     super.initState();
   }
 
+  @override
   void dispose() {
     _quantityController.dispose();
     _quantityBloc.close();
@@ -60,6 +66,7 @@ class _CouponeCardState extends State<CouponeCard> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: screenHeight * .01),
       padding: EdgeInsets.symmetric(
@@ -82,6 +89,7 @@ class _CouponeCardState extends State<CouponeCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          /// Header: title + status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -93,6 +101,8 @@ class _CouponeCardState extends State<CouponeCard> {
               CouponStatus(screenHeight, screenWidth, 'Active'),
             ],
           ),
+
+          /// Purchase date
           Row(
             children: [
               SvgPicture.asset(
@@ -110,6 +120,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
             ],
           ),
+
+          /// Company + image
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenHeight * .01),
             child: Row(
@@ -143,7 +155,8 @@ class _CouponeCardState extends State<CouponeCard> {
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: screenWidth * .032,
-                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          color:
+                          AppColors.greyDarktextIntExtFieldAndIconsHome,
                         ),
                       ),
                     ),
@@ -159,10 +172,11 @@ class _CouponeCardState extends State<CouponeCard> {
               ],
             ),
           ),
+
+          /// Coupon balance + status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
-
             children: [
               customCouponPrimaryTitle(
                 'Coupon Balance',
@@ -173,22 +187,32 @@ class _CouponeCardState extends State<CouponeCard> {
             ],
           ),
 
+          /// Progress bar
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
             child: LinearProgressIndicator(
               value: 0.4,
-              // Represents 70% progress
               backgroundColor: AppColors.primaryLight,
               minHeight: screenHeight * .012,
               borderRadius: BorderRadius.circular(10),
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ),
+
+          /// Totals row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              customCouponSecondaryTitle('25 Total', screenWidth, screenHeight),
-              customCouponSecondaryTitle('15 Used', screenWidth, screenHeight),
+              customCouponSecondaryTitle(
+                '25 Total',
+                screenWidth,
+                screenHeight,
+              ),
+              customCouponSecondaryTitle(
+                '15 Used',
+                screenWidth,
+                screenHeight,
+              ),
               customCouponSecondaryTitle(
                 '10 Remaining',
                 screenWidth,
@@ -196,6 +220,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
             ],
           ),
+
+          /// Auto-Renewal
           Padding(
             padding: EdgeInsets.only(top: screenHeight * .01),
             child: Row(
@@ -206,9 +232,8 @@ class _CouponeCardState extends State<CouponeCard> {
                   screenWidth,
                   screenHeight,
                 ),
-
                 Transform.scale(
-                  scale: .65, // Bigger (1.0 = default)
+                  scale: .65,
                   child: CupertinoSwitch(
                     activeColor: AppColors.primary,
                     value: _isSwitched,
@@ -222,6 +247,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ],
             ),
           ),
+
+          /// Auto-renewal description
           Flexible(
             child: Padding(
               padding: EdgeInsets.only(bottom: screenHeight * .02),
@@ -234,6 +261,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
             ),
           ),
+
+          /// Address
           Text(
             'Delivery Address',
             style: TextStyle(
@@ -249,18 +278,21 @@ class _CouponeCardState extends State<CouponeCard> {
               color: AppColors.BorderAnddividerAndIconColor,
             ),
           ),
+
           SizedBox(height: screenHeight * .03),
+
+          /// Weekly Sent Bundles
           customCouponPrimaryTitle(
             'Weekly Sent Bundles',
             screenWidth,
             screenHeight,
           ),
 
+          /// Quantity: Days
           BlocProvider.value(
             value: _quantityBloc,
             child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
               builder: (context, state) {
-                // Update controller when state changes
                 if (_quantityController.text != state.quantity) {
                   _quantityController.text = state.quantity;
                 }
@@ -281,7 +313,6 @@ class _CouponeCardState extends State<CouponeCard> {
                               height: screenHeight,
                               isPlus: true,
                               price: 0,
-                              // Not used for the controls
                               onIncrease: () => context
                                   .read<ProductQuantityBloc>()
                                   .add(IncreaseQuantity()),
@@ -307,6 +338,8 @@ class _CouponeCardState extends State<CouponeCard> {
               },
             ),
           ),
+
+          /// Bottles For Once
           customCouponPrimaryTitle(
             'Bottles For Once',
             screenWidth,
@@ -317,7 +350,6 @@ class _CouponeCardState extends State<CouponeCard> {
             value: _quantityTwoBloc,
             child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
               builder: (context, state) {
-                // Update controller when state changes
                 if (_quantityTwoController.text != state.quantity) {
                   _quantityTwoController.text = state.quantity;
                 }
@@ -337,7 +369,6 @@ class _CouponeCardState extends State<CouponeCard> {
                               height: screenHeight,
                               isPlus: true,
                               price: 0,
-                              // Not used for the controls
                               onIncrease: () => context
                                   .read<ProductQuantityBloc>()
                                   .add(IncreaseQuantity()),
@@ -363,6 +394,8 @@ class _CouponeCardState extends State<CouponeCard> {
               },
             ),
           ),
+
+          /// Preferred Refill Times / Week
           customCouponPrimaryTitle(
             'Preferred Refill Times /Week',
             screenWidth,
@@ -376,23 +409,67 @@ class _CouponeCardState extends State<CouponeCard> {
               color: AppColors.BorderAnddividerAndIconColor,
             ),
           ),
+
           SizedBox(height: screenHeight * .03),
-          DaySelectionGrid(),
+
+          /// DaySelectionGrid مرتبطة بعدد الأيام (Days)
+          BlocProvider.value(
+            value: _quantityBloc,
+            child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
+              builder: (context, state) {
+                final int maxPreferredDays =
+                    int.tryParse(state.quantity) ?? 0;
+
+                return DaySelectionGrid(
+                  // لازم تعدلي DaySelectionGrid في prefered_days_grid.dart
+                  // عشان يستقبل selectedDays و onDayTapped
+                  selectedDays: _selectedPreferredDays,
+                  onDayTapped: (int dayIndex) {
+                    setState(() {
+                      if (_selectedPreferredDays.contains(dayIndex)) {
+                        _selectedPreferredDays.remove(dayIndex);
+                      } else {
+                        if (maxPreferredDays > 0 &&
+                            _selectedPreferredDays.length >=
+                                maxPreferredDays) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'You can select up to $maxPreferredDays preferred days only.',
+                              ),
+                            ),
+                          );
+                        } else {
+                          _selectedPreferredDays.add(dayIndex);
+                        }
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          ),
+
+          /// View Last Consumption button
           BuildInfoAndAddToCartButton(
             screenWidth,
             screenHeight,
             'View Last Consumption',
             false,
-            () {
+                () {
               showDialog(
                 context: context,
-                builder: (ctx) => ViewConsumptionHistoryAlert(disbute:widget.disbute),
+                builder: (ctx) =>
+                    ViewConsumptionHistoryAlert(disbute: widget.disbute),
               );
             },
             fromCouponsScreen: true,
           ),
-          NextRefillButton(screenWidth,screenHeight,context)
 
+          /// Next refill button - بياخد الأيام المفضلة المختارة
+          NextRefillButton(
+            selectedDays: _selectedPreferredDays.toList(),
+          ),
         ],
       ),
     );
