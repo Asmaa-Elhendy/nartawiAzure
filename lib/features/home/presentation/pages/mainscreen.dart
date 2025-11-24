@@ -97,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
                         ),
                         BuildStretchTitleHome(
                           screenWidth,
-                          "Featured Stores",
+                          "Featured Suppliers",
                               () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => AllSuppliersScreen()));
