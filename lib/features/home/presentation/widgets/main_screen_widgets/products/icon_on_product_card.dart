@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../snack_bar_add_product.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
  final double width;
@@ -66,11 +68,16 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
           color: AppColors.primary,
         )
             : widget.isPlus
-            ? Icon(
-          Icons.add,
-          size: widget.height * .03,
-          color: AppColors.primary,
-        )
+            ? InkWell(
+          onTap: (){
+            showSnackBarAddProduct(context, widget.width, widget.height, 'You’ve added 1 item.Confirm to add to cart.');
+          },
+              child: Icon(
+                        Icons.add,
+                        size: widget.height * .03,
+                        color: AppColors.primary,
+                      ),
+            )
             : InkWell(
           onTap: () {
             setState(() {
