@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/prefered_days_grid.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/refill_outline_button.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/view_Consumption_history_alert.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
@@ -432,13 +433,15 @@ class _CouponeCardState extends State<CouponeCard> {
                         if (maxPreferredDays > 0 &&
                             _selectedPreferredDays.length >=
                                 maxPreferredDays) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'You can select up to $maxPreferredDays preferred days only.',
-                              ),
-                            ),
-                          );
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(backgroundColor: AppColors.primary,
+                          //     content: Text(
+                          //       'You can select up to $maxPreferredDays preferred days only.',
+                          //     ),
+                          //   ),
+                          // );
+                          showSnackBarWarning(context, screenWidth, screenHeight,  'You can select up to $maxPreferredDays preferred days only.');
+
                         } else {
                           _selectedPreferredDays.add(dayIndex);
                         }
