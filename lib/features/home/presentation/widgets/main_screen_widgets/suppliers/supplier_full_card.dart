@@ -27,6 +27,7 @@ class BuildFullCardSupplier extends StatefulWidget {
 }
 
 class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
+  bool isFavourite=false;
   bool isExpanded = false;
   final String description =
       'Premium Water Supplier With Quality Products And Reliable Delivery Service. This description is long and should show fully when expanded.';
@@ -89,29 +90,39 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: widget.screenWidth * .036)),
-                          Container(
-                            width: widget.screenWidth * .1,
-                            height: widget.screenHeight * .045,
-                            decoration: BoxDecoration(
-                              color: AppColors.backgrounHome,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
+                          InkWell(
+                            onTap: (){
+                           if(!widget.fromFavouritesScreen){
+                             isFavourite=!isFavourite;
+                             setState(() {
+
+                             });
+                           }
+                            },
+                            child: Container(
+                              width: widget.screenWidth * .1,
+                              height: widget.screenHeight * .045,
+                              decoration: BoxDecoration(
+                                color: AppColors.backgrounHome,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Iconify(
+                                  widget.fromFavouritesScreen
+                                      ? Mdi.heart
+                                      :isFavourite?Mdi.heart: Mdi.heart_outline,
+                                  color: widget.fromFavouritesScreen
+                                      ? AppColors.redColor
+                                      : AppColors.primary,
+                                  size: widget.screenHeight * .03,
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Iconify(
-                                widget.fromFavouritesScreen
-                                    ? Mdi.heart
-                                    : Mdi.heart_outline,
-                                color: widget.fromFavouritesScreen
-                                    ? AppColors.redColor
-                                    : AppColors.primary,
-                                size: widget.screenHeight * .03,
                               ),
                             ),
                           ),

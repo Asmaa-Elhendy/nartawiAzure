@@ -49,7 +49,7 @@ showSnackBarAddProduct(BuildContext context, double screenWidth, double screenHe
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
               child: Text(
-                "Close",
+                "Cancel",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: screenWidth * .035,   // 👈 تحكّمي في الحجم
