@@ -21,6 +21,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
     fontFamily: 'Poppins',
   );
+
   
   static const TextStyle titleRating = TextStyle(
     fontSize: 13,

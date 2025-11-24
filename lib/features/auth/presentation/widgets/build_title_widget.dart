@@ -31,10 +31,10 @@ Widget buildFooterInfo(BuildContext context,String leftText,String rightText,voi
     mainAxisAlignment: rightText==" Resend"?MainAxisAlignment.start:MainAxisAlignment.center,
     children: [
 
-      Text(leftText,style: TextStyle(fontSize: 16,color: AppColors.textLight),),
+      Text(leftText,style: TextStyle(fontSize: 15,color: AppColors.textLight),),
       GestureDetector(
           onTap:fun,
-          child: Text(rightText,style: TextStyle(color: AppColors.primary,fontSize: 16),))
+          child: Text(rightText,style: TextStyle(color: AppColors.primary,fontSize: 15),))
     ],
   );
 }
