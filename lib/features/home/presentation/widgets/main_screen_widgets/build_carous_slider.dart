@@ -31,8 +31,14 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
         Container(
           height: slideHeight,
           alignment: Alignment.center,
-          padding: EdgeInsets.only(left: screenWidth * .02,right:  screenWidth * .02,top: screenHeight*.01),
-          child: latestCouponTracker(screenWidth, screenHeight),
+          padding: EdgeInsets.only(
+              left: screenWidth * .02,
+              right: screenWidth * .02,
+              top: screenHeight * .008),
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: latestCouponTracker(screenWidth, screenHeight),
+          ),
         ),
 
         ..._imageList.map((item) {

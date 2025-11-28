@@ -8,7 +8,9 @@ import 'custom_text.dart';
 
 Widget latestCouponTracker(double screenWidth,double screenHeight){
   return
-      Column(mainAxisAlignment: MainAxisAlignment.start,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
