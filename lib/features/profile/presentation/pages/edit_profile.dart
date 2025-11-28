@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             SizedBox(height: screenHeight*.01,),
                             buildCustomeFullTextField('Phone Number', 'Enter Phone Number', _phoneNumberController, false,screenHeight,fromEditProfile: true),
                             SizedBox(height: screenHeight*.01,),
-                            buildCustomeFullTextField('Emergency Phone Number', 'Enter Emergency phone number', _emergencyphonenumberController, false,screenHeight,fromEditProfile: true),
+                            buildCustomeFullTextField('Alternative Phone Number', 'Enter Alternative phone number', _emergencyphonenumberController, false,screenHeight,fromEditProfile: true),
                             SizedBox(height: screenHeight*.01,),
                             BuildInfoAndAddToCartButton(screenWidth, screenHeight, 'Save', false, (){
 

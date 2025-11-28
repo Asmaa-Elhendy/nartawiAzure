@@ -80,7 +80,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   buildCustomeFullTextField('Email Address', 'Ex: abc@example.com', _emailController, true,height),
                   buildCustomeFullTextField('Phone', 'Enter Phone Number', _phoneNumberController, true,height),
                   buildInfoPhoneInfo(width),
-                  buildCustomeFullTextField('Emergency Phone Number', 'Enter Emergency phone number', _emergencyphonenumberController, false,height),
+                  buildCustomeFullTextField('Alternative Phone Number', 'Enter Alternative phone number', _emergencyphonenumberController, false,height),
                   buildInfoPhoneInfo(width),
                   buildCustomeFullTextField('Password', 'Enter Password ', _passwordController, true,height),
                   buildCustomeFullTextField('Confirm Password', 'Enter Confirmed Password', _confirmPasswordController, true,height),
