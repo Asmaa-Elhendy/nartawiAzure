@@ -16,6 +16,7 @@ import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import 'calender_dialog.dart';
 import 'custom_text.dart';
+import 'latest_coupon_tracker.dart';
 
 class CouponeCard extends StatefulWidget {
   bool disbute;
@@ -175,53 +176,7 @@ class _CouponeCardState extends State<CouponeCard> {
           ),
 
           /// Coupon balance + status
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              customCouponPrimaryTitle(
-                'Coupon Balance',
-                screenWidth,
-                screenHeight,
-              ),
-              CouponStatus(screenHeight, screenWidth, '10 Left'),
-            ],
-          ),
-
-          /// Progress bar
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
-            child: LinearProgressIndicator(
-              value: 0.4,
-              backgroundColor: AppColors.primaryLight,
-              minHeight: screenHeight * .012,
-              borderRadius: BorderRadius.circular(10),
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            ),
-          ),
-
-          /// Totals row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              customCouponSecondaryTitle(
-                '25 Total',
-                screenWidth,
-                screenHeight,
-              ),
-              customCouponSecondaryTitle(
-                '15 Used',
-                screenWidth,
-                screenHeight,
-              ),
-              customCouponSecondaryTitle(
-                '10 Remaining',
-                screenWidth,
-                screenHeight,
-              ),
-            ],
-          ),
-
+          latestCouponTracker(screenWidth,screenHeight),
           /// Auto-Renewal
           Padding(
             padding: EdgeInsets.only(top: screenHeight * .01),
