@@ -29,26 +29,24 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
         horizontal: screenWidth * 0.04,
         vertical: screenHeight * 0.02,
       ),
-      child: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
 
-            BuildSupplierRatingCard(screenWidth, screenHeight, items,'Rating Summary'),
-            Padding(
-              padding: EdgeInsets.only(
-                top: screenHeight * 0.02,
-              ),
-              child: Text('Customer Reviews',style: TextStyle(color: AppColors.textLight,fontWeight: FontWeight.w600,fontSize:screenWidth * .04,),),
+          BuildSupplierRatingCard(screenWidth, screenHeight, items,'Rating Summary'),
+          Padding(
+            padding: EdgeInsets.only(
+              top: screenHeight * 0.02,
             ),
-            Center(
-              child: SvgPicture.asset(
-                'assets/images/home/main_page/supplier_detail/empty-state.svg',
-               // height: screenHeight*.1,
-              ),
+            child: Text('Customer Reviews',style: TextStyle(color: AppColors.textLight,fontWeight: FontWeight.w600,fontSize:screenWidth * .04,),),
+          ),
+          Center(
+            child: SvgPicture.asset(
+              'assets/images/home/main_page/supplier_detail/empty-state.svg',
+             // height: screenHeight*.1,
             ),
-          SizedBox(height: screenHeight*.2,)
-          ],
-        ),
+          ),
+     //   SizedBox(height: screenHeight*.2,)
+        ],
       ),
     );
   }
