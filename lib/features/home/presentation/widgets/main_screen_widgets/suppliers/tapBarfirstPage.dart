@@ -96,6 +96,10 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       height: size.height,
       selectedFilters: selectedFilters,
       onClose: _hideFilterMenu,
+      onChanged: () {
+        // Rebuild parent to reflect tag visibility when filters change
+        setState(() {});
+      },
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -136,11 +140,13 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                 ),
               ],
             ),
-            Wrap(
-              spacing: 8.0,
-              runSpacing: 4.0,
-              children: generateTags(screenWidth, screenHeight),
-            ),
+            selectedFilters.isNotEmpty
+                ? Wrap(
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    children: generateTags(screenWidth, screenHeight),
+                  )
+                : const SizedBox(),
             widget.fromAllProducts ? BuildCompareButton(screenWidth, screenHeight, context) : const SizedBox(),
           ]),
         ),

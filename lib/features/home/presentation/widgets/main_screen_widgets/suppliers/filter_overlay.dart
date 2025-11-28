@@ -9,6 +9,7 @@ OverlayEntry buildFilterOverlay({
   required double height,
   required Set<String> selectedFilters,
   required VoidCallback onClose,
+  required VoidCallback onChanged,
 }) {
   return OverlayEntry(
     builder: (context) => Positioned(
@@ -29,12 +30,12 @@ OverlayEntry buildFilterOverlay({
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildFilterItem('Search By', selectedFilters, setStateOverlay),
+                  _buildFilterItem('Search By', selectedFilters, setStateOverlay, onChanged),
                   Divider(),
-                  _buildFilterItem('Price', selectedFilters, setStateOverlay),
-                  _buildFilterItem('Popular Products', selectedFilters, setStateOverlay),
-                  _buildFilterItem('Purchase Type', selectedFilters, setStateOverlay),
-                  _buildFilterItem('Size', selectedFilters, setStateOverlay),
+                  _buildFilterItem('Price', selectedFilters, setStateOverlay, onChanged),
+                  _buildFilterItem('Popular Products', selectedFilters, setStateOverlay, onChanged),
+                  _buildFilterItem('Purchase Type', selectedFilters, setStateOverlay, onChanged),
+                  _buildFilterItem('Size', selectedFilters, setStateOverlay, onChanged),
                 ],
               ),
             );
@@ -49,6 +50,7 @@ Widget _buildFilterItem(
     String title,
     Set<String> selectedFilters,
     void Function(VoidCallback fn) setStateOverlay,
+    VoidCallback onChanged,
     ) {
   final isSelected = selectedFilters.contains(title);
 
@@ -61,6 +63,7 @@ Widget _buildFilterItem(
           } else {
             selectedFilters.add(title);
           }
+          onChanged();
         });
       }
     },
