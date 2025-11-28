@@ -10,7 +10,8 @@ import '../../features/favourites/pesentation/screens/favourites_screen.dart';
 import '../../features/home/presentation/pages/all_product_screen.dart';
 import '../../features/home/presentation/pages/home.dart';
 import '../../features/home/presentation/pages/mainscreen.dart';
-import '../../features/home/presentation/pages/popular_categories_screen.dart';
+import '../../features/home/presentation/pages/popular_categories_main_screen.dart';
+import '../../features/home/presentation/pages/popular_category_screen.dart';
 import '../../features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
 import '../../features/home/presentation/pages/suppliers/product_details.dart';
 import '../../features/home/presentation/pages/suppliers/supplier_detail.dart';
@@ -54,7 +55,7 @@ class AppRouter {
       case '/supplierDetail':
         return MaterialPageRoute(builder: (_) => const SupplierDetails());
       case '/popularCategories':
-        return MaterialPageRoute(builder: (_) => const PopularCategoriesScreen());
+        return MaterialPageRoute(builder: (_) => const PopularCategoriesMainScreen());
       case '/allProducts':
         return MaterialPageRoute(builder: (_) => const AllProductScreen());
       case '/productDetail':

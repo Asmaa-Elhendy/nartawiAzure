@@ -5,15 +5,16 @@ import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
-class PopularCategoriesScreen extends StatefulWidget {
-  const PopularCategoriesScreen({super.key});
+class PopularCategoryScreen extends StatefulWidget {
+  String CategoryName;
+  PopularCategoryScreen({required this.CategoryName});
 
   @override
-  State<PopularCategoriesScreen> createState() =>
-      _PopularCategoriesScreenState();
+  State<PopularCategoryScreen> createState() =>
+      _PopularCategoryScreenState();
 }
 
-class _PopularCategoriesScreenState extends State<PopularCategoriesScreen> {
+class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -43,7 +44,7 @@ class _PopularCategoriesScreenState extends State<PopularCategoriesScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Popular Categories',
+            title: widget.CategoryName,
             is_returned: true,
           ),
           Positioned.fill(

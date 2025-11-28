@@ -8,7 +8,8 @@ class CategoryCard extends StatefulWidget {
   double screenHeight;
   String icon;
   String title;
-  CategoryCard({required  this.screenWidth,required this.screenHeight,required this.icon,required this.title});
+  bool fromMainPupularCategoriesScreen;
+  CategoryCard({required  this.screenWidth,required this.screenHeight,required this.icon,required this.title,this.fromMainPupularCategoriesScreen=false});
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
@@ -41,16 +42,19 @@ class _CategoryCardState extends State<CategoryCard> {
           widget.icon.contains('assets')?
           SvgPicture.asset(
            widget. icon,
-            height: widget.screenHeight*.027,
+            height:  widget.fromMainPupularCategoriesScreen?widget.screenHeight*.038:widget.screenHeight*.027,
           ):
           Iconify(
            widget.icon,
-            size: widget.screenHeight*.027,
+            size: widget.fromMainPupularCategoriesScreen?widget.screenHeight*.038:widget.screenHeight*.027,
             color: AppColors.primary,
           ),
+        SizedBox(height: widget.fromMainPupularCategoriesScreen?widget.screenHeight*.01:0,),
           Padding(
             padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.008),
-            child: Text(widget.title,style: TextStyle(color: AppColors.primary,fontSize: widget.screenWidth*.032,fontWeight: FontWeight.w500),),
+            child: Text(widget.title,style: TextStyle(color: AppColors.primary,
+                fontSize: widget.fromMainPupularCategoriesScreen?widget.screenWidth*.043:widget.screenWidth*.032,
+                fontWeight: FontWeight.w500),),
           )
         ],
       ),

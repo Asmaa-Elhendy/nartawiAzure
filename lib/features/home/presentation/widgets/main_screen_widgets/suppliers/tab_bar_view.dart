@@ -364,7 +364,7 @@ class _StackOverState extends State<StackOver>
 
           // 👇 هنا بقى بنعرض تاب واحدة بس
           _buildCurrentTab(h),
-          SizedBox(height: h * .08),
+          SizedBox(height: h * .08),//space below
         ],
       ),
     );
@@ -372,17 +372,4 @@ class _StackOverState extends State<StackOver>
 }
 
 
-class TabBarFirstPageWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TabBarFirstPage();
-  }
-}
-
-class TabBarSecondPageWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TabBarSecondPage();
-  }
-}
 

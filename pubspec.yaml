@@ -124,6 +124,7 @@ flutter:
     - assets/images/home/main_page/bottle.svg
     - assets/images/coupons/mdi_clock-outline.svg
     - assets/images/coupons/mdi_clock-outline2.svg
+    - assets/images/home/main_page/dispenser.svg
 
   fonts:
     - family: Poppins
