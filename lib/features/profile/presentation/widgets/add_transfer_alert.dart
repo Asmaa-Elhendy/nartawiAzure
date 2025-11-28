@@ -27,11 +27,11 @@ class _TransferAlertDialogState extends State<TransferAlertDialog> {
       insetPadding: EdgeInsets.all(16), // controls distance from screen edges
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.94, // 90% screen width
-        height: MediaQuery.of(context).size.height * 0.74, // adjust height
+    //    height: MediaQuery.of(context).size.height * 0.68, // adjust height
         child: Padding(
           padding: EdgeInsets.only(
             top: screenHeight * .04,
-            bottom: screenHeight * .02,
+            bottom: screenHeight * .04,
             left: screenWidth * .05,
             right: screenWidth * .05,
           ),
@@ -88,22 +88,22 @@ class _TransferAlertDialogState extends State<TransferAlertDialog> {
 
                 buildCustomeFullTextField(
                   'Recipient',
-                  'User Name or Email',
+                  'User Name or Mobile Number',
                   _recipientController,
                   false,
                   screenHeight,
                   fromEditProfile: true,
                 ),
-                SizedBox(height: screenHeight * .01),
-
-                buildCustomeFullTextField(
-                  'Building Number',
-                  'Enter Building Number',
-                  _buildingNoController,
-                  false,
-                  screenHeight,
-                  fromEditProfile: true,
-                ),
+                // SizedBox(height: screenHeight * .01),
+                //
+                // buildCustomeFullTextField(
+                //   'Building Number',
+                //   'Enter Building Number',
+                //   _buildingNoController,
+                //   false,
+                //   screenHeight,
+                //   fromEditProfile: true,
+                // ),
                 SizedBox(height: screenHeight * .01),
 
                 buildCustomeFullTextField(
@@ -117,7 +117,7 @@ class _TransferAlertDialogState extends State<TransferAlertDialog> {
                 SizedBox(height: screenHeight * .02),
 
                 Text(
-                  'Available Balance: QAR 1000.00',
+                  'Available Balance: QAR 1,000', // need , seperator issue
                   style: TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w300,
