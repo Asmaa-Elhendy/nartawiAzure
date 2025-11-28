@@ -6,8 +6,8 @@ import '../../../../core/theme/colors.dart';
 Widget buildFilterDateWidget(double height, double width) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: width * .03),
-    width: width,
-    height: height * .06,
+    width: width*.4,
+    height: height * .05,
     decoration: BoxDecoration(
       color: AppColors.whiteColor,
       border: Border.all(
@@ -25,7 +25,7 @@ Widget buildFilterDateWidget(double height, double width) {
           children: [
             SvgPicture.asset(
               "assets/images/orders/calendar.svg",
-              width: width * .038,
+              width: width * .03,
               color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             ),
             SizedBox(width: width * .02),

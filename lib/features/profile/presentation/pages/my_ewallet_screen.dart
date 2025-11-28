@@ -82,7 +82,31 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                           screenHeight,
                         ),
                       ),
-                      buildFilterDateWidget(screenHeight, screenWidth),
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customCouponAlertTitle(
+                                'From',
+                                screenWidth,
+                                screenHeight,
+                              ),
+                              buildFilterDateWidget(screenHeight, screenWidth),
+                            ],
+                          ),
+                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customCouponAlertTitle(
+                                'To',
+                                screenWidth,
+                                screenHeight,
+                              ),
+                              buildFilterDateWidget(screenHeight, screenWidth),
+                            ],
+                          ),
+
+                        ],
+                      ),
                       SizedBox(height:screenHeight*.01),
                       TransactionCard(screenHeight, screenWidth),
                       TransactionCard(screenHeight, screenWidth),
