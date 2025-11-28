@@ -239,7 +239,7 @@ class _CouponeCardState extends State<CouponeCard> {
 
           /// Weekly Sent Bundles
           customCouponPrimaryTitle(
-            'Weekly Sent Bundles',
+            'Weekly Deliver frequency',
             screenWidth,
             screenHeight,
           ),
@@ -297,7 +297,7 @@ class _CouponeCardState extends State<CouponeCard> {
 
           /// Bottles For Once
           customCouponPrimaryTitle(
-            'Bottles For Once',
+            'Bottles Per Delivery',
             screenWidth,
             screenHeight,
           ),
