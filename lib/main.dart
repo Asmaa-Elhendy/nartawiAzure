@@ -4,11 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
   import 'core/theme/app_theme.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/event.dart';
+import 'features/home/presentation/bloc/cart/cart_bloc.dart';
+import 'injection_container.dart';
 
-  void main() {
+  Future<void> main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await init();
     runApp(
-      BlocProvider(
-        create: (_) => NotificationBloc(initialNotifications: [])..add(LoadNotifications()),
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<NotificationBloc>(
+            create: (_) => sl<NotificationBloc>()..add(LoadNotifications()),
+          ),
+          BlocProvider<CartBloc>(
+            create: (_) => sl<CartBloc>(),
+          ),
+        ],
         child: const MyApp(),
       ),
     );

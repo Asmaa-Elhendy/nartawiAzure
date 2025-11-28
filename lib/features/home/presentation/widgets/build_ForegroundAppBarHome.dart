@@ -8,6 +8,10 @@ import 'package:newwwwwwww/features/notification/presentation/pages/notification
 import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/cart/cart_bloc.dart';
+
+import 'fixed_bage_widget.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
   double screenHeight;
@@ -92,29 +96,27 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                       ),
                     );
                   },
-                  child: badges.Badge(
-                    badgeContent: Text(
-                      '25',
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: screenWidth * .028,
-                      ),
+                  child:
+                  badges.Badge(
+                    badgeContent: buildFixedBadge(
+                      size: screenWidth * .048,
+                      text: '25',
+                      color: AppColors.whiteColor,
+                      fontSize: screenWidth * .028,
                     ),
                     badgeStyle: badges.BadgeStyle(
+                      shape: badges.BadgeShape.circle,
                       badgeColor: AppColors.redColor,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * .006,
-                        vertical: screenHeight * .005,
-                      ),
-                      // 👈 ده اللي يتحكم في حجم البادج
-                      borderRadius: BorderRadius.circular(12),
+                      padding: EdgeInsets.zero,
                     ),
-                    child:  Iconify(
+                    child: Iconify(
                       GameIcons.water_gallon,
                       size: widget.screenWidth * .05,
                       color: AppColors.whiteColor,
                     ),
                   ),
+
+
                 ),
                 InkWell(
                   onTap: () {
@@ -138,18 +140,41 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     widget.disabledCart == 'cart'
                         ? null
                         : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CartScreen(),
-                            ),
-                          );
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider.value(
+                          value: context.read<CartBloc>(),
+                          child: CartScreen(),
+                        ),
+                      ),
+                    );
                   },
-                  child: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: AppColors.whiteColor,
-                    size: widget.screenWidth * .05,
+                  child:badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -8, end: -4),
+                    badgeContent: buildFixedBadge(
+                      size: screenWidth * .048,
+                      text: context.select<CartBloc, String>((b) => b.state.cartProducts.length.toString()),
+                      color: AppColors.whiteColor,
+                      fontSize: screenWidth * .028,
+                    ),
+                    badgeStyle: badges.BadgeStyle(
+                      shape: badges.BadgeShape.circle,
+                      badgeColor: AppColors.redColor,
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Padding(
+                      padding:  EdgeInsets.only(right: screenWidth*.02),
+                      child: Icon(
+                        Icons.shopping_cart_outlined,
+                        color: AppColors.whiteColor,
+                        size: widget.screenWidth * .05,
+                      ),
+                    ),
                   ),
+
+
                 ),
+
                 SvgPicture.asset(
                   "assets/images/home/Language.svg",
                   width: widget.screenWidth * .05,
@@ -165,4 +190,6 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
       ),
     );
   }
+
+
 }
