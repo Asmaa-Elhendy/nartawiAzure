@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../orders/presentation/widgets/order_card.dart';
@@ -137,11 +138,17 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                               child: // Stores Tab
                               ListView.builder(
                                 itemCount: 4,
-                                itemBuilder: (context, index) => BuildFullCardSupplier(
-                                  screenHeight ,
-                                  screenWidth,
-                                  index.isEven,
-                                  fromFavouritesScreen: true,
+                                itemBuilder: (context, index) => InkWell(
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
+
+                                  },
+                                  child: BuildFullCardSupplier(
+                                    screenHeight ,
+                                    screenWidth,
+                                    index.isEven,
+                                    fromFavouritesScreen: true,
+                                  ),
                                 ),
                               ),
                             ),
