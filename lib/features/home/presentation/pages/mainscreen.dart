@@ -61,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
           Positioned.fill(
 
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding:  EdgeInsets.only(bottom: screenHeight*.09),//top 03
               child: CustomScrollView(

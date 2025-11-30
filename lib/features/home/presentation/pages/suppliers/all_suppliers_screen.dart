@@ -68,6 +68,7 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
           ),
           Positioned.fill(
             top: paddingTop + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
            //     top: screenHeight * .03,//05 handle design shimaa

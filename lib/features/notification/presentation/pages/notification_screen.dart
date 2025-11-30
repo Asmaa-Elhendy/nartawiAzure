@@ -125,7 +125,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       ),
 
                       SizedBox(
-                        height: screenHeight * .67,
+                        height: screenHeight * .7,//lh
                         child: TabBarView(
                           controller: _tabController,
 

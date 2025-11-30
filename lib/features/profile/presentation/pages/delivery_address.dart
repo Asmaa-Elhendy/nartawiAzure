@@ -75,82 +75,85 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
                 top: screenHeight * .03, // edit top height under appbar.03),//04 handle design shimaa
                 bottom: screenHeight * .1,
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * .04),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: screenWidth * .04),
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: screenHeight * .7,
-                      child: ListView(
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsetsGeometry.only(
-                          bottom: screenHeight * .06,
-                          left: 0,
-                          right: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: screenHeight * .7,
+                        child: ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          padding: EdgeInsetsGeometry.only(
+                            bottom: screenHeight * .06,
+                            left: 0,
+                            right: 0,
+                          ),
+                          children: [
+                            BuildInfoAndAddToCartButton(
+                              screenWidth,
+                              screenHeight,
+                              'Add New Address',
+                              false,
+                              () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => AddAddressAlertDialog(),
+                                );
+                              },
+                              fromDelivery: true,
+                            ),
+                            OutlineAuthButton(
+                              screenWidth,
+                              screenHeight,
+                              'Use Current Location',
+                              () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) =>
+                                      AddAddressAlertDialog(useGps: true),
+                                );
+                              },
+                              fromDelivery: true,
+                              icon:
+                                  'assets/images/profile/delivery/current_location.svg',
+                            ),
+                            OutlineAuthButton(
+                              screenWidth,
+                              screenHeight,
+                              'Open Google Map',
+                              () {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) =>
+                                      AddAddressAlertDialog(useGps: true),
+                                );
+                              },
+                              fromDelivery: true,
+                              icon:
+                                  'assets/images/profile/delivery/google maps.svg',
+                            ),
+                            BuildCardAddress(context, screenHeight, screenWidth),
+                            BuildCardAddress(
+                              context,
+                              screenHeight,
+                              screenWidth,
+                              work: true,
+                            ),
+                          ],
                         ),
-                        children: [
-                          BuildInfoAndAddToCartButton(
-                            screenWidth,
-                            screenHeight,
-                            'Add New Address',
-                            false,
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => AddAddressAlertDialog(),
-                              );
-                            },
-                            fromDelivery: true,
-                          ),
-                          OutlineAuthButton(
-                            screenWidth,
-                            screenHeight,
-                            'Use Current Location',
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) =>
-                                    AddAddressAlertDialog(useGps: true),
-                              );
-                            },
-                            fromDelivery: true,
-                            icon:
-                                'assets/images/profile/delivery/current_location.svg',
-                          ),
-                          OutlineAuthButton(
-                            screenWidth,
-                            screenHeight,
-                            'Open Google Map',
-                            () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) =>
-                                    AddAddressAlertDialog(useGps: true),
-                              );
-                            },
-                            fromDelivery: true,
-                            icon:
-                                'assets/images/profile/delivery/google maps.svg',
-                          ),
-                          BuildCardAddress(context, screenHeight, screenWidth),
-                          BuildCardAddress(
-                            context,
-                            screenHeight,
-                            screenWidth,
-                            work: true,
-                          ),
-                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

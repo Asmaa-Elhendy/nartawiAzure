@@ -124,8 +124,11 @@ class _SupplierDetailsState extends State<SupplierDetails> {
           // 👇 جسم الصفحة كله
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
+
+                  bottom: screenHeight*.09,
                   top: 0//screenHeight * .03
               ),//04 handle design shimaa
               child: LayoutBuilder(

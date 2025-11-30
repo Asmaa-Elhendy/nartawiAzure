@@ -58,6 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
                 top: screenHeight * .03,// edit top height under appbar.03),//04 handle design shimaa

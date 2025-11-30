@@ -69,6 +69,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
         ),
         Positioned.fill(
           top: MediaQuery.of(context).padding.top + screenHeight * .1,
+          bottom: screenHeight*.05+ screenHeight*.09,
           child: BlocProvider.value(
             value: _quantityBloc,
             child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
