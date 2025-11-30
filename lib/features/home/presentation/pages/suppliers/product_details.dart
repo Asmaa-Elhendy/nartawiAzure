@@ -81,7 +81,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   // 👈 كل الصفحة هي اللي بتسكرول
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: screenHeight * .03,
+                   //   top: screenHeight * .03,
                       right: screenWidth * .05,
                       left: screenWidth * .05,
                       bottom: screenHeight * .04,

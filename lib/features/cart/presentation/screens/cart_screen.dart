@@ -69,7 +69,7 @@ class _CartScreenState extends State<CartScreen>
               top: MediaQuery.of(context).padding.top + screenHeight * .1,
               child: Padding(
                 padding: EdgeInsets.only(
-                  top: screenHeight * .03,//04 handle design shimaa
+             //     top: screenHeight * .03,//04 handle design shimaa
                   bottom: screenHeight * .1,
                 ),
                 child: SingleChildScrollView(

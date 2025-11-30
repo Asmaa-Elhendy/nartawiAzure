@@ -57,7 +57,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * 0.03,//04 handle design shimaa
+         //       top: screenHeight * 0.03,//04 handle design shimaa
                 bottom: screenHeight * .1,
               ),
               child: SingleChildScrollView(

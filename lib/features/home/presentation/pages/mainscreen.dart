@@ -62,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
 
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
-              padding:  EdgeInsets.only(top: screenHeight*.03,bottom: screenHeight*.09),
+              padding:  EdgeInsets.only(bottom: screenHeight*.09),//top 03
               child: CustomScrollView(
                 slivers: [
                   SliverPadding(
