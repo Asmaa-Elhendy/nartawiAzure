@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../profile/presentation/widgets/add_new_address_alert.dart';
+import '../../../profile/presentation/widgets/address_card.dart';
 
-class AddAddressAlertDialog extends StatefulWidget {
-  final bool useGps;
+class ChangeAddressAlert extends StatefulWidget {
 
-  AddAddressAlertDialog({this.useGps = false});
 
   @override
-  State<AddAddressAlertDialog> createState() => _AddAddressAlertDialogState();
+  State<ChangeAddressAlert> createState() => _ChangeAddressAlertState();
 }
 
-class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
+class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
   final TextEditingController _addressNameController = TextEditingController();
   final TextEditingController _zoneNoController = TextEditingController();
   final TextEditingController _streetNoController = TextEditingController();
@@ -32,7 +34,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
       child: SizedBox(
         width: screenWidth * 0.94,
         // 90% screen width
-      //  height: widget.useGps ? screenHeight * .35 : screenHeight * 0.78,
+        //  height: widget.useGps ? screenHeight * .35 : screenHeight * 0.78,
         // adjust height
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -47,7 +49,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     customCouponPrimaryTitle(
-                      'Add New Address',
+                      'Change Address',
                       screenWidth,
                       screenHeight,
                     ),
@@ -63,70 +65,62 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     ),
                   ],
                 ),
-                buildCustomeFullTextField(
-                  'Address Name',
-                  'Enter Address Name',
-                  _addressNameController,
-                  false,
-                  screenHeight,
-                  fromEditProfile: true,
-                ),
-                widget.useGps
-                    ? SizedBox()
-                    : Column(
-                        children: [
-                          SizedBox(height: screenHeight * .01),
-                          buildCustomeFullTextField(
-                            'Zone Number',
-                            'Enter Zone Number',
-                            _zoneNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(
-                            'Street Number',
-                            'Enter Street Number',
-                            _streetNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(
-                            'Building Number',
-                            'Enter Building Number',
-                            _buildingNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(
-                            'Flat Number',
-                            'Enter Flat Number',
-                            _flatNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                        ],
-                      ),
-                SizedBox(height: screenHeight * .02),
+            BuildCardAddress(
+              context,
+              screenHeight,
+              screenWidth,
+              work: false,//work true
+              fromCart: true,
+            ),
+            BuildInfoAndAddToCartButton(
+              screenWidth,
+              screenHeight,
+              'Add New Address',
+              false,
+              () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AddAddressAlertDialog(),
+                );
+              },
+              fromDelivery: true,
+            ),
+            OutlineAuthButton(
+              screenWidth,
+              screenHeight,
+              'Use Current Location',
+              () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AddAddressAlertDialog(useGps: true),
+                );
+              },
+              fromDelivery: true,
+              icon: 'assets/images/profile/delivery/current_location.svg',
+            ),
+            OutlineAuthButton(
+              screenWidth,
+              screenHeight,
+              'Open Google Map',
+              () {
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AddAddressAlertDialog(useGps: true),
+                );
+              },
+              fromDelivery: true,
+              icon: 'assets/images/profile/delivery/google maps.svg',
+            ),
                 CancelOrderWidget(
                   context,
                   screenWidth,
                   screenHeight,
-                  'Add New Address',
+                  'Confirm',
                   'Cancel',
-                  () {
+                      () {
                     Navigator.pop(context); //send dispute to api
                   },
-                  () {
+                      () {
                     Navigator.pop(context);
                   },
                 ),

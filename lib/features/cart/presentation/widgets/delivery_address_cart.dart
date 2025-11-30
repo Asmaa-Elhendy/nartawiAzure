@@ -4,6 +4,7 @@ import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../../../profile/presentation/widgets/address_card.dart';
+import 'change_address_alert.dart';
 
 class OrderDeliveryCartWidget extends StatefulWidget {
   const OrderDeliveryCartWidget({super.key});
@@ -55,52 +56,67 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
                 screenWidth,
                 fromCart: true,
               ),
-              BuildCardAddress(
-                context,
-                screenHeight,
-                screenWidth,
-                work: true,
-                fromCart: true,
-              ),
-              BuildInfoAndAddToCartButton(
-                screenWidth,
-                screenHeight,
-                'Add New Address',
-                false,
-                () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AddAddressAlertDialog(),
-                  );
-                },
-                fromDelivery: true,
-              ),
               OutlineAuthButton(
                 screenWidth,
                 screenHeight,
-                'Use Current Location',
-                () {
+                'Change Address',
+                    () {
                   showDialog(
                     context: context,
-                    builder: (ctx) => AddAddressAlertDialog(useGps: true),
+                    builder: (ctx) =>
+                        ChangeAddressAlert(),
                   );
                 },
-                fromDelivery: true,
-                icon: 'assets/images/profile/delivery/current_location.svg',
+                fromDelivery: false,
+                icon:
+                'assets/images/profile/delivery/current_location.svg',
               ),
-              OutlineAuthButton(
-                screenWidth,
-                screenHeight,
-                'Open Google Map',
-                () {
-                  showDialog(
-                    context: context,
-                    builder: (ctx) => AddAddressAlertDialog(useGps: true),
-                  );
-                },
-                fromDelivery: true,
-                icon: 'assets/images/profile/delivery/google maps.svg',
-              ),
+              // BuildCardAddress(
+              //   context,
+              //   screenHeight,
+              //   screenWidth,
+              //   work: true,
+              //   fromCart: true,
+              // ),
+              // BuildInfoAndAddToCartButton(
+              //   screenWidth,
+              //   screenHeight,
+              //   'Add New Address',
+              //   false,
+              //   () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (ctx) => AddAddressAlertDialog(),
+              //     );
+              //   },
+              //   fromDelivery: true,
+              // ),
+              // OutlineAuthButton(
+              //   screenWidth,
+              //   screenHeight,
+              //   'Use Current Location',
+              //   () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (ctx) => AddAddressAlertDialog(useGps: true),
+              //     );
+              //   },
+              //   fromDelivery: true,
+              //   icon: 'assets/images/profile/delivery/current_location.svg',
+              // ),
+              // OutlineAuthButton(
+              //   screenWidth,
+              //   screenHeight,
+              //   'Open Google Map',
+              //   () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (ctx) => AddAddressAlertDialog(useGps: true),
+              //     );
+              //   },
+              //   fromDelivery: true,
+              //   icon: 'assets/images/profile/delivery/google maps.svg',
+              // ),
             ],
           ),
 

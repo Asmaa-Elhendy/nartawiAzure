@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/payment_radio_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../../../orders/presentation/widgets/cancel_order_buttons.dart';
 
 class PaymentMethodAlert extends StatefulWidget {
   const PaymentMethodAlert({super.key});
@@ -22,7 +23,7 @@ class _PaymentMethodAlertState extends State<PaymentMethodAlert> {
       insetPadding: const EdgeInsets.all(16),
       child: SizedBox(
         width: screenWidth * 0.94,
-        height: screenHeight * 0.68,
+     //   height: screenHeight * 0.68,
         child: Padding(
           padding: EdgeInsets.only(
             top: screenHeight * .04,
@@ -69,6 +70,19 @@ class _PaymentMethodAlertState extends State<PaymentMethodAlert> {
 
                 /// كروت الاختيار
                 const RadioPaymentCard(),
+                CancelOrderWidget(
+                  context,
+                  screenWidth,
+                  screenHeight,
+                  'Confirm',
+                  'Cancel',
+                      () {
+                    Navigator.pop(context); //send dispute to api
+                  },
+                      () {
+                    Navigator.pop(context);
+                  },
+                ),
               ],
             ),
           ),

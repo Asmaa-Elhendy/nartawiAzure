@@ -90,13 +90,13 @@ Widget OutlineAuthButton(
   return Padding(
     padding: EdgeInsets.symmetric(
       //   horizontal: widget.width * .04,
-      vertical: fromDelivery ? height * .01 : height * .02,
+      vertical: height*.01,//fromDelivery ? height * .01 : height * .02,
     ),
     child: InkWell(
       onTap: fun,
       child: Container(
         //   width:  width,
-        height: fromDelivery ? height * .06 : height * .07,
+        height: height*.06,//fromDelivery ? height * .06 : height * .07,
         decoration: BoxDecoration(
           border: Border.all(
             color: AppColors.blueBorder, // 👈 Border color
