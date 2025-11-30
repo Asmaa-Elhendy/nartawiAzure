@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * .04,// edit top height under appbar
+                top: screenHeight * .03,// edit top height under appbar.03),//04 handle design shimaa
                 bottom: screenHeight * .1,
               ),
               child: SingleChildScrollView(

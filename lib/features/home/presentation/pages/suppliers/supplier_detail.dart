@@ -125,7 +125,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
-              padding: EdgeInsets.only(top: screenHeight * .04),
+              padding: EdgeInsets.only(top: screenHeight * .03),//04 handle design shimaa
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(

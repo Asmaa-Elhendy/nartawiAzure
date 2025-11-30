@@ -78,7 +78,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * .04,
+                top: screenHeight * .03,//.03),//04 handle design shimaa
                 bottom: screenHeight * .1,
               ),
               child: SingleChildScrollView(

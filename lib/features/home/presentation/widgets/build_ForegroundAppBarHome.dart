@@ -43,9 +43,9 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Positioned(
-      top: MediaQuery.of(context).padding.top + widget.screenHeight * .05,
-      left: 16,
-      right: 16,
+      top: MediaQuery.of(context).padding.top + widget.screenHeight * .04, //05 handle design shimaa
+      left: widget.screenWidth*.04,
+      right:  widget.screenWidth*.04,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

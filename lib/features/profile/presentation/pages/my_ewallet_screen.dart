@@ -56,12 +56,12 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * .04,
+                top: screenHeight * .03,//04 handle design shimaa
                 bottom: screenHeight * .1,
               ),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(
+                  padding: EdgeInsets.only(//
                     left: screenWidth * .06,
                     bottom: screenHeight * .04,
                     right: screenWidth * .06,
@@ -96,7 +96,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                           ),
                           Column(crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              customCouponAlertTitle(
+                              customCouponAlertTitle(//ks
                                 'To',
                                 screenWidth,
                                 screenHeight,
