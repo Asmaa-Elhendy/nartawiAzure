@@ -223,8 +223,8 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     ),
                     widget.fromAllProducts?  Positioned(
-                      top: widget.screenHeight * 0.01+widget.screenHeight*.138,
-                      left: widget.screenWidth * 0.02,
+                      top: widget.screenHeight * 0.1,
+                      left: widget.screenWidth * 0.01,
                       child: CustomCheckboxExample(widget.screenWidth,widget.screenHeight),
                     ):SizedBox(),
                   ],

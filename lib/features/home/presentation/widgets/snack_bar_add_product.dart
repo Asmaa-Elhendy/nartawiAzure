@@ -13,7 +13,7 @@ showSnackBarAddProduct(BuildContext context, double screenWidth, double screenHe
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.primary,
         // 👇 هنا نخليه مايتقفلش غير لما المستخدم يدوس Close
-        duration: Duration(days: 1),
+      //  duration: Duration(days: 1),
         margin: EdgeInsets.only(
           left: screenWidth * .02,
           right: screenWidth * .02,

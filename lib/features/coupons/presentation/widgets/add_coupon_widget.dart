@@ -11,7 +11,7 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
     },
     child: Container(
       width: screenWidth*.1, // Set the desired width
-      height: screenHeight*.1, // Set the desired height
+     // height: screenHeight*.1, // Set the desired height
       decoration: BoxDecoration(
           shape: BoxShape.circle, // Makes the container circular
           border: Border.all(

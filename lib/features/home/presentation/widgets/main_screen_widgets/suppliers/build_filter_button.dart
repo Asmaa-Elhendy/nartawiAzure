@@ -43,27 +43,25 @@ Widget BuildCompareButton(double width, double height,context) {
           insetPadding: EdgeInsets.all(16), // controls distance from screen edges
           child: SizedBox(
             width: MediaQuery.of(ctx).size.width * 0.94, // 90% screen width
-            height: MediaQuery.of(ctx).size.height * 0.69, // adjust height
+         //   height: MediaQuery.of(ctx).size.height * 0.69, // adjust height
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      BuildComparedProductCard(
-                        ctx,
-                        MediaQuery.of(ctx).size.height,
-                        MediaQuery.of(ctx).size.width,
-                        true,
-                      ),
-                      BuildComparedProductCard(
-                        ctx,
-                        MediaQuery.of(ctx).size.height,
-                        MediaQuery.of(ctx).size.width,
-                        true,
-                      ),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    BuildComparedProductCard(
+                      ctx,
+                      MediaQuery.of(ctx).size.height,
+                      MediaQuery.of(ctx).size.width,
+                      true,
+                    ),
+                    BuildComparedProductCard(
+                      ctx,
+                      MediaQuery.of(ctx).size.height,
+                      MediaQuery.of(ctx).size.width,
+                      true,
+                    ),
+                  ],
                 ),
 
               ],

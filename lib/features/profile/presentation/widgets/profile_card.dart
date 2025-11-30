@@ -64,9 +64,12 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    double size = screenWidth * 0.38; // 👈 ثابت لدائرة مظبوطة
 
     return Container(
       height: screenHeight * .33,
@@ -82,7 +85,8 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
         child: Stack(
           children: [
             Container(
-              height: screenHeight * .22,width: screenWidth*.42,
+              height: size,
+              width: size,
               decoration: BoxDecoration(
                 color: AppColors.backgrounHome,
                 shape: BoxShape.circle,
@@ -111,13 +115,15 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
                     : Image.asset(localImage, fit: BoxFit.cover),
               ),
             ),
+
+            /// زرار تعديل الصورة
             Positioned(
-              bottom: screenHeight * .03,
-              right: screenWidth * .07,
+              bottom: size * 0.08,
+              right: size * 0.08,
               child: GestureDetector(
                 onTap: _showPickOptionsDialog,
                 child: Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: AppColors.whiteColor.withOpacity(0.3),
                     shape: BoxShape.circle,
@@ -125,23 +131,22 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
                         blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        offset: Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: Center(
-                    child: SvgPicture.asset(
-                      'assets/images/profile/edit.svg',
-                      color: AppColors.whiteColor,
-                      height: screenHeight * .028,
-                    ),
+                  child: SvgPicture.asset(
+                    'assets/images/profile/edit.svg',
+                    color: AppColors.whiteColor,
+                    height: screenHeight * .028,
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
+
 }
