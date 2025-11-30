@@ -41,7 +41,7 @@ Widget buildDateOfBirthWidget(
           final results = await showCalendarDatePicker2Dialog(
             context: context,
             value: [
-              selectedDate ?? DateTime(now.year - 18, now.month, now.day),
+              selectedDate ?? DateTime(now.year , now.month, now.day),
             ],
             dialogSize: Size(width * 0.9, height * 0.55), // 👈 وسّعنا الـ dialog
             borderRadius: BorderRadius.circular(16),

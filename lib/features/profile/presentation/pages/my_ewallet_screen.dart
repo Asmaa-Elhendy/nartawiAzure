@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/filter_date_widget.dart';
@@ -28,7 +29,8 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
   }
 
   String? imageUrl = null;
-
+   DateTime? selectedFromDate;
+  DateTime? selectedToDate;
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -92,7 +94,55 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                 screenWidth,
                                 screenHeight,
                               ),
-                              buildFilterDateWidget(screenHeight, screenWidth),
+                              GestureDetector(
+                                  onTap: () async {
+                                    final now = DateTime.now();
+
+                                    final results = await showCalendarDatePicker2Dialog(
+                                      context: context,
+                                      value: [
+                                        selectedFromDate ?? DateTime(now.year , now.month, now.day),
+                                      ],
+                                      dialogSize: Size(screenWidth * 0.9, screenHeight * 0.55), // 👈 وسّعنا الـ dialog
+                                      borderRadius: BorderRadius.circular(16),
+                                      config: CalendarDatePicker2WithActionButtonsConfig(
+                                        calendarType: CalendarDatePicker2Type.single,
+
+                                        // 🎨 ألوان الـ Calendar
+                                        selectedDayHighlightColor: AppColors
+                                            .primary, // بدل الموف استخدم اللون الأساسي بتاعك (تقدر تغيّره)
+                                        selectedDayTextStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * .035,
+                                        ),
+                                        dayTextStyle: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: screenWidth * .034,
+                                        ),
+                                        weekdayLabelTextStyle: TextStyle(
+                                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: screenWidth * .03,
+                                        ),
+                                        yearTextStyle: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: screenWidth * .032,
+                                        ),
+                                        controlsTextStyle: TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: screenWidth * .035,
+                                        ),
+
+                                        // لو حابب تتحكم في padding
+                                        //    daySplashRadius: 18,
+                                      ),
+                                    );
+
+
+                                  },
+                                  child: buildFilterDateWidget(screenHeight, screenWidth,)),
                             ],
                           ),
                           Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +152,55 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                 screenWidth,
                                 screenHeight,
                               ),
-                              buildFilterDateWidget(screenHeight, screenWidth),
+                              GestureDetector(
+                                  onTap: () async {
+                                    final now = DateTime.now();
+
+                                    final results = await showCalendarDatePicker2Dialog(
+                                      context: context,
+                                      value: [
+                                        selectedToDate ?? DateTime(now.year , now.month, now.day),
+                                      ],
+                                      dialogSize: Size(screenWidth * 0.9, screenHeight * 0.55), // 👈 وسّعنا الـ dialog
+                                      borderRadius: BorderRadius.circular(16),
+                                      config: CalendarDatePicker2WithActionButtonsConfig(
+                                        calendarType: CalendarDatePicker2Type.single,
+
+                                        // 🎨 ألوان الـ Calendar
+                                        selectedDayHighlightColor: AppColors
+                                            .primary, // بدل الموف استخدم اللون الأساسي بتاعك (تقدر تغيّره)
+                                        selectedDayTextStyle: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: screenWidth * .035,
+                                        ),
+                                        dayTextStyle: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: screenWidth * .034,
+                                        ),
+                                        weekdayLabelTextStyle: TextStyle(
+                                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: screenWidth * .03,
+                                        ),
+                                        yearTextStyle: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: screenWidth * .032,
+                                        ),
+                                        controlsTextStyle: TextStyle(
+                                          color: AppColors.primary,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: screenWidth * .035,
+                                        ),
+
+                                        // لو حابب تتحكم في padding
+                                        //    daySplashRadius: 18,
+                                      ),
+                                    );
+
+
+                                  },
+                                  child: buildFilterDateWidget(screenHeight, screenWidth)),
                             ],
                           ),
 

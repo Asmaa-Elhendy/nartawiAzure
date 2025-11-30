@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/theme/colors.dart';
 
-Widget buildFilterDateWidget(double height, double width) {
+Widget buildFilterDateWidget(double height, double width, ) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: width * .03),
     width: width*.4,
@@ -30,7 +30,7 @@ Widget buildFilterDateWidget(double height, double width) {
             ),
             SizedBox(width: width * .02),
             Text(
-              '12.12.2022',
+             '12.12.2025',
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: width * .036,
