@@ -1,87 +1,91 @@
-  import 'package:flutter/material.dart';
-  import 'package:flutter/services.dart';
-  import 'package:flutter_bloc/flutter_bloc.dart';
-  import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/price_widget.dart';
-  import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/SecondTabProductDetail.dart';
-  import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
-  import '../../../../../core/theme/colors.dart';
-  import '../../bloc/product_quantity/product_quantity_bloc.dart';
-  import '../../bloc/product_quantity/product_quantity_event.dart';
-  import '../../bloc/product_quantity/product_quantity_state.dart';
-  import '../../widgets/background_home_Appbar.dart';
-  import '../../widgets/build_ForegroundAppBarHome.dart';
-  import '../../widgets/main_screen_widgets/products/icon_on_product_card.dart';
-  import '../../widgets/main_screen_widgets/products/product_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/price_widget.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/SecondTabProductDetail.dart';
+import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
+import '../../../../../core/theme/colors.dart';
+import '../../bloc/product_quantity/product_quantity_bloc.dart';
+import '../../bloc/product_quantity/product_quantity_event.dart';
+import '../../bloc/product_quantity/product_quantity_state.dart';
+import '../../widgets/background_home_Appbar.dart';
+import '../../widgets/build_ForegroundAppBarHome.dart';
+import '../../widgets/main_screen_widgets/products/icon_on_product_card.dart';
+import '../../widgets/main_screen_widgets/products/product_card.dart';
 
-  class ProductDetailScreen extends StatefulWidget {
-    const ProductDetailScreen({super.key});
+class ProductDetailScreen extends StatefulWidget {
+  const ProductDetailScreen({super.key});
 
-    @override
-    State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late final TextEditingController _quantityController;
+  late final ProductQuantityBloc _quantityBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _quantityController = TextEditingController(text: '1');
+    _quantityBloc = ProductQuantityBloc(
+      calculateProductPrice: CalculateProductPrice(),
+      basePrice: 100.0,
+    );
   }
 
-  class _ProductDetailScreenState extends State<ProductDetailScreen>
-      with SingleTickerProviderStateMixin {
-    late TabController _tabController;
-    late final TextEditingController _quantityController;
-    late final ProductQuantityBloc _quantityBloc;
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _quantityController.dispose();
+    _quantityBloc.close();
+    super.dispose();
+  }
 
-    @override
-    void initState() {
-      super.initState();
-      _tabController = TabController(length: 2, vsync: this);
-      _quantityController = TextEditingController(text: '1');
-      _quantityBloc = ProductQuantityBloc(
-        calculateProductPrice: CalculateProductPrice(),
-        basePrice: 100.0,
-      );
-    }
+  String? imageUrl = null;
 
-    @override
-    void dispose() {
-      _tabController.dispose();
-      _quantityController.dispose();
-      _quantityBloc.close();
-      super.dispose();
-    }
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: Colors.transparent,
+      body: Stack(children: [
+        Container(
+          width: screenWidth,
+          height: screenHeight,
+          color: AppColors.backgrounHome,
+        ),
+        buildBackgroundAppbar(screenWidth),
+        BuildForegroundappbarhome(
+          screenHeight: screenHeight,
+          screenWidth: screenWidth,
+          title: 'Product Details',
+          is_returned: true,
+        ),
+        Positioned.fill(
+          top: MediaQuery.of(context).padding.top + screenHeight * .1,
+          child: BlocProvider.value(
+            value: _quantityBloc,
+            child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
+              builder: (context, state) {
+                if (_quantityController.text != state.quantity) {
+                  _quantityController.text = state.quantity;
+                }
 
-    String? imageUrl = null;
-
-    @override
-    Widget build(BuildContext context) {
-      final screenHeight = MediaQuery.of(context).size.height;
-      final screenWidth = MediaQuery.of(context).size.width;
-      return Scaffold(
-        extendBody: true,
-        backgroundColor: Colors.transparent,
-        body: Stack(children: [
-          Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: AppColors.backgrounHome,
-          ),
-          buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
-            title: 'Product Details',
-            is_returned: true,
-          ),
-          Positioned.fill(
-            top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            child: BlocProvider.value(
-              value: _quantityBloc,
-              child: BlocBuilder<ProductQuantityBloc, ProductQuantityState>(
-                builder: (context, state) {
-                  if (_quantityController.text != state.quantity) {
-                    _quantityController.text = state.quantity;
-                  }
-
-                  return Padding(
+                return SingleChildScrollView(
+                  // 👈 كل الصفحة هي اللي بتسكرول
+                  child: Padding(
                     padding: EdgeInsets.only(
-                        top: screenHeight * .04,
-                        right: screenWidth * .05,
-                        left: screenWidth * .05),
+                      top: screenHeight * .03,
+                      right: screenWidth * .05,
+                      left: screenWidth * .05,
+                      bottom: screenHeight * .04,
+                    ),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -97,7 +101,6 @@
                       ),
                       child: Stack(
                         children: [
-                          // ✅ نخلي المحتوى قابل للتمرير
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -126,8 +129,9 @@
                                       child: Text(
                                         "Hand Pump Dispenser",
                                         style: TextStyle(
-                                            fontSize: screenWidth * .028,
-                                            fontWeight: FontWeight.w600),
+                                          fontSize: screenWidth * .028,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
@@ -147,8 +151,9 @@
                                       child: Text(
                                         "QAR 100.00",
                                         style: TextStyle(
-                                            fontSize: screenWidth * .038,
-                                            fontWeight: FontWeight.w600),
+                                          fontSize: screenWidth * .038,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                     Text(
@@ -166,43 +171,52 @@
                                         children: [
                                           Expanded(
                                             child: BuildRoundedIconOnProduct(
-                                                context: context,
-                                                width: screenWidth,
-                                                height: screenHeight,
-                                                isPlus: true,
-                                                price: 0,
-                                                onIncrease: () => context
-                                                    .read<ProductQuantityBloc>()
-                                                    .add(IncreaseQuantity()),
-                                                onDecrease: () => context
-                                                    .read<ProductQuantityBloc>()
-                                                    .add(DecreaseQuantity()),
-                                                quantityCntroller:
-                                                _quantityController,
-                                                onTextfieldChanged: (value) =>
-                                                    context
-                                                        .read<
-                                                        ProductQuantityBloc>()
-                                                        .add(QuantityChanged(
-                                                        value)),
-                                                onDone: () => context
-                                                    .read<ProductQuantityBloc>()
-                                                    .add(
-                                                    QuantityEditingComplete()),
-                                                fromDetailedScreen: true),
+                                              context: context,
+                                              width: screenWidth,
+                                              height: screenHeight,
+                                              isPlus: true,
+                                              price: 0,
+                                              onIncrease: () => context
+                                                  .read<ProductQuantityBloc>()
+                                                  .add(IncreaseQuantity()),
+                                              onDecrease: () => context
+                                                  .read<ProductQuantityBloc>()
+                                                  .add(DecreaseQuantity()),
+                                              quantityCntroller:
+                                              _quantityController,
+                                              onTextfieldChanged: (value) =>
+                                                  context
+                                                      .read<
+                                                      ProductQuantityBloc>()
+                                                      .add(QuantityChanged(
+                                                      value)),
+                                              onDone: () => context
+                                                  .read<ProductQuantityBloc>()
+                                                  .add(
+                                                QuantityEditingComplete(),
+                                              ),
+                                              fromDetailedScreen: true,
+                                            ),
                                           ),
                                           SizedBox(width: screenWidth * .04),
                                           BuildPriceContainer(
-                                              screenWidth, screenHeight, state)
+                                            screenWidth,
+                                            screenHeight,
+                                            state,
+                                          ),
                                         ],
                                       ),
                                     ),
+
+                                    // 👇 الـ TabBar زي ما هو
                                     Container(
                                       padding: EdgeInsets.symmetric(
-                                          vertical: screenHeight * .004,
-                                          horizontal: screenWidth * .004),
+                                        vertical: screenHeight * .004,
+                                        horizontal: screenWidth * .004,
+                                      ),
                                       margin: EdgeInsets.symmetric(
-                                          horizontal: screenWidth * .04),
+                                        horizontal: screenWidth * .04,
+                                      ),
                                       height: screenHeight * .05,
                                       decoration: BoxDecoration(
                                         color: AppColors.tabViewBackground,
@@ -215,39 +229,52 @@
                                           BorderRadius.circular(8),
                                           color: AppColors.whiteColor,
                                         ),
-                                        indicatorSize:
-                                        TabBarIndicatorSize.tab,
+                                        indicatorSize: TabBarIndicatorSize.tab,
                                         dividerColor: Colors.transparent,
                                         labelStyle: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.primary),
-                                        unselectedLabelColor: AppColors
-                                            .greyDarktextIntExtFieldAndIconsHome,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.primary,
+                                        ),
+                                        unselectedLabelColor:
+                                        AppColors.greyDarktextIntExtFieldAndIconsHome,
                                         tabs: [
                                           SizedBox(
                                             width: screenWidth * .5,
                                             child: const Tab(
-                                                text: 'Product Details'),
+                                              text: 'Product Details',
+                                            ),
                                           ),
                                           SizedBox(
                                             width: screenWidth * .5,
-                                            child: const Tab(text: 'Reviews'),
+                                            child: const Tab(
+                                              text: 'Reviews',
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: screenHeight * 0.26,
-                                      child: TabBarView(
-                                        controller: _tabController,
-                                        children: [
-                                          BuildFirstTabProductDetail(
-                                              screenWidth, screenHeight),
-                                          BuildSecondTabProductDetail(
-                                              screenWidth, screenHeight),
-                                        ],
-                                      ),
+
+                                    SizedBox(height: screenHeight * .015),
+
+                                    /// 👇 بدل TabBarView نستخدم AnimatedBuilder
+                                    AnimatedBuilder(
+                                      animation: _tabController,
+                                      builder: (context, _) {
+                                        if (_tabController.index == 0) {
+                                          return BuildFirstTabProductDetail(
+                                            screenWidth,
+                                            screenHeight,
+                                          );
+                                        } else {
+                                          return BuildSecondTabProductDetail(
+                                            screenWidth,
+                                            screenHeight,
+                                          );
+                                        }
+                                      },
                                     ),
+
+                                    SizedBox(height: screenHeight * .02),
                                   ],
                                 ),
                               ),
@@ -261,21 +288,31 @@
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 BuildIconOnProduct(
-                                    screenWidth, screenHeight, true, false),
+                                  screenWidth,
+                                  screenHeight,
+                                  true,
+                                  false,
+                                ),
                                 BuildIconOnProduct(
-                                    screenWidth, screenHeight, false, false),
+                                  screenWidth,
+                                  screenHeight,
+                                  false,
+                                  false,
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
-          )
-        ]),
-      );
-    }
+          ),
+        )
+      ]),
+    );
   }
+}
+//l

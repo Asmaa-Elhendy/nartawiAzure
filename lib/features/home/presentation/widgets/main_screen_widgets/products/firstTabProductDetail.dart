@@ -6,68 +6,106 @@ import '../../../../../../core/theme/colors.dart';
 Widget BuildFirstTabProductDetail(double screenWidth,double screenHeight){
   return Padding(
     padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
-    child: ListView(
-      padding: EdgeInsets.zero,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: [
-            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Size : 5 Gallons')),
+            Expanded(
+              child: BuildTextInProductDetail(
+                screenWidth,
+                screenHeight,
+                'Size : 5 Gallons',
+              ),
+            ),
             SizedBox(width: screenWidth*.02),
-            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH Level:7.8'))
+            Expanded(
+              child: BuildTextInProductDetail(
+                screenWidth,
+                screenHeight,
+                'pH Level:7.8',
+              ),
+            ),
           ],
-        ),SizedBox(height: screenHeight*.01,),
+        ),
+        SizedBox(height: screenHeight*.01),
         Row(
           children: [
-            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Sodium : 15mg/L')),
+            Expanded(
+              child: BuildTextInProductDetail(
+                screenWidth,
+                screenHeight,
+                'Sodium : 15mg/L',
+              ),
+            ),
             SizedBox(width: screenWidth*.02),
-            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'pH 7.5'))
+            Expanded(
+              child: BuildTextInProductDetail(
+                screenWidth,
+                screenHeight,
+                'pH 7.5',
+              ),
+            ),
           ],
-        ),SizedBox(height: screenHeight*.01,),
+        ),
+        SizedBox(height: screenHeight*.01),
         Row(
           children: [
-            Expanded(child: BuildTextInProductDetail(screenWidth, screenHeight,'Vendor Information : company1 ',isBottom: true))
-
+            Expanded(
+              child: BuildTextInProductDetail(
+                screenWidth,
+                screenHeight,
+                'Vendor Information : company1 ',
+                isBottom: true,
+              ),
+            ),
           ],
         ),
         SizedBox(height: screenHeight * 0.06),
-
       ],
     ),
   );
 }
 
-Widget BuildTextInProductDetail(double screenWidth,double screenHeight,String title,{bool isBottom=false}){
-  return  Container(
-      margin: EdgeInsets.only(right: screenWidth*.01),
-      padding: EdgeInsets.symmetric(
-        horizontal: screenWidth * .02,
-        vertical: screenHeight * .015,//j
-      ),
-      decoration: BoxDecoration(
-        color: Color(0xfffeaeaea),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(mainAxisAlignment:isBottom?MainAxisAlignment.spaceBetween :MainAxisAlignment.start,
-        children: [
-          Text(
+Widget BuildTextInProductDetail(
+    double screenWidth,
+    double screenHeight,
+    String title, {
+      bool isBottom = false,
+    }) {
+  return Container(
+    margin: EdgeInsets.only(right: screenWidth*.01),
+    padding: EdgeInsets.symmetric(
+      horizontal: screenWidth * .02,
+      vertical: screenHeight * .015,
+    ),
+    decoration: BoxDecoration(
+      color: const Color(0xfffeaeaea),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      mainAxisAlignment:
+      isBottom ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
             title,
             style: TextStyle(
-                fontSize: screenWidth * .034, // larger font for all
-                fontWeight: FontWeight.w500,
-                color: AppColors.greyDarktextIntExtFieldAndIconsHome
+              fontSize: screenWidth * .034,
+              fontWeight: FontWeight.w500,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
             ),
-            //    overflow: TextOverflow.ellipsis, // optional
-            maxLines: 1,
-            softWrap: true, // يسمح باللف
-            overflow: TextOverflow.visible, // يمنع القص
+            maxLines: 2,
+            softWrap: true,
           ),
-          isBottom?
+        ),
+        if (isBottom)
           Iconify(
             MaterialSymbols.arrow_forward_ios,
             size: 16,
             color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-          )
-              :SizedBox()
-        ],
-      ));
+          ),
+      ],
+    ),
+  );
 }
