@@ -84,22 +84,24 @@ class _NotificationScreenState extends State<NotificationScreen>
                           bottom: screenHeight * .03,
                         ),
                         height: screenHeight * .05,
-                        // width: width-widget.width*.04,
                         decoration: BoxDecoration(
                           color: AppColors.tabViewBackground,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: TabBar(
                           padding: EdgeInsets.zero,
-                          // isScrollable: true,
+
+                          // 👇 خلّيها true عشان السطور الطويلة تتحرك يمين/شمال
+                          isScrollable: true,
+
+                          // 👈 padding بسيط بين التابات
                           labelPadding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * .01,
+                            horizontal: screenWidth * .02,
                           ),
+
                           controller: _tabController,
-                          // give the indicator a decoration (color and border radius)
                           indicator: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-
                             color: AppColors.whiteColor,
                           ),
                           indicatorSize: TabBarIndicatorSize.tab,
@@ -109,20 +111,19 @@ class _NotificationScreenState extends State<NotificationScreen>
                             color: AppColors.primary,
                           ),
                           unselectedLabelColor:
-                              AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          AppColors.greyDarktextIntExtFieldAndIconsHome,
 
-                          tabs: [
-                            // first tab [you can add an icon using the icon property]
-                            SizedBox(child: Tab(text: 'All')),
-                            SizedBox(child: Tab(text: 'New')),
-                            SizedBox(child: Tab(text: 'Read')),
-                            SizedBox(child: Tab(text: 'Orders')),
-                            SizedBox(child: Tab(text: 'Coupons')),
-
-                            SizedBox(child: Tab(text: 'Promos')),
+                          tabs: const [
+                            Tab(text: 'All'),
+                            Tab(text: 'New'),
+                            Tab(text: 'Read'),
+                            Tab(text: 'Orders'),
+                            Tab(text: 'Coupons'),
+                            Tab(text: 'Promos'),
                           ],
                         ),
                       ),
+
                       SizedBox(
                         height: screenHeight * .67,
                         child: TabBarView(
