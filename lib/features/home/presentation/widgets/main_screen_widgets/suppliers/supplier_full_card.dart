@@ -42,7 +42,8 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: widget.fromCartScreen ? 0 : w * .04,
-        vertical: widget.fromFavouritesScreen ? h * .01 : 0,
+        vertical: widget.fromFavouritesScreen ? h * .01 :
+        0,
       ),
       child: Container(
         padding: EdgeInsets.symmetric(

@@ -136,7 +136,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                             ,),
                             Container(
                               child: // Stores Tab
-                              ListView.builder(
+                              ListView.builder(padding: EdgeInsets.zero,//handle design shimaa height under app bar favourite store page
                                 itemCount: 4,
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: (){
