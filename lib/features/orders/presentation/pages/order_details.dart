@@ -63,6 +63,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
+            bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
                 top: screenHeight * .03,//04 handle design shimaa
@@ -106,7 +107,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>  with SingleTicke
                                     ),
                                   ],
                                 ),
-                                BuildOrderStatus(screenHeight, screenWidth, widget.orderStatus,fromOrderDetail: true)
+                                BuildOrderStatus(screenHeight, screenWidth, widget.orderStatus,fromOrderDetail: false)
                               ],
                             ),
                             SizedBox(height: screenHeight*.01,),
