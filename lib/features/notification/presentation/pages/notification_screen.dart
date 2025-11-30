@@ -81,7 +81,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                         margin: EdgeInsets.only(
                           left: .06 * screenWidth,
                           right: .06 * screenWidth,
-                          bottom: screenHeight * .03,
+                        //  bottom: screenHeight * .03,
                         ),
                         height: screenHeight * .05,
                         decoration: BoxDecoration(
@@ -125,7 +125,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       ),
 
                       SizedBox(
-                        height: screenHeight * .7,//lh
+                        height: screenHeight * .7,//
                         child: TabBarView(
                           controller: _tabController,
 
