@@ -14,9 +14,9 @@ class BuildFullCardProfile extends StatefulWidget {
 
 class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
   String imageUrl = '';
-  String localImage = "assets/images/profile/img.png";
+  String localImage = "assets/images/profile/Profile Avatar.png";
   File? pickedImage; // الصورة اللي هيختارها المستخدم
-
+//i
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
@@ -69,10 +69,10 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    double size = screenWidth * 0.38; // 👈 ثابت لدائرة مظبوطة
+    double size = screenWidth * 0.25; // 👈 ثابت لدائرة مظبوطة
 
     return Container(
-      height: screenHeight * .33,
+      height: screenHeight * .22,
       padding: EdgeInsets.symmetric(
         vertical: screenHeight * .01,
         horizontal: screenWidth * .02,
@@ -138,7 +138,7 @@ class _BuildFullCardProfileState extends State<BuildFullCardProfile> {
                   child: SvgPicture.asset(
                     'assets/images/profile/edit.svg',
                     color: AppColors.whiteColor,
-                    height: screenHeight * .028,
+                    height: screenHeight * .02,
                   ),
                 ),
               ),

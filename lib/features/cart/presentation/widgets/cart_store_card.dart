@@ -25,7 +25,7 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
             Container(
               //   width: widget.screenWidth * .04,
               // الحجم العرض
-              height: screenHeight * .09,
+              height: screenHeight * .08,//0.09
               // الحجم الارتفاع
               decoration: BoxDecoration(
                 color: AppColors.backgrounHome, // لون الخلفية
@@ -46,39 +46,47 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
             ),
             SizedBox(width: screenWidth*.01,),
             Expanded(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: screenWidth*.01),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
 
-                children: [
-                Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
-                  SizedBox(height: screenHeight*.01,),
+                  children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
                       Padding(
-                        padding:  EdgeInsets.only(top: screenHeight*.02,bottom: screenHeight*.01),
+                        padding:  EdgeInsets.only(right: screenWidth*.02),
                         child: BuildRowRating(screenWidth, screenHeight,title: 'New'),
                       ),
-                      viewStoreWithoutFlexible((){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
-
-                      }, 'View Store', screenWidth, screenHeight),
-
-                      OutlineButtonWithoutFlexible((){
-                        showGeneralDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            barrierLabel: '',
-                            barrierColor: Colors.black54, // خلفية شفافة
-                            pageBuilder: (ctx, anim1, anim2) {
-                            return  ViewDetailSupplierAlert(ctx,screenWidth,screenHeight);
-                            },
-                        );
-                            }
-
-                      , 'View Details', screenWidth, screenHeight)
-
                     ],
                   ),
-                ],
+                    SizedBox(height: screenHeight*.01,),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+
+                        viewStoreWithoutFlexible((){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
+
+                        }, 'View Store', screenWidth, screenHeight),
+
+                        OutlineButtonWithoutFlexible((){
+                          showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: '',
+                              barrierColor: Colors.black54, // خلفية شفافة
+                              pageBuilder: (ctx, anim1, anim2) {
+                              return  ViewDetailSupplierAlert(ctx,screenWidth,screenHeight);
+                              },
+                          );
+                              }
+
+                        , 'View Details', screenWidth, screenHeight)
+
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
           ],

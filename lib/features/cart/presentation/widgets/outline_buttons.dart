@@ -108,7 +108,7 @@ Widget OutlineButtonWithoutFlexible(void Function()? rightFun,String leftTitle,d
         vertical: screenHeight * .01,
         horizontal: screenWidth * .015,
       ),
-      height: screenHeight * .055,
+   //   height: screenHeight * .055,
       decoration: BoxDecoration(
         border: Border.all(
           color: AppColors.blueBorder,
@@ -141,7 +141,7 @@ Widget viewStoreWithoutFlexible(void Function()? leftFun,String leftTitle,double
         vertical: screenHeight * .01,
         horizontal: screenWidth * .015,
       ),
-      height: screenHeight * .055,
+  //    height: screenHeight * .055,
       decoration: BoxDecoration(
         color: AppColors.secondaryColorWithOpacity8,
         borderRadius: BorderRadius.circular(8),

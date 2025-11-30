@@ -9,7 +9,7 @@ Widget BuildRowRating(double screenWidth,double screenHeight ,
     children: [
       Iconify(
         MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-        size: screenHeight*.03,
+        size: screenHeight*.025,
         color: Colors.amber,
       ),
       //  SizedBox(width: screenWidth*.01,),
