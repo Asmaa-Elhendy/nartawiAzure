@@ -2,22 +2,22 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-Widget BuildFloatActionButton(int _tabIndex,Widget logoCenter,List<GlobalKey<NavigatorState>> _navigatorKeys){
+Widget BuildFloatActionButton(
+    int tabIndex,
+    Widget logoCenter,
+    List<GlobalKey<NavigatorState>> navigatorKeys,
+    ) {
   return FloatingActionButton(
-    //backgroundColor: AppColors.primary,
     backgroundColor: Colors.transparent,
     elevation: 0,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(40)),
-    ),
+    shape: const CircleBorder(), // 👈 دايرة نضيييفة
     onPressed: () {
-      final middleTab = (_tabIndex / 2).floor(); // 🧠 احسبي النص
+      final middleTab = (tabIndex / 2).floor();
+      log(tabIndex.toString());
 
-    log(_tabIndex.toString());
-
-        _navigatorKeys[_tabIndex].currentState!.popUntil((route) => route.isFirst);
-
-
+      navigatorKeys[tabIndex]
+          .currentState!
+          .popUntil((route) => route.isFirst);
     },
     child: logoCenter,
   );

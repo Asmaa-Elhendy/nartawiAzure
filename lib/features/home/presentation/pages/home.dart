@@ -752,8 +752,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         resizeToAvoidBottomInset: false, // 👈 الكيبورد مش هيأثر على FAB
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
-          width: screenWidth * .123,
-          height: screenHeight * .064,
+          width:screenWidth*.14,// screenWidth * .123,
+          height: screenWidth*.14,g//screenHeight * .064,
           decoration: BoxDecoration(
             gradient: AppColors.primaryGradient,
             shape: BoxShape.rectangle,
