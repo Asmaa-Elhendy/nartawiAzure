@@ -37,41 +37,64 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
   @override
   void initState() {
     super.initState();
-    _focusedDay = widget.nextRefillDate;
+
+    final today = DateTime.now();
+    final first = DateTime(today.year, today.month, today.day);
+    final last = first.add(const Duration(days: 365));
+
+    // خلي الـ focusedDay جوّه الرينچ
+    DateTime initial = widget.nextRefillDate;
+    if (initial.isBefore(first)) initial = first;
+    if (initial.isAfter(last))  initial = last;
+
+    _focusedDay = initial;
+
     _calculateAvailableDates();
     _tempPreferredDate = _firstRefillDate;
   }
 
+
   void _calculateAvailableDates() {
     _availableDates.clear();
+    _firstRefillDate = null;
+
+    // 1️⃣ لو مفيش أيام مفضّلة أصلاً
+    if (widget.selectedDays.isEmpty) {
+      final d = DateTime(
+        widget.nextRefillDate.year,
+        widget.nextRefillDate.month,
+        widget.nextRefillDate.day,
+      );
+      _firstRefillDate = d;
+      _availableDates.add(d);
+      return;
+    }
+
     DateTime currentDate = widget.nextRefillDate;
     int count = 0;
 
-    // Calculate next available dates based on selected days
-    while (count < widget.remainingRefills) {
-      // Check if current day is in selected days
-      // weekday: 1=Monday, 7=Sunday, so we convert to 0=Sunday format
-      int dayIndex = currentDate.weekday % 7; // Convert to 0=Sunday format
+    // 2️⃣ safety counter عشان ما ندخلش في لوب لا نهائي
+    int safetyCounter = 0;
+    const int maxDaysToSearch = 365; // سنة قدّام مثلاً
+
+    while (count < widget.remainingRefills && safetyCounter < maxDaysToSearch) {
+      final int dayIndex = currentDate.weekday % 7; // 0 = Sunday
 
       if (widget.selectedDays.contains(dayIndex)) {
-        _availableDates.add(DateTime(
+        final normalized = DateTime(
           currentDate.year,
           currentDate.month,
           currentDate.day,
-        ));
+        );
+
+        _availableDates.add(normalized);
         count++;
 
-        // Set first refill date
-        if (_firstRefillDate == null) {
-          _firstRefillDate = DateTime(
-            currentDate.year,
-            currentDate.month,
-            currentDate.day,
-          );
-        }
+        _firstRefillDate ??= normalized;
       }
 
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
+      safetyCounter++;
     }
   }
 
@@ -114,7 +137,8 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final first = DateTime.now();
+    final last = first.add(const Duration(days: 365));
     // التاريخ المعروض في الهيدر حسب المود
     final DateTime displayedDate = _isRequestMode
         ? (_requestDate ?? _firstRefillDate ?? widget.nextRefillDate)
