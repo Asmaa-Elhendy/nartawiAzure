@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/coupon_card.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/theme/text_styles.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
+import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -24,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   void initState() {
     super.initState();
   }
+  String _selectedLanguage = 'Male';
 
   @override
   void dispose() {
@@ -86,7 +89,67 @@ class _SettingsScreenState extends State<SettingsScreen>
                       SettingCard(title: 'Refill Updates', description: 'Get notified when your bottles have been refilled', quantityLabel: '',isIncrease: false,),
 
                       SettingCard(title: 'Promotions & Offers', description: 'Receive notifications about promotions and special offers', quantityLabel: '',isIncrease: false,),
-                     Padding(
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: screenHeight * .01),
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * .01,
+                        horizontal: screenWidth * .03,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.whiteColor,
+
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+
+                          Padding(
+                            padding: EdgeInsets.only(top: screenHeight * .01),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    customCouponPrimaryTitle(
+                                     "Language Preference",
+                                      screenWidth,
+                                      screenHeight,
+                                    ),
+
+                                  ],
+                                ),
+                                Padding(
+                                  padding:  EdgeInsets.only(left:screenWidth*.03 ,top: screenHeight*.02,bottom: screenHeight*.02),
+                                  child: Row(
+                                    children: [
+                                      _buildLanguageRadio(
+                                        label: 'English',
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                      ),
+                                      SizedBox(width: screenWidth * .08),
+                                      _buildLanguageRadio(
+                                        label: 'Arabic',
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                              ],
+                            ),
+
+                          ),
+
+
+
+                        ],
+                      ),
+                    ),
+                      Padding(
                        padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
                        child: Text('Security',style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
                      ),
@@ -104,6 +167,57 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildLanguageRadio({
+    required String label,
+    required double screenWidth,
+    required double screenHeight,
+  }) {
+    final bool isSelected = _selectedLanguage == label;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedLanguage = label;
+        });
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+
+            width: screenWidth * 0.045,
+            height: screenWidth * 0.045,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.greyDarktextIntExtFieldAndIconsHome,
+                width: isSelected ? 2 : 1.5,
+              ),
+            ),
+            child: isSelected
+                ? Center(
+              child: Container(
+                width: screenWidth * 0.023,
+                height: screenWidth * 0.023,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primary,
+                ),
+              ),
+            )
+                : null,
+          ),
+          SizedBox(width: screenWidth * 0.02),
+          Text(
+              label,
+              style: AppTextStyles.LabelInTextField
           ),
         ],
       ),
