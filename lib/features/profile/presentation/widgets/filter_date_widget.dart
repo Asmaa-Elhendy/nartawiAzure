@@ -3,16 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/theme/colors.dart';
 
-Widget buildFilterDateWidget(double height, double width, ) {
+Widget buildFilterDateWidget(
+    double height,
+    double width, {
+      DateTime? selectedDate,
+    }) {
+  // نص التاريخ المعروض
+  String displayedDate = 'DD.MM.YYYY';
+
+  if (selectedDate != null) {
+    displayedDate =
+    '${selectedDate.day.toString().padLeft(2, '0')}.'
+        '${selectedDate.month.toString().padLeft(2, '0')}.'
+        '${selectedDate.year}';
+  }
+
   return Container(
     padding: EdgeInsets.symmetric(horizontal: width * .03),
-    width: width*.4,
+    width: width * .4,
     height: height * .05,
     decoration: BoxDecoration(
       color: AppColors.whiteColor,
       border: Border.all(
-        color: AppColors.BorderAnddividerAndIconColor, // 👈 Border color
-        width: 1.5, // 👈 Optional: Border thickness
+        color: AppColors.BorderAnddividerAndIconColor,
+        width: 1.5,
       ),
       borderRadius: BorderRadius.circular(24),
     ),
@@ -30,7 +44,7 @@ Widget buildFilterDateWidget(double height, double width, ) {
             ),
             SizedBox(width: width * .02),
             Text(
-             '12.12.2025',
+              displayedDate,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: width * .036,

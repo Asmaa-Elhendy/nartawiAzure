@@ -85,9 +85,11 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                           screenHeight,
                         ),
                       ),
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               customCouponAlertTitle(
                                 'From',
@@ -95,117 +97,157 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                 screenHeight,
                               ),
                               GestureDetector(
-                                  onTap: () async {
-                                    final now = DateTime.now();
+                                onTap: () async {
+                                  final now = DateTime.now();
 
-                                    final results = await showCalendarDatePicker2Dialog(
-                                      context: context,
-                                      value: [
-                                        selectedFromDate ?? DateTime(now.year , now.month, now.day),
-                                      ],
-                                      dialogSize: Size(screenWidth * 0.9, screenHeight * 0.55), // 👈 وسّعنا الـ dialog
-                                      borderRadius: BorderRadius.circular(16),
-                                      config: CalendarDatePicker2WithActionButtonsConfig(
-                                        calendarType: CalendarDatePicker2Type.single,
-
-                                        // 🎨 ألوان الـ Calendar
-                                        selectedDayHighlightColor: AppColors
-                                            .primary, // بدل الموف استخدم اللون الأساسي بتاعك (تقدر تغيّره)
-                                        selectedDayTextStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: screenWidth * .035,
-                                        ),
-                                        dayTextStyle: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: screenWidth * .034,
-                                        ),
-                                        weekdayLabelTextStyle: TextStyle(
-                                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: screenWidth * .03,
-                                        ),
-                                        yearTextStyle: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: screenWidth * .032,
-                                        ),
-                                        controlsTextStyle: TextStyle(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: screenWidth * .035,
-                                        ),
-
-                                        // لو حابب تتحكم في padding
-                                        //    daySplashRadius: 18,
+                                  final results = await showCalendarDatePicker2Dialog(
+                                    context: context,
+                                    value: [
+                                      selectedFromDate ??
+                                          DateTime(now.year, now.month, now.day),
+                                    ],
+                                    dialogSize: Size(
+                                        screenWidth * 0.9, screenHeight * 0.55),
+                                    borderRadius: BorderRadius.circular(16),
+                                    config:
+                                    CalendarDatePicker2WithActionButtonsConfig(
+                                      calendarType: CalendarDatePicker2Type.single,
+                                      selectedDayHighlightColor: AppColors.primary,
+                                      selectedDayTextStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth * .035,
                                       ),
-                                    );
+                                      dayTextStyle: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: screenWidth * .034,
+                                      ),
+                                      weekdayLabelTextStyle: TextStyle(
+                                        color: AppColors
+                                            .greyDarktextIntExtFieldAndIconsHome,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: screenWidth * .03,
+                                      ),
+                                      yearTextStyle: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: screenWidth * .032,
+                                      ),
+                                      controlsTextStyle: TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: screenWidth * .035,
+                                      ),
+                                    ),
+                                  );
 
-
-                                  },
-                                  child: buildFilterDateWidget(screenHeight, screenWidth,)),
+                                  if (results != null &&
+                                      results.isNotEmpty &&
+                                      results.first != null) {
+                                    setState(() {
+                                      selectedFromDate = results.first;
+                                      // لو حابة تأمني إن TO دايمًا بعد FROM:
+                                      if (selectedToDate != null &&
+                                          selectedToDate!.isBefore(selectedFromDate!)) {
+                                        selectedToDate = null;
+                                      }
+                                    });
+                                  }
+                                },
+                                child: buildFilterDateWidget(
+                                  screenHeight,
+                                  screenWidth,
+                                  selectedDate: selectedFromDate,
+                                ),
+                              ),
                             ],
                           ),
-                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              customCouponAlertTitle(//ks
+                              customCouponAlertTitle(
                                 'To',
                                 screenWidth,
                                 screenHeight,
                               ),
                               GestureDetector(
-                                  onTap: () async {
-                                    final now = DateTime.now();
+                                onTap: () async {
+                                  final now = DateTime.now();
 
-                                    final results = await showCalendarDatePicker2Dialog(
-                                      context: context,
-                                      value: [
-                                        selectedToDate ?? DateTime(now.year , now.month, now.day),
-                                      ],
-                                      dialogSize: Size(screenWidth * 0.9, screenHeight * 0.55), // 👈 وسّعنا الـ dialog
-                                      borderRadius: BorderRadius.circular(16),
-                                      config: CalendarDatePicker2WithActionButtonsConfig(
-                                        calendarType: CalendarDatePicker2Type.single,
-
-                                        // 🎨 ألوان الـ Calendar
-                                        selectedDayHighlightColor: AppColors
-                                            .primary, // بدل الموف استخدم اللون الأساسي بتاعك (تقدر تغيّره)
-                                        selectedDayTextStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: screenWidth * .035,
-                                        ),
-                                        dayTextStyle: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: screenWidth * .034,
-                                        ),
-                                        weekdayLabelTextStyle: TextStyle(
-                                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: screenWidth * .03,
-                                        ),
-                                        yearTextStyle: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: screenWidth * .032,
-                                        ),
-                                        controlsTextStyle: TextStyle(
-                                          color: AppColors.primary,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: screenWidth * .035,
-                                        ),
-
-                                        // لو حابب تتحكم في padding
-                                        //    daySplashRadius: 18,
+                                  final results = await showCalendarDatePicker2Dialog(
+                                    context: context,
+                                    value: [
+                                      selectedToDate ??
+                                          selectedFromDate ??
+                                          DateTime(now.year, now.month, now.day),
+                                    ],
+                                    dialogSize: Size(
+                                        screenWidth * 0.9, screenHeight * 0.55),
+                                    borderRadius: BorderRadius.circular(16),
+                                    config:
+                                    CalendarDatePicker2WithActionButtonsConfig(
+                                      calendarType: CalendarDatePicker2Type.single,
+                                      selectedDayHighlightColor: AppColors.primary,
+                                      selectedDayTextStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth * .035,
                                       ),
-                                    );
+                                      dayTextStyle: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: screenWidth * .034,
+                                      ),
+                                      weekdayLabelTextStyle: TextStyle(
+                                        color: AppColors
+                                            .greyDarktextIntExtFieldAndIconsHome,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: screenWidth * .03,
+                                      ),
+                                      yearTextStyle: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: screenWidth * .032,
+                                      ),
+                                      controlsTextStyle: TextStyle(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: screenWidth * .035,
+                                      ),
+                                    ),
+                                  );
 
+                                  if (results != null &&
+                                      results.isNotEmpty &&
+                                      results.first != null) {
+                                    final picked = results.first as DateTime;
 
-                                  },
-                                  child: buildFilterDateWidget(screenHeight, screenWidth)),
+                                    // لو حابة تمنعي إن TO يكون قبل FROM:
+                                    if (selectedFromDate != null &&
+                                        picked.isBefore(selectedFromDate!)) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              'To date cannot be before From date'),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                      return;
+                                    }
+
+                                    setState(() {
+                                      selectedToDate = picked;
+                                    });
+                                  }
+                                },
+                                child: buildFilterDateWidget(
+                                  screenHeight,
+                                  screenWidth,
+                                  selectedDate: selectedToDate,
+                                ),
+                              ),
                             ],
                           ),
-
                         ],
                       ),
+
                       SizedBox(height:screenHeight*.01),
                       TransactionCard(screenHeight, screenWidth),
                       TransactionCard(screenHeight, screenWidth),
