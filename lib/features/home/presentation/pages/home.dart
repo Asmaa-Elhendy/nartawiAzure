@@ -753,7 +753,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
           width:screenWidth*.14,// screenWidth * .123,
-          height: screenWidth*.14,g//screenHeight * .064,
+          height: screenWidth*.14,//screenHeight * .064,
           decoration: BoxDecoration(
             gradient: AppColors.primaryGradient,
             shape: BoxShape.rectangle,
