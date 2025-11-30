@@ -170,13 +170,13 @@ class _MainScreenState extends State<MainScreen> {
 
                   /// ✅ GridView بقى SliverGrid علشان Lazy Loading
                   SliverPadding(
-                    padding: const EdgeInsets.all(16),
+                    padding:  EdgeInsets.only(left: screenWidth*.06,right: screenWidth*.06,top: screenHeight*.01,bottom: screenHeight*.03),
                     sliver: SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.48,
+                        crossAxisSpacing: screenWidth*.03,//12
+                        mainAxisSpacing: screenWidth*.03, //12
+                        childAspectRatio: 0.49, //0.48 handel design shimaa for product card
                       ),
                       delegate: SliverChildBuilderDelegate(
                             (context, index) {
@@ -190,6 +190,7 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),

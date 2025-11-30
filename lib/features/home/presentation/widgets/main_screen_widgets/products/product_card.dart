@@ -70,7 +70,7 @@ class _ProductCardState extends State<ProductCard> {
             return Padding(
               padding: EdgeInsets.only(bottom: widget.screenHeight * .02),
               child: Container(
-                width: widget.screenWidth * .24,
+                width: widget.screenWidth * .25, // Slightly increased width
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: AppColors.secondaryColorWithOpacity8,
@@ -86,20 +86,25 @@ class _ProductCardState extends State<ProductCard> {
                 child: Stack(
                   children: [
                     Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                          child: Image.asset(
-                            widget.icon,
-                            width: double.infinity,
-                            height: widget.screenHeight * 0.2,
-                            fit: BoxFit.cover,
+                        Container(
+                          height: widget.screenHeight * 0.14, // Further reduced height
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                            child: Image.asset(
+                              widget.icon,
+                              width: double.infinity,
+                              height: widget.screenHeight * 0.14,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            vertical: widget.screenHeight * .01,
+                            vertical: widget.screenHeight * .008, // Reduced vertical padding
                             horizontal: widget.screenWidth * .02,
                           ),
                           child: Column(
@@ -130,46 +135,60 @@ class _ProductCardState extends State<ProductCard> {
                               ),
                               // Static price display
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
-                                child: Text(
-                                  "QAR 100.00",
-                                  style: TextStyle(
+                                padding: EdgeInsets.only(top: widget.screenHeight*.005, bottom: widget.screenHeight*.005),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    "QAR 100.00",
+                                    style: TextStyle(
                                       color: AppColors.primary,
-                                      fontSize: widget.screenWidth*.036,
-                                      fontWeight: FontWeight.w600
+                                      fontSize: widget.screenWidth * .034, // Slightly smaller font
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ),
                               ),
                               Text(
                                 'one-time purchase',
                                 style: TextStyle(
-                                  fontSize: widget.screenWidth*.028,
+                                  fontSize: widget.screenWidth*.026, // Slightly smaller font
                                   fontWeight: FontWeight.w500,
                                   color: Colors.black,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              // Quantity controls and dynamic price display
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
+                              Container(
+                                padding: EdgeInsets.only(top: widget.screenHeight * 0.008, bottom: widget.screenHeight * 0.008),
+                                constraints: BoxConstraints(
+                                  minHeight: widget.screenHeight * 0.045,
+                                ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     // Quantity controls
-                                    BuildRoundedIconOnProduct(
-                                      context: context,
-                                      width: widget.screenWidth,
-                                      height: widget.screenHeight,
-                                      isPlus: true,
-                                      price: 0, // Not used for the controls
-                                      onIncrease: () => context.read<ProductQuantityBloc>().add(IncreaseQuantity()),
-                                      onDecrease: () => context.read<ProductQuantityBloc>().add(DecreaseQuantity()),
-                                      quantityCntroller: _quantityController,
-                                      onTextfieldChanged: (value) => context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
-                                      onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
+                                    Flexible(
+                                      flex: 2,
+                                      child: BuildRoundedIconOnProduct(
+                                        context: context,
+                                        width: widget.screenWidth,
+                                        height: widget.screenHeight,
+                                        isPlus: true,
+                                        price: 0, // Not used for the controls
+                                        onIncrease: () => context.read<ProductQuantityBloc>().add(IncreaseQuantity()),
+                                        onDecrease: () => context.read<ProductQuantityBloc>().add(DecreaseQuantity()),
+                                        quantityCntroller: _quantityController,
+                                        onTextfieldChanged: (value) => context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
+                                        onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
+                                      ),
                                     ),
                                     // Dynamic price display
-                                    BuildPriceContainer(widget.screenWidth, widget.screenHeight, state)
-
+                                    Flexible(
+                                      flex: 1,
+                                      child: BuildPriceContainer(widget.screenWidth, widget.screenHeight, state),
+                                    )
                                   ],
                                 ),
                               )

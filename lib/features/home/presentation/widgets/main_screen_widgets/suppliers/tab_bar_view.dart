@@ -360,7 +360,7 @@ class _StackOverState extends State<StackOver>
             ),
           ),
 
-          SizedBox(height: h * .02),
+       //   SizedBox(height: h * .01), //handle design
 
           // 👇 هنا بقى بنعرض تاب واحدة بس
           _buildCurrentTab(h),

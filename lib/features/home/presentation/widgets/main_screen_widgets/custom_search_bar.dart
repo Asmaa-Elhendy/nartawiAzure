@@ -18,7 +18,7 @@ class CustomSearchBar extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Padding(//k
       padding:  EdgeInsets.only(bottom: height*.01),
       child: Container(
         height:fromSupplierDetail?height*.07 :height*.06,

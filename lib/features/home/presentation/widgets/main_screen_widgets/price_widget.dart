@@ -5,9 +5,8 @@ import '../../../../../core/theme/colors.dart';
 
 Widget BuildPriceContainer(double screenWidth,double screenHeight,state){
   return      Container(
-    padding: EdgeInsets.all(screenHeight*.005),
-    width: screenWidth * .15,
-    height: screenHeight * .045,
+    width: screenWidth * 0.31,
+    height: screenHeight * 0.045, 
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
       color: AppColors.backgrounHome,
@@ -19,13 +18,20 @@ Widget BuildPriceContainer(double screenWidth,double screenHeight,state){
         ),
       ],
     ),
-    child: Center(
-      child: Text(
-        '${(state.price).toStringAsFixed(2)}',
-        style: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: screenWidth * 0.034,
-        ),overflow: TextOverflow.ellipsis,
+    child: Padding(
+      padding: EdgeInsets.only(left: screenWidth * 0.01, right: screenWidth * 0.01),
+      child: Center(
+        child: Text(
+          '${(state.price).toStringAsFixed(1)} QAR',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            fontSize: screenWidth * 0.036,
+            color: Colors.black,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.visible,
+          textAlign: TextAlign.center,
+        ),
       ),
     ),
   );

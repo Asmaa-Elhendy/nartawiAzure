@@ -156,11 +156,14 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.48,
+            // crossAxisSpacing: 12,
+            // mainAxisSpacing: 12,
+            // childAspectRatio: 0.48,
+            crossAxisSpacing: screenWidth*.03,//12
+            mainAxisSpacing: screenWidth*.03, //12
+            childAspectRatio: 0.49, //0.48 handel design shimaa for product card
           ),
           itemCount: products.length,
           itemBuilder: (context, index) {

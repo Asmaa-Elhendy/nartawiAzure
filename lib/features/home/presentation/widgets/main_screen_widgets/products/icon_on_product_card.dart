@@ -47,7 +47,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.width * .1,
+      width: widget.width * .09,//handel design product shimaa .1
       height: widget.height * .045,
       decoration: BoxDecoration(
         color: AppColors.backgrounHome,
@@ -64,7 +64,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
         child: widget.isDelete
             ? Iconify(
           MaterialSymbols.delete_outline_rounded,
-          size: widget.height * .03,
+          size: widget.height * .025,//03 handle design product shimaa
           color: AppColors.primary,
         )
             : widget.isPlus
@@ -74,7 +74,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
           },
               child: Icon(
                         Icons.add,
-                        size: widget.height * .03,
+                        size: widget.height * .025,//03 handle design product shimaa
                         color: AppColors.primary,
                       ),
             )
@@ -89,7 +89,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
             color: isFavourite
                 ? AppColors.redColor
                 : AppColors.primary,
-            size: widget.height * .03,
+            size: widget.height * .025,//03 handle design product shimaa
           ),
         ),
       ),

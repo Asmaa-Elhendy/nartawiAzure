@@ -144,7 +144,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                             false,
                           ),
 
-                          SizedBox(height: screenHeight * .02),
+                          SizedBox(height: screenHeight * .01),//handle design
 
                           // التاب بار + محتوى التابز
                           StackOver(
@@ -154,7 +154,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                         ],
                       ),
                     ),
-                  );
+                  );//k
                 },
               ),
             ),
