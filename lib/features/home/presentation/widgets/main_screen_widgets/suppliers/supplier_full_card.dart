@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+
 import '../../../../../../core/theme/colors.dart';
 import 'build_row_raing.dart';
 import 'build_info_button.dart';
@@ -14,34 +15,40 @@ class BuildFullCardSupplier extends StatefulWidget {
   final bool fromCartScreen;
 
   const BuildFullCardSupplier(
-
-     this.screenHeight,
-     this.screenWidth,
-     this.isFeatured,{
-    this.fromFavouritesScreen = false,
-        this.fromCartScreen=false
-  }) : super();
+      this.screenHeight,
+      this.screenWidth,
+      this.isFeatured, {
+        this.fromFavouritesScreen = false,
+        this.fromCartScreen = false,
+        super.key,
+      });
 
   @override
   State<BuildFullCardSupplier> createState() => _BuildFullCardSupplierState();
 }
 
 class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
-  bool isFavourite=false;
+  bool isFavourite = false;
   bool isExpanded = false;
+
   final String description =
       'Premium Water Supplier With Quality Products And Reliable Delivery Service. This description is long and should show fully when expanded.';
 
   @override
   Widget build(BuildContext context) {
+    final h = widget.screenHeight;
+    final w = widget.screenWidth;
+
     return Padding(
       padding: EdgeInsets.symmetric(
-          horizontal: widget.fromCartScreen?0:widget.screenWidth * .04,
-          vertical: widget.fromFavouritesScreen ? widget.screenHeight * .01 : 0),
+        horizontal: widget.fromCartScreen ? 0 : w * .04,
+        vertical: widget.fromFavouritesScreen ? h * .01 : 0,
+      ),
       child: Container(
         padding: EdgeInsets.symmetric(
-            vertical: widget.screenHeight * .01,
-            horizontal: widget.screenWidth * .02),
+          vertical: h * .01,
+          horizontal: w * .03,
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: AppColors.whiteColor,
@@ -59,49 +66,66 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: widget.screenHeight * .09,
-                  decoration: BoxDecoration(
-                    color: AppColors.backgrounHome,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
+                // ✅ اللوجو بحجم ثابت
+                SizedBox(
+                  width: h * .09,
+                  height: h * .09,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.backgrounHome,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        "assets/images/home/main_page/company.png",
+                        fit: BoxFit.cover,
                       ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    "assets/images/home/main_page/company.png",
-                    height: widget.screenHeight * .03,
-                    fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-                SizedBox(width: widget.screenWidth * .03),
-                SizedBox(
-                  width: widget.screenWidth * .66,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Company A',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: widget.screenWidth * .036)),
-                          InkWell(
-                            onTap: (){
-                           if(!widget.fromFavouritesScreen){
-                             isFavourite=!isFavourite;
-                             setState(() {
 
-                             });
-                           }
+                SizedBox(width: w * .03),
+
+                // ✅ باقي الكارت في Expanded عشان ما يحصلش overflow
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ====== اسم الشركة + زر الفيفوريت ======
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // اسم الشركة ياخد أكبر مساحة
+                          Expanded(
+                            child: Text(
+                              'Company A',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: w * .036,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(width: w * .02),
+                          InkWell(
+                            onTap: () {
+                              if (!widget.fromFavouritesScreen) {
+                                setState(() {
+                                  isFavourite = !isFavourite;
+                                });
+                              }
                             },
                             child: Container(
-                              width: widget.screenWidth * .1,
-                              height: widget.screenHeight * .045,
+                              width: h * .045,
+                              height: h * .045,
                               decoration: BoxDecoration(
                                 color: AppColors.backgrounHome,
                                 shape: BoxShape.circle,
@@ -117,50 +141,68 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                                 child: Iconify(
                                   widget.fromFavouritesScreen
                                       ? Mdi.heart
-                                      :isFavourite?Mdi.heart: Mdi.heart_outline,
+                                      : (isFavourite
+                                      ? Mdi.heart
+                                      : Mdi.heart_outline),
                                   color: widget.fromFavouritesScreen
                                       ? AppColors.redColor
                                       : AppColors.primary,
-                                  size: widget.screenHeight * .03,
+                                  size: h * .024,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
+
+                      // ====== Rating + Verified ======
                       Padding(
                         padding: EdgeInsets.only(
-                            top: widget.screenHeight * .02,
-                            bottom: widget.screenHeight * .01),
+                          top: h * .015,
+                          bottom: h * .008,
+                        ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            BuildRowRating(
-                                widget.screenWidth, widget.screenHeight),
-                            BuildVerifiedWidget(
-                                widget.screenHeight, widget.screenWidth),
+                            // ⭐ خلي الـ Rating جوّه Flexible
+                            Flexible(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: BuildRowRating(w, h),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: w * .02),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: BuildVerifiedWidget(h, w),
+                            ),
                           ],
                         ),
                       ),
+
+                      // ====== الوصف مع Expand / Collapse ======
                       AnimatedCrossFade(
                         firstChild: Text(
                           description,
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: widget.screenWidth * 0.036,
+                            fontSize: w * 0.036,
                             fontWeight: FontWeight.w400,
-                            color: AppColors
-                                .greyDarktextIntExtFieldAndIconsHome,
+                            color:
+                            AppColors.greyDarktextIntExtFieldAndIconsHome,
                           ),
                         ),
                         secondChild: Text(
                           description,
                           style: TextStyle(
-                            fontSize: widget.screenWidth * 0.036,
+                            fontSize: w * 0.036,
                             fontWeight: FontWeight.w400,
-                            color: AppColors
-                                .greyDarktextIntExtFieldAndIconsHome,
+                            color:
+                            AppColors.greyDarktextIntExtFieldAndIconsHome,
                           ),
                         ),
                         crossFadeState: isExpanded
@@ -170,12 +212,14 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
+
+            // ====== زرار Info / Show less ======
             BuildInfoAndAddToCartButton(
-              widget.screenWidth,
-              widget.screenHeight,
+              w,
+              h,
               isExpanded ? 'Show less' : 'Info',
               true,
                   () {
@@ -183,7 +227,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                   isExpanded = !isExpanded;
                 });
               },
-            )
+            ),
           ],
         ),
       ),
