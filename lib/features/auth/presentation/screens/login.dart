@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         children: [
                           Checkbox(
-                            value: checkedValue,
+                            value: checkedValue,activeColor: AppColors.primary,
                             onChanged: (newValue) {
                               setState(() => checkedValue = newValue!);
                             },

@@ -119,8 +119,8 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
               child: isSelected
                   ? Center(
                 child: Container(
-                  width: screenWidth * 0.024,
-                  height: screenWidth * 0.024,
+                  width: screenWidth * 0.023,
+                  height: screenWidth * 0.023,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.primary ,
