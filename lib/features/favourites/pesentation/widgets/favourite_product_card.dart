@@ -74,8 +74,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
               _quantityController.text = state.quantity;
             }
             double containerHeight = widget.fromCartScreen
-                ? widget.screenHeight * .33
-                : widget.screenHeight * .28;
+                ? widget.screenHeight * .29//.33 handle design shimaa
+                : widget.screenHeight * .25; //handle height of favourite product card handle design dhimaa
             return Padding(
               padding: EdgeInsets.only(
                 bottom: widget.screenHeight * .02,
@@ -112,7 +112,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            widget.fromCartScreen
+                            widget.fromCartScreen//j
                                 ? Positioned(
                                     top: widget.screenHeight * 0.01,
                                     left: widget.screenWidth * 0.01,
@@ -155,7 +155,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                           child: Padding(
                             padding: EdgeInsets.only(
                               bottom: widget.screenHeight * .01,
-                              top: widget.screenHeight * .02,
+                              top: widget.screenHeight * .01,
                               right: widget.screenWidth * .03,
                               left: widget.screenWidth * .03,
                             ),
@@ -225,27 +225,30 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      BuildRoundedIconOnProduct(
-                                        fromCartScreen: widget.fromCartScreen,
-                                        context: context,
-                                        width: widget.screenWidth,
-                                        height: widget.screenHeight,
-                                        isPlus: true,
-                                        price: 0,
-                                        onIncrease: () => context
-                                            .read<ProductQuantityBloc>()
-                                            .add(IncreaseQuantity()),
-                                        onDecrease: () => context
-                                            .read<ProductQuantityBloc>()
-                                            .add(DecreaseQuantity()),
-                                        quantityCntroller: _quantityController,
-                                        onTextfieldChanged: (value) => context
-                                            .read<ProductQuantityBloc>()
-                                            .add(QuantityChanged(value)),
-                                        onDone: () => context
-                                            .read<ProductQuantityBloc>()
-                                            .add(QuantityEditingComplete()),
+                                      Expanded(
+                                        child: BuildRoundedIconOnProduct(
+                                          fromCartScreen: widget.fromCartScreen,
+                                          context: context,
+                                          width: widget.screenWidth,
+                                          height: widget.screenHeight,
+                                          isPlus: true,
+                                          price: 0,
+                                          onIncrease: () => context
+                                              .read<ProductQuantityBloc>()
+                                              .add(IncreaseQuantity()),
+                                          onDecrease: () => context
+                                              .read<ProductQuantityBloc>()
+                                              .add(DecreaseQuantity()),
+                                          quantityCntroller: _quantityController,
+                                          onTextfieldChanged: (value) => context
+                                              .read<ProductQuantityBloc>()
+                                              .add(QuantityChanged(value)),
+                                          onDone: () => context
+                                              .read<ProductQuantityBloc>()
+                                              .add(QuantityEditingComplete()),
+                                        ),
                                       ),
+                                      SizedBox(width: widget.screenWidth*.01,),
                                       BuildPriceContainer(
                                         widget.screenWidth,
                                         widget.screenHeight,

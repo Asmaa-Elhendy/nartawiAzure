@@ -5,7 +5,7 @@ import '../../../../../core/theme/colors.dart';
 
 Widget BuildPriceContainer(double screenWidth,double screenHeight,state){
   return      Container(
-    width: screenWidth * 0.25, //hanle design shimaa  .3  price in product detail pade
+    width: screenWidth * 0.2, //hanle design shimaa  .3  price in product detail pade
     height: screenHeight * 0.045, 
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),

@@ -124,7 +124,7 @@ Widget BuildRoundedIconOnProduct({
         ? width * .55
         : isPlus
         ? fromCartScreen
-              ? width * .28
+              ? width * .26
               : width * .21
         : width * .15,
     // الحجم العرض
