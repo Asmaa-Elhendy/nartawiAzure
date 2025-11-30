@@ -106,7 +106,7 @@ Widget OutlineButtonWithoutFlexible(void Function()? rightFun,String leftTitle,d
     child: Container(
       padding: EdgeInsetsGeometry.symmetric(
         vertical: screenHeight * .01,
-        horizontal: screenWidth * .015,
+        horizontal: screenWidth * .02,//015
       ),
    //   height: screenHeight * .055,
       decoration: BoxDecoration(
@@ -139,7 +139,7 @@ Widget viewStoreWithoutFlexible(void Function()? leftFun,String leftTitle,double
     child: Container(
       padding: EdgeInsetsGeometry.symmetric(
         vertical: screenHeight * .01,
-        horizontal: screenWidth * .015,
+        horizontal: screenWidth * .02,//0.15
       ),
   //    height: screenHeight * .055,
       decoration: BoxDecoration(
