@@ -121,7 +121,7 @@ Widget BuildRoundedIconOnProduct({
         ? EdgeInsets.symmetric(horizontal: width * .02)
         : EdgeInsets.zero,
     width: fromDetailedScreen
-        ? width * .6
+        ? width * .55
         : isPlus
         ? fromCartScreen
               ? width * .28

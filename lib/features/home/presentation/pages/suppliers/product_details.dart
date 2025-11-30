@@ -164,32 +164,34 @@
                                           vertical: screenHeight * .02),
                                       child: Row(
                                         children: [
-                                          BuildRoundedIconOnProduct(
-                                              context: context,
-                                              width: screenWidth,
-                                              height: screenHeight,
-                                              isPlus: true,
-                                              price: 0,
-                                              onIncrease: () => context
-                                                  .read<ProductQuantityBloc>()
-                                                  .add(IncreaseQuantity()),
-                                              onDecrease: () => context
-                                                  .read<ProductQuantityBloc>()
-                                                  .add(DecreaseQuantity()),
-                                              quantityCntroller:
-                                              _quantityController,
-                                              onTextfieldChanged: (value) =>
-                                                  context
-                                                      .read<
-                                                      ProductQuantityBloc>()
-                                                      .add(QuantityChanged(
-                                                      value)),
-                                              onDone: () => context
-                                                  .read<ProductQuantityBloc>()
-                                                  .add(
-                                                  QuantityEditingComplete()),
-                                              fromDetailedScreen: true),
-                                          SizedBox(width: screenWidth * .07),
+                                          Expanded(
+                                            child: BuildRoundedIconOnProduct(
+                                                context: context,
+                                                width: screenWidth,
+                                                height: screenHeight,
+                                                isPlus: true,
+                                                price: 0,
+                                                onIncrease: () => context
+                                                    .read<ProductQuantityBloc>()
+                                                    .add(IncreaseQuantity()),
+                                                onDecrease: () => context
+                                                    .read<ProductQuantityBloc>()
+                                                    .add(DecreaseQuantity()),
+                                                quantityCntroller:
+                                                _quantityController,
+                                                onTextfieldChanged: (value) =>
+                                                    context
+                                                        .read<
+                                                        ProductQuantityBloc>()
+                                                        .add(QuantityChanged(
+                                                        value)),
+                                                onDone: () => context
+                                                    .read<ProductQuantityBloc>()
+                                                    .add(
+                                                    QuantityEditingComplete()),
+                                                fromDetailedScreen: true),
+                                          ),
+                                          SizedBox(width: screenWidth * .04),
                                           BuildPriceContainer(
                                               screenWidth, screenHeight, state)
                                         ],

@@ -5,7 +5,7 @@ import '../../../../../core/theme/colors.dart';
 
 Widget BuildPriceContainer(double screenWidth,double screenHeight,state){
   return      Container(
-    width: screenWidth * 0.31,
+    width: screenWidth * 0.25, //hanle design shimaa  .3  price in product detail pade
     height: screenHeight * 0.045, 
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
@@ -22,7 +22,7 @@ Widget BuildPriceContainer(double screenWidth,double screenHeight,state){
       padding: EdgeInsets.only(left: screenWidth * 0.01, right: screenWidth * 0.01),
       child: Center(
         child: Text(
-          '${(state.price).toStringAsFixed(1)} QAR',
+          '${(state.price).toStringAsFixed(1)}',
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: screenWidth * 0.036,
