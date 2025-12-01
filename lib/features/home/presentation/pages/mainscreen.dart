@@ -6,6 +6,8 @@ import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.
 import 'package:newwwwwwww/features/home/presentation/pages/popular_categories_main_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
+import 'package:newwwwwwww/features/home/presentation/pages/suppliers/product_details.dart';
+import 'package:newwwwwwww/features/home/presentation/pages/suppliers/supplier_detail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
@@ -110,9 +112,15 @@ class _MainScreenState extends State<MainScreen> {
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: 10,
-                            itemBuilder: (context, index) => StoreCard(
-                              screenWidth: screenWidth,
-                              screenHeight: screenHeight,
+                            itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (_) => SupplierDetails()),
+                                  );},
+                              child: StoreCard(
+                                screenWidth: screenWidth,
+                                screenHeight: screenHeight,
+                              ),
                             ),
                           ),
                         ),
@@ -129,29 +137,53 @@ class _MainScreenState extends State<MainScreen> {
                           child: ListView(
                             scrollDirection: Axis.horizontal,
                             children: [
-                              CategoryCard(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight,
-                                icon: 'assets/images/home/main_page/bottle.svg',
-                                title: 'Bottles',
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Bottles')),
+                                  );},
+                                child: CategoryCard(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
+                                  icon: 'assets/images/home/main_page/bottle.svg',
+                                  title: 'Bottles',g
+                                ),
                               ),
-                              CategoryCard(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight,
-                                icon: GameIcons.water_gallon,
-                                title: 'Gallons',
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Gallons')),
+                                    );},
+                                child: CategoryCard(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
+                                  icon: GameIcons.water_gallon,
+                                  title: 'Gallons',
+                                ),
                               ),
-                              CategoryCard(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight,
-                                icon: 'assets/images/home/main_page/ph.svg',
-                                title: 'Alkaline',
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (_) =>PopularCategoryScreen(CategoryName: 'Alkaline')),
+                                  );},
+                                child: CategoryCard(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
+                                  icon: 'assets/images/home/main_page/ph.svg',
+                                  title: 'Alkaline',
+                                ),
                               ),
-                              CategoryCard(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight,
-                                icon: Mdi.coupon_outline,
-                                title: 'Coupons',
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Coupons')),
+                                  );},
+                                child: CategoryCard(
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
+                                  icon: Mdi.coupon_outline,
+                                  title: 'Coupons',
+                                ),
                               ),
                             ],
                           ),

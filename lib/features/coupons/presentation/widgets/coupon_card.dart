@@ -238,6 +238,7 @@ class _CouponeCardState extends State<CouponeCard> {
                     builder: (ctx) =>
                         ChangeAddressAlert(fromCouponCard:true),
                   );
+                  // choose address for that coupon only
                 },
                 child: ShaderMask(
                   shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
