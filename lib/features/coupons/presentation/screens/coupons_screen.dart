@@ -199,7 +199,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                         ),
                         const SizedBox(height: 10),
                         const Text(
-                          'Plese Wait...',
+                          'Please Wait...',
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,

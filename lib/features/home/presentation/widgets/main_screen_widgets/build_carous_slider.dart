@@ -5,6 +5,7 @@ import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
+import '../../../../coupons/presentation/widgets/latest_soupon_tracker_carous_slider.dart';
 
   class BuildCarousSlider extends StatefulWidget {
     @override
@@ -25,7 +26,7 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
       final screenWidth = MediaQuery.of(context).size.width;
 
       /// كل slide بياخد نفس الارتفاع بالظبط
-      double slideHeight = screenHeight * .15;
+      double slideHeight = screenHeight * .17;
 
       /// هنا بنحط tracker + الصور جوه Containers بنفس الارتفاع
       final List<Widget> sliderItems = [
@@ -37,13 +38,15 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
           child: Container(
             height: slideHeight,
             alignment: Alignment.center,
-            padding: EdgeInsets.only(
-                left: screenWidth * .02,
-                right: screenWidth * .02,
-                top: screenHeight * .008),
+            padding: EdgeInsets.zero,
+            // padding: EdgeInsets.only(
+            //     left: screenWidth * .02,
+            //     right: screenWidth * .02,
+            //     top: screenHeight * .008
+            // ),
             child: SingleChildScrollView(
               physics: ClampingScrollPhysics(),
-              child: latestCouponTracker(screenWidth, screenHeight,(){
+              child: latestCouponTrackerCarousSlider(screenWidth, screenHeight,(){
                 // buy new coupon from same supplier ans same quantity
                 setState(() {
                   //newCoupon=true;
@@ -88,7 +91,7 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
               items: sliderItems,
               options: CarouselOptions(
                 height: slideHeight,
-                autoPlay: true,
+          //k      autoPlay: true,
                 viewportFraction: 1.0,
                 enlargeCenterPage: true,
                 onPageChanged: (index, reason) {
@@ -98,16 +101,16 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
                 },
               ),
             ),
-            SizedBox(height: screenHeight * .05),
+            SizedBox(height: screenHeight * .03),
             DotsIndicator(
               dotsCount: sliderItems.length,
               position: _currentIndex.toDouble(),
               decorator: DotsDecorator(
                 activeColor: AppColors.secondary,
                 color: AppColors.Secondary48,
-                size: const Size.square(9.0),
+                size: const Size.square(8.0),
                 spacing: EdgeInsets.symmetric(horizontal: screenWidth * .01),
-                activeSize: const Size(9.0, 9.0),
+                activeSize: const Size(8.0, 8.0),
                 activeShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0),
                 ),

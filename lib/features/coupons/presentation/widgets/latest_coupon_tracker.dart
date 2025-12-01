@@ -25,7 +25,7 @@ Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReo
                 onTap: (){
                   onReorder();
                 },
-                  child: CouponStatus(screenHeight, screenWidth, 'Re order')),
+                  child: CouponStatus(screenHeight, screenWidth, "Re-Order")),
             ],
           ),//k
 
