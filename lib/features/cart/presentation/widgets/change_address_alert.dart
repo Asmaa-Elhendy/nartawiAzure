@@ -10,7 +10,8 @@ import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../../../profile/presentation/widgets/address_card.dart';
 
 class ChangeAddressAlert extends StatefulWidget {
-
+bool fromCouponCard;
+ChangeAddressAlert({this.fromCouponCard=false});
 
   @override
   State<ChangeAddressAlert> createState() => _ChangeAddressAlertState();
@@ -65,7 +66,29 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                     ),
                   ],
                 ),
-            BuildCardAddress(
+            Text("Change The Delivery Address If You Want",style: TextStyle(color: AppColors.greyDarktextIntExtFieldAndIconsHome,fontSize: screenWidth*.034)),
+           widget.fromCouponCard?
+           Column(
+             children: [
+               BuildCardAddress(
+                 context,
+                 screenHeight,
+                 screenWidth,
+                 work: false,//work true
+                 fromCart: true,
+                   fromCouponCard:widget.fromCouponCard
+               ),
+               BuildCardAddress(
+                   context,
+                   screenHeight,
+                   screenWidth,
+                   work: true,//work true
+                   fromCart: true,
+                   fromCouponCard:widget.fromCouponCard
+               ),
+             ],
+           )
+               : BuildCardAddress(
               context,
               screenHeight,
               screenWidth,

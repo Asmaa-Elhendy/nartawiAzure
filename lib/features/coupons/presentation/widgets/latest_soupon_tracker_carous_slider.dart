@@ -13,8 +13,8 @@ Widget latestCouponTrackerCarousSlider(double screenWidth,double screenHeight,Fu
       padding: EdgeInsets.only(
           left: screenWidth * .04,
           right: screenWidth * .04,
-          top: screenHeight * .008,
-        bottom: screenHeight*.008
+          top: screenHeight * .01,
+        bottom: screenHeight*.01
       ),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,

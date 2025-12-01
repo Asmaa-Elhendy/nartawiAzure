@@ -7,6 +7,7 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/refill_outline_
 import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/view_Consumption_history_alert.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../cart/presentation/widgets/change_address_alert.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
@@ -221,13 +222,37 @@ class _CouponeCardState extends State<CouponeCard> {
           ),
 
           /// Address
-          Text(
-            'Delivery Address',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: screenWidth * .036,
-            ),
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Delivery Address',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: screenWidth * .036,
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  showDialog(
+                    context: context,
+                    builder: (ctx) =>
+                        ChangeAddressAlert(fromCouponCard:true),
+                  );
+                },
+                child: ShaderMask(
+                  shaderCallback: (bounds) => AppColors.primaryGradient.createShader(bounds),
+                  child: Text(
+                    'Change Address',
+                    style: TextStyle(
+                      color: AppColors.whiteColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: screenWidth * .034,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),SizedBox(height: screenHeight*.01,),
           Text(
             'Zone abc, Street 20, Building 21, Flat 22',
             style: TextStyle(

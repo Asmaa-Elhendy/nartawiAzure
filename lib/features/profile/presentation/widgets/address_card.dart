@@ -5,7 +5,7 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../../../core/theme/colors.dart';
 
 
-Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false}){
+Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false,bool fromCouponCard=false}){
   return  GestureDetector(
     onTap: (){
 
@@ -36,9 +36,9 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(work?'Work':'Home',style: TextStyle(
+          fromCouponCard?SizedBox():  Text(work?'Work':'Home',style: TextStyle(
                 fontWeight: FontWeight.w600,fontSize: screenWidth*.04,color:work?AppColors.textLight: AppColors.primary),),
-            SizedBox(height: screenHeight*.02,),
+            SizedBox(height: fromCouponCard?0:screenHeight*.02,),
             Row(crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -48,13 +48,13 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
                 children: [
                   SvgPicture.asset(
                   'assets/images/profile/delivery/home.svg',
-                  height: screenHeight * .055,
+                  height: screenHeight * .03,
                               ),
                   SizedBox(width: screenWidth*.04),
                    Column(crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.start,
                      children: [
-                       Text('Delivering to Home',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
+                       Text(work?'Delivering to Work':'Delivering to Home',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
 
                        Text('portsaid,23july',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
 
@@ -65,7 +65,7 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
               //  SizedBox(width:fromCart?screenWidth*.2: screenWidth*.3,),
            work?SizedBox():     Iconify(
                   MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-                  size: screenHeight*.035,
+                  size: screenHeight*.03,
                   color: AppColors.primary,
                 ),
               ],

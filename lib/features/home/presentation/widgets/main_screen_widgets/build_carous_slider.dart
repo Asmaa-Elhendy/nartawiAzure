@@ -26,7 +26,7 @@ import '../../../../coupons/presentation/widgets/latest_soupon_tracker_carous_sl
       final screenWidth = MediaQuery.of(context).size.width;
 
       /// كل slide بياخد نفس الارتفاع بالظبط
-      double slideHeight = screenHeight * .17;
+      double slideHeight = screenHeight * .18;//.15 edit
 
       /// هنا بنحط tracker + الصور جوه Containers بنفس الارتفاع
       final List<Widget> sliderItems = [
@@ -61,6 +61,7 @@ import '../../../../coupons/presentation/widgets/latest_soupon_tracker_carous_sl
             height: slideHeight,
             alignment: Alignment.center,
             child: Image.asset(
+            //  height: screenHeight*.12,
               item,
               fit: BoxFit.contain,
             ),
@@ -101,7 +102,7 @@ import '../../../../coupons/presentation/widgets/latest_soupon_tracker_carous_sl
                 },
               ),
             ),
-            SizedBox(height: screenHeight * .03),
+            SizedBox(height: screenHeight * .02), //05 edit
             DotsIndicator(
               dotsCount: sliderItems.length,
               position: _currentIndex.toDouble(),
