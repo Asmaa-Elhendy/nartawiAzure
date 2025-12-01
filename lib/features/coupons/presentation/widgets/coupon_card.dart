@@ -18,10 +18,13 @@ import 'calender_dialog.dart';
 import 'custom_text.dart';
 import 'latest_coupon_tracker.dart';
 
+
 class CouponeCard extends StatefulWidget {
   bool disbute;
+  Function onReorder;
 
-  CouponeCard({Key? key, this.disbute = false}) : super(key: key);
+
+  CouponeCard({Key? key, this.disbute = false,required this.onReorder}) : super(key: key);
 
   @override
   State<CouponeCard> createState() => _CouponeCardState();
@@ -35,7 +38,6 @@ class _CouponeCardState extends State<CouponeCard> {
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityController;
   late final TextEditingController _quantityTwoController;
-
   /// الأيام اللي المستخدم اختارها كـ Preferred days
   /// 0 = Sunday, 1 = Monday, ... 6 = Saturday
   final Set<int> _selectedPreferredDays = {};
@@ -176,7 +178,7 @@ class _CouponeCardState extends State<CouponeCard> {
           ),
 
           /// Coupon balance + status
-          latestCouponTracker(screenWidth,screenHeight),
+          latestCouponTracker(screenWidth,screenHeight,widget.onReorder),
           /// Auto-Renewal
           Padding(
             padding: EdgeInsets.only(top: screenHeight * .01),

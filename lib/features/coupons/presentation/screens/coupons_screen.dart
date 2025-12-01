@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/add_coupon_widget.dart';
 import '../../../../core/theme/colors.dart';
@@ -9,7 +11,7 @@ import '../widgets/coupon_card.dart';
 class CouponsScreen extends StatefulWidget {
   final bool fromViewButton;
 
-  CouponsScreen({this.fromViewButton=false});
+  CouponsScreen({this.fromViewButton = false});
 
   @override
   State<CouponsScreen> createState() => _CouponsScreenState();
@@ -19,6 +21,8 @@ class _CouponsScreenState extends State<CouponsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late final ProductQuantityBloc _quantityBloc;
+  bool newCoupon = false;
+  bool _isLoading = false; // Add loading state
 
   @override
   void initState() {
@@ -34,43 +38,75 @@ class _CouponsScreenState extends State<CouponsScreen>
 
   String? imageUrl = null;
 
+  // Handle refresh action
+  Future<void> _handleRefresh() async {
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
+
+    try {
+      // simulate loading
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (mounted) {
+        setState(() {
+          newCoupon = true;
+        });
+      }
+    } catch (e) {
+      log('Error refreshing coupons: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+
+    final double topOffset =
+        MediaQuery.of(context).padding.top + screenHeight * .1;
+    final double bottomOffset = screenHeight * .05;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
       backgroundColor: Colors.transparent,
-      // في حالة الصورة في الخلفية
       body: Stack(
         children: [
+          // الخلفية
           Container(
             width: screenWidth,
             height: screenHeight,
             color: AppColors.backgrounHome,
           ),
+
           buildBackgroundAppbar(screenWidth),
+
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Coupons',
-            is_returned:widget.fromViewButton , //edit back from orders
+            is_returned: widget.fromViewButton,
             disabledGallon: 'Coupons',
-
           ),
+
+          // 👇 الكونتنت الأساسي كله في Positioned.fill واحد
           Positioned.fill(
-            top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            bottom: screenHeight*.05,
-            child: Padding(
-              padding: EdgeInsets.only(
-             //   top: screenHeight * .03,//04 handle design shimaa
-                bottom: screenHeight * .1,
-              ),
+            top: topOffset,
+            bottom: bottomOffset,
+            child: RefreshIndicator(
+              onRefresh: _handleRefresh,
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -78,9 +114,9 @@ class _CouponsScreenState extends State<CouponsScreen>
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
@@ -90,10 +126,9 @@ class _CouponsScreenState extends State<CouponsScreen>
                                   fontSize: screenWidth * .045,
                                 ),
                               ),
-                              AddCoupon(context, screenWidth, screenHeight)
+                              AddCoupon(context, screenWidth, screenHeight),
                             ],
                           ),
-
                           Padding(
                             padding: EdgeInsets.symmetric(
                               vertical: screenHeight * .01,
@@ -108,9 +143,28 @@ class _CouponsScreenState extends State<CouponsScreen>
                               ),
                             ),
                           ),
-                          CouponeCard(),
-
-                          CouponeCard(disbute:true),
+                          CouponeCard(
+                            onReorder: () {
+                              log("hello 1 - Reload triggered");
+                              _handleRefresh();
+                            },
+                          ),
+                          CouponeCard(
+                            disbute: true,
+                            onReorder: () {
+                              log("hello 2 - Reload triggered");
+                              _handleRefresh();
+                            },
+                          ),
+                          newCoupon
+                              ? CouponeCard(
+                            disbute: true,
+                            onReorder: () {
+                              log("hello 3 - Reload triggered");
+                              _handleRefresh();
+                            },
+                          )
+                              : const SizedBox(),
                           SizedBox(height: screenHeight * .04),
                         ],
                       ),
@@ -120,6 +174,43 @@ class _CouponsScreenState extends State<CouponsScreen>
               ),
             ),
           ),
+
+          // 👇 الـ LOADING OVERLAY فوق الكونتنت بس (نفس الـ top/bottom)
+          if (_isLoading)
+            Positioned.fill(
+              top: topOffset,
+              bottom: bottomOffset,
+              child: Container(
+                color: Colors.black54,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Plese Wait...',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

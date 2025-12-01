@@ -60,7 +60,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.pushNamed(context, '/productDetail');
+        // Navigator
+        // .pushNamed(context, '/productDetail');
         Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
@@ -75,7 +76,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
             }
             double containerHeight = widget.fromCartScreen
                 ? widget.screenHeight * .29//.33 handle design shimaa
-                : widget.screenHeight * .25; //handle height of favourite product card handle design dhimaa
+                : widget.screenHeight * .257; //handle height of favourite product card handle design dhimaa
             return Padding(
               padding: EdgeInsets.only(
                 bottom: widget.screenHeight * .02,

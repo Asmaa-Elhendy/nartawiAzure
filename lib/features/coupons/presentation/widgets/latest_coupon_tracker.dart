@@ -6,7 +6,7 @@ import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
 import 'custom_text.dart';
 
-Widget latestCouponTracker(double screenWidth,double screenHeight){
+Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReorder){
   return
       Column(
         mainAxisSize: MainAxisSize.min,
@@ -21,9 +21,13 @@ Widget latestCouponTracker(double screenWidth,double screenHeight){
                 screenWidth,
                 screenHeight,
               ),
-              CouponStatus(screenHeight, screenWidth, '10 Left'),
+              GestureDetector(
+                onTap: (){
+                  onReorder();
+                },
+                  child: CouponStatus(screenHeight, screenWidth, 'Re order')),
             ],
-          ),
+          ),//k
 
           /// Progress bar
           Padding(

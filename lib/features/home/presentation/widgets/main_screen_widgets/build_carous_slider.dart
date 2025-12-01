@@ -1,6 +1,7 @@
   import 'package:flutter/material.dart';
   import 'package:carousel_slider/carousel_slider.dart';
   import 'package:dots_indicator/dots_indicator.dart';
+import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
@@ -28,16 +29,27 @@ import '../../../../coupons/presentation/widgets/latest_coupon_tracker.dart';
 
       /// هنا بنحط tracker + الصور جوه Containers بنفس الارتفاع
       final List<Widget> sliderItems = [
-        Container(
-          height: slideHeight,
-          alignment: Alignment.center,
-          padding: EdgeInsets.only(
-              left: screenWidth * .02,
-              right: screenWidth * .02,
-              top: screenHeight * .008),
-          child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: latestCouponTracker(screenWidth, screenHeight),
+        GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>CouponsScreen()));
+
+          },
+          child: Container(
+            height: slideHeight,
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(
+                left: screenWidth * .02,
+                right: screenWidth * .02,
+                top: screenHeight * .008),
+            child: SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: latestCouponTracker(screenWidth, screenHeight,(){
+                // buy new coupon from same supplier ans same quantity
+                setState(() {
+                  //newCoupon=true;
+                });
+              }),
+            ),
           ),
         ),
 
