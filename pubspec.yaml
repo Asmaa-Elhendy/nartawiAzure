@@ -127,6 +127,11 @@ flutter:
     - assets/images/coupons/mdi_clock-outline2.svg
     - assets/images/home/main_page/dispenser.svg
     - assets/images/profile/Profile Avatar.png
+    - assets/images/navigation_bar/couponsvg.svg
+    - assets/images/navigation_bar/orderIcon.svg
+    - assets/images/navigation_bar/heart_navigation_bar.svg
+    - assets/images/navigation_bar/user-profile_navigation_bar.svg
+    - assets/images/navigation_bar/Logosvg.svg
 
   fonts:
     - family: Poppins

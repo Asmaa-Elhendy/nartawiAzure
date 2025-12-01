@@ -52,8 +52,8 @@ class _ConfirmationAlertState extends State<ConfirmationAlert> {
                         screenHeight,
                       ),
                     ),SizedBox(width: screenWidth*.01,),
-                    Text("QAR 100",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
-                  ],
+                  widget.itemAAdedToCart?  Text("QAR 100",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
+                :SizedBox()  ],
                 ),
 
 
