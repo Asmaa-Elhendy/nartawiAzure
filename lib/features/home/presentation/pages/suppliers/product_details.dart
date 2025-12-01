@@ -5,6 +5,9 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/SecondTabProductDetail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../../../../core/utils/components/confirmation_alert.dart';
+import '../../bloc/cart/cart_bloc.dart';
+import '../../bloc/cart/cart_event.dart';
 import '../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../bloc/product_quantity/product_quantity_event.dart';
 import '../../bloc/product_quantity/product_quantity_state.dart';
@@ -66,6 +69,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           screenWidth: screenWidth,
           title: 'Product Details',
           is_returned: true,
+          onReturnFromSupplierDetail:(){
+            final currentQuantity = int.parse(_quantityBloc.state.quantity);
+            if(currentQuantity>1){
+              showDialog(
+                context: context,
+                builder: (dialogContext) =>
+                    ConfirmationAlert(centerTitle: "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
+                        leftOnTap: (){
+                      Navigator.pop(dialogContext);
+                      context.read<CartBloc>().add(CartAddItem('Hand Pump'));
+                      Navigator.pop(context);
+
+                    },rightOnTap: (){
+                          Navigator.pop(dialogContext);
+                          Navigator.pop(context);
+
+                        }
+
+                        ,leftTtile: 'Add To Cart', rightTitle: 'Continue Shopping', itemAAdedToCart:true),
+
+              );
+          }else{
+              Navigator.pop(context);
+            }}
         ),
         Positioned.fill(
           top: MediaQuery.of(context).padding.top + screenHeight * .1,

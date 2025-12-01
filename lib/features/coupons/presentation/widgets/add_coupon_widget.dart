@@ -13,7 +13,7 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
         context: context,
         builder: (dialogContext) => ConfirmationAlert(
           centerTitle: 'You Already Have 2 Coupons. Continue To Buy Another One?',
-          leftTtile: 'Continue Shopping',
+          leftTtile: 'Continue Shopping',rightTitle: 'Cancel',
           leftOnTap: () {
             // 👈 ده هيقفل الـ Dialog بس
             Navigator.of(dialogContext).pop();
@@ -22,7 +22,9 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
               context,
               MaterialPageRoute(builder: (context) => AllProductScreen()),
             );
-          },
+          },rightOnTap: (){
+          Navigator.pop(dialogContext);
+        },
         ),
       );
     },

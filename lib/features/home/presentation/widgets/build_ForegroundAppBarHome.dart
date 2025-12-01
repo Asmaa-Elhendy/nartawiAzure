@@ -21,6 +21,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
   String disabledCart;
   String disabledNotification;
   String disabledGallon;
+  GestureTapCallback? onReturnFromSupplierDetail;
 
   BuildForegroundappbarhome({
     required this.screenHeight,
@@ -29,7 +30,8 @@ class BuildForegroundappbarhome extends StatefulWidget {
     required this.is_returned,
     this.disabledCart = '',
     this.disabledNotification = '',
-    this.disabledGallon=''
+    this.disabledGallon='',
+    this.onReturnFromSupplierDetail=null
   });
 
   @override
@@ -54,9 +56,9 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
             children: [
               widget.is_returned
                   ? GestureDetector(
-                      onTap: () {
+                      onTap:widget.onReturnFromSupplierDetail==null? () {
                         Navigator.pop(context);
-                      },
+                      }:widget.onReturnFromSupplierDetail!,
                       child: Padding(
                         padding: EdgeInsets.only(
                           right: screenWidth * .02,

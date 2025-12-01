@@ -82,7 +82,12 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               Navigator.pop(dialogContext);
               context.read<CartBloc>().add(CartAddItem('Hand Pump'));
 
-            },leftTtile: 'Confirm',  itemAAdedToCart:true),
+            },
+                rightOnTap: (){
+              Navigator.pop(dialogContext);
+                }
+
+            ,leftTtile: 'Confirm',rightTitle: 'Cancel',  itemAAdedToCart:true),
 
             );
           },

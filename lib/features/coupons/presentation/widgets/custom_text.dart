@@ -18,7 +18,9 @@ Widget customCouponAlertTitle(String title,double width,double height){
   return  Text(title,style: TextStyle(fontWeight: FontWeight.w600,fontSize: width*.036),);
 }
 
-
+Widget TEXTextConfirmationAlertTitle(String title,double width,double height){
+  return  Text(title,style: TextStyle(fontWeight: FontWeight.w600,fontSize: width*.034),);
+}
 
 Widget customCouponAlertSubTitle(String title,double width,double height){
 return  Text(title,style: TextStyle(fontWeight: FontWeight.w400,fontSize: width*.036),);

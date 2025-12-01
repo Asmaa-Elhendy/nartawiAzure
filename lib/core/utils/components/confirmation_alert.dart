@@ -6,9 +6,12 @@ import '../../../features/coupons/presentation/widgets/custom_text.dart';
 class ConfirmationAlert extends StatefulWidget {
   String centerTitle;
 String leftTtile;
+String rightTitle;
 void Function() leftOnTap;
+
+  void Function() rightOnTap;
 bool itemAAdedToCart=false; // to display price if add to cart
-ConfirmationAlert({required this.centerTitle,required this.leftTtile,required this.leftOnTap, this.itemAAdedToCart=false});
+ConfirmationAlert({required this.centerTitle,required this.leftTtile,required this.rightTitle,required this.leftOnTap, required this.rightOnTap,this.itemAAdedToCart=false});
 
   @override
   State<ConfirmationAlert> createState() => _ConfirmationAlertState();
@@ -40,12 +43,15 @@ class _ConfirmationAlertState extends State<ConfirmationAlert> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    customCouponPrimaryTitle(
-                     widget.centerTitle,
-                      screenWidth,
-                      screenHeight,
-                    ),
+                    Expanded(
+                      child: TEXTextConfirmationAlertTitle(
+                       widget.centerTitle,
+                        screenWidth,
+                        screenHeight,
+                      ),
+                    ),SizedBox(width: screenWidth*.01,),
                     Text("QAR 100",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
                   ],
                 ),
@@ -57,11 +63,9 @@ class _ConfirmationAlertState extends State<ConfirmationAlert> {
                   screenWidth,
                   screenHeight,
                   widget.leftTtile,
-                  'Cancel',
+                  widget.rightTitle,
                       widget.leftOnTap,
-                      () {
-                    Navigator.pop(context);
-                  },
+                  widget.rightOnTap,
                 ),
               ],
             ),
