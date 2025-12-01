@@ -137,17 +137,14 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                     children: [
                       SizedBox(height: screenHeight * 0.005),
                       Text(
-                        widget.originalTabs[widget.currentIndex],
+                        dynamicTabOrder[2], // 👈 دايماً اسم التاب اللي في النص فعلياً
                         style: TextStyle(
-                          color: widget.currentIndex == 2
-                              ? AppColors.darkBlue
-                              : AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          color: AppColors.darkBlue, // 👈 اللي في النص دايماً أزرق
                           fontSize: screenWidth * 0.032,
-                          fontWeight: widget.currentIndex == 2
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
+
                     ],
                   ),
                 ),
