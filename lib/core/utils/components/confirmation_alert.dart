@@ -7,7 +7,8 @@ class ConfirmationAlert extends StatefulWidget {
   String centerTitle;
 String leftTtile;
 void Function() leftOnTap;
-ConfirmationAlert({required this.centerTitle,required this.leftTtile,required this.leftOnTap});
+bool itemAAdedToCart=false; // to display price if add to cart
+ConfirmationAlert({required this.centerTitle,required this.leftTtile,required this.leftOnTap, this.itemAAdedToCart=false});
 
   @override
   State<ConfirmationAlert> createState() => _ConfirmationAlertState();
@@ -38,10 +39,15 @@ class _ConfirmationAlertState extends State<ConfirmationAlert> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customCouponPrimaryTitle(
-                 widget.centerTitle,
-                  screenWidth,
-                  screenHeight,
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    customCouponPrimaryTitle(
+                     widget.centerTitle,
+                      screenWidth,
+                      screenHeight,
+                    ),
+                    Text("QAR 100",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
+                  ],
                 ),
 
 

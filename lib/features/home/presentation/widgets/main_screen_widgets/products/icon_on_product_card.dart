@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
@@ -10,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../bloc/cart/cart_bloc.dart';
+import '../../../bloc/cart/cart_event.dart';
 import '../../snack_bar_add_product.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
@@ -70,7 +74,17 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
             : widget.isPlus
             ? InkWell(
           onTap: (){
-            showSnackBarAddProduct(context, widget.width, widget.height, 'You’ve added 1 item.Confirm to add to cart.');
+          //  showSnackBarAddProduct(context, widget.width, widget.height, 'You’ve added 1 item.Confirm to add to cart.');
+            showDialog(
+                context: context,
+                builder: (dialogContext) =>
+            ConfirmationAlert(centerTitle: 'You\'ve added 1 item',leftOnTap: (){
+              Navigator.pop(dialogContext);
+              context.read<CartBloc>().add(CartAddItem('Hand Pump'));
+
+            },leftTtile: 'Confirm',  itemAAdedToCart:true),
+
+            );
           },
               child: Icon(
                         Icons.add,

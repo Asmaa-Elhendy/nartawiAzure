@@ -146,7 +146,7 @@ class _MainScreenState extends State<MainScreen> {
                                   screenWidth: screenWidth,
                                   screenHeight: screenHeight,
                                   icon: 'assets/images/home/main_page/bottle.svg',
-                                  title: 'Bottles',g
+                                  title: 'Bottles',
                                 ),
                               ),
                               GestureDetector(
