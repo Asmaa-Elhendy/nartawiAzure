@@ -70,7 +70,7 @@ Widget TransactionCard(double screenHeight, double screenWidth) {
                         ],
                       ),
                       Text(
-                        'QAR 1000.00',
+                        'QAR 1000,00',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: screenWidth * .036,

@@ -75,7 +75,7 @@ Widget eWalletCard(
             Padding(
               padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
               child: Text(
-                'QAR 1000.00',
+                'QAR 1000,00',
                 style: TextStyle(
                   color: AppColors.primary,
                   fontSize: .046 * screenWidth,

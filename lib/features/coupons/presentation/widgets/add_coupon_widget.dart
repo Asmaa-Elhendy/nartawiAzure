@@ -12,7 +12,7 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
     onTap: () {
       showDialog(
         context: context,
-        builder: (dialogContext) => ConfirmationAlert(
+        builder: (dialogContext) => ConfirmationAlert(price: 0,
           centerTitle: 'You Already Have 2 Coupons. Continue To Buy Another One?',
           leftTtile: 'Continue Shopping',rightTitle: 'Cancel',
           leftOnTap: () {

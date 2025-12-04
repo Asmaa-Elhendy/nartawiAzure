@@ -24,9 +24,10 @@ class BuildIconOnProduct extends StatefulWidget {
  final  bool isPlus;
  final  bool isFavourite;
  final bool isDelete;
-
+ final double price;
 
  const BuildIconOnProduct(
+     this.price,
      this.width,
      this.height,
      this.isPlus,
@@ -78,7 +79,9 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
             showDialog(
                 context: context,
                 builder: (dialogContext) =>
-            ConfirmationAlert(centerTitle: 'You\'ve added 1 item',leftOnTap: (){
+            ConfirmationAlert(
+              price:widget.price,
+              centerTitle: 'You\'ve added 1 item',leftOnTap: (){
               Navigator.pop(dialogContext);
               context.read<CartBloc>().add(CartAddItem('Hand Pump'));
 
@@ -87,7 +90,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               Navigator.pop(dialogContext);
                 }
 
-            ,leftTtile: 'Confirm',rightTitle: 'Cancel',  itemAAdedToCart:true),
+            ,leftTtile: 'Confirm',rightTitle: 'Cancel',  itemAAdedToCart:true,),
 
             );
           },

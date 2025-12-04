@@ -8,10 +8,10 @@ class ConfirmationAlert extends StatefulWidget {
 String leftTtile;
 String rightTitle;
 void Function() leftOnTap;
-
+double price;
   void Function() rightOnTap;
 bool itemAAdedToCart=false; // to display price if add to cart
-ConfirmationAlert({required this.centerTitle,required this.leftTtile,required this.rightTitle,required this.leftOnTap, required this.rightOnTap,this.itemAAdedToCart=false});
+ConfirmationAlert({required this.price,required this.centerTitle,required this.leftTtile,required this.rightTitle,required this.leftOnTap, required this.rightOnTap,this.itemAAdedToCart=false});
 
   @override
   State<ConfirmationAlert> createState() => _ConfirmationAlertState();
@@ -52,7 +52,7 @@ class _ConfirmationAlertState extends State<ConfirmationAlert> {
                         screenHeight,
                       ),
                     ),SizedBox(width: screenWidth*.01,),
-                  widget.itemAAdedToCart?  Text("QAR 100",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
+                  widget.itemAAdedToCart?  Text("QAR ${widget.price}",style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w500,fontSize: screenWidth*.042),)
                 :SizedBox()  ],
                 ),
 

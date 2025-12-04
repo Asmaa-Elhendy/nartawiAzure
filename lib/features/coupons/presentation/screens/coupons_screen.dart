@@ -112,6 +112,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * .06,
+                      vertical: screenHeight*.02
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
