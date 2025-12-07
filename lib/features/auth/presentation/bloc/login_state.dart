@@ -1,28 +1,43 @@
-
+// lib/features/auth/presentation/bloc/login_state.dart
 import 'package:equatable/equatable.dart';
 
-abstract class LoginState extends Equatable {
+abstract class AuthState extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class LoginInitial extends LoginState {}
+class AuthInitial extends AuthState {}
 
-class LoginLoading extends LoginState {}
+/// LOGIN
+class LoginLoading extends AuthState {}
 
-class LoginSuccess extends LoginState {
-  final Map response;
+class LoginSuccess extends AuthState {}
 
-  LoginSuccess(this.response);
-
-  @override
-  List<Object?> get props => [response];
-}
-
-class LoginFailure extends LoginState {
+class LoginFailure extends AuthState {
   final String error;
 
   LoginFailure(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}
+
+/// REGISTER
+class RegisterLoading extends AuthState {}
+
+class RegisterSuccess extends AuthState {
+  final String message;
+
+  RegisterSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class RegisterFailure extends AuthState {
+  final String error;
+
+  RegisterFailure(this.error);
 
   @override
   List<Object?> get props => [error];

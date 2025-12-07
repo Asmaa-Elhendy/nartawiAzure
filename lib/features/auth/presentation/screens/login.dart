@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLogin() {
-    context.read<LoginBloc>().add(
+    context.read<AuthBloc>().add(
       PerformLogin(
         _emailController.text.trim(),
         _passwordController.text,
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: BlocConsumer<LoginBloc, LoginState>(
+      child: BlocConsumer<AuthBloc, AuthState>(
         // 👈 خليه async عشان نقدر نـ await
         listener: (context, state) async {
           if (state is LoginSuccess) {

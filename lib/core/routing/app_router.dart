@@ -41,15 +41,21 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
       case '/login':
         return MaterialPageRoute(
-          builder: (_) => BlocProvider<LoginBloc>(
-            create: (_) => di.sl<LoginBloc>(),
+          builder: (_) => BlocProvider<AuthBloc>(
+            create: (_) => di.sl<AuthBloc>(),
             child: const LoginScreen(),
           ),
         );
 
 
       case '/signUp':
-        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      // 👈 نفس الفكرة: نلفّ الـ SignUpScreen بـ BlocProvider<LoginBloc>
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => di.sl<AuthBloc>(),
+            child: const SignUpScreen(),
+          ),
+        );
       case '/forgetPassword':
         return MaterialPageRoute(builder: (_) => const ForgetPasswordScreen());
       case '/verification':

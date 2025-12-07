@@ -77,16 +77,16 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
                 controller: widget.controller,
                 keyboardType: TextInputType.phone,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                // validator: (value) {
-                //   if(widget.required==true) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'This field is required';
-                //     }
-                //
-                //     return null;
-                //   }
-                //   return null;
-                // },
+                validator: (value) {
+                  if(widget.required==true) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field is required';
+                    }
+
+                    return null;
+                  }
+                  return null;
+                },
                 style: AppTextStyles.textInTextField,
                 decoration: InputDecoration(
                   hintText: widget.hintText,
@@ -109,12 +109,12 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: widget.controller,
         obscureText: isPasswordField ? _obscureText : false,
-        // validator: (value) {
-        //   if (value == null || value.isEmpty) {
-        //     return 'This field is required';
-        //   }
-        //   return null;
-        // },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          }
+          return null;
+        },
         cursorColor: AppColors.primary,
         decoration: InputDecoration(
           hintText: widget.hintText,
@@ -157,13 +157,13 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: AppColors.primary),
           ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
+          // errorBorder: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(8),
+          //   borderSide: const BorderSide(color: Colors.red),
+          // ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.red),
+         //   borderSide: const BorderSide(color: Colors.red),
           ),
         ),
       ),

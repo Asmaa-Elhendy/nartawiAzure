@@ -14,6 +14,6 @@ Future<void> init() async {
   // TODO: Register usecases, repositories, datasources here when available
   sl.registerLazySingleton<Dio>(() => Dio());
 
-  sl.registerFactory<LoginBloc>(() => LoginBloc(dio: sl<Dio>()));
+  sl.registerFactory<AuthBloc>(() => AuthBloc(dio: sl<Dio>()));
 
 }
