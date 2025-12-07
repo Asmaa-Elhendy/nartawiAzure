@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/auth/presentation/bloc/login_bloc.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
 import '../../features/auth/presentation/screens/reset_password.dart';
@@ -27,6 +29,7 @@ import '../../features/profile/presentation/pages/scan_qr.dart';
 import '../../features/profile/presentation/pages/settings.dart';
 import '../../features/splash/onboarding.dart';
 import '../../features/splash/splash_screen.dart';
+import '../../injection_container.dart' as di;
 // Import other pages as needed
 
 class AppRouter {
@@ -37,7 +40,14 @@ class AppRouter {
       case '/onBording':
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
       case '/login':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<LoginBloc>(
+            create: (_) => di.sl<LoginBloc>(),
+            child: const LoginScreen(),
+          ),
+        );
+
+
       case '/signUp':
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case '/forgetPassword':

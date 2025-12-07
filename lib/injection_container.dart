@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 
@@ -10,4 +12,8 @@ Future<void> init() async {
   sl.registerFactory<NotificationBloc>(() => NotificationBloc(initialNotifications: []));
 
   // TODO: Register usecases, repositories, datasources here when available
+  sl.registerLazySingleton<Dio>(() => Dio());
+
+  sl.registerFactory<LoginBloc>(() => LoginBloc(dio: sl<Dio>()));
+
 }
