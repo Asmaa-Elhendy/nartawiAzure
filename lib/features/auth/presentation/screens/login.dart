@@ -302,14 +302,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Text(
-                              'Logging in...',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
+                            const SelectionContainer.disabled(
+                              child: const Text(
+                                'Logging in...',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                  decoration: TextDecoration.none,        // لا underline
+                                  decorationColor: Colors.transparent,
+                                  backgroundColor: Colors.transparent,    // لو في أي هايلايت
+                                ),
+                              )
+                            )
+
                           ],
                         ),
                       ),

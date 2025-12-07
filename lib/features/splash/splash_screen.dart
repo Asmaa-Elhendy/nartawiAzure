@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Correct import
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/theme/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,8 +16,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () {
-       Navigator.pushReplacementNamed(context, '/onBording');
+    Future.delayed(const Duration(seconds: 3), () async {
+      final prefs = await SharedPreferences.getInstance();
+     String user = prefs.getString('saved_email') ?? '';
+      user==''||user==null? Navigator.pushReplacementNamed(context, '/onBording'):
+      Navigator.of(context).pushReplacementNamed('/login');
+      ;
     });
   }
 
