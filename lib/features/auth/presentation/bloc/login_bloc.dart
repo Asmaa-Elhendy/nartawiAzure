@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 
 import 'login_event.dart';
 import 'login_state.dart';
-// asmaa asmaa123
+// asmaa asmaa123   asmaa@gmail.com
 //admai Admin@123
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Dio dio;
@@ -15,13 +15,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required this.dio}) : super(AuthInitial()) {
     on<PerformLogin>(_onPerformLogin);
     on<PerformRegister>(_onPerformRegister);
+    on<SendOtp>(_onSendOtp);
   }
 
   /// 🔹 LOGIN
   Future<void> _onPerformLogin(
       PerformLogin event,
       Emitter<AuthState> emit,
-      ) async {
+      ) async
+  {
     emit(LoginLoading());
 
     try {
@@ -65,7 +67,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onPerformRegister(
       PerformRegister event,
       Emitter<AuthState> emit,
-      ) async {
+      ) async
+  {
     emit(RegisterLoading());
 
     try {
@@ -129,4 +132,61 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(RegisterFailure('Unexpected error, please try again.'));
     }
   }
+
+  Future<void> _onSendOtp(
+      SendOtp event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(OtpSending());
+
+    try {
+      debugPrint("📤 Sending OTP to: ${event.email}");
+
+      final response = await dio.post(
+        "https://nartawi.smartvillageqatar.com/api/Auth/otp/send",
+        data: {
+          "email": event.email,
+          "purpose": event.purpose,   // what purpose
+        },
+      );
+
+      debugPrint("✅ OTP sent: ${response.data}");
+
+      emit(OtpSentSuccess("OTP sent successfully to ${event.email}"));
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      final status = e.response?.statusCode;
+
+      debugPrint("❌ OTP error ($status): $data");
+
+      String message = "Failed to send OTP";
+
+      if (data is Map && data["title"] != null) {
+        message = data["title"];
+      }
+
+      emit(OtpSentFailure(message));
+    } catch (e) {
+      emit(OtpSentFailure("Unexpected error"));
+    }
+  }
+
 }
+// {
+// "id": 1,
+// "username": "admin",
+// "fullName": "Administrator",
+// "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsImp0aSI6IjJhNzM5NTcxLTBhNTEtNDgxNy1iMTU4LTRmN2I3NTdiMzhjNCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiZXhwIjoxNzY1MTA1OTA2LCJpc3MiOiJOYXJ0YXdpIiwiYXVkIjoiTmFydGF3aSJ9.KbbY5K3r5tJBNwLt1Hf1TfkbfkbUfH87qcsD8ZeIuQs",
+// "refreshToken": "HshQf/X30tgyvJ1B/u3CbSztvIzqvCPy/2Ntm/GQF1s=",
+// "roles": [
+// "Admin"
+// ],
+// "tokenExpiration": "2025-12-07T11:11:46.797203Z"
+// }
+// Response headers
+// access-control-allow-origin: *
+// content-type: application/json; charset=utf-8
+// date: Sun,07 Dec 2025 10:11:46 GMT
+// server: Microsoft-IIS/10.0
+// x-powered-by: ASP.NET
+// x-powered-by-plesk: PleskWin

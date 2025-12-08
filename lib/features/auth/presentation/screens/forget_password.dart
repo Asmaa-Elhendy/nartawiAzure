@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/login_bloc.dart';
+import '../bloc/login_event.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_custome_full_text_field.dart';
 import '../widgets/build_title_widget.dart';
@@ -30,6 +33,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       Navigator.pushNamed(context, '/verification');
       print('Password: ${_emailController.text}');
+
+      context.read<AuthBloc>().add(
+        SendOtp(email: _emailController.text.trim()),
+      );
+
     }
   }
   void _handleBackToLogin() {

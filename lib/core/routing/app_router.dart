@@ -57,7 +57,12 @@ class AppRouter {
           ),
         );
       case '/forgetPassword':
-        return MaterialPageRoute(builder: (_) => const ForgetPasswordScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => di.sl<AuthBloc>(),
+            child: const ForgetPasswordScreen(),
+          ),
+        );
       case '/verification':
         return MaterialPageRoute(builder: (_) => const VerificationScreen());
       case '/resetPassword':

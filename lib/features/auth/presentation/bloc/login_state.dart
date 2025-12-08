@@ -42,3 +42,20 @@ class RegisterFailure extends AuthState {
   @override
   List<Object?> get props => [error];
 }
+class OtpSending extends AuthState {}
+
+class OtpSentSuccess extends AuthState {
+  final String message;
+  OtpSentSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class OtpSentFailure extends AuthState {
+  final String error;
+  OtpSentFailure(this.error);
+
+  @override
+  List<Object?> get props => [error];
+}

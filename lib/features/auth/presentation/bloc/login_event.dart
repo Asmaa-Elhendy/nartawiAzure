@@ -39,3 +39,15 @@ class PerformRegister extends AuthEvent {
   List<Object?> get props =>
       [username, email, password, confirmPassword, fullName, phoneNumber, role];
 }
+class SendOtp extends AuthEvent {
+  final String email;
+  final String purpose;
+
+  SendOtp({
+    required this.email,
+    this.purpose = "Auth",
+  });
+
+  @override
+  List<Object?> get props => [email, purpose];
+}
