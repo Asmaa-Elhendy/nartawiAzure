@@ -71,12 +71,14 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../../domain/models/supplier_model.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
 import '../../widgets/main_screen_widgets/suppliers/tab_bar_view.dart';
 
 class SupplierDetails extends StatefulWidget {
-  const SupplierDetails({super.key});
+  Supplier supplier;
+  SupplierDetails({required this.supplier});
 
   @override
   State<SupplierDetails> createState() => _SupplierDetailsState();
@@ -117,7 +119,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Company A',
+            title:widget.supplier.enName,
             is_returned: true,
           ),
 

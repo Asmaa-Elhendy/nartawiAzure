@@ -169,7 +169,7 @@ class _MainScreenState extends State<MainScreen> {
                                           MaterialPageRoute(
                                             builder: (_) => SupplierDetails(
                                               // لو عندك constructor بياخد supplier ابعتيه هنا
-                                              // supplier: supplier,
+                                               supplier: supplier,
                                             ),
                                           ),
                                         );

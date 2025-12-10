@@ -56,34 +56,47 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
             children: [
               widget.is_returned
                   ? GestureDetector(
-                      onTap:widget.onReturnFromSupplierDetail==null? () {
-                        Navigator.pop(context);
-                      }:widget.onReturnFromSupplierDetail!,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: screenWidth * .02,
-                          left: screenWidth * .02,
-                        ),
-                        child: Iconify(
-                          MaterialSymbols.arrow_back_ios,
-                          size: screenWidth * .05,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-              Text(
-                widget.title,
-                style: TextStyle(
-                  color: AppColors.whiteColor,
-                  fontWeight: FontWeight.w400,
-                  fontSize: widget.screenWidth * .044,
+                onTap: widget.onReturnFromSupplierDetail == null
+                    ? () {
+                  Navigator.pop(context);
+                }
+                    : widget.onReturnFromSupplierDetail!,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    right: screenWidth * .02,
+                    left: screenWidth * .02,
+                  ),
+                  child: Iconify(
+                    MaterialSymbols.arrow_back_ios,
+                    size: screenWidth * .05,
+                    color: AppColors.whiteColor,
+                  ),
+                ),
+              )
+                  : const SizedBox(),
+
+              /// 👇 هنا بقى بنقيّد عرض العنوان + نخليه ellipsis
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: widget.screenWidth * 0.45, // حوالي نص المساحة الشمال
+                ),
+                child: Text(
+                  widget.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: AppColors.whiteColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: widget.screenWidth * .042,
+                  ),
                 ),
               ),
             ],
           ),
+
           SizedBox(
-            width: widget.screenWidth * .38,
+            width: widget.screenWidth * .36,// edit *0.38
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

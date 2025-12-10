@@ -80,8 +80,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MainScreen());
       // case '/allSuppliers':
       //   return MaterialPageRoute(builder: (_) => const AllSuppliersScreen());
-      case '/supplierDetail':
-        return MaterialPageRoute(builder: (_) => const SupplierDetails());
+      // case '/supplierDetail':
+      //   return MaterialPageRoute(builder: (_) => const SupplierDetails());
       // case '/popularCategories':
       //   return MaterialPageRoute(builder: (_) => const PopularCategoriesMainScreen());
       case '/allProducts':

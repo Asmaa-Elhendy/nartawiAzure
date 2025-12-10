@@ -22,7 +22,7 @@ class _StoreCardState extends State<StoreCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => SupplierDetails()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => SupplierDetails(supplier: widget.supplier,)));
 
       },
       child: Padding(

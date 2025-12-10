@@ -16,7 +16,7 @@ Widget BuildCardSupplier(
   return GestureDetector(
     onTap: () {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => SupplierDetails()),
+        MaterialPageRoute(builder: (_) => SupplierDetails(supplier:supplier)),
       );
     },
     child: Padding(

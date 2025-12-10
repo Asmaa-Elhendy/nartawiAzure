@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
@@ -141,7 +142,8 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                                 itemCount: 4,
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: ''
+                                        , enName: 'enName', isActive: true, accounts: []),)));
 
                                   },
                                   child: BuildFullCardSupplier(

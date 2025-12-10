@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/widget_view_detail_store.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
@@ -65,7 +66,7 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                       children: [
 
                         viewStoreWithoutFlexible((){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: 'arName', enName: 'enName', isActive: true, accounts: []))));
 
                         }, 'View Store', screenWidth, screenHeight),
 
