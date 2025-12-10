@@ -348,14 +348,43 @@ class _MainScreenState extends State<MainScreen> {
 // You can customize this based on your category names
 
                         SizedBox(height: screenHeight * .01),
+
                         BuildStretchTitleHome(
                           screenWidth,
                           "Popular Products",
                               () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AllProductScreen()));
+                            final productState = context.read<ProductsBloc>().state;
+
+                            if (productState is ProductsLoaded) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => AllProductScreen(
+                                    products: productState.response.items,
+                                  ),
+                                ),
+                              );
+                            } else if (productState is ProductsLoading || productState is ProductsInitial) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Products are still loading, please try again.'),
+                                ),
+                              );
+                            } else if (productState is ProductsError) {
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Text('Failed to load products: ${productState.message}'),
+                              //   ),
+                              // );
+                            } else {
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //     content: Text('Products are not available yet.'),
+                              //   ),
+                              // );
+                            }
                           },
                         ),
+
                       ]),
                     ),
                   ),
@@ -450,7 +479,7 @@ class _MainScreenState extends State<MainScreen> {
                             // imageUrl: product.imageUrl,
                           );
                         },
-                        childCount: products.length, // 👈 هنا بقى عدد المنتجات الحقيقي
+                        childCount: products.length.clamp(0, 10), //products.length, // 👈 هنا بقى عدد المنتجات الحقيقي
                       ),
                     );
                   }

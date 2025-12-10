@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../core/theme/colors.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 class AllProductScreen extends StatefulWidget {
-  const AllProductScreen({super.key});
+ List<ClientProduct> products;
+ AllProductScreen({required this.products});
 
   @override
   State<AllProductScreen> createState() => _AllProductScreenState();
@@ -48,7 +50,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          TabBarFirstPage(fromAllProducts:true),
+                          TabBarFirstPage(fromAllProducts:true,products:widget.products),
 
                         ],
                       ),

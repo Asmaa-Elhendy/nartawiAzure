@@ -84,8 +84,8 @@ class AppRouter {
       //   return MaterialPageRoute(builder: (_) => const SupplierDetails());
       // case '/popularCategories':
       //   return MaterialPageRoute(builder: (_) => const PopularCategoriesMainScreen());
-      case '/allProducts':
-        return MaterialPageRoute(builder: (_) => const AllProductScreen());
+      // case '/allProducts':
+      //   return MaterialPageRoute(builder: (_) => const AllProductScreen());
       case '/productDetail':
         return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
       case '/ordersScreen':

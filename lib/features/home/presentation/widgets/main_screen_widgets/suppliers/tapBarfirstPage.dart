@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
+import '../../../../domain/models/product_model.dart';
 import '../custom_search_bar.dart';
 import '../products/product_card.dart';
 import 'build_filter_button.dart';
@@ -8,7 +9,8 @@ import 'filter_overlay.dart';
 
 class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
-  const TabBarFirstPage({super.key, this.fromAllProducts = false});
+  List<ClientProduct>? products;
+   TabBarFirstPage({super.key, this.fromAllProducts = false,this.products=null});
 
   @override
   State<TabBarFirstPage> createState() => _TabBarFirstPageState();
@@ -165,9 +167,10 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
             mainAxisSpacing: screenWidth*.03, //12
             childAspectRatio: 0.49, //0.48 handel design shimaa for product card
           ),
-          itemCount: products.length,
+          itemCount: widget.products==null?products.length:widget.products!.length,
           itemBuilder: (context, index) {
             return ProductCard(
+              product: widget.products![index],
               screenWidth: screenWidth,
               screenHeight: screenHeight,
               icon: 'assets/images/home/main_page/product.jpg',
