@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../domain/models/product_categories_models/product_category_model.dart';
 import '../../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../bloc/product_quantity/product_quantity_event.dart';
 import '../../../bloc/product_quantity/product_quantity_state.dart';
@@ -17,12 +19,13 @@ class ProductCard extends StatefulWidget {
   double screenHeight;
   String icon;
   bool fromAllProducts;
+  ClientProduct? product;
 
   ProductCard({
     required this.screenWidth,
     required this.screenHeight,
     required this.icon,
-
+    this.product=null,
     this.fromAllProducts=false
   });
 
@@ -40,7 +43,7 @@ class _ProductCardState extends State<ProductCard> {
     _quantityController = TextEditingController(text: '1');
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: 100.0,
+      basePrice:widget.product!=null?widget.product!.price: 100.0,
     );
   }
 
@@ -114,7 +117,7 @@ class _ProductCardState extends State<ProductCard> {
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
                                 child: Text(
-                                  "Hand Pump Dispenser",
+                               widget.product!=null?   widget.product!.enName:'Hand Pump Dispenser',
                                   style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth*.028,
@@ -139,7 +142,7 @@ class _ProductCardState extends State<ProductCard> {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    "QAR 100.00",
+                                    (widget.product!=null)?  'QAR ${widget.product!.price}':'QAR 100.00',
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .034, // Slightly smaller font

@@ -4,6 +4,8 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
 import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/products_bloc/products_event.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_categories_main_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
@@ -14,9 +16,12 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
+import '../../domain/models/product_categories_models/product_category_model.dart';
 import '../bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../bloc/product_categories_bloc/product_categories_event.dart';
 import '../bloc/product_categories_bloc/product_categories_state.dart';
+import '../bloc/products_bloc/products_bloc.dart';
+import '../bloc/products_bloc/products_state.dart';
 import '../bloc/suppliers_bloc/suppliers_bloc.dart';
 import '../bloc/suppliers_bloc/suppliers_event.dart';
 import '../bloc/suppliers_bloc/suppliers_state.dart';
@@ -48,6 +53,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
     context.read<SuppliersBloc>().add(FetchSuppliers());
+    context.read<ProductsBloc>().add(FetchProducts());
+
 
 }
   @override
@@ -354,29 +361,107 @@ class _MainScreenState extends State<MainScreen> {
                   ),
 
                   /// ✅ GridView بقى SliverGrid علشان Lazy Loading
-                  SliverPadding(
-                    padding:  EdgeInsets.only(left: screenWidth*.06,right: screenWidth*.06,top: screenHeight*.01,bottom: screenHeight*.03),
-                    sliver: SliverGrid(
+                  // SliverPadding(
+                  //   padding:  EdgeInsets.only(left: screenWidth*.06,right: screenWidth*.06,top: screenHeight*.01,bottom: screenHeight*.03),
+                  //   sliver: SliverGrid(
+                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  //       crossAxisCount: 2,
+                  //       crossAxisSpacing: screenWidth*.03,//12
+                  //       mainAxisSpacing: screenWidth*.03, //12
+                  //       childAspectRatio: 0.49, //0.48 handel design shimaa for product card
+                  //     ),
+                  //     delegate: SliverChildBuilderDelegate(
+                  //           (context, index) {
+                  //         return ProductCard(
+                  //           screenWidth: screenWidth,
+                  //           screenHeight: screenHeight,
+                  //           icon: 'assets/images/home/main_page/product.jpg',
+                  //         );
+                  //       },
+                  //       childCount: 10, // 🔥 غير الرقم ده حسب عدد المنتجات
+                  //     ),
+                  //   ),
+                  // ),
+            SliverPadding(
+              padding: EdgeInsets.only(
+                left: screenWidth * .06,
+                right: screenWidth * .06,
+                top: screenHeight * .01,
+                bottom: screenHeight * .03,
+              ),
+              sliver: BlocBuilder<ProductsBloc, ProductsState>(
+                builder: (context, state) {
+                  if (state is ProductsInitial || state is ProductsLoading) {
+                    // 🔵 نفس المساحة لكن بنحط لودينج جواها
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: screenHeight * .02),
+                          child: CircularProgressIndicator(color: AppColors.primary),
+                        ),
+                      ),
+                    );
+                  } else if (state is ProductsError) {
+                    return SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: screenHeight * .02),
+                          child: Text(
+                            'Failed to load products',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (state is ProductsLoaded) {
+                    final products = state.response.items;
+
+                    if (products.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: screenHeight * .02),
+                            child: const Text('No products found'),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: screenWidth*.03,//12
-                        mainAxisSpacing: screenWidth*.03, //12
-                        childAspectRatio: 0.49, //0.48 handel design shimaa for product card
+                        crossAxisSpacing: screenWidth * .03,
+                        mainAxisSpacing: screenWidth * .03,
+                        childAspectRatio: 0.49,
                       ),
                       delegate: SliverChildBuilderDelegate(
                             (context, index) {
+                              ClientProduct product = products[index] ;
+
                           return ProductCard(
                             screenWidth: screenWidth,
                             screenHeight: screenHeight,
+                            product:product,
+                            // 👇 دلوقتي الكارت مبني على الـ products اللي جاية من الـ API
                             icon: 'assets/images/home/main_page/product.jpg',
+                            // لو ProductCard بياخد داتا زيادة، ابعتيها هنا مثلاً:
+                            // title: product.enName,
+                            // price: product.price,
+                            // imageUrl: product.imageUrl,
                           );
                         },
-                        childCount: 10, // 🔥 غير الرقم ده حسب عدد المنتجات
+                        childCount: products.length, // 👈 هنا بقى عدد المنتجات الحقيقي
                       ),
-                    ),
-                  ),
+                    );
+                  }
 
-                ],
+                  // fallback لو حالة مش متوقعة
+                  return const SliverToBoxAdapter(child: SizedBox.shrink());
+                },
+              ),
+            )
+
+            ],
               ),
             ),
           ),

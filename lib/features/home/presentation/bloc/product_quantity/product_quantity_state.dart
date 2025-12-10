@@ -9,10 +9,10 @@ class ProductQuantityState extends Equatable {
     required this.price,
   });
 
-  factory ProductQuantityState.initial() {
-    return const ProductQuantityState(
+  factory ProductQuantityState.initial(double price) {
+    return ProductQuantityState(
       quantity: '1',
-      price: 100.0,
+      price: price,
     );
   }
 

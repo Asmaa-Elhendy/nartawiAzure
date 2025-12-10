@@ -6,6 +6,7 @@ import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppli
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/event.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
@@ -40,6 +41,10 @@ Future<void> main() async {
         BlocProvider<SuppliersBloc>(
           create: (_) => sl<SuppliersBloc>(),
         ),
+        BlocProvider<ProductsBloc>(
+          create: (_) => sl<ProductsBloc>(),
+        ),
+
       ],
       child: const MyApp(),
     ),

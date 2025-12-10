@@ -3,7 +3,7 @@ import 'product_quantity_event.dart';
 import 'product_quantity_state.dart';
 
 class CalculateProductPrice {
-  double call(int quantity, {double basePrice = 100.0}) {
+  double call(int quantity, double basePrice ) {
     return basePrice * quantity;
   }
 }
@@ -14,8 +14,8 @@ class ProductQuantityBloc extends Bloc<ProductQuantityEvent, ProductQuantityStat
 
   ProductQuantityBloc({
     required this.calculateProductPrice,
-    this.basePrice = 100.0,
-  }) : super(ProductQuantityState.initial()) {
+    required this.basePrice ,
+  }) : super(ProductQuantityState.initial(basePrice)) {
     on<IncreaseQuantity>(_onIncreaseQuantity);
     on<DecreaseQuantity>(_onDecreaseQuantity);
     on<QuantityChanged>(_onQuantityChanged);
@@ -62,7 +62,7 @@ class ProductQuantityBloc extends Bloc<ProductQuantityEvent, ProductQuantityStat
 
   void _updateQuantity(Emitter<ProductQuantityState> emit, String newQuantity) {
     final quantity = int.tryParse(newQuantity) ?? 1;
-    final price = calculateProductPrice(quantity, basePrice: basePrice);
+    final price = calculateProductPrice(quantity, basePrice);
     emit(state.copyWith(
       quantity: quantity.toString(),
       price: price,
