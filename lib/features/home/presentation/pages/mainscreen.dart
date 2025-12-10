@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/tabler.dart';
@@ -13,6 +14,9 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
+import '../bloc/product_categories_bloc/product_categories_bloc.dart';
+import '../bloc/product_categories_bloc/product_categories_event.dart';
+import '../bloc/product_categories_bloc/product_categories_state.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';
@@ -35,7 +39,13 @@ class _MainScreenState extends State<MainScreen> {
     _SearchController.dispose();
     super.dispose();
   }
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<ProductCategoriesBloc>().add(FetchProductCategories());
 
+}
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -132,62 +142,111 @@ class _MainScreenState extends State<MainScreen> {
                                 builder: (_) => PopularCategoriesMainScreen()));
                           },
                         ),
+                        // SizedBox(
+                        //   height: screenHeight * 0.15,
+                        //   child: ListView(
+                        //     scrollDirection: Axis.horizontal,
+                        //     children: [
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.of(context).push(
+                        //             MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Bottles')),
+                        //           );},
+                        //         child: CategoryCard(
+                        //           screenWidth: screenWidth,
+                        //           screenHeight: screenHeight,
+                        //           icon: 'assets/images/home/main_page/bottle.svg',
+                        //           title: 'Bottles',
+                        //         ),
+                        //       ),
+                        //       GestureDetector(
+                        //           onTap: () {
+                        //             Navigator.of(context).push(
+                        //               MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Gallons')),
+                        //             );},
+                        //         child: CategoryCard(
+                        //           screenWidth: screenWidth,
+                        //           screenHeight: screenHeight,
+                        //           icon: GameIcons.water_gallon,
+                        //           title: 'Gallons',
+                        //         ),
+                        //       ),
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.of(context).push(
+                        //             MaterialPageRoute(builder: (_) =>PopularCategoryScreen(CategoryName: 'Alkaline')),
+                        //           );},
+                        //         child: CategoryCard(
+                        //           screenWidth: screenWidth,
+                        //           screenHeight: screenHeight,
+                        //           icon: 'assets/images/home/main_page/ph.svg',
+                        //           title: 'Alkaline',
+                        //         ),
+                        //       ),
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.of(context).push(
+                        //             MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Coupons')),
+                        //           );},
+                        //         child: CategoryCard(
+                        //           screenWidth: screenWidth,
+                        //           screenHeight: screenHeight,
+                        //           icon: Mdi.coupon_outline,
+                        //           title: 'Coupons',
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // In your MainScreen's build method, replace the SizedBox with:
+
                         SizedBox(
                           height: screenHeight * 0.15,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Bottles')),
-                                  );},
-                                child: CategoryCard(
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                  icon: 'assets/images/home/main_page/bottle.svg',
-                                  title: 'Bottles',
-                                ),
-                              ),
-                              GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Gallons')),
-                                    );},
-                                child: CategoryCard(
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                  icon: GameIcons.water_gallon,
-                                  title: 'Gallons',
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) =>PopularCategoryScreen(CategoryName: 'Alkaline')),
-                                  );},
-                                child: CategoryCard(
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                  icon: 'assets/images/home/main_page/ph.svg',
-                                  title: 'Alkaline',
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Coupons')),
-                                  );},
-                                child: CategoryCard(
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                  icon: Mdi.coupon_outline,
-                                  title: 'Coupons',
-                                ),
-                              ),
-                            ],
+                          child: BlocBuilder<ProductCategoriesBloc, ProductCategoriesState>(
+                            builder: (context, state) {
+                              if (state is ProductCategoriesInitial ||
+                                  state is ProductCategoriesLoading) {
+                                return  Center(child: CircularProgressIndicator(color: AppColors.primary,));
+                              } else if (state is ProductCategoriesError) {
+                                return Center(child: Text('Error: ${state.message}'));
+                              } else if (state is ProductCategoriesLoaded) {
+                                if (state.categories.isEmpty) {
+                                  return const Center(child: Text('No categories found'));
+                                }
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.categories.length,
+                                  itemBuilder: (context, index) {
+                                    final category = state.categories[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => PopularCategoryScreen(
+                                              CategoryName: category.enName ?? 'Category',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: CategoryCard(
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                        icon:'assets/images/home/main_page/bottle.svg',// _getCategoryIcon(category.enName ?? ''),
+                                        title: category.enName ?? 'Category',
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
                           ),
                         ),
+
+
+// Add this helper method to get the appropriate icon for each category
+// You can customize this based on your category names
+
                         SizedBox(height: screenHeight * .01),
                         BuildStretchTitleHome(
                           screenWidth,
@@ -232,4 +291,20 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+  String _getCategoryIcon(String categoryName) {
+    String casee=categoryName.toLowerCase();
+    switch (casee) {
+      case 'bottle':
+        return 'assets/images/home/main_page/bottle.svg';
+      case 'gallon':
+        return GameIcons.water_gallon;
+      case 'alkaline':
+        return 'assets/images/home/main_page/ph.svg';
+      case 'coupons':
+        return Mdi.coupon_outline;
+      default:
+        return 'assets/images/placeholder_icon.svg'; // Add a default icon
+    }
+  }
 }
+

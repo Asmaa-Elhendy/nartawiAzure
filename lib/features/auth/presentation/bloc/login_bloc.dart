@@ -1,14 +1,16 @@
-// lib/features/auth/presentation/bloc/login_bloc.dart
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+
+import '../../../../core/services/auth_service.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 // asmaa asmaa123   asmaa@gmail.com
-//admai Admin@123
+//admin Admin@123
+String base_url= 'https://nartawi.smartvillageqatar.com/api';
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Dio dio;
 
@@ -16,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<PerformLogin>(_onPerformLogin);
     on<PerformRegister>(_onPerformRegister);
     on<SendOtp>(_onSendOtp);
+   // on<Logout>(_onLogout);
   }
 
   /// 🔹 LOGIN
@@ -32,17 +35,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       debugPrint('password: ${event.password}');
 
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/Auth/login',
+        '$base_url/Auth/login',
         data: {
           'username': event.username,
           'password': event.password,
         },
       );
 
-      // ممكن هنا تحفظي الـ token في SharedPreferences لو حابة
       debugPrint('✅ Login success: ${response.data}');
-
-      emit(LoginSuccess());
+      
+      // Save the token from the response
+      final token = response.data['accessToken'];
+      if (token != null) {
+        await AuthService.saveToken(token);
+        emit(LoginSuccess());
+      } else {
+        emit(LoginFailure('No access token received'));
+      }
     } on DioException catch (e) {
       final status = e.response?.statusCode;
       final data = e.response?.data;
@@ -80,7 +89,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       debugPrint('phone: ${event.phoneNumber}');
 
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/Auth/register',
+        '$base_url/Auth/register',
         data: {
           "username": event.username,
           "email": event.email,
@@ -143,7 +152,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       debugPrint("📤 Sending OTP to: ${event.email}");
 
       final response = await dio.post(
-        "https://nartawi.smartvillageqatar.com/api/Auth/otp/send",
+        "$base_url/Auth/otp/send",
         data: {
           "email": event.email,
           "purpose": event.purpose,   // what purpose

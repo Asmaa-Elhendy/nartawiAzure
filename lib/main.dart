@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/event.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'injection_container.dart';
+import 'injection_container.dart' as di;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,9 @@ Future<void> main() async {
         ),
         BlocProvider<CartBloc>(
           create: (_) => sl<CartBloc>(),
+        ),
+        BlocProvider<ProductCategoriesBloc>(
+          create: (_) => sl<ProductCategoriesBloc>(),
         ),
       ],
       child: const MyApp(),

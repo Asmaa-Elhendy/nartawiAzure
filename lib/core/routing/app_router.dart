@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../../features/auth/presentation/bloc/login_bloc.dart';
 import '../../features/auth/presentation/screens/forget_password.dart';
 import '../../features/auth/presentation/screens/login.dart';
@@ -68,7 +70,12 @@ class AppRouter {
       case '/resetPassword':
         return MaterialPageRoute(builder: (_) => const ResetPasswordScreen());
       case '/home':
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<ProductCategoriesBloc>(
+            create: (_) => di.sl<ProductCategoriesBloc>(),
+            child: const  HomeScreen(),
+          ),
+        );
       case '/main':
         return MaterialPageRoute(builder: (_) => const MainScreen());
       case '/allSuppliers':
