@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_card.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
 
 class AllSuppliersScreen extends StatefulWidget {
-  const AllSuppliersScreen({super.key});
+  List<Supplier> suppliers;
+  AllSuppliersScreen({required this.suppliers});
 
   @override
   State<AllSuppliersScreen> createState() => _AllSuppliersScreenState();
@@ -79,14 +81,14 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
               child: ListView.builder(
                 controller: _scrollController,
                 padding: EdgeInsets.zero,
-                itemCount: _suppliersData.length + (_isLoadingMore ? 1 : 0),
+                itemCount:widget.suppliers.length,
                 itemBuilder: (context, index) {
-                  if (index < _suppliersData.length) {
+                  if (index < widget.suppliers.length) {
                     return BuildCardSupplier(
                       context,
                       screenHeight,
                       screenWidth,
-                      _suppliersData[index],
+                      widget.suppliers[index],
                     );
                   } else {
                     // Loader في أسفل الصفحة

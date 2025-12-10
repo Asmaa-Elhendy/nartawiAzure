@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 
 import '../../pages/suppliers/supplier_detail.dart';
 
@@ -9,7 +10,8 @@ class StoreCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
   String? imageUrl;
-  StoreCard({required this.screenWidth,required this.screenHeight,this.imageUrl=''});
+  Supplier supplier;
+  StoreCard({required this.screenWidth,required this.screenHeight,this.imageUrl='',required this.supplier});
 
   @override
   State<StoreCard> createState() => _StoreCardState();
@@ -65,7 +67,7 @@ class _StoreCardState extends State<StoreCard> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.008),
-                child: Text('Company A',style: TextStyle(fontSize: widget.screenWidth*.036,fontWeight: FontWeight.w500,),overflow: TextOverflow.ellipsis,),
+                child: Text(widget.supplier.enName,style: TextStyle(fontSize: widget.screenWidth*.036,fontWeight: FontWeight.w500,),overflow: TextOverflow.ellipsis,),
               ),
 
               Row(mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 
 import '../../../../../../core/theme/colors.dart';
@@ -8,7 +9,7 @@ Widget BuildCardSupplier(
     BuildContext context,
     double screenHeight,
     double screenWidth,
-    bool isFeatured,
+    Supplier supplier,
     ) {
   final double avatarSize = screenHeight * 0.09;
 
@@ -79,7 +80,7 @@ Widget BuildCardSupplier(
                     children: [
                       Expanded(
                         child: Text(
-                          'Company A',
+                         supplier.enName,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: screenWidth * .036,
@@ -94,7 +95,7 @@ Widget BuildCardSupplier(
                         child: BuildFeaturedOrSponsered(
                           screenHeight,
                           screenWidth,
-                          isFeatured ? 'Featured' : 'Sponsored',
+                          supplier.isActive ? 'Featured' : 'Sponsored',
                         ),
                       ),
                     ],

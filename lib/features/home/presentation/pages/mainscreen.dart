@@ -17,6 +17,9 @@ import '../../../../core/theme/colors.dart';
 import '../bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../bloc/product_categories_bloc/product_categories_event.dart';
 import '../bloc/product_categories_bloc/product_categories_state.dart';
+import '../bloc/suppliers_bloc/suppliers_bloc.dart';
+import '../bloc/suppliers_bloc/suppliers_event.dart';
+import '../bloc/suppliers_bloc/suppliers_state.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/build_carous_slider.dart';
@@ -44,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement initState
     super.initState();
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
+    context.read<SuppliersBloc>().add(FetchSuppliers());
 
 }
   @override
@@ -113,35 +117,124 @@ class _MainScreenState extends State<MainScreen> {
                           screenWidth,
                           "Featured Suppliers",
                               () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => AllSuppliersScreen()));
+                                final state = context.read<SuppliersBloc>().state;
+
+                                if (state is SuppliersLoaded) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (_) => AllSuppliersScreen(suppliers:state.suppliers)));
+                                } else {
+                                  // لو لسه لودينج أو حصل error
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   const SnackBar(
+                                  //     content: Text('Categories are still loading, please try again.'),
+                                  //   ),
+                                  // );
+                                }
+
                           },
                         ),
                         SizedBox(
                           height: screenHeight * 0.18,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 10,
-                            itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (_) => SupplierDetails()),
-                                  );},
-                              child: StoreCard(
-                                screenWidth: screenWidth,
-                                screenHeight: screenHeight,
-                              ),
-                            ),
+                          child: BlocBuilder<SuppliersBloc, SuppliersState>(
+                            builder: (context, state) {
+                              if (state is SuppliersInitial || state is SuppliersLoading) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                  ),
+                                );
+                              } else if (state is SuppliersError) {
+                                return Center(
+                                  child: Text(
+                                    'Failed to load suppliers',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                );
+                              } else if (state is SuppliersLoaded) {
+                                if (state.suppliers.isEmpty) {
+                                  return const Center(
+                                    child: Text('No suppliers found'),
+                                  );
+                                }
+
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.suppliers.length,
+                                  itemBuilder: (context, index) {
+                                    final supplier = state.suppliers[index];
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => SupplierDetails(
+                                              // لو عندك constructor بياخد supplier ابعتيه هنا
+                                              // supplier: supplier,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: StoreCard(
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                        supplier:supplier
+                                        // لو StoreCard بياخد بيانات، مرّريها هنا مثلاً:
+                                        // name: supplier.enName,
+                                        // logoUrl: supplier.logoUrl,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
+                              // fallback لو حصل state غريب
+                              return const SizedBox.shrink();
+                            },
                           ),
                         ),
+
+                        // SizedBox(
+                        //   height: screenHeight * 0.18,
+                        //   child: ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: 10,
+                        //     itemBuilder: (context, index) => GestureDetector(
+                        //         onTap: () {
+                        //           Navigator.of(context).push(
+                        //             MaterialPageRoute(builder: (_) => SupplierDetails()),
+                        //           );},
+                        //       child: StoreCard(
+                        //         screenWidth: screenWidth,
+                        //         screenHeight: screenHeight,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         BuildStretchTitleHome(
                           screenWidth,
                           "Popular Categories",
                               () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => PopularCategoriesMainScreen()));
+                            final state = context.read<ProductCategoriesBloc>().state;
+
+                            if (state is ProductCategoriesLoaded) {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => PopularCategoriesMainScreen(
+                                    categories: state.categories,   // 👈 بنبعَت الليست هنا
+                                  ),
+                                ),
+                              );
+                            } else {
+                              // لو لسه لودينج أو حصل error
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   const SnackBar(
+                              //     content: Text('Categories are still loading, please try again.'),
+                              //   ),
+                              // );
+                            }
                           },
                         ),
+
                         // SizedBox(
                         //   height: screenHeight * 0.15,
                         //   child: ListView(

@@ -78,12 +78,12 @@ class AppRouter {
         );
       case '/main':
         return MaterialPageRoute(builder: (_) => const MainScreen());
-      case '/allSuppliers':
-        return MaterialPageRoute(builder: (_) => const AllSuppliersScreen());
+      // case '/allSuppliers':
+      //   return MaterialPageRoute(builder: (_) => const AllSuppliersScreen());
       case '/supplierDetail':
         return MaterialPageRoute(builder: (_) => const SupplierDetails());
-      case '/popularCategories':
-        return MaterialPageRoute(builder: (_) => const PopularCategoriesMainScreen());
+      // case '/popularCategories':
+      //   return MaterialPageRoute(builder: (_) => const PopularCategoriesMainScreen());
       case '/allProducts':
         return MaterialPageRoute(builder: (_) => const AllProductScreen());
       case '/productDetail':

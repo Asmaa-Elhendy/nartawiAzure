@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
 import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
@@ -13,6 +14,8 @@ Future<void> init() async {
 
   // Blocs
   sl.registerFactory(() => ProductCategoriesBloc(dio: sl<Dio>()));
+
+  sl.registerFactory(() => SuppliersBloc(dio: sl<Dio>()));
 
 
   sl.registerFactory<CartBloc>(() => CartBloc());

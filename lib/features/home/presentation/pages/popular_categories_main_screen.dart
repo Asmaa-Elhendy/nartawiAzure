@@ -4,6 +4,7 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../domain/models/product_categories_models/product_category_model.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/category_card.dart';
@@ -13,7 +14,12 @@ import '../widgets/main_screen_widgets/suppliers/filter_overlay.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 class PopularCategoriesMainScreen extends StatefulWidget {
-  const PopularCategoriesMainScreen({super.key});
+  final List<ProductCategory> categories;   // 👈 الليست اللي جاية من المين
+
+  const PopularCategoriesMainScreen({
+    Key? key,
+    required this.categories,
+  }) : super(key: key);
 
   @override
   State<PopularCategoriesMainScreen> createState() =>
@@ -22,38 +28,38 @@ class PopularCategoriesMainScreen extends StatefulWidget {
 
 class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<Map<String, dynamic>> categories = [
-    {
-      'type': 'svg',
-      'icon': 'assets/images/home/main_page/bottle.svg',
-      'title': 'Bottles',
-    },
-    {
-      'type': 'iconify',
-      'icon': GameIcons.water_gallon,
-      'title': 'Gallons',
-    },
-    {
-      'type': 'icon',
-      'icon': Mdi.coupon_outline, // بديل لـ coupon_outline لو بتحبيه
-      'title': 'Coupons',
-    },
-    {
-      'type': 'svg',
-      'icon':'assets/images/home/main_page/ph.svg',
-      'title': 'Alkaline',
-    },
-    {
-      'type': 'svg',
-      'icon': 'assets/images/home/main_page/bottle.svg',
-      'title': 'Small Bottles',
-    },
-    {
-      'type': 'svg',
-      'icon': 'assets/images/home/main_page/dispenser.svg',
-      'title': 'Dispenser',
-    },
-  ];
+  // final List<Map<String, dynamic>> categories = [
+  //   {
+  //     'type': 'svg',
+  //     'icon': 'assets/images/home/main_page/bottle.svg',
+  //     'title': 'Bottles',
+  //   },
+  //   {
+  //     'type': 'iconify',
+  //     'icon': GameIcons.water_gallon,
+  //     'title': 'Gallons',
+  //   },
+  //   {
+  //     'type': 'icon',
+  //     'icon': Mdi.coupon_outline, // بديل لـ coupon_outline لو بتحبيه
+  //     'title': 'Coupons',
+  //   },
+  //   {
+  //     'type': 'svg',
+  //     'icon':'assets/images/home/main_page/ph.svg',
+  //     'title': 'Alkaline',
+  //   },
+  //   {
+  //     'type': 'svg',
+  //     'icon': 'assets/images/home/main_page/bottle.svg',
+  //     'title': 'Small Bottles',
+  //   },
+  //   {
+  //     'type': 'svg',
+  //     'icon': 'assets/images/home/main_page/dispenser.svg',
+  //     'title': 'Dispenser',
+  //   },
+  // ];
   final GlobalKey _searchBarKey = GlobalKey();
   OverlayEntry? _overlayEntry;
   final Set<String> selectedFilters = {};
@@ -215,20 +221,20 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                           mainAxisSpacing: screenWidth * 0.008,
                           childAspectRatio: 1.1,
                         ),
-                        itemCount: categories.length,
+                        itemCount: widget.categories.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => PopularCategoryScreen(CategoryName:categories[index]['title'])));
+                                  builder: (_) => PopularCategoryScreen(CategoryName:widget.categories[index].enName)));
                             },
 
                             child: CategoryCard(
                               fromMainPupularCategoriesScreen: true,
                               screenWidth: screenWidth,
                               screenHeight: screenHeight,
-                              icon: categories[index]['icon'],
-                              title: categories[index]['title'],
+                              icon:'assets/images/home/main_page/bottle.svg', //widget.categories[index]['icon'],
+                              title: widget.categories[index].enName,
                             ),
                           );
                         },
