@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_categories_models/product_category_model.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/all_product_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import '../../../../core/theme/colors.dart';
@@ -21,7 +22,7 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
             // go to products filter by coupons
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PopularCategoryScreen(CategoryName: 'Coupons')),
+              MaterialPageRoute(builder: (context) => PopularCategoryScreen(category: ProductCategory(id: 0, arName: 'arName', enName: 'enName', uiOrderId: 0, products: []),)),
             );
           },rightOnTap: (){
           Navigator.pop(dialogContext);

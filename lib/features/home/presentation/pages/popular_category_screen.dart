@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../domain/models/product_categories_models/product_category_model.dart';
+import '../bloc/products_bloc/products_bloc.dart';
+import '../bloc/products_bloc/products_event.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 class PopularCategoryScreen extends StatefulWidget {
-  String CategoryName;
-  PopularCategoryScreen({required this.CategoryName});
+
+  ProductCategory category;
+  PopularCategoryScreen({required this.category});
 
   @override
   State<PopularCategoryScreen> createState() =>
@@ -16,7 +21,12 @@ class PopularCategoryScreen extends StatefulWidget {
 
 class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+}
   @override
   void dispose() {
     _searchController.dispose();
@@ -44,7 +54,7 @@ class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: widget.CategoryName,
+            title: widget.category.enName,
             is_returned: true,
           ),
           Positioned.fill(
@@ -54,7 +64,7 @@ class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TabBarFirstPage(),
+                    TabBarFirstPage(category: widget.category,),
                   ],
                 ),
               ),

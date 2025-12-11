@@ -297,7 +297,7 @@ class _StackOverState extends State<StackOver>
             top: h * 0.02,
             bottom: h * .02,
           ),
-          child: TabBarFirstPage(),
+          child: TabBarFirstPage(category: null,),
         );
       case 1:
       default:

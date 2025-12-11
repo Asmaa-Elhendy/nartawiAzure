@@ -18,7 +18,10 @@ class AllProductScreen extends StatefulWidget {
 class _AllProductScreenState extends State<AllProductScreen> {
   final TextEditingController _SearchController = TextEditingController();
   @override
-
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   void dispose() {
     _SearchController.dispose();
@@ -57,7 +60,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          TabBarFirstPage(fromAllProducts:true),
+                          TabBarFirstPage(fromAllProducts:true,category: null,),
 
                         ],
                       ),

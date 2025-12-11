@@ -323,7 +323,7 @@ class _MainScreenState extends State<MainScreen> {
                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (_) => PopularCategoryScreen(
-                                              CategoryName: category.enName ?? 'Category',
+                                              category:category
                                             ),
                                           ),
                                         );

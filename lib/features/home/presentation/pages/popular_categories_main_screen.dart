@@ -226,7 +226,7 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                           return InkWell(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => PopularCategoryScreen(CategoryName:widget.categories[index].enName)));
+                                  builder: (_) => PopularCategoryScreen(category:widget.categories[index])));
                             },
 
                             child: CategoryCard(

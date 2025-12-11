@@ -1,14 +1,18 @@
+// lib/features/home/presentation/bloc/products_bloc/products_bloc.dart
+
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:newwwwwwww/core/services/auth_service.dart';
-import '../../../domain/models/product_model.dart';
+
 import 'products_event.dart';
 import 'products_state.dart';
+import 'package:newwwwwwww/core/services/auth_service.dart';
+import '../../../domain/models/product_model.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   final Dio dio;
+
   static const int _defaultPageSize = 10;
   int _currentPage = 1;
   bool _hasReachedMax = false;
@@ -20,20 +24,24 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   }
 
   Future<void> _onFetchProducts(
-    FetchProducts event,
-    Emitter<ProductsState> emit,
-  ) async {
-    if (event.executeClear == true) {
+      FetchProducts event,
+      Emitter<ProductsState> emit,
+      ) async {
+    final bool shouldClear = event.executeClear ?? false;
+
+    // 👈 لو محتاجين نبدأ من الأول (مثلاً لما نغير الكاتيجوري)
+    if (shouldClear) {
       _currentPage = 1;
       _hasReachedMax = false;
       _currentResponse = null;
       emit(ProductsInitial());
-      return;
     }
 
-    if (state is ProductsLoading) return;
+    // لو بالفعل في Loading ومش بنعمل clear → بلاش نعمل كول تاني
+    if (state is ProductsLoading && !shouldClear) return;
 
-    if (_hasReachedMax && !event.executeClear!) return;
+    // لو وصلنا الحد الأقصى ومش clear → مفيش داعي نجيب تاني
+    if (_hasReachedMax && !shouldClear) return;
 
     try {
       final token = await AuthService.getToken();
@@ -44,13 +52,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         return;
       }
 
-      final isFirstLoad = _currentPage == 1;
+      final bool isFirstLoad = _currentPage == 1;
+
       if (isFirstLoad) {
-        emit(ProductsLoading(isFirstFetch: true));
+        emit(const ProductsLoading(isFirstFetch: true));
+      } else {
+        // لو مش أول صفحة ممكن تحبّي تشيكي هنا لو محتاجة State تاني
+        emit(const ProductsLoading(isFirstFetch: false));
       }
 
-      final pageToFetch = event.pageIndex ?? _currentPage;
-      final pageSize = event.pageSize ?? _defaultPageSize;
+      final int pageToFetch = event.pageIndex ?? _currentPage;
+      final int pageSize = event.pageSize ?? _defaultPageSize;
 
       final params = <String, dynamic>{
         if (event.categoryId != null) 'CategoryId': event.categoryId,
@@ -66,7 +78,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         if (event.isDescending != null) 'IsDescending': event.isDescending,
       };
 
-      final url = 'https://nartawi.smartvillageqatar.com/api/v1/client/products';
+      const url = 'https://nartawi.smartvillageqatar.com/api/v1/client/products';
       print('🌐 Calling: $url with params: $params');
 
       final response = await dio.get(
@@ -81,11 +93,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       );
 
       print('📡 statusCode = ${response.statusCode}');
+      print('📦 data = ${response.data}');
 
       if (response.statusCode == 200) {
         final responseData = response.data as Map<String, dynamic>;
         final productsResponse = ProductsResponse.fromJson(responseData);
-        
+
+        // لو مفيش items في الـ page دي
         if (productsResponse.items.isEmpty) {
           _hasReachedMax = true;
           emit(ProductsLoaded(
@@ -95,9 +109,11 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           return;
         }
 
-        if (_currentResponse == null || isFirstLoad) {
+        // أول مرة أو clear أو بداية فلتر جديد
+        if (_currentResponse == null || shouldClear || isFirstLoad) {
           _currentResponse = productsResponse;
         } else {
+          // ضيف على اللي فات
           _currentResponse = ProductsResponse(
             pageIndex: productsResponse.pageIndex,
             pageSize: productsResponse.pageSize,
@@ -105,7 +121,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
             totalPages: productsResponse.totalPages,
             hasPreviousPage: productsResponse.hasPreviousPage,
             hasNextPage: productsResponse.hasNextPage,
-            items: [..._currentResponse!.items, ...productsResponse.items],
+            items: [
+              ..._currentResponse!.items,
+              ...productsResponse.items,
+            ],
           );
         }
 
@@ -118,12 +137,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         ));
       } else {
         emit(ProductsError(
-            'Failed to load products (status: ${response.statusCode})'));
+          'Failed to load products (status: ${response.statusCode})',
+        ));
       }
     } on DioException catch (e) {
       print('❌ Dio error: ${e.response?.data}');
-      final errorMessage = e.response?.data?['title']?.toString() ??
-          'Failed to load products';
+      final errorMessage =
+          e.response?.data?['title']?.toString() ?? 'Failed to load products';
       emit(ProductsError(errorMessage));
     } catch (e) {
       print('🔥 Unexpected error: $e');
@@ -131,18 +151,57 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     }
   }
 
-  void refresh() {
+  /// 🔄 تستخدمها لما تحبي تعملي refresh كامل (مثلاً pull to refresh)
+  void refresh({
+    int? categoryId,
+    double? minPrice,
+    double? maxPrice,
+    bool? isActive,
+    int? supplierId,
+    String? searchTerm,
+    String? sortBy,
+    bool? isDescending,
+  }) {
     _currentPage = 1;
     _hasReachedMax = false;
     _currentResponse = null;
-    add(const FetchProducts(executeClear: true));
+
+    add(FetchProducts(
+      executeClear: true,
+      categoryId: categoryId,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+      isActive: isActive,
+      supplierId: supplierId,
+      searchTerm: searchTerm,
+      sortBy: sortBy,
+      isDescending: isDescending,
+    ));
   }
 
-  void loadNextPage() {
+  /// ⬇ استدعائها من السكروول عشان تجيب الصفحة اللي بعدها
+  void loadNextPage({
+    int? categoryId,
+    double? minPrice,
+    double? maxPrice,
+    bool? isActive,
+    int? supplierId,
+    String? searchTerm,
+    String? sortBy,
+    bool? isDescending,
+  }) {
     if (!_hasReachedMax) {
       add(FetchProducts(
         pageIndex: _currentPage,
         pageSize: _currentResponse?.pageSize ?? _defaultPageSize,
+        categoryId: categoryId,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        isActive: isActive,
+        supplierId: supplierId,
+        searchTerm: searchTerm,
+        sortBy: sortBy,
+        isDescending: isDescending,
       ));
     }
   }
