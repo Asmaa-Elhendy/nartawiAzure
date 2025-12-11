@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../core/theme/colors.dart';
+import '../bloc/products_bloc/products_bloc.dart';
+import '../bloc/products_bloc/products_event.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 class AllProductScreen extends StatefulWidget {
- List<ClientProduct> products;
- AllProductScreen({required this.products});
+
 
   @override
   State<AllProductScreen> createState() => _AllProductScreenState();
@@ -15,6 +17,8 @@ class AllProductScreen extends StatefulWidget {
 
 class _AllProductScreenState extends State<AllProductScreen> {
   final TextEditingController _SearchController = TextEditingController();
+  @override
+
   @override
   void dispose() {
     _SearchController.dispose();
@@ -44,13 +48,16 @@ class _AllProductScreenState extends State<AllProductScreen> {
               ),
               Positioned.fill(
                   top: MediaQuery.of(context).padding.top + screenHeight * .1,
+                  bottom: screenHeight*.05,
                   child:Padding(
-                    padding:  EdgeInsets.only(top: screenHeight*.03),//04 handle design shimaa
+                    padding:  EdgeInsets.only(top: screenHeight*.03,
+                     bottom: screenHeight*.09,//top 03
+                    ),//04 handle design shimaa
 
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          TabBarFirstPage(fromAllProducts:true,products:widget.products),
+                          TabBarFirstPage(fromAllProducts:true),
 
                         ],
                       ),

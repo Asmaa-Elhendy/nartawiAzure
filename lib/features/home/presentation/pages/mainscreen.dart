@@ -359,7 +359,6 @@ class _MainScreenState extends State<MainScreen> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => AllProductScreen(
-                                    products: productState.response.items,
                                   ),
                                 ),
                               );

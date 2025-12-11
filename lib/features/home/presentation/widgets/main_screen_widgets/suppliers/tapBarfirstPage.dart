@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
 import '../../../../domain/models/product_model.dart';
+import '../../../bloc/products_bloc/products_bloc.dart';
+import '../../../bloc/products_bloc/products_event.dart';
+import '../../../bloc/products_bloc/products_state.dart';
 import '../custom_search_bar.dart';
 import '../products/product_card.dart';
 import 'build_filter_button.dart';
@@ -9,8 +13,8 @@ import 'filter_overlay.dart';
 
 class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
-  List<ClientProduct>? products;
-   TabBarFirstPage({super.key, this.fromAllProducts = false,this.products=null});
+
+  const TabBarFirstPage({super.key, this.fromAllProducts = false});
 
   @override
   State<TabBarFirstPage> createState() => _TabBarFirstPageState();
@@ -18,7 +22,12 @@ class TabBarFirstPage extends StatefulWidget {
 
 class _TabBarFirstPageState extends State<TabBarFirstPage> {
   final Set<String> selectedFilters = {};
-  final Set<String> tags = {'small bottles', 'gallons', 'under QAE 50', 'spring water'};
+  final Set<String> tags = {
+    'small bottles',
+    'gallons',
+    'under QAR 50',
+    'spring water',
+  };
 
   OverlayEntry? _overlayEntry;
   final GlobalKey _searchBarKey = GlobalKey();
@@ -28,6 +37,9 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+
+    // أول تحميل للـ products
+    context.read<ProductsBloc>().add(const FetchProducts());
   }
 
   @override
@@ -69,10 +81,17 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
               });
             },
             child: Padding(
-              padding: EdgeInsets.only(right: width * .01, left: width * .02),
-              child: Icon(Icons.close, color: AppColors.whiteColor, size: width * .042),
+              padding: EdgeInsets.only(
+                right: width * .01,
+                left: width * .02,
+              ),
+              child: Icon(
+                Icons.close,
+                color: AppColors.whiteColor,
+                size: width * .042,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -87,7 +106,8 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   }
 
   void _showFilterMenu() {
-    final renderBox = _searchBarKey.currentContext!.findRenderObject() as RenderBox;
+    final renderBox =
+    _searchBarKey.currentContext!.findRenderObject() as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
     final size = renderBox.size;
 
@@ -99,7 +119,6 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       selectedFilters: selectedFilters,
       onClose: _hideFilterMenu,
       onChanged: () {
-        // Rebuild parent to reflect tag visibility when filters change
         setState(() {});
       },
     );
@@ -112,73 +131,163 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     _overlayEntry = null;
   }
 
+  /// 🔽 دي اللي هتسمع السكروول وتندهّي loadNextPage من الـ bloc
+  bool _onScrollNotification(ScrollNotification scrollInfo) {
+    if (scrollInfo.metrics.pixels >=
+        scrollInfo.metrics.maxScrollExtent - 200) {
+      final bloc = context.read<ProductsBloc>();
+      final state = bloc.state;
+
+      if (state is ProductsLoaded && !state.hasReachedMax) {
+        bloc.loadNextPage();
+      }
+    }
+    return false; // عشان ما نوقفش الباقي
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // دي عشان التجربة، خلي عندك list من المنتجات
-    final products = List.generate(15, (index) => "Product $index");
+    return NotificationListener<ScrollNotification>(
+      onNotification: _onScrollNotification,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// 🔹 Search + Filter + Tags + Compare
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Search + Filter Button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomSearchBar(
+                        key: _searchBarKey,
+                        controller: _searchController,
+                        height: screenHeight,
+                        width: screenWidth,
+                        fromSupplierDetail: true,
+                      ),
+                      BuildFilterButton(
+                        screenWidth,
+                        screenHeight,
+                        _toggleFilterMenu,
+                      ),
+                    ],
+                  ),
 
-    return SingleChildScrollView(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CustomSearchBar(
-                  key: _searchBarKey,
-                  controller: _searchController,
-                  height: screenHeight,
-                  width: screenWidth,
-                  fromSupplierDetail: true,
-                ),
-                BuildFilterButton(
-                  screenWidth,
-                  screenHeight,
-                  _toggleFilterMenu,
-                ),
-              ],
-            ),
-            selectedFilters.isNotEmpty
-                ? Wrap(
+                  // Filter tags
+                  selectedFilters.isNotEmpty
+                      ? Wrap(
                     spacing: 8.0,
                     runSpacing: 4.0,
                     children: generateTags(screenWidth, screenHeight),
                   )
-                : const SizedBox(),
-            widget.fromAllProducts ? BuildCompareButton(screenWidth, screenHeight, context) : const SizedBox(),
-          ]),
-        ),
+                      : const SizedBox(),
 
-        // optimized grid
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            // crossAxisSpacing: 12,
-            // mainAxisSpacing: 12,
-            // childAspectRatio: 0.48,
-            crossAxisSpacing: screenWidth*.03,//12
-            mainAxisSpacing: screenWidth*.03, //12
-            childAspectRatio: 0.49, //0.48 handel design shimaa for product card
-          ),
-          itemCount: widget.products==null?products.length:widget.products!.length,
-          itemBuilder: (context, index) {
-            return ProductCard(
-              product: widget.products![index],
-              screenWidth: screenWidth,
-              screenHeight: screenHeight,
-              icon: 'assets/images/home/main_page/product.jpg',
-              fromAllProducts: widget.fromAllProducts,
-            );
-          },
+                  // Compare button لو من صفحة All Products
+                  widget.fromAllProducts
+                      ? BuildCompareButton(
+                    screenWidth,
+                    screenHeight,
+                    context,
+                  )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+
+            /// 🔹 Products Grid من الـ Bloc + Load More
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.04,
+                vertical: screenHeight * 0.01,
+              ),
+              child: BlocBuilder<ProductsBloc, ProductsState>(
+                builder: (context, state) {
+                  // First Load
+                  if (state is ProductsInitial ||
+                      (state is ProductsLoading && state.isFirstFetch)) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: screenHeight * .02),
+                        child: CircularProgressIndicator(color: AppColors.primary),
+                      ),
+                    );
+                  }
+
+                  // Errors
+                  if (state is ProductsError) {
+                    return Center(
+                      child: Text(state.message, style: TextStyle(color: Colors.red)),
+                    );
+                  }
+
+                  // Get latest loaded products
+                  ProductsLoaded? loadedState;
+
+                  if (state is ProductsLoaded) {
+                    loadedState = state;
+                  } else if (state is ProductsLoading) {
+                    final blocState = context.read<ProductsBloc>().state;
+                    if (blocState is ProductsLoaded) {
+                      loadedState = blocState;
+                    }
+                  }
+
+                  if (loadedState == null) return const SizedBox.shrink();
+
+                  final products = loadedState.response.items;
+
+                  if (products.isEmpty) {
+                    return const Center(child: Text("No Products Found"));
+                  }
+
+                  return Column(
+                    children: [
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: screenWidth * .03,
+                          mainAxisSpacing: screenWidth * .03,
+                          childAspectRatio: 0.49,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (_, index) {
+                          return ProductCard(
+                            product: products[index],
+                            screenWidth: screenWidth,
+                            screenHeight: screenHeight,
+                            icon: 'assets/images/home/main_page/product.jpg',
+                            fromAllProducts: widget.fromAllProducts,
+                          );
+                        },
+                      ),
+
+                      // Loader for pagination
+                      if (state is ProductsLoading && !state.isFirstFetch)
+                        Padding(
+                          padding: EdgeInsets.only(top: screenHeight * .015),
+                          child: Center(
+                            child: CircularProgressIndicator(color: AppColors.primary),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              )
+
+            ),
+          ],
         ),
-      ]),
+      ),
     );
   }
 }
