@@ -155,6 +155,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
 
                           // التاب بار + محتوى التابز
                           StackOver(
+                            supplier:widget.supplier,
                             width: screenWidth,
                             height: screenHeight,
                           ),

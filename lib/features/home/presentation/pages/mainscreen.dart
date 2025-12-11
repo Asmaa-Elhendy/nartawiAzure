@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
     context.read<SuppliersBloc>().add(FetchSuppliers());
-    context.read<ProductsBloc>().add(FetchProducts());
+    context.read<ProductsBloc>().add(FetchProducts(executeClear: true)); // get first page without load more like other pages
 
 
 }
@@ -109,7 +109,9 @@ class _MainScreenState extends State<MainScreen> {
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => CouponsScreen(fromViewButton:true)));
+                                    builder: (_) => CouponsScreen(fromViewButton:true))).then((_) {
+                                  context.read<ProductsBloc>().refresh();
+                                });
                               },
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
@@ -128,7 +130,9 @@ class _MainScreenState extends State<MainScreen> {
 
                                 if (state is SuppliersLoaded) {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => AllSuppliersScreen(suppliers:state.suppliers)));
+                                      builder: (_) => AllSuppliersScreen(suppliers:state.suppliers))).then((_) {
+                                    context.read<ProductsBloc>().refresh();
+                                  });
                                 } else {
                                   // لو لسه لودينج أو حصل error
                                   // ScaffoldMessenger.of(context).showSnackBar(
@@ -179,7 +183,9 @@ class _MainScreenState extends State<MainScreen> {
                                                supplier: supplier,
                                             ),
                                           ),
-                                        );
+                                        ).then((_) {
+                                          context.read<ProductsBloc>().refresh();
+                                        });
                                       },
                                       child: StoreCard(
                                         screenWidth: screenWidth,
@@ -230,7 +236,9 @@ class _MainScreenState extends State<MainScreen> {
                                     categories: state.categories,   // 👈 بنبعَت الليست هنا
                                   ),
                                 ),
-                              );
+                              ).then((_) {
+                                context.read<ProductsBloc>().refresh();
+                              });
                             } else {
                               // لو لسه لودينج أو حصل error
                               // ScaffoldMessenger.of(context).showSnackBar(
@@ -319,14 +327,16 @@ class _MainScreenState extends State<MainScreen> {
                                   itemBuilder: (context, index) {
                                     final category = state.categories[index];
                                     return GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
+                                      onTap: () async {
+                                         Navigator.of(context).push(
                                           MaterialPageRoute(
                                             builder: (_) => PopularCategoryScreen(
                                               category:category
                                             ),
                                           ),
-                                        );
+                                        ).then((_) {
+                                    context.read<ProductsBloc>().refresh();
+                                  });
                                       },
                                       child: CategoryCard(
                                         screenWidth: screenWidth,
@@ -361,7 +371,9 @@ class _MainScreenState extends State<MainScreen> {
                                   builder: (_) => AllProductScreen(
                                   ),
                                 ),
-                              );
+                              ).then((_) {
+                                context.read<ProductsBloc>().refresh();
+                              });
                             } else if (productState is ProductsLoading || productState is ProductsInitial) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

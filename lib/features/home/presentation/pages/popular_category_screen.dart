@@ -64,7 +64,7 @@ class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TabBarFirstPage(category: widget.category,),
+                    TabBarFirstPage(category: widget.category,supplier: null,),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_categories_models/product_category_model.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 
 import '../../../../domain/models/product_model.dart';
 import '../../../bloc/products_bloc/products_bloc.dart';
@@ -15,8 +16,8 @@ import 'filter_overlay.dart';
 class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
   ProductCategory? category;
-
-   TabBarFirstPage({super.key, required this.category,this.fromAllProducts = false});
+Supplier? supplier;
+   TabBarFirstPage({super.key, required this.category,required this.supplier,this.fromAllProducts = false});
 
   @override
   State<TabBarFirstPage> createState() => _TabBarFirstPageState();
@@ -44,6 +45,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     context.read<ProductsBloc>().add(
         FetchProducts(
           categoryId: widget.category?.id,
+          supplierId: widget.supplier?.id,
           executeClear: true, // 👈 مهم
         ));
   }

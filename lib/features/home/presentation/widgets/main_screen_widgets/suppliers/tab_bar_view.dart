@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tabbar_second_page.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
@@ -257,8 +258,9 @@ import '../../../../../../core/theme/colors.dart';
 class StackOver extends StatefulWidget {
   double width;
   double height;
+  Supplier? supplier;
 
-  StackOver({required this.height, required this.width, super.key});
+  StackOver({required this.height, required this.width,required this.supplier, super.key});
 
   @override
   State<StackOver> createState() => _StackOverState();
@@ -297,7 +299,7 @@ class _StackOverState extends State<StackOver>
             top: h * 0.02,
             bottom: h * .02,
           ),
-          child: TabBarFirstPage(category: null,),
+          child: TabBarFirstPage(category: null,supplier:widget.supplier!),
         );
       case 1:
       default:

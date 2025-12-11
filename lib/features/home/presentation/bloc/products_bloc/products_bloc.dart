@@ -34,7 +34,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       _currentPage = 1;
       _hasReachedMax = false;
       _currentResponse = null;
-      emit(ProductsInitial());
     }
 
     // لو بالفعل في Loading ومش بنعمل clear → بلاش نعمل كول تاني
@@ -52,17 +51,19 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         return;
       }
 
-      final bool isFirstLoad = _currentPage == 1;
+      // ⬅️ نحسب الصفحة الأول
+      final int pageToFetch = event.pageIndex ?? _currentPage;
+      final int pageSize = event.pageSize ?? _defaultPageSize;
+
+      // ⬅️ تعريف أدق لأول تحميل
+      final bool isFirstLoad =
+          shouldClear || _currentResponse == null || pageToFetch == 1;
 
       if (isFirstLoad) {
         emit(const ProductsLoading(isFirstFetch: true));
       } else {
-        // لو مش أول صفحة ممكن تحبّي تشيكي هنا لو محتاجة State تاني
         emit(const ProductsLoading(isFirstFetch: false));
       }
-
-      final int pageToFetch = event.pageIndex ?? _currentPage;
-      final int pageSize = event.pageSize ?? _defaultPageSize;
 
       final params = <String, dynamic>{
         if (event.categoryId != null) 'CategoryId': event.categoryId,
@@ -151,7 +152,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     }
   }
 
-  /// 🔄 تستخدمها لما تحبي تعملي refresh كامل (مثلاً pull to refresh)
+  /// 🔄 تستخدمها لما تحبي تعملي refresh كامل (مثلاً pull to refresh أو بعد الرجوع للهوم)
   void refresh({
     int? categoryId,
     double? minPrice,
