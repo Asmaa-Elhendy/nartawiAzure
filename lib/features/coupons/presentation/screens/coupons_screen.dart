@@ -12,7 +12,7 @@ import '../widgets/coupon_card.dart';
 class CouponsScreen extends StatefulWidget {
   final bool fromViewButton;
 
-  CouponsScreen({this.fromViewButton = false});
+  const CouponsScreen({super.key, this.fromViewButton = false});
 
   @override
   State<CouponsScreen> createState() => _CouponsScreenState();
@@ -23,7 +23,7 @@ class _CouponsScreenState extends State<CouponsScreen>
   late TabController _tabController;
   late final ProductQuantityBloc _quantityBloc;
 
-  bool _isLoading = false;
+  bool _isLoadingOverlay = false;
   late final CouponsController _couponsController;
   final ScrollController _scrollController = ScrollController();
 
@@ -34,9 +34,9 @@ class _CouponsScreenState extends State<CouponsScreen>
 
     _couponsController = CouponsController(dio: Dio());
 
-    // ✅ لازم الاتنين
-    _couponsController.fetchCoupons(); // عشان نجيب currentCoupon
-    _couponsController.fetchBundlePurchases(); // عشان نعرض bundles list
+    // ✅ نجيب الكل مرة واحدة عشان آخر delivery يبقى صح
+    _couponsController.fetchAllCoupons();
+    _couponsController.fetchBundlePurchases();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -48,7 +48,7 @@ class _CouponsScreenState extends State<CouponsScreen>
     _couponsController.addListener(() {
       if (!mounted) return;
       setState(() {
-        _isLoading = _couponsController.isLoadingBundles;
+        _isLoadingOverlay = _couponsController.isLoadingBundles;
       });
     });
   }
@@ -62,9 +62,7 @@ class _CouponsScreenState extends State<CouponsScreen>
   }
 
   Future<void> _handleRefresh() async {
-    // ✅ ريفريش الاتنين عشان الربط يفضل شغال
-    await _couponsController.refresh();
-    await _couponsController.refreshBundlePurchases();
+    await _couponsController.refreshAll();
   }
 
   @override
@@ -94,7 +92,6 @@ class _CouponsScreenState extends State<CouponsScreen>
             is_returned: widget.fromViewButton,
             disabledGallon: 'Coupons',
           ),
-
           Positioned.fill(
             top: topOffset,
             bottom: bottomOffset,
@@ -135,8 +132,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: screenWidth * .036,
-                              color: AppColors
-                                  .greyDarktextIntExtFieldAndIconsHome,
+                              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                             ),
                           ),
                         ),
@@ -147,12 +143,10 @@ class _CouponsScreenState extends State<CouponsScreen>
                             if (_couponsController.isLoadingBundles &&
                                 _couponsController.bundlePurchases.isEmpty) {
                               return Padding(
-                                padding:
-                                EdgeInsets.only(top: screenHeight * .15),
+                                padding: EdgeInsets.only(top: screenHeight * .15),
                                 child: Center(
                                   child: CircularProgressIndicator(
-                                    valueColor:
-                                    AlwaysStoppedAnimation<Color>(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
                                       AppColors.primary,
                                     ),
                                   ),
@@ -163,13 +157,11 @@ class _CouponsScreenState extends State<CouponsScreen>
                             if (_couponsController.bundlesError != null &&
                                 _couponsController.bundlePurchases.isEmpty) {
                               return Padding(
-                                padding:
-                                EdgeInsets.only(top: screenHeight * .15),
+                                padding: EdgeInsets.only(top: screenHeight * .15),
                                 child: Center(
                                   child: Text(
                                     _couponsController.bundlesError!,
-                                    style:
-                                    const TextStyle(color: Colors.red),
+                                    style: const TextStyle(color: Colors.red),
                                   ),
                                 ),
                               );
@@ -177,11 +169,10 @@ class _CouponsScreenState extends State<CouponsScreen>
 
                             if (_couponsController.bundlePurchases.isEmpty) {
                               return Padding(
-                                padding:
-                                EdgeInsets.only(top: screenHeight * .1),
+                                padding: EdgeInsets.only(top: screenHeight * .1),
                                 child: Center(
                                   child: Text(
-                                    'No Coupons found',
+                                    'No Bundles found',
                                     style: TextStyle(
                                       fontSize: screenWidth * .04,
                                       fontWeight: FontWeight.w500,
@@ -194,19 +185,18 @@ class _CouponsScreenState extends State<CouponsScreen>
                             return ListView.builder(
                               controller: _scrollController,
                               shrinkWrap: true,
-                              physics:
-                              const NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: _couponsController.bundlePurchases.length +
                                   (_couponsController.isLoadingMoreBundles ? 1 : 0),
                               itemBuilder: (context, index) {
                                 if (index >= _couponsController.bundlePurchases.length) {
                                   return Padding(
                                     padding: EdgeInsets.symmetric(
-                                        vertical: screenHeight * .02),
+                                      vertical: screenHeight * .02,
+                                    ),
                                     child: Center(
                                       child: CircularProgressIndicator(
-                                        valueColor:
-                                        AlwaysStoppedAnimation<Color>(
+                                        valueColor: AlwaysStoppedAnimation<Color>(
                                           AppColors.primary,
                                         ),
                                       ),
@@ -216,16 +206,16 @@ class _CouponsScreenState extends State<CouponsScreen>
 
                                 final bundle = _couponsController.bundlePurchases[index];
 
-                                // ✅ هنا نجيب coupon الحقيقي اللي جاي من fetchCoupons
-                                final relatedCoupon = _couponsController.getCouponByBundleId(bundle.id);
+                                // ✅ آخر delivery (day+hour) = list
+                                final lastDeliveredCoupons =
+                                _couponsController.getCouponsInLastDeliveryDayHour(bundle.id);
 
                                 return CouponeCard(
                                   bundle: bundle,
-                                  currentCoupon: relatedCoupon, // ✅ WalletCoupon? (ممكن null)
-                                  disbute: relatedCoupon?.status == 'Disputed',
+                                  currentCoupon: lastDeliveredCoupons, // ✅ دايمًا List
+                                  disbute: lastDeliveredCoupons.any((c) => c.status == 'Disputed'),
                                   onReorder: () async => _handleRefresh(),
                                 );
-
                               },
                             );
                           },
@@ -240,7 +230,7 @@ class _CouponsScreenState extends State<CouponsScreen>
             ),
           ),
 
-          if (_isLoading)
+          if (_isLoadingOverlay)
             Positioned.fill(
               child: Container(
                 margin: EdgeInsets.only(top: topOffset, bottom: bottomOffset),
@@ -256,9 +246,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.primary,
-                          ),
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
                         ),
                         const SizedBox(height: 10),
                         const Text(

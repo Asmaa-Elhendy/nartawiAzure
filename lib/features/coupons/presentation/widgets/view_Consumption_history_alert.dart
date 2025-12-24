@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:newwwwwwww/features/coupons/domain/models/coupons_models.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_photos.dart';
@@ -10,7 +11,7 @@ import 'oulined_icon_button.dart';
 
 class ViewConsumptionHistoryAlert extends StatefulWidget {
 bool disbute;
-WalletCoupon currentCoupon;
+List <WalletCoupon> currentCoupon;
 ViewConsumptionHistoryAlert({required this.disbute,required this.currentCoupon}) ;
 @override
   State<ViewConsumptionHistoryAlert> createState() =>
@@ -19,6 +20,19 @@ ViewConsumptionHistoryAlert({required this.disbute,required this.currentCoupon})
 
 class _ViewConsumptionHistoryAlertState
     extends State<ViewConsumptionHistoryAlert> {
+
+
+  String formatMarkedOn(String? iso) {
+    if (iso == null || iso.trim().isEmpty) return '-';
+
+    final dt = DateTime.tryParse(iso);
+    if (dt == null) return '-';
+
+    final local = dt.toLocal();
+    return DateFormat('MMMM d, yyyy').format(local); // March 5, 2025
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -78,7 +92,7 @@ class _ViewConsumptionHistoryAlertState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '1 Coupon Marked Used',
+                      '${widget.currentCoupon.length} Coupon Marked Used',
                       style: TextStyle(
                         color: AppColors.primary,
                         fontWeight: FontWeight.w700,
@@ -86,7 +100,11 @@ class _ViewConsumptionHistoryAlertState
                       ),
                     ),
                     SizedBox(height: screenHeight * .01),
-                    customCouponAlertSubTitle(   'Marked On March 5, 2025', screenWidth, screenHeight),
+                    customCouponAlertSubTitle(
+                      'Marked On ${formatMarkedOn(widget.currentCoupon.first.markedUsedAt.toString())}',
+                      screenWidth,
+                      screenHeight,
+                    ),
 
                     SizedBox(height: screenHeight * .02),
                     customCouponAlertTitle(  'Marked By', screenWidth, screenHeight),
@@ -99,7 +117,7 @@ class _ViewConsumptionHistoryAlertState
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          customCouponAlertSubTitle('Company 1', screenWidth, screenHeight),
+                          customCouponAlertSubTitle('${widget.currentCoupon.first.vendorName}', screenWidth, screenHeight),
                           CouponStatus(screenHeight, screenWidth, 'Vendor'),
                         ],
                       ),
@@ -126,7 +144,7 @@ class _ViewConsumptionHistoryAlertState
                       () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => ShowDeliveryPhotos(widget.currentCoupon),
+                          builder: (ctx) => ShowDeliveryPhotos(widget.currentCoupon.first),
                         );
                       },
                     ),
