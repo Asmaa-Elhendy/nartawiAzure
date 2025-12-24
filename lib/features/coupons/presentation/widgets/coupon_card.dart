@@ -403,7 +403,7 @@ class _CouponeCardState extends State<CouponeCard> {
               showDialog(
                 context: context,
                 builder: (ctx) {
-                  if (!hasCoupons || firstCoupon == null) return const SizedBox();
+
                   return ViewConsumptionHistoryAlert(
                     disbute: widget.disbute,
                     currentCoupon: widget.currentCoupon,
