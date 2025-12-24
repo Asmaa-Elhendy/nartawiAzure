@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:newwwwwwww/features/coupons/domain/models/coupons_models.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import '../../../../core/theme/colors.dart';
 
 class ShowDeliveryPhotos extends StatefulWidget {
-  const ShowDeliveryPhotos({super.key});
+  WalletCoupon currentCoupon;
+  ShowDeliveryPhotos(this.currentCoupon);
 
   @override
   State<ShowDeliveryPhotos> createState() =>
@@ -14,6 +17,17 @@ class ShowDeliveryPhotos extends StatefulWidget {
 class _ShowDeliveryPhotosState
     extends State<ShowDeliveryPhotos> {
   String imageUrl='';
+  String formatDeliveredAt(DateTime? deliveredAt) {
+    if (deliveredAt == null) return '';
+
+    final localDate = deliveredAt.toLocal();
+
+    final datePart = DateFormat('d MMM, yyyy').format(localDate);
+    final timePart = DateFormat('h:mm a').format(localDate);
+
+    return '$datePart at $timePart';
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -75,14 +89,14 @@ class _ShowDeliveryPhotosState
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child:   imageUrl==null||imageUrl==''?
+                  child:   widget.currentCoupon.proofOfDelivery?.photoUrl==null||widget.currentCoupon.proofOfDelivery?.photoUrl==''?
                 Image.asset(
                   'assets/images/coupons/dlivery.png',
                   fit: BoxFit.cover,
                 )
                     :
                 Image.network(
-                  imageUrl! ,
+                  widget.currentCoupon.proofOfDelivery!.photoUrl! ,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Image.asset(
@@ -96,9 +110,10 @@ class _ShowDeliveryPhotosState
              Padding(
                padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
                child: Text(''
-                   'portsaid,23july',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w700),),
+                   '${widget.currentCoupon.proofOfDelivery!.location}',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w700),),
              ),
-              Text('23 dec ,2025  at 6:00 pm',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),),
+              Text(  formatDeliveredAt(widget.currentCoupon.proofOfDelivery?.deliveredAt),
+                  style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),),
             SizedBox(height: screenHeight*.01,),
 
               CancelOrderWidget(

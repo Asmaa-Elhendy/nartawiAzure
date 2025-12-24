@@ -1,11 +1,12 @@
-import 'dart:developer';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/add_coupon_widget.dart';
+
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../provider/coupon_controller.dart';
 import '../widgets/coupon_card.dart';
 
 class CouponsScreen extends StatefulWidget {
@@ -21,48 +22,49 @@ class _CouponsScreenState extends State<CouponsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late final ProductQuantityBloc _quantityBloc;
-  bool newCoupon = false;
-  bool _isLoading = false; // Add loading state
+
+  bool _isLoading = false;
+  late final CouponsController _couponsController;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     super.initState();
+
+    _couponsController = CouponsController(dio: Dio());
+
+    // ✅ لازم الاتنين
+    _couponsController.fetchCoupons(); // عشان نجيب currentCoupon
+    _couponsController.fetchBundlePurchases(); // عشان نعرض bundles list
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        _couponsController.loadMoreBundlePurchases();
+      }
+    });
+
+    _couponsController.addListener(() {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = _couponsController.isLoadingBundles;
+      });
+    });
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
+    _couponsController.dispose();
     _tabController.dispose();
     super.dispose();
   }
 
-  String? imageUrl = null;
-
-  // Handle refresh action
   Future<void> _handleRefresh() async {
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
-
-    try {
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        setState(() {
-          newCoupon = true;
-        });
-      }
-    } catch (e) {
-      log('Error refreshing coupons: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    // ✅ ريفريش الاتنين عشان الربط يفضل شغال
+    await _couponsController.refresh();
+    await _couponsController.refreshBundlePurchases();
   }
 
   @override
@@ -72,22 +74,19 @@ class _CouponsScreenState extends State<CouponsScreen>
 
     final double topOffset =
         MediaQuery.of(context).padding.top + screenHeight * .08;
-    final double bottomOffset = screenHeight * .05; // زي favourites
+    final double bottomOffset = screenHeight * .05;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // الخلفية
           Container(
             width: screenWidth,
             height: screenHeight,
             color: AppColors.backgrounHome,
           ),
-
           buildBackgroundAppbar(screenWidth),
-
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
@@ -96,15 +95,11 @@ class _CouponsScreenState extends State<CouponsScreen>
             disabledGallon: 'Coupons',
           ),
 
-          /// 👇 الكونتنت الأساسي زي favourites (bottom + padding داخلي)
           Positioned.fill(
             top: topOffset,
             bottom: bottomOffset,
             child: Padding(
-              padding: EdgeInsets.only(
-                // نفس الفكرة اللي في Favourites
-                bottom: screenHeight * .1,
-              ),
+              padding: EdgeInsets.only(bottom: screenHeight * .1),
               child: RefreshIndicator(
                 onRefresh: _handleRefresh,
                 child: SingleChildScrollView(
@@ -112,7 +107,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: screenWidth * .06,
-                      vertical: screenHeight*.02
+                      vertical: screenHeight * .02,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +131,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                             vertical: screenHeight * .01,
                           ),
                           child: Text(
-                            'Manage your water coupon bundles and delivery preferences',
+                            'Bundle purchase history and details',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: screenWidth * .036,
@@ -145,28 +140,97 @@ class _CouponsScreenState extends State<CouponsScreen>
                             ),
                           ),
                         ),
-                        CouponeCard(
-                          onReorder: () {
-                            log("hello 1 - Reload triggered");
-                            _handleRefresh();
+
+                        AnimatedBuilder(
+                          animation: _couponsController,
+                          builder: (context, _) {
+                            if (_couponsController.isLoadingBundles &&
+                                _couponsController.bundlePurchases.isEmpty) {
+                              return Padding(
+                                padding:
+                                EdgeInsets.only(top: screenHeight * .15),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor:
+                                    AlwaysStoppedAnimation<Color>(
+                                      AppColors.primary,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (_couponsController.bundlesError != null &&
+                                _couponsController.bundlePurchases.isEmpty) {
+                              return Padding(
+                                padding:
+                                EdgeInsets.only(top: screenHeight * .15),
+                                child: Center(
+                                  child: Text(
+                                    _couponsController.bundlesError!,
+                                    style:
+                                    const TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            if (_couponsController.bundlePurchases.isEmpty) {
+                              return Padding(
+                                padding:
+                                EdgeInsets.only(top: screenHeight * .1),
+                                child: Center(
+                                  child: Text(
+                                    'No Coupons found',
+                                    style: TextStyle(
+                                      fontSize: screenWidth * .04,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return ListView.builder(
+                              controller: _scrollController,
+                              shrinkWrap: true,
+                              physics:
+                              const NeverScrollableScrollPhysics(),
+                              itemCount: _couponsController.bundlePurchases.length +
+                                  (_couponsController.isLoadingMoreBundles ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                if (index >= _couponsController.bundlePurchases.length) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: screenHeight * .02),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                        AlwaysStoppedAnimation<Color>(
+                                          AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                final bundle = _couponsController.bundlePurchases[index];
+
+                                // ✅ هنا نجيب coupon الحقيقي اللي جاي من fetchCoupons
+                                final relatedCoupon = _couponsController.getCouponByBundleId(bundle.id);
+
+                                return CouponeCard(
+                                  bundle: bundle,
+                                  currentCoupon: relatedCoupon, // ✅ WalletCoupon? (ممكن null)
+                                  disbute: relatedCoupon?.status == 'Disputed',
+                                  onReorder: () async => _handleRefresh(),
+                                );
+
+                              },
+                            );
                           },
                         ),
-                        CouponeCard(
-                          disbute: true,
-                          onReorder: () {
-                            log("hello 2 - Reload triggered");
-                            _handleRefresh();
-                          },
-                        ),
-                        newCoupon
-                            ? CouponeCard(
-                          disbute: true,
-                          onReorder: () {
-                            log("hello 3 - Reload triggered");
-                            _handleRefresh();
-                          },
-                        )
-                            : const SizedBox(),
+
                         SizedBox(height: screenHeight * .04),
                       ],
                     ),
@@ -176,14 +240,10 @@ class _CouponsScreenState extends State<CouponsScreen>
             ),
           ),
 
-          /// 👇 اللودينج أوفرلاي على نفس مساحة الكونتنت بالظبط
           if (_isLoading)
             Positioned.fill(
               child: Container(
-                margin: EdgeInsets.only(
-                  top: topOffset,
-                  bottom: bottomOffset,
-                ),
+                margin: EdgeInsets.only(top: topOffset, bottom: bottomOffset),
                 color: Colors.black54,
                 child: Center(
                   child: Container(

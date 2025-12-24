@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
 import 'products_event.dart';
 import 'products_state.dart';
@@ -79,7 +80,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         if (event.isDescending != null) 'IsDescending': event.isDescending,
       };
 
-      const url = 'https://nartawi.smartvillageqatar.com/api/v1/client/products';
+      final url = '$base_url/v1/client/products';
       print('🌐 Calling: $url with params: $params');
 
       final response = await dio.get(

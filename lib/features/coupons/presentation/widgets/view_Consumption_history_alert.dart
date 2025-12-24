@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/coupons/domain/models/coupons_models.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_photos.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
@@ -9,7 +10,8 @@ import 'oulined_icon_button.dart';
 
 class ViewConsumptionHistoryAlert extends StatefulWidget {
 bool disbute;
-ViewConsumptionHistoryAlert({required this.disbute}) ;
+WalletCoupon currentCoupon;
+ViewConsumptionHistoryAlert({required this.disbute,required this.currentCoupon}) ;
 @override
   State<ViewConsumptionHistoryAlert> createState() =>
       _ViewConsumptionHistoryAlertState();
@@ -124,7 +126,7 @@ class _ViewConsumptionHistoryAlertState
                       () {
                         showDialog(
                           context: context,
-                          builder: (ctx) => ShowDeliveryPhotos(),
+                          builder: (ctx) => ShowDeliveryPhotos(widget.currentCoupon),
                         );
                       },
                     ),

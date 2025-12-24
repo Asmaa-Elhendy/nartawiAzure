@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:newwwwwwww/features/coupons/domain/models/bundle_purchase.dart';
+import 'package:newwwwwwww/features/coupons/domain/models/coupons_models.dart';//k
 import 'package:newwwwwwww/features/coupons/presentation/widgets/prefered_days_grid.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/refill_outline_button.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
@@ -23,9 +26,11 @@ import 'latest_coupon_tracker.dart';
 class CouponeCard extends StatefulWidget {
   bool disbute;
   Function onReorder;
+  WalletCoupon? currentCoupon;
+  BundlePurchase bundle;
 
 
-  CouponeCard({Key? key, this.disbute = false,required this.onReorder}) : super(key: key);
+  CouponeCard({Key? key, required this.currentCoupon,required this.bundle,this.disbute = false,required this.onReorder}) : super(key: key);
 
   @override
   State<CouponeCard> createState() => _CouponeCardState();
@@ -66,7 +71,12 @@ class _CouponeCardState extends State<CouponeCard> {
     _quantityTwoController.dispose();
     super.dispose();
   }
+  String formatIssuedDate(String? isoDate) {
+    if (isoDate == null || isoDate.isEmpty) return '';
 
+    final dateTime = DateTime.parse(isoDate).toLocal();
+    return DateFormat('MMMM d, yyyy').format(dateTime);
+  }
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -99,11 +109,12 @@ class _CouponeCardState extends State<CouponeCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customCouponPrimaryTitle(
-                '25 Coupon Bundle',
+                '${widget.bundle.couponsPerBundle} Coupon Bundle',
                 screenWidth,
                 screenHeight,
               ),
-              CouponStatus(screenHeight, screenWidth, 'Active'),
+              CouponStatus(screenHeight, screenWidth, widget.bundle.status,fromCoupon: true//'Active'
+              ),
             ],
           ),
 
@@ -117,7 +128,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
               SizedBox(width: screenWidth * .02),
               Text(
-                'Purchased On March 24, 2025',
+                'Purchased On ${  formatIssuedDate(widget.bundle.purchasedAt?.toIso8601String())
+                }',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: screenWidth * .036,
@@ -145,7 +157,7 @@ class _CouponeCardState extends State<CouponeCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Company 1',
+                      '${widget.bundle.vendorName}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: screenWidth * .037,
@@ -166,7 +178,7 @@ class _CouponeCardState extends State<CouponeCard> {
                       ),
                     ),
                     Text(
-                      'QAR 200.00',
+                      'QAR ${widget.bundle.totalPrice}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: screenWidth * .037,
@@ -179,7 +191,7 @@ class _CouponeCardState extends State<CouponeCard> {
           ),
 
           /// Coupon balance + status
-          latestCouponTracker(screenWidth,screenHeight,widget.onReorder),
+          latestCouponTracker(screenWidth,screenHeight,widget.onReorder,widget.bundle),
           /// Auto-Renewal
           Padding(
             padding: EdgeInsets.only(top: screenHeight * .01),
@@ -254,8 +266,8 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
             ],
           ),SizedBox(height: screenHeight*.01,),
-          Text(
-            'Zone abc, Street 20, Building 21, Flat 22',
+          Text(widget.currentCoupon==null?'':
+           '${widget.currentCoupon?.proofOfDelivery!.location}',// 'Zone abc, Street 20, Building 21, Flat 22',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: screenWidth * .032,
@@ -446,7 +458,8 @@ class _CouponeCardState extends State<CouponeCard> {
               showDialog(
                 context: context,
                 builder: (ctx) =>
-                    ViewConsumptionHistoryAlert(disbute: widget.disbute),
+                 widget.currentCoupon==null?SizedBox():
+                 ViewConsumptionHistoryAlert(disbute: widget.disbute,currentCoupon:widget.currentCoupon!),
               );
             },
             fromCouponsScreen: true,

@@ -5,7 +5,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
-
+import 'dart:io' show Platform;
 class CustomBottomNav extends StatefulWidget {
   final int currentIndex;
   final Function(int) onTabSelected;
@@ -129,7 +129,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
               ),
               // Home label تحت اللوجو
               Positioned(
-                bottom: screenHeight * 0.026,
+                bottom:Platform.isAndroid ?  screenHeight * 0.022:screenHeight*0.018, //0.026
                 child: GestureDetector(
                   onTap: () => widget.onTabSelected(2),
                   child: Column(

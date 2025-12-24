@@ -35,7 +35,7 @@ class ProductCategoriesBloc
         return;
       }
 
-      final url = '$base_url/ProductCategories';
+      final url = '$base_url/v1/categories';
       print('🌐 Calling: $url');
 
       final response = await dio.get(

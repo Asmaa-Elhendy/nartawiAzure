@@ -31,7 +31,7 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
         return;
       }
 
-      final url = '$base_url/Suppliers';
+      final url = '$base_url/v1/admin/suppliers';
       print('🌐 Calling: $url');
 
       final response = await dio.get(

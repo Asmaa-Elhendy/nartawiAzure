@@ -10,7 +10,7 @@ import '../../../cart/presentation/screens/cart_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
-
+import 'dart:io' show Platform;
 import 'fixed_bage_widget.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
@@ -45,7 +45,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Positioned(
-      top: MediaQuery.of(context).padding.top + widget.screenHeight * .04, //05 handle design shimaa
+      top:Platform.isAndroid ?  MediaQuery.of(context).padding.top + widget.screenHeight * .04:MediaQuery.of(context).padding.top + widget.screenHeight * .02, //05 handle design shimaa
       left: widget.screenWidth*.04,
       right:  widget.screenWidth*.04,
       child: Row(

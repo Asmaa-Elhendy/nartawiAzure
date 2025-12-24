@@ -13,6 +13,7 @@ Widget BuildOutlinedIconButton(
     String title,
     void Function()? fun,
 
+
     ) {
   bool isPhotoButton=title.toLowerCase().contains('upload')||title.toLowerCase().contains('take');
   return Padding(

@@ -1,12 +1,13 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/coupons/domain/models/bundle_purchase.dart';
 
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
 import 'custom_text.dart';
 
-Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReorder){
+Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReorder,BundlePurchase bundle){
   return
       Column(
         mainAxisSize: MainAxisSize.min,
@@ -46,7 +47,7 @@ Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReo
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customCouponSecondaryTitle(
-                '25 Total',
+                '${bundle.totalCoupons} Total',
                 screenWidth,
                 screenHeight,
               ),
