@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
@@ -13,13 +14,13 @@ import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
 class FavouriteProductCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
-  String icon;
-  bool fromCartScreen;
+FavoriteProduct favouriteProduct;
+    bool fromCartScreen;
 
   FavouriteProductCard({
     required this.screenWidth,
     required this.screenHeight,
-    required this.icon,
+    required this.favouriteProduct,
     this.fromCartScreen = false,
   });
 
@@ -105,7 +106,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                 bottomLeft: Radius.circular(20),
                               ),
                               child: Image.asset(
-                                widget.icon,
+
+                                'assets/images/home/main_page/product.jpg',
                                 width: widget.screenWidth * .31,
                                 // match or be smaller than container
                                 height: containerHeight,
@@ -177,7 +179,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     bottom: widget.screenHeight * .01,
                                   ),
                                   child: Text(
-                                    "Hand Pump Dispenser",
+                                   widget.favouriteProduct.product!.enName,
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .03, //.028
@@ -201,7 +203,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     vertical: widget.screenHeight * .01,
                                   ),
                                   child: Text(
-                                    "QAR 100.00",
+                                    "QAR ${widget.favouriteProduct.product?.price}",
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .036,

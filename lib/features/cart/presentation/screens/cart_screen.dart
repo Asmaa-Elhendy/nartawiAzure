@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/delivery_address_cart.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/outline_buttons.dart';
+import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
@@ -101,7 +102,8 @@ class _CartScreenState extends State<CartScreen>
                                         (p) => FavouriteProductCard(
                                           screenWidth: screenWidth,
                                           screenHeight: screenHeight,
-                                          icon: p,
+                                          favouriteProduct: FavoriteProduct(id: 0, productVsId: 0, createdAt: DateTime.now(),
+                                              product: FavoriteProductItem(id: 0, vsId: 0, enName: 'enName', arName: 'arName', isActive: false, isCurrent: false, price: 0, categoryId: 0, categoryName: 'categoryName', images: [], totalAvailableQuantity: 0, inventory: [])),
                                           fromCartScreen: true,
                                         ),
                                       )
