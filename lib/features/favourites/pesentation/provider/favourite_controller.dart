@@ -178,4 +178,8 @@ class FavoritesController extends ChangeNotifier {
   bool isVendorFavorited(int supplierId) {
     return favoriteVendors.any((v) => v.supplierId == supplierId || v.supplier?.id == supplierId);
   }
+  Future<void> refreshVendors() async {
+    await fetchFavoriteVendors();
+  }
+
 }

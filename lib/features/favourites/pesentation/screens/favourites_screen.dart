@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
+
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../provider/favourite_controller.dart';
 import '../widgets/favourite_product_card.dart';
-
-
 
 class FavouritesScreen extends StatefulWidget {
   const FavouritesScreen({super.key});
@@ -24,8 +23,11 @@ class FavouritesScreen extends StatefulWidget {
 class _FavouritesScreenState extends State<FavouritesScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
   late FavoritesController favController;
+
+  // ✅ مهم: RefreshIndicator لازم ScrollController/Physics قابلة للسحب
+  final ScrollController _productsScroll = ScrollController();
+  final ScrollController _storesScroll = ScrollController();
 
   @override
   void initState() {
@@ -34,18 +36,26 @@ class _FavouritesScreenState extends State<FavouritesScreen>
 
     favController = FavoritesController(dio: Dio());
     favController.fetchFavoriteProducts(); // ✅ أول تحميل
-    favController.fetchFavoriteVendors(); // ✅ ADD THIS
-
+    favController.fetchFavoriteVendors(); // ✅ أول تحميل للتاب التاني
   }
 
   @override
   void dispose() {
+    _productsScroll.dispose();
+    _storesScroll.dispose();
     _tabController.dispose();
     favController.dispose();
     super.dispose();
   }
 
-  String? imageUrl = null;
+  Future<void> _onRefreshCurrentTab() async {
+    // 0 = Products, 1 = Stores
+    if (_tabController.index == 0) {
+      await favController.refresh(); // products
+    } else {
+      await favController.refreshVendors(); // stores
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,188 +83,232 @@ class _FavouritesScreenState extends State<FavouritesScreen>
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             bottom: screenHeight * .05,
             child: Padding(
-              padding: EdgeInsets.only(
-                bottom: screenHeight * .1,
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: screenHeight * .004,
-                          horizontal: screenWidth * .004,
-                        ),
-                        margin: EdgeInsets.only(
-                          left: .06 * screenWidth,
-                          right: .06 * screenWidth,
-                          bottom: screenHeight * .03,
-                        ),
-                        height: screenHeight * .05,
-                        decoration: BoxDecoration(
-                          color: AppColors.tabViewBackground,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: TabBar(
-                          padding: EdgeInsets.zero,
-                          labelPadding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * .01,
-                          ),
-                          controller: _tabController,
-                          indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: AppColors.whiteColor,
-                          ),
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          dividerColor: Colors.transparent,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                          unselectedLabelColor:
-                          AppColors.greyDarktextIntExtFieldAndIconsHome,
-                          tabs: [
-                            SizedBox(
-                              width: screenWidth * .5,
-                              child: const Tab(text: 'Products'),
-                            ),
-                            SizedBox(
-                              width: screenWidth * .5,
-                              child: const Tab(text: 'Stores'),
-                            ),
-                          ],
-                        ),
+              padding: EdgeInsets.only(bottom: screenHeight * .1),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Tabs header
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: screenHeight * .004,
+                      horizontal: screenWidth * .004,
+                    ),
+                    margin: EdgeInsets.only(
+                      left: .06 * screenWidth,
+                      right: .06 * screenWidth,
+                      bottom: screenHeight * .03,
+                    ),
+                    height: screenHeight * .05,
+                    decoration: BoxDecoration(
+                      color: AppColors.tabViewBackground,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TabBar(
+                      padding: EdgeInsets.zero,
+                      labelPadding: EdgeInsets.symmetric(horizontal: screenWidth * .01),
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: AppColors.whiteColor,
                       ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                      unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                      tabs: [
+                        SizedBox(
+                          width: screenWidth * .5,
+                          child: const Tab(text: 'Products'),
+                        ),
+                        SizedBox(
+                          width: screenWidth * .5,
+                          child: const Tab(text: 'Stores'),
+                        ),
+                      ],
+                    ),
+                  ),
 
-                      SizedBox(
-                        height: screenHeight * .65,
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: [
-                            // =======================
-                            // ✅ Products Tab (Favorites API)
-                            // =======================
-                            AnimatedBuilder(
-                              animation: favController,
-                              builder: (context, _) {
-                                // Loading
-                                if (favController.isLoading) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.primary,
-                                    ),
-                                  );
-                                }
+                  // ✅ RefreshIndicator لازم يبقى فوق Scrollable
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: [
+                        // =======================
+                        // ✅ Products Tab + Refresh
+                        // =======================
+                        AnimatedBuilder(
+                          animation: favController,
+                          builder: (context, _) {
+                            final favs = favController.favorites;
 
-                                // Error
-                                if (favController.error != null) {
-                                  return Center(
-                                    child: Text(
-                                      favController.error!,
-                                      style: const TextStyle(color: Colors.red),
-                                    ),
-                                  );
-                                }
-
-                                final List<FavoriteProduct> favs =
-                                    favController.favorites;
-
-                                if (favs.isEmpty) {
-                                  return const Center(
-                                      child: Text('No favourite products'));
-                                }
-
-                                return ListView.builder(
-                                  padding: EdgeInsets.only(
-                                      bottom: screenHeight * 0.06),
-                                  itemCount: favs.length,
-                                  itemBuilder: (context, index) {
-                                    final fav = favs[index];
-
-                                    // ⚠️ أنت قلت: "كل الموضوع عايزه دي تمشي ع ال list"
-                                    // فهنستخدم نفس FavouriteProductCard زي ما هو
-                                    // (لو الكارد عندك بياخد product data ابعتلي constructor وأنا أركّبه)
-                                    return FavouriteProductCard(
-                                      screenWidth: screenWidth,
-                                      screenHeight: screenHeight,
-                                      favouriteProduct:fav,
-                                    );
-                                  },
-                                );
+                            // Wrap list in RefreshIndicator
+                            return RefreshIndicator(
+                              color: AppColors.primary,
+                              onRefresh: () async {
+                                await favController.refresh(); // products only
                               },
-                            ),
+                              child: Builder(
+                                builder: (_) {
+                                  if (favController.isLoading && favs.isEmpty) {
+                                    // لازم Scrollable حتى لو Loading
+                                    return ListView(
+                                      controller: _productsScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: [
+                                        SizedBox(height: screenHeight * .2),
+                                        Center(
+                                          child: CircularProgressIndicator(color: AppColors.primary),
+                                        ),
+                                      ],
+                                    );
+                                  }
 
-                            // =======================
-                            // Stores Tab (زي ما هو عندك مؤقت)
-                            // =======================
-                            AnimatedBuilder(
-                              animation: favController,
-                              builder: (context, _) {
-                                if (favController.isLoadingVendors) {
-                                  return Center(
-                                    child: CircularProgressIndicator(color: AppColors.primary),
-                                  );
-                                }
-
-                                if (favController.vendorsError != null) {
-                                  return Center(
-                                    child: Text(
-                                      favController.vendorsError!,
-                                      style: const TextStyle(color: Colors.red),
-                                    ),
-                                  );
-                                }
-
-                                final vendors = favController.favoriteVendors;
-
-                                if (vendors.isEmpty) {
-                                  return const Center(child: Text('No favourite stores'));
-                                }
-
-                                return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: vendors.length,
-                                  itemBuilder: (context, index) {
-                                    final favVendor = vendors[index];
-                                    final supplier = favVendor.supplier;
-                                     log('${supplier!.rating.toString()}  ${supplier!.arName} ${supplier!.enName}');
-                                    if (supplier == null) {
-                                      return const SizedBox.shrink();
-                                    }
-
-                                    return InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SupplierDetails(supplier: supplier),
+                                  if (favController.error != null && favs.isEmpty) {
+                                    return ListView(
+                                      controller: _productsScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: [
+                                        SizedBox(height: screenHeight * .2),
+                                        Center(
+                                          child: Text(
+                                            favController.error!,
+                                            style: const TextStyle(color: Colors.red),
                                           ),
-                                        );
-                                      },
-                                      child: BuildFullCardSupplier(
-                                        screenHeight,
-                                        screenWidth,
-                                        supplier,
-                                        supplier.isVerified,
-                                        fromFavouritesScreen: true,
-                                      ),
+                                        ),
+                                      ],
                                     );
-                                  },
-                                );
-                              },
-                            ),
+                                  }
 
-                          ],
+                                  if (favs.isEmpty) {
+                                    return ListView(
+                                      controller: _productsScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: const [
+                                        SizedBox(height: 120),
+                                        Center(child: Text('No favourite products')),
+                                      ],
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    controller: _productsScroll,
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    padding: EdgeInsets.only(bottom: screenHeight * 0.06),
+                                    itemCount: favs.length,
+                                    itemBuilder: (context, index) {
+                                      final fav = favs[index];
+                                      return FavouriteProductCard(
+                                        screenWidth: screenWidth,
+                                        screenHeight: screenHeight,
+                                        favouriteProduct: fav,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ],
+
+                        // =======================
+                        // ✅ Stores Tab + Refresh
+                        // =======================
+                        AnimatedBuilder(
+                          animation: favController,
+                          builder: (context, _) {
+                            final vendors = favController.favoriteVendors;
+
+                            return RefreshIndicator(
+                              color: AppColors.primary,
+                              onRefresh: () async {
+                                await favController.refreshVendors(); // stores only
+                              },
+                              child: Builder(
+                                builder: (_) {
+                                  if (favController.isLoadingVendors && vendors.isEmpty) {
+                                    return ListView(
+                                      controller: _storesScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: [
+                                        SizedBox(height: screenHeight * .2),
+                                        Center(
+                                          child: CircularProgressIndicator(color: AppColors.primary),
+                                        ),
+                                      ],
+                                    );
+                                  }
+
+                                  if (favController.vendorsError != null && vendors.isEmpty) {
+                                    return ListView(
+                                      controller: _storesScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: [
+                                        SizedBox(height: screenHeight * .2),
+                                        Center(
+                                          child: Text(
+                                            favController.vendorsError!,
+                                            style: const TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+
+                                  if (vendors.isEmpty) {
+                                    return ListView(
+                                      controller: _storesScroll,
+                                      physics: const AlwaysScrollableScrollPhysics(),
+                                      children: const [
+                                        SizedBox(height: 120),
+                                        Center(child: Text('No favourite stores')),
+                                      ],
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    controller: _storesScroll,
+                                    physics: const AlwaysScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                    itemCount: vendors.length,
+                                    itemBuilder: (context, index) {
+                                      final favVendor = vendors[index];
+                                      final supplier = favVendor.supplier;
+
+                                      if (supplier == null) return const SizedBox.shrink();
+
+                                      log('${supplier.rating ?? 0}  ${supplier.arName} ${supplier.enName}');
+
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => SupplierDetails(supplier: supplier),
+                                            ),
+                                          );
+                                        },
+                                        child: BuildFullCardSupplier(
+                                          screenHeight,
+                                          screenWidth,
+                                          supplier,
+                                          supplier.isVerified,
+                                          fromFavouritesScreen: true,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
