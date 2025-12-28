@@ -1,7 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../../domain/models/order_model.dart';
+import '../provider/order_controller.dart';
 import '../widgets/order_card.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -13,15 +16,22 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late OrdersController ordersController;
+
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+
+    ordersController = OrdersController(dio: Dio());
+    ordersController.fetchOrders(executeClear: true); // ✅ تحميل كل الطلبات
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    ordersController.dispose();
+
     super.dispose();
   }
 
@@ -145,16 +155,73 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                 controller: _tabController,
 
                                 children: [
-                                  Container(
-                                    child:ListView(
-                                      padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06),
-                                      children: [
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
-                                      ],),
-                                  ) // first tab bar view widget
-                                  ,
+                                  // Container(
+                                  //   child:ListView(
+                                  //     padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06),
+                                  //     children: [
+                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
+                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
+                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
+                                  //     ],),
+                                  // ) // first tab bar view widget
+                                AnimatedBuilder(
+                                animation: ordersController,
+                                builder: (context, _) {
+
+                                  // 🔄 Loading
+                                  if (ordersController.isLoading) {
+                                    return Center(
+                                      child: CircularProgressIndicator(color: AppColors.primary),
+                                    );
+                                  }
+
+                                  // ❌ Error
+                                  if (ordersController.error != null) {
+                                    return Center(
+                                      child: Text(
+                                        ordersController.error!,
+                                        style: const TextStyle(color: Colors.red),
+                                      ),
+                                    );
+                                  }
+
+                                  final List<ClientOrder> orders = ordersController.orders;
+
+                                  if (orders.isEmpty) {
+                                    return const Center(child: Text('No orders found'));
+                                  }
+
+                                  return  RefreshIndicator(
+                                    color: AppColors.primary,
+                                    onRefresh: () async {
+                                      await ordersController.fetchOrders(executeClear: true);
+                                    },
+                                    child: ListView.builder(
+                                      physics: const AlwaysScrollableScrollPhysics(), // 👈 مهم
+                                      padding: EdgeInsets.only(bottom: screenHeight * .06),
+                                      itemCount: orders.length,
+                                      itemBuilder: (context, index) {
+                                        final order = orders[index];
+
+                                        final statusText = order.statusName ?? 'Unknown';
+                                        final paymentText =
+                                        order.isPaid == true ? 'Paid' : 'Pending Payment';
+
+                                        return BuildOrderCard(
+                                         order:  order!,
+                                          context,
+                                          screenHeight,
+                                          screenWidth,
+                                          statusText,
+                                          paymentText,
+                                        );
+                                      },
+                                    ),
+                                  );
+
+                                },
+                              )
+                                ,
                                   Container(
                                     child:ListView(
                                       padding: EdgeInsetsGeometry.zero,

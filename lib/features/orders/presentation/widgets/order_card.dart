@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/orders_buttons.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
 import '../../../../core/theme/colors.dart';
 import 'order_image_network_widget.dart';
 import 'order_status_widget.dart';
 
+String formatOrderDate(DateTime? date) {
+  if (date == null) return '';
+  return DateFormat('MMMM d, y').format(date);
+}
 
-Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidth,String orderStatus,String paymentStatus){
+
+Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidth,String orderStatus,String paymentStatus,{ClientOrder? order=null}){
  String imageUrl='';
   return  Padding(
     padding:  EdgeInsets.only(bottom: screenHeight*.025),
@@ -35,7 +42,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Order #3',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
+                Text('Order #${order!=null?order?.id:0}',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
                 BuildOrderStatus(screenHeight, screenWidth, orderStatus)
               ],
             ),
@@ -49,7 +56,15 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                      SvgPicture.asset("assets/images/orders/calendar.svg",
                          width: screenWidth * .042,color: AppColors.textLight,),
                      SizedBox(width: screenWidth*.02,),
-                     Text('May 3, 2025',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.036),)
+                     Text(
+                       order != null
+                           ? formatOrderDate(order.issueTime)
+                           : 'UNkOWN DATE',
+                       style: TextStyle(
+                         fontWeight: FontWeight.w400,
+                         fontSize: screenWidth * .036,
+                       ),
+                     )
                    ],
                  ),
                   BuildPaymentStatus(screenWidth,screenHeight,paymentStatus)
@@ -76,7 +91,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                              color: AppColors.greyDarktextIntExtFieldAndIconsHome
                          ),),
                        ),
-                       Text('QAR 200.00',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
+                       Text('QAR ${order!=null?order.total:0}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
 
                      ],
                    )
