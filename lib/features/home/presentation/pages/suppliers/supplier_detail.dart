@@ -86,7 +86,6 @@ class SupplierDetails extends StatefulWidget {
 
 class _SupplierDetailsState extends State<SupplierDetails> {
   final TextEditingController _searchController = TextEditingController();
-  String? imageUrl = null;
 
   @override
   void dispose() {
@@ -148,6 +147,7 @@ class _SupplierDetailsState extends State<SupplierDetails> {
                           BuildFullCardSupplier(
                             screenHeight,
                             screenWidth,
+                            widget.supplier,
                             false,
                           ),
 

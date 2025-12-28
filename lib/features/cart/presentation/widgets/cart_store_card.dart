@@ -66,7 +66,7 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                       children: [
 
                         viewStoreWithoutFlexible((){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: 'arName', enName: 'enName', isActive: true, accounts: []))));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: 'arName', enName: 'enName', isActive: true, isVerified: false))));
 
                         }, 'View Store', screenWidth, screenHeight),
 

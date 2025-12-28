@@ -59,9 +59,21 @@ Widget BuildCardSupplier(
                   ],
                 ),
                 child: ClipOval(
-                  child: Image.asset(
-                    "assets/images/home/main_page/company.png",
+                  child:  supplier.logoUrl==null||supplier.logoUrl==''?
+                  Image.asset(
+                      'assets/images/home/main_page/person.png'
+                    //  fit: BoxFit.cover,
+                  )
+                      :
+                  Image.network(
+                    supplier.logoUrl! ,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                          'assets/images/home/main_page/person.png'
+                        //  fit: BoxFit.cover,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -95,7 +107,7 @@ Widget BuildCardSupplier(
                         child: BuildFeaturedOrSponsered(
                           screenHeight,
                           screenWidth,
-                          supplier.isActive ? 'Featured' : 'Sponsored',
+                          supplier.isVerified?'Verified':'Not Verified'//isActive ? 'Featured' : 'Sponsored',
                         ),
                       ),
                     ],
@@ -113,7 +125,7 @@ Widget BuildCardSupplier(
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.centerLeft,
-                            child: BuildRowRating(screenWidth, screenHeight),
+                            child: BuildRowRating(screenWidth, screenHeight,title: supplier.rating.toString()),
                           ),
                         ),
                       ),
@@ -165,7 +177,7 @@ Widget BuildFeaturedOrSponsered(
       horizontal: screenWidth * .02,
     ),
     decoration: BoxDecoration(
-      color: title == 'Featured'
+      color:title=='Verified'?AppColors.primaryLight: title == 'Featured'
           ? AppColors.greenLight
           : AppColors.orangeLight,
       borderRadius: BorderRadius.circular(8),
@@ -174,7 +186,7 @@ Widget BuildFeaturedOrSponsered(
       title,
       style: TextStyle(
         fontWeight: FontWeight.w600,
-        color: title == 'Featured'
+        color:title=='Verified'?AppColors.nextRefillTextColor: title == 'Featured'
             ? AppColors.greenColor
             : AppColors.orangeColor,
         fontSize: screenWidth * .032,

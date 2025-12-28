@@ -13,7 +13,7 @@ Widget BuildRowRating(double screenWidth,double screenHeight ,
         color: Colors.amber,
       ),
       //  SizedBox(width: screenWidth*.01,),
-      Text(title==''?'5.0':title,style: TextStyle(fontSize: screenWidth*.034,fontWeight: FontWeight.w500))
+      Text(title,style: TextStyle(fontSize: screenWidth*.034,fontWeight: FontWeight.w500))
     ],
 
   );

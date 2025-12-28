@@ -9,9 +9,8 @@ import '../../pages/suppliers/supplier_detail.dart';
 class StoreCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
-  String? imageUrl;
   Supplier supplier;
-  StoreCard({required this.screenWidth,required this.screenHeight,this.imageUrl='',required this.supplier});
+  StoreCard({required this.screenWidth,required this.screenHeight,required this.supplier});
 
   @override
   State<StoreCard> createState() => _StoreCardState();
@@ -46,14 +45,14 @@ class _StoreCardState extends State<StoreCard> {
                   padding: const EdgeInsets.all(6.0),
                   child: ClipOval(
                     child:
-                    widget.imageUrl==null||widget.imageUrl==''?
+                    widget.supplier.logoUrl==null||widget.supplier.logoUrl==''?
                         Image.asset(
                             'assets/images/home/main_page/person.png'
                           //  fit: BoxFit.cover,
                         )
                     :
                     Image.network(
-                      widget.imageUrl! ,
+                      widget.supplier.logoUrl! ,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Image.asset(
@@ -78,7 +77,7 @@ class _StoreCardState extends State<StoreCard> {
                     color: Colors.amber,
                   ),
                   SizedBox(width: widget.screenWidth*.01,),
-                  Text('5.0',style: TextStyle(fontSize: widget.screenWidth*.03,fontWeight: FontWeight.w500))
+                  Text(widget.supplier.rating.toString(),style: TextStyle(fontSize: widget.screenWidth*.03,fontWeight: FontWeight.w500))
                 ],
               )
             ],

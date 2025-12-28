@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 
 import '../../../../../../core/theme/colors.dart';
+import '../../../../domain/models/supplier_model.dart';
 import 'build_row_raing.dart';
 import 'build_info_button.dart';
 import 'build_verified_widget.dart';
@@ -13,10 +15,13 @@ class BuildFullCardSupplier extends StatefulWidget {
   final bool isFeatured;
   final bool fromFavouritesScreen;
   final bool fromCartScreen;
+  final Supplier supplier;
 
   const BuildFullCardSupplier(
       this.screenHeight,
       this.screenWidth,
+       this.supplier,
+
       this.isFeatured, {
         this.fromFavouritesScreen = false,
         this.fromCartScreen = false,
@@ -84,13 +89,26 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                       ],
                     ),
                     child: ClipOval(
-                      child: Image.asset(
-                        "assets/images/home/main_page/company.png",
+                      child:  widget.supplier.logoUrl==null||widget.supplier.logoUrl==''?
+                      Image.asset(
+                          'assets/images/home/main_page/person.png'
+                        //  fit: BoxFit.cover,
+                      )
+                          :
+                      Image.network(
+                        widget.supplier.logoUrl! ,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                              'assets/images/home/main_page/person.png'
+                            //  fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
+                    ),
                   ),
-                ),
+
 
                 SizedBox(width: w * .03),
 
@@ -106,7 +124,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                           // اسم الشركة ياخد أكبر مساحة
                           Expanded(
                             child: Text(
-                              'Company A',
+                              widget.supplier.enName,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: w * .036,
@@ -171,14 +189,14 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.centerLeft,
-                                  child: BuildRowRating(w, h),
+                                  child: BuildRowRating(w, h,title: widget.supplier.rating.toString()),
                                 ),
                               ),
                             ),
                             SizedBox(width: w * .02),
                             FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: BuildVerifiedWidget(h, w),
+                              child: BuildVerifiedWidget(h, w,widget.supplier.isVerified),
                             ),
                           ],
                         ),

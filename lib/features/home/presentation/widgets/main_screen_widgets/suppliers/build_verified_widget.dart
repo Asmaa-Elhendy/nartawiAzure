@@ -4,7 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../../../core/theme/colors.dart';
 
-Widget BuildVerifiedWidget(double screenHeight,double screenWidth){
+Widget BuildVerifiedWidget(double screenHeight,double screenWidth,bool isVerified){
 
     return   Container(
       padding: EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.02),
@@ -21,7 +21,7 @@ Widget BuildVerifiedWidget(double screenHeight,double screenWidth){
             color: AppColors.greenColor,
           ),SizedBox(width: screenWidth*.02,),
           Text(
-            'Verified',
+          isVerified?  'Verified':'Not Verified',
             style: TextStyle(
               fontWeight: FontWeight.w600,
               color: AppColors.greenColor,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../../../home/domain/models/supplier_model.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 
 Widget ViewDetailSupplierAlert(BuildContext context,double screenWidth,double screenHeight){
@@ -48,7 +49,8 @@ Widget ViewDetailSupplierAlert(BuildContext context,double screenWidth,double sc
                       child: SingleChildScrollView(
                         child: BuildFullCardSupplier(
                             screenHeight,
-                            screenWidth,
+                            screenWidth, Supplier(id: 0, arName: ''
+                            , enName: 'enName', isActive: true,isVerified: false),
                             false,
                             fromCartScreen:true
                         ),

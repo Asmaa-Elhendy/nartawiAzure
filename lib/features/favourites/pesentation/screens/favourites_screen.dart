@@ -143,12 +143,14 @@ class _FavouritesScreenState extends State<FavouritesScreen>  with SingleTickerP
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: ''
-                                        , enName: 'enName', isActive: true, accounts: []),)));
+                                        , enName: 'enName', isActive: true,isVerified: false))));
 
                                   },
                                   child: BuildFullCardSupplier(
                                     screenHeight ,
                                     screenWidth,
+                                    Supplier(id: 0, arName: ''
+                                        , enName: 'enName', isActive: true,isVerified: false),
                                     index.isEven,
                                     fromFavouritesScreen: true,
                                   ),
