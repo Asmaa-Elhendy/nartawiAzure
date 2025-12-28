@@ -97,7 +97,7 @@ class _CouponsScreenState extends State<CouponsScreen>
             bottom: bottomOffset,
             child: Padding(
               padding: EdgeInsets.only(bottom: screenHeight * .1),
-              child: RefreshIndicator(
+              child: RefreshIndicator(color: AppColors.primary,
                 onRefresh: _handleRefresh,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -230,38 +230,38 @@ class _CouponsScreenState extends State<CouponsScreen>
             ),
           ),
 
-          if (_isLoadingOverlay)
-            Positioned.fill(
-              child: Container(
-                margin: EdgeInsets.only(top: topOffset, bottom: bottomOffset),
-                color: Colors.black54,
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Please Wait...',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+          // if (_isLoadingOverlay)
+          //   Positioned.fill(
+          //     child: Container(
+          //       margin: EdgeInsets.only(top: topOffset, bottom: bottomOffset),
+          //       color: Colors.black54,
+          //       child: Center(
+          //         child: Container(
+          //           padding: const EdgeInsets.all(20),
+          //           decoration: BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.circular(10),
+          //           ),
+          //           child: Column(
+          //             mainAxisSize: MainAxisSize.min,
+          //             children: [
+          //               CircularProgressIndicator(
+          //                 valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          //               ),
+          //               const SizedBox(height: 10),
+          //               const Text(
+          //                 'Please Wait...',
+          //                 style: TextStyle(
+          //                   color: Colors.black,
+          //                   fontWeight: FontWeight.bold,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );
