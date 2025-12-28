@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
@@ -32,6 +34,8 @@ class _FavouritesScreenState extends State<FavouritesScreen>
 
     favController = FavoritesController(dio: Dio());
     favController.fetchFavoriteProducts(); // ✅ أول تحميل
+    favController.fetchFavoriteVendors(); // ✅ ADD THIS
+
   }
 
   @override
@@ -62,7 +66,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Favourites',
+            title: 'Favorites',
             is_returned: false,
           ),
           Positioned.fill(
@@ -188,41 +192,63 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                             // =======================
                             // Stores Tab (زي ما هو عندك مؤقت)
                             // =======================
-                            ListView.builder(
-                              padding: EdgeInsets.zero,
-                              itemCount: 4,
-                              itemBuilder: (context, index) => InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SupplierDetails(
-                                        supplier: Supplier(
-                                          id: 0,
-                                          arName: '',
-                                          enName: 'enName',
-                                          isActive: true,
-                                          isVerified: false,
-                                        ),
-                                      ),
+                            AnimatedBuilder(
+                              animation: favController,
+                              builder: (context, _) {
+                                if (favController.isLoadingVendors) {
+                                  return Center(
+                                    child: CircularProgressIndicator(color: AppColors.primary),
+                                  );
+                                }
+
+                                if (favController.vendorsError != null) {
+                                  return Center(
+                                    child: Text(
+                                      favController.vendorsError!,
+                                      style: const TextStyle(color: Colors.red),
                                     ),
                                   );
-                                },
-                                child: BuildFullCardSupplier(
-                                  screenHeight,
-                                  screenWidth,
-                                  Supplier(
-                                    id: 0,
-                                    arName: '',
-                                    enName: 'enName',
-                                    isActive: true,
-                                    isVerified: false,
-                                  ),
-                                  index.isEven,
-                                  fromFavouritesScreen: true,
-                                ),
-                              ),
+                                }
+
+                                final vendors = favController.favoriteVendors;
+
+                                if (vendors.isEmpty) {
+                                  return const Center(child: Text('No favourite stores'));
+                                }
+
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  itemCount: vendors.length,
+                                  itemBuilder: (context, index) {
+                                    final favVendor = vendors[index];
+                                    final supplier = favVendor.supplier;
+                                     log('${supplier!.rating.toString()}  ${supplier!.arName} ${supplier!.enName}');
+                                    if (supplier == null) {
+                                      return const SizedBox.shrink();
+                                    }
+
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SupplierDetails(supplier: supplier),
+                                          ),
+                                        );
+                                      },
+                                      child: BuildFullCardSupplier(
+                                        screenHeight,
+                                        screenWidth,
+                                        supplier,
+                                        supplier.isVerified,
+                                        fromFavouritesScreen: true,
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
                             ),
+
                           ],
                         ),
                       ),

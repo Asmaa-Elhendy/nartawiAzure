@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     pageController = PageController(initialPage: _tabIndex);
-    originalTabs = ['Orders', 'Coupons', 'Home', 'Favourites', 'Profile'];
+    originalTabs = ['Orders', 'Coupons', 'Home', 'Favorites', 'Profile'];
     _initIconsAndLogo();
   }
 
