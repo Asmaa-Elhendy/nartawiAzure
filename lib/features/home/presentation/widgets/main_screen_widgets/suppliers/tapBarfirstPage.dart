@@ -149,6 +149,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       if (state is ProductsLoaded && !state.hasReachedMax) {
         bloc.loadNextPage(
           categoryId: widget.category?.id,
+          supplierId: widget.supplier?.id,
         );
       }
     }

@@ -185,6 +185,8 @@ class _MainScreenState extends State<MainScreen> {
                                           ),
                                         ).then((_) {
                                           context.read<ProductsBloc>().refresh();
+
+
                                         });
                                       },
                                       child: StoreCard(
