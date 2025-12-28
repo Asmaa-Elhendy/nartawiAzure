@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
@@ -47,16 +48,32 @@ class _MainScreenState extends State<MainScreen> {
     _SearchController.dispose();
     super.dispose();
   }
-@override
+
+  @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
     context.read<SuppliersBloc>().add(FetchSuppliers());
-    context.read<ProductsBloc>().add(FetchProducts(executeClear: true)); // get first page without load more like other pages
+    context.read<ProductsBloc>().add(FetchProducts(executeClear: true));
+  }
 
+  Future<void> _onRefresh() async {
+    // ✅ Reload categories
+    context.read<ProductCategoriesBloc>().add(FetchProductCategories());
 
-}
+    // ✅ Reload suppliers
+    context.read<SuppliersBloc>().add(FetchSuppliers());
+
+    // ✅ Reload products (first page)
+    context.read<ProductsBloc>().refresh(
+      supplierId: null,
+      categoryId: null,
+    );
+
+    // optional delay to allow UI to show indicator briefly
+    await Future.delayed(const Duration(milliseconds: 300));
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -80,430 +97,335 @@ class _MainScreenState extends State<MainScreen> {
             is_returned: false,
           ),
 
-          /// ✅ الأداء اتحسن باستخدام CustomScrollView و Slivers
           Positioned.fill(
-
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            bottom: screenHeight*.05,
+            bottom: screenHeight * .05,
             child: Padding(
-              padding:  EdgeInsets.only(bottom: screenHeight*.09),//top 03
-              child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: EdgeInsets.symmetric(
+              padding: EdgeInsets.only(bottom: screenHeight * .09),
+              child: RefreshIndicator(
+                color: AppColors.primary,
+                onRefresh: _onRefresh,
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    SliverPadding(
+                      padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * .06,
-                      //  vertical: screenHeight * .02
-                    ),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        CustomSearchBar(
-                          controller: _SearchController,
-                          height: screenHeight,
-                          width: screenWidth,
-                        ),
-                        SizedBox(height: screenHeight * .02),
-                        BuildCarousSlider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (_) => CouponsScreen(fromViewButton:true))).then((_) {
-                                  context.read<ProductsBloc>().refresh();
-                                });
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: screenHeight * .01),
-                                child:
-                                BuildTappedTitle('View All Coupons', screenWidth),
-                              ),
-                            ),
-                          ],
-                        ),
-                        BuildStretchTitleHome(
-                          screenWidth,
-                          "Featured Suppliers",
-                              () {
-                                final state = context.read<SuppliersBloc>().state;
-
-                                if (state is SuppliersLoaded) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (_) => AllSuppliersScreen(suppliers:state.suppliers))).then((_) {
+                      ),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                          CustomSearchBar(
+                            controller: _SearchController,
+                            height: screenHeight,
+                            width: screenWidth,
+                          ),
+                          SizedBox(height: screenHeight * .02),
+                          BuildCarousSlider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context)
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          CouponsScreen(fromViewButton: true),
+                                    ),
+                                  )
+                                      .then((_) {
                                     context.read<ProductsBloc>().refresh();
                                   });
-                                } else {
-                                  // لو لسه لودينج أو حصل error
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text('Categories are still loading, please try again.'),
-                                  //   ),
-                                  // );
-                                }
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: screenHeight * .01),
+                                  child: BuildTappedTitle(
+                                      'View All Coupons', screenWidth),
+                                ),
+                              ),
+                            ],
+                          ),
 
-                          },
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.18,
-                          child: BlocBuilder<SuppliersBloc, SuppliersState>(
-                            builder: (context, state) {
-                              if (state is SuppliersInitial || state is SuppliersLoading) {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primary,
+                          BuildStretchTitleHome(
+                            screenWidth,
+                            "Featured Suppliers",
+                                () {
+                              final state =
+                                  context.read<SuppliersBloc>().state;
+
+                              if (state is SuppliersLoaded) {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => AllSuppliersScreen(
+                                        suppliers: state.suppliers),
                                   ),
-                                );
-                              } else if (state is SuppliersError) {
-                                return Center(
-                                  child: Text(
-                                    'Failed to load suppliers',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                );
-                              } else if (state is SuppliersLoaded) {
-                                if (state.suppliers.isEmpty) {
+                                )
+                                    .then((_) {
+                                  context.read<ProductsBloc>().refresh();
+                                });
+                              }
+                            },
+                          ),
+
+                          SizedBox(
+                            height: screenHeight * 0.18,
+                            child: BlocBuilder<SuppliersBloc, SuppliersState>(
+                              builder: (context, state) {
+                                if (state is SuppliersInitial ||
+                                    state is SuppliersLoading) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.primary,
+                                    ),
+                                  );
+                                } else if (state is SuppliersError) {
                                   return const Center(
-                                    child: Text('No suppliers found'),
+                                    child: Text(
+                                      'Failed to load suppliers',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  );
+                                } else if (state is SuppliersLoaded) {
+                                  if (state.suppliers.isEmpty) {
+                                    return const Center(
+                                      child: Text('No suppliers found'),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.suppliers.length,
+                                    itemBuilder: (context, index) {
+                                      final supplier = state.suppliers[index];
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .push(
+                                            MaterialPageRoute(
+                                              builder: (_) => SupplierDetails(
+                                                supplier: supplier,
+                                              ),
+                                            ),
+                                          )
+                                              .then((_) {
+                                            context.read<ProductsBloc>().refresh();
+                                          });
+                                        },
+                                        child: StoreCard(
+                                          screenWidth: screenWidth,
+                                          screenHeight: screenHeight,
+                                          supplier: supplier,
+                                        ),
+                                      );
+                                    },
                                   );
                                 }
 
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: state.suppliers.length,
-                                  itemBuilder: (context, index) {
-                                    final supplier = state.suppliers[index];
+                                return const SizedBox.shrink();
+                              },
+                            ),
+                          ),
 
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => SupplierDetails(
-                                              // لو عندك constructor بياخد supplier ابعتيه هنا
-                                               supplier: supplier,
-                                            ),
-                                          ),
-                                        ).then((_) {
-                                          context.read<ProductsBloc>().refresh();
+                          BuildStretchTitleHome(
+                            screenWidth,
+                            "Popular Categories",
+                                () {
+                              final state = context
+                                  .read<ProductCategoriesBloc>()
+                                  .state;
 
-
-                                        });
-                                      },
-                                      child: StoreCard(
-                                        screenWidth: screenWidth,
-                                        screenHeight: screenHeight,
-                                        supplier:supplier
-                                        // لو StoreCard بياخد بيانات، مرّريها هنا مثلاً:
-                                        // name: supplier.enName,
-                                        // logoUrl: supplier.logoUrl,
-                                      ),
-                                    );
-                                  },
-                                );
+                              if (state is ProductCategoriesLoaded) {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => PopularCategoriesMainScreen(
+                                      categories: state.categories,
+                                    ),
+                                  ),
+                                )
+                                    .then((_) {
+                                  context.read<ProductsBloc>().refresh();
+                                });
                               }
-
-                              // fallback لو حصل state غريب
-                              return const SizedBox.shrink();
                             },
                           ),
-                        ),
 
-                        // SizedBox(
-                        //   height: screenHeight * 0.18,
-                        //   child: ListView.builder(
-                        //     scrollDirection: Axis.horizontal,
-                        //     itemCount: 10,
-                        //     itemBuilder: (context, index) => GestureDetector(
-                        //         onTap: () {
-                        //           Navigator.of(context).push(
-                        //             MaterialPageRoute(builder: (_) => SupplierDetails()),
-                        //           );},
-                        //       child: StoreCard(
-                        //         screenWidth: screenWidth,
-                        //         screenHeight: screenHeight,
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        BuildStretchTitleHome(
-                          screenWidth,
-                          "Popular Categories",
-                              () {
-                            final state = context.read<ProductCategoriesBloc>().state;
+                          SizedBox(
+                            height: screenHeight * 0.15,
+                            child: BlocBuilder<ProductCategoriesBloc,
+                                ProductCategoriesState>(
+                              builder: (context, state) {
+                                if (state is ProductCategoriesInitial ||
+                                    state is ProductCategoriesLoading) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                        color: AppColors.primary),
+                                  );
+                                } else if (state is ProductCategoriesError) {
+                                  return Center(
+                                    child: Text('Error: ${state.message}'),
+                                  );
+                                } else if (state is ProductCategoriesLoaded) {
+                                  if (state.categories.isEmpty) {
+                                    return const Center(
+                                        child: Text('No categories found'));
+                                  }
 
-                            if (state is ProductCategoriesLoaded) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => PopularCategoriesMainScreen(
-                                    categories: state.categories,   // 👈 بنبعَت الليست هنا
-                                  ),
-                                ),
-                              ).then((_) {
-                                context.read<ProductsBloc>().refresh();
-                              });
-                            } else {
-                              // لو لسه لودينج أو حصل error
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //     content: Text('Categories are still loading, please try again.'),
-                              //   ),
-                              // );
-                            }
-                          },
-                        ),
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.categories.length,
+                                    itemBuilder: (context, index) {
+                                      final category = state.categories[index];
 
-                        // SizedBox(
-                        //   height: screenHeight * 0.15,
-                        //   child: ListView(
-                        //     scrollDirection: Axis.horizontal,
-                        //     children: [
-                        //       GestureDetector(
-                        //         onTap: () {
-                        //           Navigator.of(context).push(
-                        //             MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Bottles')),
-                        //           );},
-                        //         child: CategoryCard(
-                        //           screenWidth: screenWidth,
-                        //           screenHeight: screenHeight,
-                        //           icon: 'assets/images/home/main_page/bottle.svg',
-                        //           title: 'Bottles',
-                        //         ),
-                        //       ),
-                        //       GestureDetector(
-                        //           onTap: () {
-                        //             Navigator.of(context).push(
-                        //               MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Gallons')),
-                        //             );},
-                        //         child: CategoryCard(
-                        //           screenWidth: screenWidth,
-                        //           screenHeight: screenHeight,
-                        //           icon: GameIcons.water_gallon,
-                        //           title: 'Gallons',
-                        //         ),
-                        //       ),
-                        //       GestureDetector(
-                        //         onTap: () {
-                        //           Navigator.of(context).push(
-                        //             MaterialPageRoute(builder: (_) =>PopularCategoryScreen(CategoryName: 'Alkaline')),
-                        //           );},
-                        //         child: CategoryCard(
-                        //           screenWidth: screenWidth,
-                        //           screenHeight: screenHeight,
-                        //           icon: 'assets/images/home/main_page/ph.svg',
-                        //           title: 'Alkaline',
-                        //         ),
-                        //       ),
-                        //       GestureDetector(
-                        //         onTap: () {
-                        //           Navigator.of(context).push(
-                        //             MaterialPageRoute(builder: (_) => PopularCategoryScreen(CategoryName: 'Coupons')),
-                        //           );},
-                        //         child: CategoryCard(
-                        //           screenWidth: screenWidth,
-                        //           screenHeight: screenHeight,
-                        //           icon: Mdi.coupon_outline,
-                        //           title: 'Coupons',
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        // In your MainScreen's build method, replace the SizedBox with:
-
-                        SizedBox(
-                          height: screenHeight * 0.15,
-                          child: BlocBuilder<ProductCategoriesBloc, ProductCategoriesState>(
-                            builder: (context, state) {
-                              if (state is ProductCategoriesInitial ||
-                                  state is ProductCategoriesLoading) {
-                                return  Center(child: CircularProgressIndicator(color: AppColors.primary,));
-                              } else if (state is ProductCategoriesError) {
-                                return Center(child: Text('Error: ${state.message}'));
-                              } else if (state is ProductCategoriesLoaded) {
-                                if (state.categories.isEmpty) {
-                                  return const Center(child: Text('No categories found'));
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .push(
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  PopularCategoryScreen(
+                                                    category: category,
+                                                  ),
+                                            ),
+                                          )
+                                              .then((_) {
+                                            context.read<ProductsBloc>().refresh();
+                                          });
+                                        },
+                                        child: CategoryCard(
+                                          screenWidth: screenWidth,
+                                          screenHeight: screenHeight,
+                                          icon:
+                                          'assets/images/home/main_page/bottle.svg',
+                                          title: category.enName ?? 'Category',
+                                        ),
+                                      );
+                                    },
+                                  );
                                 }
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: state.categories.length,
-                                  itemBuilder: (context, index) {
-                                    final category = state.categories[index];
-                                    return GestureDetector(
-                                      onTap: () async {
-                                         Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => PopularCategoryScreen(
-                                              category:category
-                                            ),
-                                          ),
-                                        ).then((_) {
-                                    context.read<ProductsBloc>().refresh();
-                                  });
-                                      },
-                                      child: CategoryCard(
-                                        screenWidth: screenWidth,
-                                        screenHeight: screenHeight,
-                                        icon:'assets/images/home/main_page/bottle.svg',// _getCategoryIcon(category.enName ?? ''),
-                                        title: category.enName ?? 'Category',
-                                      ),
-                                    );
-                                  },
+                                return const SizedBox.shrink();
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: screenHeight * .01),
+
+                          BuildStretchTitleHome(
+                            screenWidth,
+                            "Popular Products",
+                                () {
+                              final productState =
+                                  context.read<ProductsBloc>().state;
+
+                              if (productState is ProductsLoaded) {
+                                Navigator.of(context)
+                                    .push(
+                                  MaterialPageRoute(
+                                    builder: (_) => AllProductScreen(),
+                                  ),
+                                )
+                                    .then((_) {
+                                  context.read<ProductsBloc>().refresh();
+                                });
+                              } else if (productState is ProductsLoading ||
+                                  productState is ProductsInitial) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Products are still loading, please try again.'),
+                                  ),
                                 );
                               }
-                              return const SizedBox.shrink();
                             },
                           ),
-                        ),
+                        ]),
+                      ),
+                    ),
 
-
-// Add this helper method to get the appropriate icon for each category
-// You can customize this based on your category names
-
-                        SizedBox(height: screenHeight * .01),
-
-                        BuildStretchTitleHome(
-                          screenWidth,
-                          "Popular Products",
-                              () {
-                            final productState = context.read<ProductsBloc>().state;
-
-                            if (productState is ProductsLoaded) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => AllProductScreen(
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                        left: screenWidth * .06,
+                        right: screenWidth * .06,
+                        top: screenHeight * .01,
+                        bottom: screenHeight * .03,
+                      ),
+                      sliver: BlocBuilder<ProductsBloc, ProductsState>(
+                        builder: (context, state) {
+                          if (state is ProductsInitial ||
+                              state is ProductsLoading) {
+                            return SliverToBoxAdapter(
+                              child: Center(
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(top: screenHeight * .02),
+                                  child: CircularProgressIndicator(
+                                      color: AppColors.primary),
+                                ),
+                              ),
+                            );
+                          } else if (state is ProductsError) {
+                            return SliverToBoxAdapter(
+                              child: Center(
+                                child: Padding(
+                                  padding:
+                                  EdgeInsets.only(top: screenHeight * .02),
+                                  child: const Text(
+                                    'Failed to load products',
+                                    style: TextStyle(color: Colors.red),
                                   ),
                                 ),
-                              ).then((_) {
-                                context.read<ProductsBloc>().refresh();
-                              });
-                            } else if (productState is ProductsLoading || productState is ProductsInitial) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Products are still loading, please try again.'),
+                              ),
+                            );
+                          } else if (state is ProductsLoaded) {
+                            final products = state.response.items;
+
+                            if (products.isEmpty) {
+                              return SliverToBoxAdapter(
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: screenHeight * .02),
+                                    child: const Text('No products found'),
+                                  ),
                                 ),
                               );
-                            } else if (productState is ProductsError) {
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(
-                              //     content: Text('Failed to load products: ${productState.message}'),
-                              //   ),
-                              // );
-                            } else {
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   const SnackBar(
-                              //     content: Text('Products are not available yet.'),
-                              //   ),
-                              // );
                             }
-                          },
-                        ),
 
-                      ]),
-                    ),
-                  ),
+                            return SliverGrid(
+                              gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: screenWidth * .03,
+                                mainAxisSpacing: screenWidth * .03,
+                                childAspectRatio: 0.49,
+                              ),
+                              delegate: SliverChildBuilderDelegate(
+                                    (context, index) {
+                                  ClientProduct product = products[index];
 
-                  /// ✅ GridView بقى SliverGrid علشان Lazy Loading
-                  // SliverPadding(
-                  //   padding:  EdgeInsets.only(left: screenWidth*.06,right: screenWidth*.06,top: screenHeight*.01,bottom: screenHeight*.03),
-                  //   sliver: SliverGrid(
-                  //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  //       crossAxisCount: 2,
-                  //       crossAxisSpacing: screenWidth*.03,//12
-                  //       mainAxisSpacing: screenWidth*.03, //12
-                  //       childAspectRatio: 0.49, //0.48 handel design shimaa for product card
-                  //     ),
-                  //     delegate: SliverChildBuilderDelegate(
-                  //           (context, index) {
-                  //         return ProductCard(
-                  //           screenWidth: screenWidth,
-                  //           screenHeight: screenHeight,
-                  //           icon: 'assets/images/home/main_page/product.jpg',
-                  //         );
-                  //       },
-                  //       childCount: 10, // 🔥 غير الرقم ده حسب عدد المنتجات
-                  //     ),
-                  //   ),
-                  // ),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                left: screenWidth * .06,
-                right: screenWidth * .06,
-                top: screenHeight * .01,
-                bottom: screenHeight * .03,
-              ),
-              sliver: BlocBuilder<ProductsBloc, ProductsState>(
-                builder: (context, state) {
-                  if (state is ProductsInitial || state is ProductsLoading) {
-                    // 🔵 نفس المساحة لكن بنحط لودينج جواها
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: screenHeight * .02),
-                          child: CircularProgressIndicator(color: AppColors.primary),
-                        ),
-                      ),
-                    );
-                  } else if (state is ProductsError) {
-                    return SliverToBoxAdapter(
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: screenHeight * .02),
-                          child: Text(
-                            'Failed to load products',
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else if (state is ProductsLoaded) {
-                    final products = state.response.items;
+                                  return ProductCard(
+                                    screenWidth: screenWidth,
+                                    screenHeight: screenHeight,
+                                    product: product,
+                                    icon:
+                                    'assets/images/home/main_page/product.jpg',
+                                  );
+                                },
+                                childCount: products.length.clamp(0, 10),
+                              ),
+                            );
+                          }
 
-                    if (products.isEmpty) {
-                      return SliverToBoxAdapter(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: screenHeight * .02),
-                            child: const Text('No products found'),
-                          ),
-                        ),
-                      );
-                    }
-
-                    return SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: screenWidth * .03,
-                        mainAxisSpacing: screenWidth * .03,
-                        childAspectRatio: 0.49,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              ClientProduct product = products[index] ;
-
-                          return ProductCard(
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                            product:product,
-                            // 👇 دلوقتي الكارت مبني على الـ products اللي جاية من الـ API
-                            icon: 'assets/images/home/main_page/product.jpg',
-                            // لو ProductCard بياخد داتا زيادة، ابعتيها هنا مثلاً:
-                            // title: product.enName,
-                            // price: product.price,
-                            // imageUrl: product.imageUrl,
-                          );
+                          return const SliverToBoxAdapter(
+                              child: SizedBox.shrink());
                         },
-                        childCount: products.length.clamp(0, 10), //products.length, // 👈 هنا بقى عدد المنتجات الحقيقي
                       ),
-                    );
-                  }
-
-                  // fallback لو حالة مش متوقعة
-                  return const SliverToBoxAdapter(child: SizedBox.shrink());
-                },
-              ),
-            )
-
-            ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -511,8 +433,9 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
   String _getCategoryIcon(String categoryName) {
-    String casee=categoryName.toLowerCase();
+    String casee = categoryName.toLowerCase();
     switch (casee) {
       case 'bottle':
         return 'assets/images/home/main_page/bottle.svg';
@@ -523,8 +446,7 @@ class _MainScreenState extends State<MainScreen> {
       case 'coupons':
         return Mdi.coupon_outline;
       default:
-        return 'assets/images/placeholder_icon.svg'; // Add a default icon
+        return 'assets/images/placeholder_icon.svg';
     }
   }
 }
-
