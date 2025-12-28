@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/price_widget.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/SecondTabProductDetail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
@@ -17,7 +19,10 @@ import '../../widgets/main_screen_widgets/products/icon_on_product_card.dart';
 import '../../widgets/main_screen_widgets/products/product_card.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  ClientProduct? clientProduct;
+  FavoriteProduct? favoriteProduct;
+  bool fromFavorite;
+  ProductDetailScreen({ this.clientProduct=null,this.favoriteProduct=null,this.fromFavorite=false});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -38,7 +43,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     _quantityController = TextEditingController(text: '1');
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: 100.0,
+      basePrice:widget.fromFavorite? widget.favoriteProduct!.product!.price.toDouble()
+:      widget.clientProduct!.price.toDouble(),
     );
   }
 
@@ -166,7 +172,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           vertical: screenHeight * .01,
                                         ),
                                         child: Text(
-                                          "Hand Pump Dispenser",
+                                          widget.fromFavorite?widget.favoriteProduct!.product!.enName:widget.clientProduct!.enName,
                                           style: TextStyle(
                                             fontSize: screenWidth * .028,
                                             fontWeight: FontWeight.w600,
@@ -189,7 +195,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           vertical: screenHeight * .01,
                                         ),
                                         child: Text(
-                                          "QAR 100.00",
+                                          "QAR ${ widget.fromFavorite?widget.favoriteProduct!.product!.price:widget.clientProduct!.price
+            }",
                                           style: TextStyle(
                                             fontSize: screenWidth * .038,
                                             fontWeight: FontWeight.w600,

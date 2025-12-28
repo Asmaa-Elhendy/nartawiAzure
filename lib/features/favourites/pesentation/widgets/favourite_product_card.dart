@@ -40,11 +40,11 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     _quantityController = TextEditingController(text: '1');
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: 100.0,
+      basePrice: widget.favouriteProduct.product!.price.toDouble(),
     );
     _quantityTwoBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: 100.0,
+      basePrice: widget.favouriteProduct.product!.price.toDouble(),
     );
     _quantityTwoController = TextEditingController(text: '1');
   }
@@ -65,7 +65,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
         // .pushNamed(context, '/productDetail');
         Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
+        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(favoriteProduct: widget.favouriteProduct!,fromFavorite: true,)));
       },
       child: BlocProvider.value(
         value: _quantityBloc,

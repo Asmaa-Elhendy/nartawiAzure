@@ -58,7 +58,7 @@ class _ProductCardState extends State<ProductCard> {
     return InkWell(
       onTap: (){
         // Navigator.pushNamed(context, '/productDetail');
-        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailScreen()));
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(clientProduct:widget.product)));
 
       },
       child: BlocProvider.value(
@@ -242,7 +242,7 @@ class _ProductCardState extends State<ProductCard> {
   }
 }
 
-Widget ProductTitle(double screenHeight,double screenWidth){
+Widget ProductTitle(double screenHeight,double screenWidth){ // need handle from api supplier name,rate ,product image
   return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Row(
