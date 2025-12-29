@@ -6,7 +6,7 @@ import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
-import '../provider/client_controller.dart';
+import '../provider/address_controller.dart';
 
 import '../widgets/add_new_address_alert.dart';
 import '../widgets/address_card.dart';
@@ -176,8 +176,9 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                             ...addressController.addresses.map((a) {
                               // هنا هنحوّل الـ API Address إلى الكارد بتاعك
                               // لو BuildCardAddress عندك بياخد داتا مختلفة ابعتيلي signature وأنا أوصلها 100%
-                              return BuildCardAddress(
-                                context,
+                              return BuildCardAddress(  controller: addressController, // ✅ PASS IT HERE
+
+                                  context,
                                 screenHeight,
                                 screenWidth,
                                 address: a

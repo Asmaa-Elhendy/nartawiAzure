@@ -1,7 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../profile/presentation/provider/address_controller.dart';
 import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../../../profile/presentation/widgets/address_card.dart';
 import 'change_address_alert.dart';
@@ -15,6 +17,16 @@ class OrderDeliveryCartWidget extends StatefulWidget {
 }
 
 class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
+  late AddressController addressController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    addressController = AddressController(dio: Dio());
+    addressController.fetchAddresses(); // ✅ أول تحميل
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -50,7 +62,7 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BuildCardAddress(
+              BuildCardAddress(controller:addressController,
                 context,
                 screenHeight,
                 screenWidth,

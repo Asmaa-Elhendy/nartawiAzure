@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 
@@ -6,6 +7,7 @@ import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../profile/presentation/provider/address_controller.dart';
 import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../../../profile/presentation/widgets/address_card.dart';
 
@@ -23,6 +25,15 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
   final TextEditingController _streetNoController = TextEditingController();
   final TextEditingController _buildingNoController = TextEditingController();
   final TextEditingController _flatNoController = TextEditingController();
+  late AddressController addressController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    addressController = AddressController(dio: Dio());
+    addressController.fetchAddresses(); // ✅ أول تحميل
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +81,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
            widget.fromCouponCard?
            Column(
              children: [
-               BuildCardAddress(
+               BuildCardAddress(controller: addressController,
                  context,
                  screenHeight,
                  screenWidth,
@@ -78,7 +89,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                  fromCart: true,
                    fromCouponCard:widget.fromCouponCard
                ),
-               BuildCardAddress(
+               BuildCardAddress(controller: addressController,
                    context,
                    screenHeight,
                    screenWidth,
@@ -88,8 +99,9 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                ),
              ],
            )
-               : BuildCardAddress(
-              context,
+               : BuildCardAddress(  controller: addressController, // ✅ PASS IT HERE
+
+             context,
               screenHeight,
               screenWidth,
               work: false,//work true

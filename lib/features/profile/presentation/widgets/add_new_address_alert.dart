@@ -13,7 +13,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../domain/models/address_req.dart';
-import '../provider/client_controller.dart';
+import '../provider/address_controller.dart';
 
 class AddAddressAlertDialog extends StatefulWidget {
   final bool useGps;

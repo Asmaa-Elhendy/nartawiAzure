@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/features/profile/domain/models/client_address.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../provider/address_controller.dart';
 
 // Helper function to remove duplicate address parts
 String _removeDuplicateAddress(String address) {
@@ -22,7 +24,9 @@ String _removeDuplicateAddress(String address) {
   return uniqueParts.join(', ');
 }
 
-Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false,bool fromCouponCard=false,ClientAddress? address=null}){
+Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,
+  bool fromCart=false,bool fromCouponCard=false,ClientAddress? address=null,  required AddressController controller, // ✅ ADD THIS
+}){
   return  GestureDetector(
     onTap: (){
 
@@ -53,8 +57,55 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-          fromCouponCard?SizedBox():  Text(address!=null?address.title!:'Home',style: TextStyle(
-                fontWeight: FontWeight.w600,fontSize: screenWidth*.04,color:work?AppColors.textLight: AppColors.primary),),
+         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             fromCouponCard?SizedBox():  Text(address!=null?address.title!:'Home',style: TextStyle(
+                 fontWeight: FontWeight.w600,fontSize: screenWidth*.04,color:work?AppColors.textLight: AppColors.primary),),
+             GestureDetector(
+               onTap: address == null
+                   ? null
+                   : () async {
+                 final confirmed = await showDialog<bool>(
+                   context: context,
+                   builder: (contextt) => AlertDialog(
+                     title:  Text('Delete address',style: TextStyle(
+                       fontWeight: FontWeight.w600,fontSize: screenWidth*.034,)),
+                     content: const Text(
+                       'Are you sure you want to delete this address?\nThis action cannot be undone.',style: TextStyle(
+                     color: AppColors.greyDarktextIntExtFieldAndIconsHome
+                     ),
+                     ),
+                     actions: [
+                       TextButton(
+                         onPressed: () => Navigator.pop(contextt, false
+                         ),
+                         child:  Text('Cancel',style: TextStyle(color: AppColors.primary),),
+                       ),
+                       TextButton(
+                         onPressed: () => Navigator.pop(contextt, true),
+                         child:  Text(
+                           'Delete',
+                           style: TextStyle(color: AppColors.redColor),
+                         ),
+                       ),
+                     ],
+                   ),
+                 );
+
+                 if (confirmed != true) return;
+
+                 await controller.deleteAddress(address.id!);
+               },
+
+               child: Iconify(
+                 MaterialSymbols.delete_outline_rounded,
+                 size: screenHeight * .025,
+                 color: AppColors.primary,
+               ),
+             ),
+
+           ],
+         ),
             SizedBox(height: fromCouponCard?0:screenHeight*.02,),
             Row(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -91,7 +142,7 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
                   ),
                 ),
                 SizedBox(width: screenWidth*.02),
-                address!=null && address.isDefault!? 
+                address!=null && address.isDefault!?
                   Iconify(
                     MaterialSymbols.star,  // This uses the Material Symbols "star" icon
                     size: screenHeight*.03,

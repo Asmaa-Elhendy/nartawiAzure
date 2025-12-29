@@ -7,7 +7,6 @@ import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 import '../../domain/models/address_req.dart';
 import '../../domain/models/client_address.dart';
 
-
 class AddressController extends ChangeNotifier {
   final Dio dio;
 
@@ -23,6 +22,10 @@ class AddressController extends ChangeNotifier {
   // ✅ Create Address flags
   bool isCreating = false;
   String? createError;
+
+  // ✅ Delete Address flags
+  bool isDeleting = false;
+  String? deleteError;
 
   /// ✅ GET /api/v1/client/account/addresses
   Future<void> fetchAddresses({bool executeClear = true}) async {
@@ -166,8 +169,7 @@ class AddressController extends ChangeNotifier {
 
         return true;
       } else {
-        createError =
-        'Failed to create address (status: ${response.statusCode})';
+        createError = 'Failed to create address (status: ${response.statusCode})';
         return false;
       }
     } on DioException catch (e) {
@@ -189,6 +191,74 @@ class AddressController extends ChangeNotifier {
       return false;
     } finally {
       isCreating = false;
+      notifyListeners();
+    }
+  }
+
+  /// ✅ DELETE /api/v1/client/account/addresses/{id}
+  /// - بيرجع true لو نجح
+  /// - refreshAfter: لو true هيرجع يعمل fetchAddresses تاني بعد الحذف
+  Future<bool> deleteAddress(
+      int id, {
+        bool refreshAfter = false,
+      }) async {
+    if (isDeleting) return false;
+
+    isDeleting = true;
+    deleteError = null;
+    notifyListeners();
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        deleteError = 'Authentication required';
+        return false;
+      }
+
+      final url = '$base_url/v1/client/account/addresses/$id';
+
+      final response = await dio.delete(
+        url,
+        options: Options(
+          headers: {
+            'accept': '*/*',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        // ✅ remove locally
+        addresses.removeWhere((a) => (a.id ?? 0) == id);
+
+        if (refreshAfter) {
+          await fetchAddresses(executeClear: true);
+        }
+
+        return true;
+      } else {
+        deleteError = 'Failed to delete address (status: ${response.statusCode})';
+        return false;
+      }
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to delete address';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      deleteError = msg;
+      return false;
+    } catch (e) {
+      deleteError = 'An unexpected error occurred: $e';
+      return false;
+    } finally {
+      isDeleting = false;
       notifyListeners();
     }
   }
