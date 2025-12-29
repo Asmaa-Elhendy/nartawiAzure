@@ -29,18 +29,14 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   final TextEditingController _flatNoController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-
   bool _isSubmitting = false;
 
   // =========================
-  // ✅ GPS Helpers (Geolocator)
+  // ✅ GPS Helpers (NO SnackBars)
   // =========================
-  Future<Position?> getCurrentPositionSafely(BuildContext context) async {
+  Future<Position?> getCurrentPositionSafely() async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enable location services (GPS)')),
-      );
       await Geolocator.openLocationSettings();
       return null;
     }
@@ -50,21 +46,11 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Location permission is required')),
-        );
         return null;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Location permission permanently denied. Please enable it from settings.',
-          ),
-        ),
-      );
       await Geolocator.openAppSettings();
       return null;
     }
@@ -102,61 +88,22 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
 
   Future<String> getAddressFromLatLng(double latitude, double longitude) async {
     try {
-      // ✅ Try EN first
       final en = await _reverseGeocode(latitude, longitude, locale: 'en');
       if (en.isNotEmpty) return en;
 
-      // ✅ Then AR (often better in GCC)
       final ar = await _reverseGeocode(latitude, longitude, locale: 'ar');
       if (ar.isNotEmpty) return ar;
 
-      // ✅ Final fallback
       return 'Lat: $latitude, Lng: $longitude';
-    } catch (e) {
-      debugPrint('Reverse geocoding failed: $e');
+    } catch (_) {
       return 'Lat: $latitude, Lng: $longitude';
     }
-  }
-
-  void _showMsg(String msg) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
-
-  bool _isNumeric(String s) => int.tryParse(s.trim()) != null;
-
-  bool _validateManualFields() {
-    final title = _addressNameController.text.trim();
-    final address = _addressController.text.trim();
-    final zone = _zoneNoController.text.trim();
-    final street = _streetNoController.text.trim();
-    final building = _buildingNoController.text.trim();
-    final flat = _flatNoController.text.trim();
-
-    if (title.isEmpty) {
-      _showMsg('Title is required');
-      return false;
-    }
-    if (address.isEmpty) {
-      _showMsg('Address is required');
-      return false;
-    }
-    if (zone.isEmpty || street.isEmpty || building.isEmpty || flat.isEmpty) {
-      _showMsg('Please fill all address details');
-      return false;
-    }
-    if (!_isNumeric(zone) || !_isNumeric(street) || !_isNumeric(building) || !_isNumeric(flat)) {
-      _showMsg('Zone/Street/Building/Flat must be numbers');
-      return false;
-    }
-    return true;
   }
 
   // =========================
-  // ✅ Handle Add Address (Manual + GPS)
+  // ✅ API Call
   // =========================
   Future<bool> handleAddNewAddress({
-    required BuildContext context,
     required String title,
     required String address,
     required String zone,
@@ -169,38 +116,13 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   }) async {
     final controller = AddressController(dio: Dio());
 
-    if (title.trim().isEmpty) {
-      _showMsg('Title is required');
-      return false;
-    }
-
-    if (useGps) {
-      if (latitude == null || longitude == null) {
-        _showMsg('Failed to get current location');
-        return false;
-      }
-    } else {
-      if (address.trim().isEmpty) {
-        _showMsg('Address is required');
-        return false;
-      }
-      if (zone.trim().isEmpty || street.trim().isEmpty || building.trim().isEmpty || flat.trim().isEmpty) {
-        _showMsg('Please fill all address details');
-        return false;
-      }
-    }
-
-    final finalAddress = address.trim().isEmpty
-        ? (useGps ? 'Lat: $latitude, Lng: $longitude' : '')
-        : address.trim();
-
     final success = await controller.addNewAddress(
       AddAddressRequest(
         title: title.trim(),
-        address: finalAddress,
-        areaId: 1, // TODO: link areaId with your Areas API
-        latitude: useGps ? latitude! : 0,
-        longitude: useGps ? longitude! : 0,
+        address: address.trim(),
+        areaId: 1,
+        latitude: useGps ? (latitude ?? 0) : 0,
+        longitude: useGps ? (longitude ?? 0) : 0,
         streetNum: useGps ? null : int.tryParse(street),
         buildingNum: useGps ? null : int.tryParse(building),
         doorNumber: useGps ? null : int.tryParse(flat),
@@ -210,12 +132,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
       refreshAfter: true,
     );
 
-    if (!success) {
-      _showMsg(controller.createError ?? 'Failed to create address');
-      return false;
-    }
-
-    return true;
+    return success;
   }
 
   @override
@@ -254,6 +171,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     ],
                   ),
 
+                  // ✅ Title
                   buildCustomeFullTextField(
                     'Title',
                     'Enter Title',
@@ -263,6 +181,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     fromEditProfile: true,
                   ),
 
+                  // ✅ Manual fields (only if not GPS)
                   widget.useGps
                       ? const SizedBox()
                       : Column(
@@ -330,17 +249,15 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                         () async {
                       if (_isSubmitting) return;
 
+                      // ✅ EXACTLY like your old file
+                      if (!(_formKey.currentState?.validate() ?? false)) return;
+
                       setState(() => _isSubmitting = true);
 
                       try {
                         // ✅ GPS flow
                         if (widget.useGps) {
-                          if (_addressNameController.text.trim().isEmpty) {
-                            _showMsg('Title is required');
-                            return;
-                          }
-
-                          final pos = await getCurrentPositionSafely(context);
+                          final pos = await getCurrentPositionSafely();
                           if (pos == null) return;
 
                           final resolvedAddress = await getAddressFromLatLng(
@@ -349,9 +266,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           );
 
                           final ok = await handleAddNewAddress(
-                            context: context,
                             title: _addressNameController.text,
-                            address: resolvedAddress, // ✅ real address OR lat/lng fallback
+                            address: resolvedAddress,
                             zone: '',
                             street: '',
                             building: '',
@@ -365,11 +281,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           return;
                         }
 
-                        // ✅ Manual flow (IMPORTANT: was missing before)
-                        if (!_validateManualFields()) return;
-
+                        // ✅ Manual flow
                         final ok = await handleAddNewAddress(
-                          context: context,
                           title: _addressNameController.text,
                           address: _addressController.text,
                           zone: _zoneNoController.text,
