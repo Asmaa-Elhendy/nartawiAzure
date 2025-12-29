@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
+import 'package:newwwwwwww/features/orders/domain/models/client_address.dart';
 import '../../../../../../core/theme/colors.dart';
 
 
-Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false,bool fromCouponCard=false}){
+Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWidth,{bool work=false,bool fromCart=false,bool fromCouponCard=false,ClientAddress? address=null}){
   return  GestureDetector(
     onTap: (){
 
@@ -36,7 +37,7 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-          fromCouponCard?SizedBox():  Text(work?'Work':'Home',style: TextStyle(
+          fromCouponCard?SizedBox():  Text(address!=null?address.title!:'Home',style: TextStyle(
                 fontWeight: FontWeight.w600,fontSize: screenWidth*.04,color:work?AppColors.textLight: AppColors.primary),),
             SizedBox(height: fromCouponCard?0:screenHeight*.02,),
             Row(crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,20 +55,20 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
                    Column(crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.start,
                      children: [
-                       Text(work?'Delivering to Work':'Delivering to Home',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
+                       Text(address!=null?'Delivering to ${address.title!}':'Delivering to Work',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.032),),
 
-                       Text('portsaid,23july',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
+                       Text(address!=null?address.address!:'',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
 
                      ],
                    ),
                 ],
               ),
               //  SizedBox(width:fromCart?screenWidth*.2: screenWidth*.3,),
-           work?SizedBox():     Iconify(
+               address!=null? address.title=='Home'?  Iconify(
                   MaterialSymbols.star,  // This uses the Material Symbols "star" icon
                   size: screenHeight*.03,
                   color: AppColors.primary,
-                ),
+                ):SizedBox():SizedBox(),
               ],
             ),
           ],
