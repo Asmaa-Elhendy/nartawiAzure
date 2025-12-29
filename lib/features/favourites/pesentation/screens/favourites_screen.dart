@@ -59,6 +59,9 @@ class _FavouritesScreenState extends State<FavouritesScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Ensure the context is still valid
+    if (!mounted || context.mounted == false) return const SizedBox.shrink();
+    
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
@@ -142,7 +145,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                         AnimatedBuilder(
                           animation: favController,
                           builder: (context, _) {
-                            final favs = favController.favorites;
+                            final favs = favController.favorites.where((fav) => fav.product != null).toList();
 
                             // Wrap list in RefreshIndicator
                             return RefreshIndicator(

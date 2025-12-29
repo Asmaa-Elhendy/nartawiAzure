@@ -13,6 +13,7 @@ class SignUpTextField extends StatefulWidget {
 
   final TextEditingController? controller;
   final bool required;
+  final bool isNumberKeyboard;
 
   const SignUpTextField({
     Key? key,
@@ -20,6 +21,7 @@ class SignUpTextField extends StatefulWidget {
     this.label = '',
     this.controller,
     required this.required,
+    required this.isNumberKeyboard,
     this.fromEditProfile=false
   }) : super(key: key);
 
@@ -106,6 +108,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
     return Container(
       height: widget.fromEditProfile?height*.06:height * .07,
       child: TextFormField(
+        keyboardType:widget.isNumberKeyboard?TextInputType.number:TextInputType.text,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: widget.controller,
         obscureText: isPasswordField ? _obscureText : false,

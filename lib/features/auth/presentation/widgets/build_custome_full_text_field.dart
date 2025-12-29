@@ -5,7 +5,7 @@ import 'package:newwwwwwww/features/auth/presentation/widgets/signup_textfield.d
 
 import '../../../../core/theme/text_styles.dart';
 
-buildCustomeFullTextField(String label,String hintText,TextEditingController controller,bool required,double height,{bool fromEditProfile=false}){
+buildCustomeFullTextField(String label,String hintText,TextEditingController controller,bool required,double height,{bool fromEditProfile=false,bool isNumberKeyboard=false}){
   return Padding(
     padding:  EdgeInsets.only(top:height*.01 ),
     child: Column(
@@ -18,7 +18,7 @@ buildCustomeFullTextField(String label,String hintText,TextEditingController con
 
 
           ],),SizedBox(height: height*.01,),
-        SignUpTextField(hintText:hintText,label: label,controller: controller,required:required,fromEditProfile: fromEditProfile,),
+        SignUpTextField(hintText:hintText,label: label,controller: controller,required:required,fromEditProfile: fromEditProfile,isNumberKeyboard: isNumberKeyboard,),
       ],
     ),
   );

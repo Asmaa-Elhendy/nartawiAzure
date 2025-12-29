@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../../domain/models/address_req.dart';
+import '../provider/client_controller.dart';
 
 class AddAddressAlertDialog extends StatefulWidget {
   final bool useGps;
@@ -16,10 +19,52 @@ class AddAddressAlertDialog extends StatefulWidget {
 
 class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   final TextEditingController _addressNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+
   final TextEditingController _zoneNoController = TextEditingController();
   final TextEditingController _streetNoController = TextEditingController();
   final TextEditingController _buildingNoController = TextEditingController();
   final TextEditingController _flatNoController = TextEditingController();
+
+
+  Future<bool> handleAddNewAddress({
+    required BuildContext context,
+    required String title,
+    required String address,
+    required String zone,
+    required String street,
+    required String building,
+    required String flat,
+  }) async {
+    final controller = AddressController(dio: Dio());
+
+
+
+
+    final success = await controller.addNewAddress(
+      AddAddressRequest(
+        title: title,
+        address: address,
+        areaId: 1,        // 🔹 عدليها لما تربطي Areas
+        latitude: 0,      // 🔹 GPS لاحقًا
+        longitude: 0,
+        streetNum: int.tryParse(street),
+        buildingNum: int.tryParse(building),
+        doorNumber: int.tryParse(flat),
+        floorNum: null,
+        notes: null,
+      ),
+      refreshAfter: true,
+    );
+
+    if (!success) {
+
+      return false;
+    }
+
+    return true;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +109,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                   ],
                 ),
                 buildCustomeFullTextField(
-                  'Address Name',
-                  'Enter Address Name',
+                  'Title',
+                  'Enter Title',
                   _addressNameController,
                   false,
                   screenHeight,
@@ -77,8 +122,17 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                         children: [
                           SizedBox(height: screenHeight * .01),
                           buildCustomeFullTextField(
+                            'Address ',
+                            'Enter Address ',
+                            _addressController,
+                            false,
+                            screenHeight,
+                            fromEditProfile: true,
+                          ),
+                          SizedBox(height: screenHeight * .01),
+                          buildCustomeFullTextField(
                             'Zone Number',
-                            'Enter Zone Number',
+                            'Enter Zone Number',isNumberKeyboard: true,
                             _zoneNoController,
                             false,
                             screenHeight,
@@ -86,7 +140,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           ),
                           SizedBox(height: screenHeight * .01),
 
-                          buildCustomeFullTextField(
+                          buildCustomeFullTextField(isNumberKeyboard: true,
                             'Street Number',
                             'Enter Street Number',
                             _streetNoController,
@@ -96,7 +150,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           ),
                           SizedBox(height: screenHeight * .01),
 
-                          buildCustomeFullTextField(
+                          buildCustomeFullTextField(isNumberKeyboard: true,
                             'Building Number',
                             'Enter Building Number',
                             _buildingNoController,
@@ -106,7 +160,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           ),
                           SizedBox(height: screenHeight * .01),
 
-                          buildCustomeFullTextField(
+                          buildCustomeFullTextField(isNumberKeyboard: true,
                             'Flat Number',
                             'Enter Flat Number',
                             _flatNoController,
@@ -123,9 +177,21 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                   screenHeight,
                   'Add New Address',
                   'Cancel',
-                  () {
-                    Navigator.pop(context); //send dispute to api
-                  },
+                      () async { // add new address
+                    final ok = await handleAddNewAddress(
+                      context: context,
+                      title: _addressNameController.text,address: _addressController.text,
+                      zone: _zoneNoController.text,
+                      street: _streetNoController.text,
+                      building: _buildingNoController.text,
+                      flat: _flatNoController.text,
+                    );
+
+                    if (ok) {
+                      Navigator.pop(context, true); // يرجّع نجاح
+                    }
+                  }
+,
                   () {
                     Navigator.pop(context);
                   },

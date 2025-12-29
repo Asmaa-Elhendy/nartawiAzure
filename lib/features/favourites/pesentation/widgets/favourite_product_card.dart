@@ -38,13 +38,17 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   void initState() {
     super.initState();
     _quantityController = TextEditingController(text: '1');
+    
+    // Check if product exists, otherwise use default price
+    final productPrice = widget.favouriteProduct.product?.price.toDouble() ?? 0.0;
+    
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: widget.favouriteProduct.product!.price.toDouble(),
+      basePrice: productPrice,
     );
     _quantityTwoBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice: widget.favouriteProduct.product!.price.toDouble(),
+      basePrice: productPrice,
     );
     _quantityTwoController = TextEditingController(text: '1');
   }
@@ -53,19 +57,17 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   void dispose() {
     _quantityController.dispose();
     _quantityBloc.close();
-    _quantityBloc.close();
     _quantityTwoBloc.close();
+    _quantityTwoController.dispose();
     super.dispose();
   }
 
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator
-        // .pushNamed(context, '/productDetail');
         Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(favoriteProduct: widget.favouriteProduct!,fromFavorite: true,)));
+        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(favoriteProduct: widget.favouriteProduct,fromFavorite: true,)));
       },
       child: BlocProvider.value(
         value: _quantityBloc,
@@ -179,7 +181,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     bottom: widget.screenHeight * .01,
                                   ),
                                   child: Text(
-                                   widget.favouriteProduct.product!.enName,
+                                   widget.favouriteProduct.product?.enName ?? 'Product',
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .03, //.028
