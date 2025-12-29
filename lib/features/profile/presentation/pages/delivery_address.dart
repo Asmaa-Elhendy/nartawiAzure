@@ -124,7 +124,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                               showDialog(
                                 context: context,
                                 builder: (ctx) =>
-                                    AddAddressAlertDialog(useGps: true),
+                                    AddAddressAlertDialog(pickFromMap: true),
                               ).then((_) => addressController.refresh());
                             },
                             fromDelivery: true,

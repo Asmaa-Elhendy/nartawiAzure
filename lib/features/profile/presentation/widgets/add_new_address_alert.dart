@@ -4,6 +4,10 @@ import 'package:geocoding/geocoding.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import 'package:geolocator/geolocator.dart';
 
+// ✅ OSM (No API Key)
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
@@ -13,7 +17,13 @@ import '../provider/client_controller.dart';
 class AddAddressAlertDialog extends StatefulWidget {
   final bool useGps;
 
-  AddAddressAlertDialog({this.useGps = false});
+  // ✅ NEW: if true -> open OSM map picker and choose location manually
+  final bool pickFromMap;
+
+  AddAddressAlertDialog({
+    this.useGps = false,
+    this.pickFromMap = false,
+  });
 
   @override
   State<AddAddressAlertDialog> createState() => _AddAddressAlertDialogState();
@@ -31,6 +41,10 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   final _formKey = GlobalKey<FormState>();
   bool _isSubmitting = false;
 
+  bool get _isGpsMode => widget.useGps == true;
+  bool get _isMapMode => widget.pickFromMap == true;
+  bool get _isManualMode => !_isGpsMode && !_isMapMode;
+
   // =========================
   // ✅ GPS Helpers (NO SnackBars)
   // =========================
@@ -45,9 +59,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return null;
-      }
+      if (permission == LocationPermission.denied) return null;
     }
 
     if (permission == LocationPermission.deniedForever) {
@@ -98,6 +110,27 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     } catch (_) {
       return 'Lat: $latitude, Lng: $longitude';
     }
+  }
+
+  // =========================
+  // ✅ OSM Map Picker (No API Key)
+  // =========================
+  Future<LatLng?> _pickLocationFromOsmMap(BuildContext context) async {
+    // Optional: start from GPS if available, else Port Said fallback
+    LatLng initial = const LatLng(31.2653, 32.3019); // Port Said
+    try {
+      final pos = await getCurrentPositionSafely();
+      if (pos != null) {
+        initial = LatLng(pos.latitude, pos.longitude);
+      }
+    } catch (_) {}
+
+    return await Navigator.push<LatLng?>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => _OsmPickLocationScreen(initial: initial),
+      ),
+    );
   }
 
   // =========================
@@ -171,7 +204,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     ],
                   ),
 
-                  // ✅ Title
+                  // ✅ Title (always)
                   buildCustomeFullTextField(
                     'Title',
                     'Enter Title',
@@ -181,8 +214,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     fromEditProfile: true,
                   ),
 
-                  // ✅ Manual fields (only if not GPS)
-                  widget.useGps
+                  // ✅ Manual fields only (hide in GPS + Map modes)
+                  (_isGpsMode || _isMapMode)
                       ? const SizedBox()
                       : Column(
                     children: [
@@ -255,8 +288,10 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                       setState(() => _isSubmitting = true);
 
                       try {
-                        // ✅ GPS flow
-                        if (widget.useGps) {
+                        // =========================
+                        // ✅ 1) GPS flow
+                        // =========================
+                        if (_isGpsMode) {
                           final pos = await getCurrentPositionSafely();
                           if (pos == null) return;
 
@@ -281,7 +316,46 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                           return;
                         }
 
-                        // ✅ Manual flow
+                        // =========================
+                        // ✅ 2) MAP PICKER flow (OSM)
+                        // =========================
+                        if (_isMapMode) {
+                          // 1) validate title فقط (الفورم بتاعك جاهز)
+                          if (!(_formKey.currentState?.validate() ?? false)) return;
+
+                          // 2) افتح الماب بعد ما التايتل يبقى موجود
+                          final picked = await _pickLocationFromOsmMap(context);
+
+                          // 3) لو المستخدم قفل الماب من غير اختيار -> مفيش إضافة
+                          if (picked == null) return;
+
+                          // 4) reverse geocoding
+                          final resolvedAddress = await getAddressFromLatLng(
+                            picked.latitude,
+                            picked.longitude,
+                          );
+
+                          // 5) add address بالـ lat/lng المختارين
+                          final ok = await handleAddNewAddress(
+                            title: _addressNameController.text,
+                            address: resolvedAddress,
+                            zone: '',
+                            street: '',
+                            building: '',
+                            flat: '',
+                            useGps: true,
+                            latitude: picked.latitude,
+                            longitude: picked.longitude,
+                          );
+
+                          if (ok) Navigator.pop(context, true);
+                          return;
+                        }
+
+
+                        // =========================
+                        // ✅ 3) Manual flow
+                        // =========================
                         final ok = await handleAddNewAddress(
                           title: _addressNameController.text,
                           address: _addressController.text,
@@ -317,5 +391,65 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     _addressNameController.dispose();
     _addressController.dispose();
     super.dispose();
+  }
+}
+
+// =====================================================
+// ✅ OSM Picker Screen (No API Key)
+// =====================================================
+class _OsmPickLocationScreen extends StatefulWidget {
+  final LatLng initial;
+  const _OsmPickLocationScreen({required this.initial});
+
+  @override
+  State<_OsmPickLocationScreen> createState() => _OsmPickLocationScreenState();
+}
+
+class _OsmPickLocationScreenState extends State<_OsmPickLocationScreen> {
+  LatLng? selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Pick Location')),
+      body: Stack(
+        children: [
+          FlutterMap(
+            options: MapOptions(
+              initialCenter: widget.initial,
+              initialZoom: 16,
+              onTap: (_, latLng) => setState(() => selected = latLng),
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.newwwwwwww',
+              ),
+              if (selected != null)
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: selected!,
+                      width: 45,
+                      height: 45,
+                      child: const Icon(Icons.location_pin, size: 45, color: Colors.red),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: ElevatedButton(
+              onPressed: selected == null ? null : () => Navigator.pop(context, selected),
+              child: const Text('Use This Location'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
