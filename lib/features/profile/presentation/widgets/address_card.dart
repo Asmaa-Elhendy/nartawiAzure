@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:newwwwwwww/features/orders/domain/models/client_address.dart';
+import 'package:newwwwwwww/features/profile/domain/models/client_address.dart';
 import '../../../../../../core/theme/colors.dart';
 
 
@@ -64,7 +64,7 @@ Widget BuildCardAddress(BuildContext context,double screenHeight,double screenWi
                 ],
               ),
               //  SizedBox(width:fromCart?screenWidth*.2: screenWidth*.3,),
-               address!=null? address.title=='Home'?  Iconify(
+               address!=null? address.isDefault!?  Iconify(
                   MaterialSymbols.star,  // This uses the Material Symbols "star" icon
                   size: screenHeight*.03,
                   color: AppColors.primary,

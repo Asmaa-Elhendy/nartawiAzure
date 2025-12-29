@@ -6,7 +6,7 @@ import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
-import '../../../orders/presentation/provider/client_controller.dart';
+import '../provider/client_controller.dart';
 
 import '../widgets/add_new_address_alert.dart';
 import '../widgets/address_card.dart';
