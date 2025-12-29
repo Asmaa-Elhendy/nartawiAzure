@@ -56,6 +56,10 @@ dependencies:
   dio:
   shared_preferences: ^2.2.2
   intl:
+  geolocator: ^10.1.0
+  geocoding: ^2.1.0
+
+
 
 
 
