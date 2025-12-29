@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/services/maps_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
@@ -116,19 +117,25 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   // ✅ OSM Map Picker (No API Key)
   // =========================
   Future<LatLng?> _pickLocationFromOsmMap(BuildContext context) async {
-    // Optional: start from GPS if available, else Port Said fallback
+    // fallback
     LatLng initial = const LatLng(31.2653, 32.3019); // Port Said
+
     try {
-      final pos = await getCurrentPositionSafely();
+      // حاول تجيب اللوكيشن بسرعة (لو اتأخر سيبها fallback)
+      final pos = await getCurrentPositionSafely()
+          .timeout(const Duration(seconds: 6));
+
       if (pos != null) {
         initial = LatLng(pos.latitude, pos.longitude);
       }
-    } catch (_) {}
+    } catch (_) {
+      // ignore -> fallback
+    }
 
     return await Navigator.push<LatLng?>(
       context,
       MaterialPageRoute(
-        builder: (_) => _OsmPickLocationScreen(initial: initial),
+        builder: (_) => OsmPickLocationScreen(initial: initial),
       ),
     );
   }
@@ -394,62 +401,3 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   }
 }
 
-// =====================================================
-// ✅ OSM Picker Screen (No API Key)
-// =====================================================
-class _OsmPickLocationScreen extends StatefulWidget {
-  final LatLng initial;
-  const _OsmPickLocationScreen({required this.initial});
-
-  @override
-  State<_OsmPickLocationScreen> createState() => _OsmPickLocationScreenState();
-}
-
-class _OsmPickLocationScreenState extends State<_OsmPickLocationScreen> {
-  LatLng? selected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Pick Location')),
-      body: Stack(
-        children: [
-          FlutterMap(
-            options: MapOptions(
-              initialCenter: widget.initial,
-              initialZoom: 16,
-              onTap: (_, latLng) => setState(() => selected = latLng),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.newwwwwwww',
-              ),
-              if (selected != null)
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      point: selected!,
-                      width: 45,
-                      height: 45,
-                      child: const Icon(Icons.location_pin, size: 45, color: Colors.red),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 16,
-            child: ElevatedButton(
-              onPressed: selected == null ? null : () => Navigator.pop(context, selected),
-              child: const Text('Use This Location'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
