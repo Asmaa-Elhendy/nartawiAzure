@@ -23,7 +23,6 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
   late TabController _tabController;
 
   late AddressController addressController;
-
   @override
   void initState() {
     super.initState();

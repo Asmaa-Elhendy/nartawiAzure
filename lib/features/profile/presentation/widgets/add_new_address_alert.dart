@@ -45,7 +45,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
       AddAddressRequest(
         title: title,
         address: address,
-        areaId: 1,        // 🔹 عدليها لما تربطي Areas
+        areaId: 1,        // 🔹 عدليها لما تربطي Areas (zone number) get from api
         latitude: 0,      // 🔹 GPS لاحقًا
         longitude: 0,
         streetNum: int.tryParse(street),
@@ -64,6 +64,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
 
     return true;
   }
+  final _formKey = GlobalKey<FormState>();
 
 
   @override
@@ -85,118 +86,123 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
             horizontal: screenWidth * .05,
           ),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    customCouponPrimaryTitle(
-                      'Add New Address',
-                      screenWidth,
-                      screenHeight,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.close,
-                        size: screenWidth * .05,
-                        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      customCouponPrimaryTitle(
+                        'Add New Address',
+                        screenWidth,
+                        screenHeight,
                       ),
-                    ),
-                  ],
-                ),
-                buildCustomeFullTextField(
-                  'Title',
-                  'Enter Title',
-                  _addressNameController,
-                  false,
-                  screenHeight,
-                  fromEditProfile: true,
-                ),
-                widget.useGps
-                    ? SizedBox()
-                    : Column(
-                        children: [
-                          SizedBox(height: screenHeight * .01),
-                          buildCustomeFullTextField(
-                            'Address ',
-                            'Enter Address ',
-                            _addressController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-                          buildCustomeFullTextField(
-                            'Zone Number',
-                            'Enter Zone Number',isNumberKeyboard: true,
-                            _zoneNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(isNumberKeyboard: true,
-                            'Street Number',
-                            'Enter Street Number',
-                            _streetNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(isNumberKeyboard: true,
-                            'Building Number',
-                            'Enter Building Number',
-                            _buildingNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                          SizedBox(height: screenHeight * .01),
-
-                          buildCustomeFullTextField(isNumberKeyboard: true,
-                            'Flat Number',
-                            'Enter Flat Number',
-                            _flatNoController,
-                            false,
-                            screenHeight,
-                            fromEditProfile: true,
-                          ),
-                        ],
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: screenWidth * .05,
+                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                        ),
                       ),
-                SizedBox(height: screenHeight * .02),
-                CancelOrderWidget(
-                  context,
-                  screenWidth,
-                  screenHeight,
-                  'Add New Address',
-                  'Cancel',
-                      () async { // add new address
-                    final ok = await handleAddNewAddress(
-                      context: context,
-                      title: _addressNameController.text,address: _addressController.text,
-                      zone: _zoneNoController.text,
-                      street: _streetNoController.text,
-                      building: _buildingNoController.text,
-                      flat: _flatNoController.text,
-                    );
+                    ],
+                  ),
+                  buildCustomeFullTextField(
+                    'Title',
+                    'Enter Title',
+                    _addressNameController,
+                    false,
+                    screenHeight,
+                    fromEditProfile: true,
+                  ),
+                  widget.useGps
+                      ? SizedBox()
+                      : Column(
+                          children: [
+                            SizedBox(height: screenHeight * .01),
+                            buildCustomeFullTextField(
+                              'Address ',
+                              'Enter Address ',
+                              _addressController,
+                              false,
+                              screenHeight,
+                              fromEditProfile: true,
+                            ),
+                            SizedBox(height: screenHeight * .01),
+                            buildCustomeFullTextField(
+                              'Zone Number',
+                              'Enter Zone Number',isNumberKeyboard: true,
+                              _zoneNoController,
+                              false,
+                              screenHeight,
+                              fromEditProfile: true,
+                            ),
+                            SizedBox(height: screenHeight * .01),
 
-                    if (ok) {
-                      Navigator.pop(context, true); // يرجّع نجاح
+                            buildCustomeFullTextField(isNumberKeyboard: true,
+                              'Street Number',
+                              'Enter Street Number',
+                              _streetNoController,
+                              false,
+                              screenHeight,
+                              fromEditProfile: true,
+                            ),
+                            SizedBox(height: screenHeight * .01),
+
+                            buildCustomeFullTextField(isNumberKeyboard: true,
+                              'Building Number',
+                              'Enter Building Number',
+                              _buildingNoController,
+                              false,
+                              screenHeight,
+                              fromEditProfile: true,
+                            ),
+                            SizedBox(height: screenHeight * .01),
+
+                            buildCustomeFullTextField(isNumberKeyboard: true,
+                              'Flat Number',
+                              'Enter Flat Number',
+                              _flatNoController,
+                              false,
+                              screenHeight,
+                              fromEditProfile: true,
+                            ),
+                          ],
+                        ),
+                  SizedBox(height: screenHeight * .02),
+                  CancelOrderWidget(
+                    context,
+                    screenWidth,
+                    screenHeight,
+                    'Add New Address',
+                    'Cancel',
+                        () async { // add new address
+                          if (!(_formKey.currentState?.validate() ?? false)) return;
+
+                          final ok = await handleAddNewAddress(
+                        context: context,
+                        title: _addressNameController.text,address: _addressController.text,
+                        zone: _zoneNoController.text,
+                        street: _streetNoController.text,
+                        building: _buildingNoController.text,
+                        flat: _flatNoController.text,
+                      );
+
+                      if (ok) {
+                        Navigator.pop(context, true); // يرجّع نجاح
+                      }
                     }
-                  }
-,
-                  () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
+              ,
+                    () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
