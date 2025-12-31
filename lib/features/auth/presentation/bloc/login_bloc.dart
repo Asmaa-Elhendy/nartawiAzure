@@ -9,7 +9,7 @@ import 'login_event.dart';
 import 'login_state.dart';
 // asmaa asmaa123   asmaa@gmail.com
 //admin Admin@123
-String base_url= 'https://nartawi.smartvillageqatar.com/api';
+String base_url= 'https://nartawitest.smartvillageqatar.com/api';//'https://nartawi.smartvillageqatar.com/api';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final Dio dio;

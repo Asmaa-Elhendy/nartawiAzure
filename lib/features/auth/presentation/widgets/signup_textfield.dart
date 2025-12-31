@@ -14,6 +14,7 @@ class SignUpTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool required;
   final bool isNumberKeyboard;
+  final String countryCode;
 
   const SignUpTextField({
     Key? key,
@@ -22,7 +23,8 @@ class SignUpTextField extends StatefulWidget {
     this.controller,
     required this.required,
     required this.isNumberKeyboard,
-    this.fromEditProfile=false
+    this.fromEditProfile=false,
+     this.countryCode='+974'
   }) : super(key: key);
 
   @override
@@ -55,7 +57,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
             SizedBox(
               width: 50,
               child: TextFormField(
-                initialValue: '+974',
+                initialValue: widget.countryCode,
                 style: AppTextStyles.textInTextField,
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(
