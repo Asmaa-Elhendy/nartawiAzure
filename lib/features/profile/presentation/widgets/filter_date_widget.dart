@@ -7,8 +7,8 @@ Widget buildFilterDateWidget(
     double height,
     double width, {
       DateTime? selectedDate,
+      VoidCallback? onClear, // ✅ NEW
     }) {
-  // نص التاريخ المعروض
   String displayedDate = 'DD.MM.YYYY';
 
   if (selectedDate != null) {
@@ -53,11 +53,23 @@ Widget buildFilterDateWidget(
             ),
           ],
         ),
-        Icon(
-          CupertinoIcons.chevron_down,
-          size: width * .038,
-          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-        ),
+
+        // ✅ بدل chevron دايمًا: لو في تاريخ -> close يمسح
+        if (selectedDate != null)
+          GestureDetector(
+            onTap: onClear,
+            child: Icon(
+              CupertinoIcons.clear_circled_solid,
+              size: width * .042,
+              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+            ),
+          )
+        else
+          Icon(
+            CupertinoIcons.chevron_down,
+            size: width * .038,
+            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+          ),
       ],
     ),
   );
