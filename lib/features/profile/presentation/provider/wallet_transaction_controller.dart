@@ -68,8 +68,14 @@ class WalletTransactionsController extends ChangeNotifier {
   WalletTransactionsQuery _query = const WalletTransactionsQuery();
 
   void setDateFilter({DateTime? fromDate, DateTime? toDate}) {
-    _query = _query.copyWith(fromDate: fromDate, toDate: toDate);
+    _query = WalletTransactionsQuery(fromDate: fromDate, toDate: toDate);
+
+    pageNumber = 1;
+    hasMore = true;
+    transactions.clear();
+    notifyListeners();
   }
+
 
   Future<void> fetchTransactions({bool reset = false}) async {
     if (isLoading) return;
