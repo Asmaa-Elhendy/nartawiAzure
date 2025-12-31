@@ -4,6 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
+import 'package:newwwwwwww/features/coupons/presentation/provider/coupon_controller.dart';
 import 'package:newwwwwwww/features/notification/presentation/pages/notification_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/cart/cart_bloc.dart';
 import 'dart:io' show Platform;
 import 'fixed_bage_widget.dart';
+import 'package:dio/dio.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
   double screenHeight;
@@ -31,7 +33,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
     this.disabledCart = '',
     this.disabledNotification = '',
     this.disabledGallon='',
-    this.onReturnFromSupplierDetail=null
+    this.onReturnFromSupplierDetail=null,
   });
 
   @override
@@ -40,6 +42,49 @@ class BuildForegroundappbarhome extends StatefulWidget {
 }
 
 class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
+  late final CouponsController _couponsController;
+  int _bundleCount = 0;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _couponsController = CouponsController(dio: Dio());
+    _fetchBundleCount();
+  }
+
+  Future<void> _fetchBundleCount() async {
+    if (_isLoading) return;
+    
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _couponsController.fetchBundlePurchases();
+      if (mounted) {
+        setState(() {
+          _bundleCount = _couponsController.bundlePurchases.length;
+        });
+      }
+    } catch (e) {
+      // Handle error silently or show debug print
+      debugPrint('Error fetching bundle count: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _couponsController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -115,14 +160,14 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                   badges.Badge(
                     badgeContent: buildFixedBadge(
                       size: screenWidth * .048,
-                      text: '25',
+                      text: _bundleCount.toString(),
                       color: AppColors.whiteColor,
                       fontSize: screenWidth * .028,
                     ),
                     badgeStyle: badges.BadgeStyle(
                       shape: badges.BadgeShape.circle,
                       badgeColor: AppColors.redColor,
-                      padding: EdgeInsets.zero,
+                      padding: EdgeInsets.zero,//k
                     ),
                     child: Iconify(
                       GameIcons.water_gallon,
