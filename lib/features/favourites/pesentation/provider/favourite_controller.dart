@@ -374,5 +374,205 @@ class FavoritesController extends ChangeNotifier {
       return ApiMessageResponse(success: false, message: msg);
     }
   }
+  // for add/remove favorite vendors:
+  /// ✅ POST /api/v1/client/favorites/vendors/{vendorId}
+  /// Adds vendor to favorites
+  Future<ApiMessageResponse?> makeVendorFavorite(int vendorId) async {
+    // ✅ لو already favorite متعمليش call
+    if (isVendorFavorited(vendorId)) {
+      return ApiMessageResponse(success: true, message: 'Already favorited');
+    }
+
+    vendorsError = null;
+    notifyListeners();
+
+    // ✅ Optimistic UI (اختياري): ضيف vendorId فوراً (لو model يسمح)
+    // لو FavoriteVendor محتاج fields كتير ومش هتعرفي تعملي dummy سيبي الجزء ده.
+    // ----------------------------
+    // favoriteVendors.insert(
+    //   0,
+    //   FavoriteVendor(
+    //     supplierId: vendorId,
+    //     createdAt: DateTime.now(),
+    //   ),
+    // );
+    // notifyListeners();
+    // ----------------------------
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        vendorsError = 'Authentication required';
+        notifyListeners();
+        return ApiMessageResponse(success: false, message: vendorsError);
+      }
+
+      final url = '$base_url/v1/client/favorites/vendors/$vendorId';
+
+      final response = await dio.post(
+        url,
+        data: '', // swagger shows -d ''
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+        final parsed = (data is Map<String, dynamic>)
+            ? ApiMessageResponse.fromJson(data)
+            : ApiMessageResponse(success: true, message: 'Success');
+
+        // ✅ refresh vendors list to sync with backend
+        await fetchFavoriteVendors();
+
+        return parsed;
+      } else {
+        final msg = 'Failed to add vendor favorite (status: ${response.statusCode})';
+        vendorsError = msg;
+
+        // ✅ rollback لو كنتِ عاملة optimistic insert فوق
+        // favoriteVendors.removeWhere((v) => v.supplierId == vendorId || v.supplier?.id == vendorId);
+
+        notifyListeners();
+        return ApiMessageResponse(success: false, message: msg);
+      }
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to add vendor favorite';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      vendorsError = msg;
+
+      // ✅ rollback لو optimistic insert كان شغال
+      // favoriteVendors.removeWhere((v) => v.supplierId == vendorId || v.supplier?.id == vendorId);
+
+      notifyListeners();
+      return ApiMessageResponse(success: false, message: msg);
+    } catch (e) {
+      final msg = 'An unexpected error occurred: $e';
+      vendorsError = msg;
+
+      // ✅ rollback لو optimistic insert كان شغال
+      // favoriteVendors.removeWhere((v) => v.supplierId == vendorId || v.supplier?.id == vendorId);
+
+      notifyListeners();
+      return ApiMessageResponse(success: false, message: msg);
+    }
+  }
+
+  /// ✅ DELETE /api/v1/client/favorites/vendors/{vendorId}
+  /// Removes vendor from favorites
+  Future<ApiMessageResponse?> removeVendorFavorite(int vendorId) async {
+    // ✅ لو مش موجود أصلاً متعمليش call
+    if (!isVendorFavorited(vendorId)) {
+      return ApiMessageResponse(success: true, message: 'Already not favorited');
+    }
+
+    vendorsError = null;
+    notifyListeners();
+
+    // ✅ Optimistic UI: شيله فوراً + backup للـ rollback
+    final backup = List<FavoriteVendor>.from(favoriteVendors);
+
+    favoriteVendors.removeWhere(
+          (v) => v.supplierId == vendorId || v.supplier?.id == vendorId,
+    );
+    notifyListeners();
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        vendorsError = 'Authentication required';
+
+        // rollback
+        favoriteVendors
+          ..clear()
+          ..addAll(backup);
+
+        notifyListeners();
+        return ApiMessageResponse(success: false, message: vendorsError);
+      }
+
+      final url = '$base_url/v1/client/favorites/vendors/$vendorId';
+
+      final response = await dio.delete(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final parsed = (data is Map<String, dynamic>)
+            ? ApiMessageResponse.fromJson(data)
+            : ApiMessageResponse(success: true, message: 'Success');
+
+        // ✅ Sync with backend
+        await fetchFavoriteVendors();
+
+        return parsed;
+      } else {
+        final msg =
+            'Failed to remove vendor favorite (status: ${response.statusCode})';
+        vendorsError = msg;
+
+        // rollback
+        favoriteVendors
+          ..clear()
+          ..addAll(backup);
+        notifyListeners();
+
+        return ApiMessageResponse(success: false, message: msg);
+      }
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to remove vendor favorite';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      vendorsError = msg;
+
+      // rollback
+      favoriteVendors
+        ..clear()
+        ..addAll(backup);
+      notifyListeners();
+
+      return ApiMessageResponse(success: false, message: msg);
+    } catch (e) {
+      final msg = 'An unexpected error occurred: $e';
+      vendorsError = msg;
+
+      // rollback
+      favoriteVendors
+        ..clear()
+        ..addAll(backup);
+      notifyListeners();
+
+      return ApiMessageResponse(success: false, message: msg);
+    }
+  }
+
 
 }

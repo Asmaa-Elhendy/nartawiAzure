@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
+import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_controller.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../../core/theme/colors.dart';
-import '../../../../domain/models/supplier_model.dart';
 import 'build_row_raing.dart';
 import 'build_info_button.dart';
 import 'build_verified_widget.dart';
@@ -35,6 +36,49 @@ class BuildFullCardSupplier extends StatefulWidget {
 class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
   bool isFavourite = false;
   bool isExpanded = false;
+  
+  // ✅ يمنع الضغط المتكرر بسرعة (optional)
+  bool _isToggling = false;
+  
+  // ✅ Store controller reference to avoid context issues in dispose
+  FavoritesController? _favoritesController;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // ✅ Check initial favorite status from controller
+    if (widget.fromFavouritesScreen) {
+      // In favorites screen, it's always favorited
+      isFavourite = true;
+    } else {
+      // In other screens, check from controller
+      _favoritesController = context.read<FavoritesController>();
+      isFavourite = _favoritesController!.isVendorFavorited(widget.supplier.id);
+      
+      // ✅ Listen for changes to update UI automatically
+      _favoritesController!.addListener(_onFavoritesChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (!widget.fromFavouritesScreen && _favoritesController != null) {
+      _favoritesController!.removeListener(_onFavoritesChanged);
+    }
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    if (!widget.fromFavouritesScreen && mounted && _favoritesController != null) {
+      final newStatus = _favoritesController!.isVendorFavorited(widget.supplier.id);
+      if (isFavourite != newStatus) {
+        setState(() {
+          isFavourite = newStatus;
+        });
+      }
+    }
+  }
 
   final String description =
       'Premium Water Supplier With Quality Products And Reliable Delivery Service. This description is long and should show fully when expanded.';
@@ -135,12 +179,64 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                           ),
                           SizedBox(width: w * .02),
                           InkWell(
-                            onTap: () {
-                              if (!widget.fromFavouritesScreen) {
-                                setState(() {
-                                  isFavourite = !isFavourite;
-                                });
+                            onTap: () async {
+                              if (widget.fromFavouritesScreen) return;
+                              
+                              if (_isToggling) return;
+                              _isToggling = true;
+
+                              final oldValue = isFavourite;
+
+                              setState(() {
+                                isFavourite = !isFavourite;
+                              });
+
+                              // ✅ LOG في الـ terminal
+                              if (isFavourite) {
+                                debugPrint('❤️ [VENDOR FAVORITE] Added locally (not API yet)');
+                              } else {
+                                debugPrint('🤍 [VENDOR FAVORITE] Removed locally (not API yet)');
                               }
+
+                              // ✅ API call with automatic refresh
+                              final favoritesController = _favoritesController ?? context.read<FavoritesController>();
+                              try {
+                                if (isFavourite) {
+                                  await favoritesController.makeVendorFavorite(widget.supplier.id);
+                                  debugPrint('✅ API: Vendor added to favorites');
+                                } else {
+                                  await favoritesController.removeVendorFavorite(widget.supplier.id);
+                                  debugPrint('✅ API: Vendor removed from favorites');
+                                }
+                                
+                                // ✅ Show SnackBar after successful API call
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(isFavourite ? 'Vendor added to favorites' : 'Vendor removed from favorites'),
+                                      behavior: SnackBarBehavior.floating,
+                                      duration: const Duration(milliseconds: 800),
+                                    ),
+                                  );
+                                }
+                              } catch (e) {
+                                debugPrint('❌ API ERROR: $e');
+                                setState(() => isFavourite = oldValue); // rollback
+                                
+                                // ✅ Show error SnackBar
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Failed to update favorites: $e'),
+                                      behavior: SnackBarBehavior.floating,
+                                      backgroundColor: Colors.red,
+                                      duration: const Duration(milliseconds: 1500),
+                                    ),
+                                  );
+                                }
+                              }
+
+                              _isToggling = false;
                             },
                             child: Container(
                               width: h * .045,

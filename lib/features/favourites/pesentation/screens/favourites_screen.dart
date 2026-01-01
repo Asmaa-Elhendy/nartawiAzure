@@ -33,8 +33,8 @@ class _FavouritesScreenState extends State<FavouritesScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    
-    // ✅ Use the provider instance instead of creating a new one
+
+    // ✅ Get controller from provider instead of creating new instance
     favController = context.read<FavoritesController>();
     favController.fetchFavoriteProducts(); // ✅ أول تحميل
     favController.fetchFavoriteVendors(); // ✅ أول تحميل للتاب التاني
@@ -45,7 +45,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
     _productsScroll.dispose();
     _storesScroll.dispose();
     _tabController.dispose();
-    // ✅ Don't dispose favController since it's from provider
+    // ✅ Don't dispose favController here - provider handles it
     super.dispose();
   }
 
@@ -299,7 +299,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                                           screenWidth,
                                           supplier,
                                           supplier.isVerified,
-                                          fromFavouritesScreen: true,
+                                          fromFavouritesScreen: false, // ✅ Changed to false to allow toggle
                                         ),
                                       );
                                     },
