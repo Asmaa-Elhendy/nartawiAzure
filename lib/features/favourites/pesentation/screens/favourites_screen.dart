@@ -294,12 +294,15 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                                             ),
                                           );
                                         },
-                                        child: BuildFullCardSupplier(
-                                          screenHeight,
-                                          screenWidth,
-                                          supplier,
-                                          supplier.isVerified,
-                                          fromFavouritesScreen: false, // ✅ Changed to false to allow toggle
+                                        child: Padding(
+                                          padding:  EdgeInsets.only(bottom: screenHeight*.02),
+                                          child: BuildFullCardSupplier(
+                                            screenHeight,
+                                            screenWidth,
+                                            supplier,
+                                            supplier.isVerified,
+                                            fromFavouritesScreen: false, // ✅ Changed to false to allow toggle
+                                          ),
                                         ),
                                       );
                                     },
