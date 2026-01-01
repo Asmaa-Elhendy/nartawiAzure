@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../profile/domain/models/coupon_balance_item.dart';
 import 'custom_text.dart';
 
 
@@ -124,36 +125,7 @@ Widget latestCouponTrackerCarousSliderDynamic({
   );
 }
 
-class CouponBalanceItem {
-  final int totalCoupons;
-  final int usedCoupons;
-  final int availableCoupons;
-  final DateTime? lastUsed;
-  final DateTime? expiryDate;
 
-  CouponBalanceItem({
-    required this.totalCoupons,
-    required this.usedCoupons,
-    required this.availableCoupons,
-    required this.lastUsed,
-    required this.expiryDate,
-  });
-
-  factory CouponBalanceItem.fromJson(Map<String, dynamic> json) {
-    DateTime? _dt(dynamic v) {
-      if (v == null) return null;
-      return DateTime.tryParse(v.toString());
-    }
-
-    return CouponBalanceItem(
-      totalCoupons: (json['totalCoupons'] ?? 0) as int,
-      usedCoupons: (json['usedCoupons'] ?? 0) as int,
-      availableCoupons: (json['availableCoupons'] ?? 0) as int,
-      lastUsed: _dt(json['lastUsed']),
-      expiryDate: _dt(json['expiryDate']),
-    );
-  }
-}
 
 class LatestCouponTrackerFromApi extends StatelessWidget {
   final double screenWidth;
