@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../../../../core/services/auth_service.dart';
 import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
-import '../../domain/models/wallet_transaction7.dart';
+import '../../domain/models/wallet_transaction.dart';
 
 class WalletTransactionsQuery {
   final DateTime? fromDate;

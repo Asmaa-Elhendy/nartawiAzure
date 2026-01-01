@@ -1,23 +1,18 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:iconify_flutter/icons/tabler.dart';
 import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/products_bloc/products_event.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_categories_main_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/all_suppliers_screen.dart';
-import 'package:newwwwwwww/features/home/presentation/pages/suppliers/product_details.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/supplier_detail.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
-import '../../domain/models/product_categories_models/product_category_model.dart';
 import '../bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../bloc/product_categories_bloc/product_categories_event.dart';
 import '../bloc/product_categories_bloc/product_categories_state.dart';
@@ -42,6 +37,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController _SearchController = TextEditingController();
+
+  // ✅ GlobalKey عشان ننادي refresh() في BuildCarousSlider
+  final GlobalKey<BuildCarousSliderState> _sliderKey = GlobalKey();
 
   @override
   void dispose() {
@@ -70,6 +68,9 @@ class _MainScreenState extends State<MainScreen> {
       categoryId: null,
     );
 
+    // ✅ Refresh slider (coupon balance API)
+    _sliderKey.currentState?.refresh();
+
     // optional delay to allow UI to show indicator briefly
     await Future.delayed(const Duration(milliseconds: 300));
   }
@@ -96,7 +97,6 @@ class _MainScreenState extends State<MainScreen> {
             title: 'NARTAWI',
             is_returned: false,
           ),
-
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
             bottom: screenHeight * .05,
@@ -120,7 +120,10 @@ class _MainScreenState extends State<MainScreen> {
                             width: screenWidth,
                           ),
                           SizedBox(height: screenHeight * .02),
-                          BuildCarousSlider(),
+
+                          // ✅ هنا التعديل: key
+                          BuildCarousSlider(key: _sliderKey),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -135,6 +138,8 @@ class _MainScreenState extends State<MainScreen> {
                                   )
                                       .then((_) {
                                     context.read<ProductsBloc>().refresh();
+                                    // ✅ optional: كمان حدثي السلايدر بعد الرجوع
+                                    _sliderKey.currentState?.refresh();
                                   });
                                 },
                                 child: Padding(
@@ -146,13 +151,11 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                             ],
                           ),
-
                           BuildStretchTitleHome(
                             screenWidth,
                             "Featured Suppliers",
                                 () {
-                              final state =
-                                  context.read<SuppliersBloc>().state;
+                              final state = context.read<SuppliersBloc>().state;
 
                               if (state is SuppliersLoaded) {
                                 Navigator.of(context)
@@ -168,7 +171,6 @@ class _MainScreenState extends State<MainScreen> {
                               }
                             },
                           ),
-
                           SizedBox(
                             height: screenHeight * 0.18,
                             child: BlocBuilder<SuppliersBloc, SuppliersState>(
@@ -211,7 +213,9 @@ class _MainScreenState extends State<MainScreen> {
                                             ),
                                           )
                                               .then((_) {
-                                            context.read<ProductsBloc>().refresh();
+                                            context
+                                                .read<ProductsBloc>()
+                                                .refresh();
                                           });
                                         },
                                         child: StoreCard(
@@ -228,7 +232,6 @@ class _MainScreenState extends State<MainScreen> {
                               },
                             ),
                           ),
-
                           BuildStretchTitleHome(
                             screenWidth,
                             "Popular Categories",
@@ -252,7 +255,6 @@ class _MainScreenState extends State<MainScreen> {
                               }
                             },
                           ),
-
                           SizedBox(
                             height: screenHeight * 0.15,
                             child: BlocBuilder<ProductCategoriesBloc,
@@ -292,14 +294,15 @@ class _MainScreenState extends State<MainScreen> {
                                             ),
                                           )
                                               .then((_) {
-                                            context.read<ProductsBloc>().refresh();
+                                            context
+                                                .read<ProductsBloc>()
+                                                .refresh();
                                           });
                                         },
                                         child: CategoryCard(
                                           screenWidth: screenWidth,
                                           screenHeight: screenHeight,
-                                          icon:
-                                          'assets/images/home/main_page/bottle.svg',
+                                          icon: 'assets/images/home/main_page/bottle.svg',
                                           title: category.enName ?? 'Category',
                                         ),
                                       );
@@ -310,9 +313,7 @@ class _MainScreenState extends State<MainScreen> {
                               },
                             ),
                           ),
-
                           SizedBox(height: screenHeight * .01),
-
                           BuildStretchTitleHome(
                             screenWidth,
                             "Popular Products",
@@ -344,7 +345,6 @@ class _MainScreenState extends State<MainScreen> {
                         ]),
                       ),
                     ),
-
                     SliverPadding(
                       padding: EdgeInsets.only(
                         left: screenWidth * .06,

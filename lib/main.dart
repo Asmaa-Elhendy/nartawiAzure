@@ -44,6 +44,7 @@ Future<void> main() async {
         BlocProvider<ProductsBloc>(
           create: (_) => sl<ProductsBloc>(),
         ),
+        
 
       ],
       child: const MyApp(),

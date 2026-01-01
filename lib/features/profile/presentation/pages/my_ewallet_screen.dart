@@ -8,7 +8,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import '../../domain/models/wallet_transaction7.dart';
+import '../../domain/models/wallet_transaction.dart';
 import '../provider/wallet_transaction_controller.dart';
 import '../widgets/e_wallet_card.dart';
 
