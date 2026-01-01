@@ -210,18 +210,19 @@ class _ProductCardState extends State<ProductCard> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           BuildIconOnProduct(
+                            widget.product!.vsId,
                               state.price,
                               widget.screenWidth,
                               widget.screenHeight,
                               true, // plus icon
-                              false
+                              isFavourite: false,
                           ),
                           //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                          BuildIconOnProduct(state.price,
+                          BuildIconOnProduct(widget.product!.vsId,state.price,
                               widget.screenWidth,
                               widget.screenHeight,
-                              false,
-                              false// heart icon
+                              false,isFavourite: false,
+
                           ),
                         ],
                       ),

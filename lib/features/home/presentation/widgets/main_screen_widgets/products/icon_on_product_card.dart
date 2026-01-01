@@ -14,27 +14,36 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/cart/cart_event.dart';
 import '../../snack_bar_add_product.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
- final double width;
- final double height;
- final  bool isPlus;
- final  bool isFavourite;
- final bool isDelete;
- final double price;
+  final int productVsId;
 
- const BuildIconOnProduct(
-     this.price,
-     this.width,
-     this.height,
-     this.isPlus,
-     this.isFavourite, {
-       this.isDelete = false,   // ✅ default here
-       Key? key,
-     }) : super(key: key);
+  final double width;
+  final double height;
+  final bool isPlus;
+
+  /// ✅ start value from parent (for now you pass false always)
+  final bool isFavourite;
+  final bool isDelete;
+  final double price;
+
+  /// 🔜 TODO: لازم تضيفيه لما تربطي API
+  /// final int productVsId;
+
+  const BuildIconOnProduct(
+      this.productVsId,
+      this.price,
+      this.width,
+      this.height,
+      this.isPlus,{
+        this.isFavourite=false,
+        this.isDelete = false,
+        Key? key,
+      }) : super(key: key);
 
   @override
   _BuildIconOnProductState createState() => _BuildIconOnProductState();
@@ -43,16 +52,22 @@ class BuildIconOnProduct extends StatefulWidget {
 class _BuildIconOnProductState extends State<BuildIconOnProduct> {
   late bool isFavourite;
 
+  // ✅ يمنع الضغط المتكرر بسرعة (optional)
+  bool _isToggling = false;
+
   @override
   void initState() {
     super.initState();
-    isFavourite = widget.isFavourite; // البداية
+
+    /// ✅ كبداية: لو مش عندك معلومة من API خليها false عند الاستدعاء
+    /// Example: BuildIconOnProduct(price,w,h,false,false)
+    isFavourite = widget.isFavourite;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: widget.width * .09,//handel design product shimaa .1
+      width: widget.width * .09,
       height: widget.height * .045,
       decoration: BoxDecoration(
         color: AppColors.backgrounHome,
@@ -61,7 +76,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -69,56 +84,91 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
         child: widget.isDelete
             ? Iconify(
           MaterialSymbols.delete_outline_rounded,
-          size: widget.height * .025,//03 handle design product shimaa
+          size: widget.height * .025,
           color: AppColors.primary,
         )
             : widget.isPlus
             ? InkWell(
-          onTap: (){
-          //  showSnackBarAddProduct(context, widget.width, widget.height, 'You’ve added 1 item.Confirm to add to cart.');
+          onTap: () {
             showDialog(
-                context: context,
-                builder: (dialogContext) =>
-            ConfirmationAlert(
-              price:widget.price,
-              centerTitle: 'You\'ve added 1 item',leftOnTap: (){
-              Navigator.pop(dialogContext);
-              context.read<CartBloc>().add(CartAddItem('Hand Pump'));
-
-            },
-                rightOnTap: (){
-              Navigator.pop(dialogContext);
-                }
-
-            ,leftTtile: 'Confirm',rightTitle: 'Cancel',  itemAAdedToCart:true,),
-
+              context: context,
+              builder: (dialogContext) => ConfirmationAlert(
+                price: widget.price,
+                centerTitle: 'You\'ve added 1 item',
+                leftOnTap: () {
+                  Navigator.pop(dialogContext);
+                  context.read<CartBloc>().add(CartAddItem('Hand Pump'));
+                },
+                rightOnTap: () {
+                  Navigator.pop(dialogContext);
+                },
+                leftTtile: 'Confirm',
+                rightTitle: 'Cancel',
+                itemAAdedToCart: true,
+              ),
             );
           },
-              child: Icon(
-                        Icons.add,
-                        size: widget.height * .025,//03 handle design product shimaa
-                        color: AppColors.primary,
-                      ),
-            )
+          child: Icon(
+            Icons.add,
+            size: widget.height * .025,
+            color: AppColors.primary,
+          ),
+        )
             : InkWell(
-          onTap: () {
-            setState(() {
-              isFavourite = !isFavourite;
-            });
+          onTap: () async {
+            if (_isToggling) return;
+            _isToggling = true;
+
+            final oldValue = isFavourite;
+
+            setState(() => isFavourite = !isFavourite);
+
+            final favoritesController = context.read<FavoritesController>();
+
+            try {
+              if (isFavourite) {
+                await favoritesController.makeProductFavorite(widget.productVsId);
+                debugPrint('✅ API: Product added to favorites');
+              } else {
+                await favoritesController.removeProductFavorite(widget.productVsId);
+                debugPrint('✅ API: Product removed from favorites');
+              }
+
+              // ✅ Refresh ALL favorites
+              await favoritesController.refresh();
+              debugPrint('🔄 Favorites refreshed (products + vendors)');
+
+              // ✅ sync UI with controller result (guaranteed)
+              final isNowFav = favoritesController.isFavoritedVsId(widget.productVsId);
+              setState(() => isFavourite = isNowFav);
+              debugPrint('💡 UI synced, isFavourite = $isNowFav');
+
+            } catch (e) {
+              debugPrint('❌ API ERROR: $e');
+              setState(() => isFavourite = oldValue);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Something went wrong, please try again'),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            } finally {
+              _isToggling = false;
+            }
           },
+
+
           child: Iconify(
             isFavourite ? Mdi.heart : Mdi.heart_outline,
-            color: isFavourite
-                ? AppColors.redColor
-                : AppColors.primary,
-            size: widget.height * .025,//03 handle design product shimaa
+            color: isFavourite ? AppColors.redColor : AppColors.primary,
+            size: widget.height * .025,
           ),
         ),
       ),
     );
   }
 }
-
 
 
 

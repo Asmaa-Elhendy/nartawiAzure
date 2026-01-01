@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
+import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_controller.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
@@ -27,7 +29,7 @@ Future<void> main() async {
   ]);
   await init();
   runApp(
-    MultiBlocProvider(
+    MultiProvider(
       providers: [
         BlocProvider<NotificationBloc>(
           create: (_) => sl<NotificationBloc>()..add(LoadNotifications()),
@@ -43,6 +45,9 @@ Future<void> main() async {
         ),
         BlocProvider<ProductsBloc>(
           create: (_) => sl<ProductsBloc>(),
+        ),
+        ChangeNotifierProvider<FavoritesController>(
+          create: (_) => sl<FavoritesController>(),
         ),
         
 

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
+import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_controller.dart';
 import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
@@ -28,4 +29,6 @@ Future<void> init() async {
 
   sl.registerFactory<AuthBloc>(() => AuthBloc(dio: sl<Dio>()));
 
+  // Favorites Controller
+  sl.registerFactory<FavoritesController>(() => FavoritesController(dio: sl<Dio>()));
 }

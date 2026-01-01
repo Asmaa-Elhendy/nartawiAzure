@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../profile/domain/models/coupon_balance_item.dart';
@@ -25,12 +26,14 @@ Widget latestCouponTrackerCarousSliderDynamic({
 }) {
   final progress = total <= 0 ? 0.0 : (used / total).clamp(0.0, 1.0);
 
+
   String fmt(DateTime? d) {
     if (d == null) return '-';
+
     final local = d.toLocal();
-    return '${local.day.toString().padLeft(2, '0')}/'
-        '${local.month.toString().padLeft(2, '0')}/'
-        '${local.year}';
+
+    // Sat : May 4, 2025
+    return DateFormat('EEE : MMM d, y', 'en_US').format(local);
   }
 
   return Container(
@@ -87,7 +90,7 @@ Widget latestCouponTrackerCarousSliderDynamic({
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customCouponPrimaryTitle('Last Used', screenWidth, screenHeight),
+                customCouponPrimaryTitle('Last Delivered', screenWidth, screenHeight),
                 Row(
                   children: [
                     SvgPicture.asset(
@@ -104,7 +107,7 @@ Widget latestCouponTrackerCarousSliderDynamic({
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customCouponPrimaryTitle('Expiry', screenWidth, screenHeight),
+                customCouponPrimaryTitle('Next Refill', screenWidth, screenHeight),
                 Row(
                   children: [
                     SvgPicture.asset(

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
@@ -33,8 +33,9 @@ class _FavouritesScreenState extends State<FavouritesScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
-    favController = FavoritesController(dio: Dio());
+    
+    // ✅ Use the provider instance instead of creating a new one
+    favController = context.read<FavoritesController>();
     favController.fetchFavoriteProducts(); // ✅ أول تحميل
     favController.fetchFavoriteVendors(); // ✅ أول تحميل للتاب التاني
   }
@@ -44,7 +45,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
     _productsScroll.dispose();
     _storesScroll.dispose();
     _tabController.dispose();
-    favController.dispose();
+    // ✅ Don't dispose favController since it's from provider
     super.dispose();
   }
 

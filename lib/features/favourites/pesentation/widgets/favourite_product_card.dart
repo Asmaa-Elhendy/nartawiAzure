@@ -121,12 +121,12 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                 ? Positioned(
                                     top: widget.screenHeight * 0.01,
                                     left: widget.screenWidth * 0.01,
-                                    child: BuildIconOnProduct(state.price,
+                                    child: BuildIconOnProduct(widget.favouriteProduct.productVsId,state.price,
                                       isDelete: true,
                                       widget.screenWidth,
                                       widget.screenHeight,
                                       true, // plus icon
-                                      true,
+                                      isFavourite: true,
                                     ),
                                   )
                                 : Positioned(
@@ -138,18 +138,18 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        BuildIconOnProduct(state.price,
+                                        BuildIconOnProduct(widget.favouriteProduct.productVsId,state.price,
                                           widget.screenWidth,
                                           widget.screenHeight,
                                           true, // plus icon
-                                          true,
+                                          isFavourite: true,
                                         ),
                                         //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                                        BuildIconOnProduct(state.price,
+                                        BuildIconOnProduct(widget.favouriteProduct.productVsId,state.price,
                                           widget.screenWidth,
                                           widget.screenHeight,
                                           false, // heart icon
-                                          true,
+                                          isFavourite: true,
                                         ),
                                       ],
                                     ),
@@ -237,6 +237,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                           width: widget.screenWidth,
                                           height: widget.screenHeight,
                                           isPlus: true,
+
                                           price: 0,
                                           onIncrease: () => context
                                               .read<ProductQuantityBloc>()
