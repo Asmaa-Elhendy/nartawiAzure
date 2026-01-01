@@ -7,19 +7,13 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
 
-import 'package:flutter/material.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
-import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
-import '../../../../../../core/theme/colors.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/cart/cart_event.dart';
-import '../../snack_bar_add_product.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
+  final bool fromFavouriteScreen;
   final int productVsId;
 
   final double width;
@@ -35,6 +29,7 @@ class BuildIconOnProduct extends StatefulWidget {
   /// final int productVsId;
 
   const BuildIconOnProduct(
+      this.fromFavouriteScreen,
       this.productVsId,
       this.price,
       this.width,
@@ -54,14 +49,45 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
 
   // ✅ يمنع الضغط المتكرر بسرعة (optional)
   bool _isToggling = false;
+  
+  // ✅ Store controller reference to avoid context issues in dispose
+  FavoritesController? _favoritesController;
 
   @override
   void initState() {
     super.initState();
 
-    /// ✅ كبداية: لو مش عندك معلومة من API خليها false عند الاستدعاء
-    /// Example: BuildIconOnProduct(price,w,h,false,false)
-    isFavourite = widget.isFavourite;
+    // ✅ Check initial favorite status from controller
+    if (widget.fromFavouriteScreen) {
+      // In favorites screen, it's always favorited
+      isFavourite = true;
+    } else {
+      // In other screens, check from controller
+      _favoritesController = context.read<FavoritesController>();
+      isFavourite = _favoritesController!.isFavoritedVsId(widget.productVsId);
+      
+      // ✅ Listen for changes to update UI automatically
+      _favoritesController!.addListener(_onFavoritesChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    if (!widget.fromFavouriteScreen && _favoritesController != null) {
+      _favoritesController!.removeListener(_onFavoritesChanged);
+    }
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    if (!widget.fromFavouriteScreen && mounted && _favoritesController != null) {
+      final newStatus = _favoritesController!.isFavoritedVsId(widget.productVsId);
+      if (isFavourite != newStatus) {
+        setState(() {
+          isFavourite = newStatus;
+        });
+      }
+    }
   }
 
   @override
@@ -123,7 +149,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
 
             setState(() => isFavourite = !isFavourite);
 
-            final favoritesController = context.read<FavoritesController>();
+            final favoritesController = _favoritesController ?? context.read<FavoritesController>();
 
             try {
               if (isFavourite) {

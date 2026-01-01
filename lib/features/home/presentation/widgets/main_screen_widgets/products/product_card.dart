@@ -15,6 +15,7 @@ import '../price_widget.dart';
 import 'icon_on_product_card.dart';
 
 class ProductCard extends StatefulWidget {
+
   double screenWidth;
   double screenHeight;
   String icon;
@@ -209,7 +210,7 @@ class _ProductCardState extends State<ProductCard> {
                         //  mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BuildIconOnProduct(
+                          BuildIconOnProduct(false,
                             widget.product!.vsId,
                               state.price,
                               widget.screenWidth,
@@ -218,7 +219,7 @@ class _ProductCardState extends State<ProductCard> {
                               isFavourite: false,
                           ),
                           //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                          BuildIconOnProduct(widget.product!.vsId,state.price,
+                          BuildIconOnProduct(false,widget.product!.vsId,state.price,
                               widget.screenWidth,
                               widget.screenHeight,
                               false,isFavourite: false,

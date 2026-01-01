@@ -343,13 +343,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  BuildIconOnProduct(widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
+                                  BuildIconOnProduct(widget.fromFavorite,widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
                                     screenWidth,
                                     screenHeight,
                                     true,
                                    isFavourite:  false,
                                   ),
-                                  BuildIconOnProduct(widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
+                                  BuildIconOnProduct(widget.fromFavorite,widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
                                     screenWidth,
                                     screenHeight,
                                     false,

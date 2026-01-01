@@ -52,7 +52,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
       // In favorites screen, it's always favorited
       isFavourite = true;
     } else {
-      // In other screens, check from controller //here check whether vendor favorite or not
+      // In other screens, check from controller
       _favoritesController = context.read<FavoritesController>();
       isFavourite = _favoritesController!.isVendorFavorited(widget.supplier.id);
       
