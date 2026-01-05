@@ -226,4 +226,96 @@ class OrdersController extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// ✅ POST /api/v1/client/orders/{id}/cancel
+  /// Cancel a pending order (STATUS_ID=1)
+  /// Returns true if canceled successfully.
+  Future<bool> cancelOrder({
+    required int id,
+    required String reason,
+    bool refreshAfter = true,
+  }) async {
+    error = null;
+    notifyListeners();
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        error = 'Authentication required';
+        notifyListeners();
+        return false;
+      }
+
+      final url = '$base_url/v1/client/orders/$id/cancel';
+
+      final response = await dio.post(
+        url,
+        data: {
+          'reason': reason, // ✅ swagger schema
+        },
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          // ✅ مهم: 204 يعتبر success، فبنسمح بكل الأكواد < 500
+          validateStatus: (code) => code != null && code < 500,
+        ),
+      );
+
+      // ✅ Success: 204 No Content
+      if (response.statusCode == 204) {
+        debugPrint('✅ Order #$id canceled successfully');
+
+        if (refreshAfter) {
+          await refresh(); // يرجّع أول صفحة بنفس query الحالية
+        }
+        return true;
+      }
+
+      // ✅ Failed (مثل 400)
+      final data = response.data;
+      String msg = 'Order cannot be canceled';
+
+      // Swagger error ممكن ييجي بصيغ مختلفة
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (data is String && data.trim().isNotEmpty) {
+        msg = data;
+      } else {
+        msg = 'Order cannot be canceled (status: ${response.statusCode})';
+      }
+
+      error = msg;
+      notifyListeners();
+      return false;
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to cancel order';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      error = msg;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      error = 'An unexpected error occurred: $e';
+      notifyListeners();
+      return false;
+    }
+  }
+
 }

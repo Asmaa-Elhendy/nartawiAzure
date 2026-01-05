@@ -115,7 +115,7 @@ Widget BuildOrderButtons(
                   showDialog(
                     context: context,
                     builder: (ctx) =>
-                    CancelAlertDialog(),
+                    CancelAlertDialog(orderId: clientOrder!.id.toString(),),
                   );
 
                 },
