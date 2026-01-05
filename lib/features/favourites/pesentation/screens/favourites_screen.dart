@@ -36,8 +36,14 @@ class _FavouritesScreenState extends State<FavouritesScreen>
 
     // ✅ Get controller from provider instead of creating new instance
     favController = context.read<FavoritesController>();
-    favController.fetchFavoriteProducts(); // ✅ أول تحميل
-    favController.fetchFavoriteVendors(); // ✅ أول تحميل للتاب التاني
+    
+    // ✅ Delay the fetch calls to avoid calling notifyListeners during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        favController.fetchFavoriteProducts(); // ✅ أول تحميل
+        favController.fetchFavoriteVendors(); // ✅ أول تحميل للتاب التاني
+      }
+    });
   }
 
   @override

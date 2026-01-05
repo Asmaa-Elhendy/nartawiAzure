@@ -98,7 +98,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                  ],
                ),
              ),
-            BuildOrderButtons(context,screenWidth, screenHeight, orderStatus,paymentStatus)
+            BuildOrderButtons(context,screenWidth, screenHeight, orderStatus,paymentStatus,order)
           ],
         ),
       ),

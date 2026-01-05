@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/text_styles.dart';
+import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 
 import '../../../../core/theme/colors.dart';
 
-Widget OrderSummaryCard(double screenWidth, double screenHeight) {
+Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .0,
@@ -118,7 +119,7 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight) {
                   children: [
                     Text('Items Subtotal', style: AppTextStyles.textSummaryStyle),
                     SizedBox(height: 4),
-                    Text('QAR 124,00', style: AppTextStyles.textSummaryStyle),
+                    Text('QAR ${clientOrder.subTotal}', style: AppTextStyles.textSummaryStyle),
                   ],
                 ),
               ),
@@ -142,7 +143,7 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight) {
                   children: [
                     Text('Delivery Fee', style: AppTextStyles.textSummaryStyle),
                     SizedBox(height: 4),
-                    Text('QAR 10,00', style: AppTextStyles.textSummaryStyle),
+                    Text('QAR ${clientOrder.deliveryCost}', style: AppTextStyles.textSummaryStyle),
                   ],
                 ),
               ),
@@ -195,7 +196,7 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight) {
                     children: [
                       Text('Total :', style: AppTextStyles.textSummaryStyle),
                       SizedBox(height: 4),
-                      Text('QAR 134', style: AppTextStyles.textSummaryStyle),
+                      Text('QAR ${clientOrder.total}', style: AppTextStyles.textSummaryStyle),
                     ],
                   ),
                 ),

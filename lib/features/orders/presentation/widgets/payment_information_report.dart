@@ -3,8 +3,9 @@ import 'package:newwwwwwww/core/theme/text_styles.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../domain/models/order_model.dart';
 
-Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentStatus) {
+Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentStatus,ClientOrder clientOrder) {
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .02,
@@ -53,7 +54,7 @@ Widget OrderPaymentCard(double screenWidth, double screenHeight,String paymentSt
               children: [
                 Text('Payment Method', style: AppTextStyles.textSummaryStyle),
                 Text(
-                paymentStatus=='Paid'?  'eWallet':'Cash On Delivery',
+               clientOrder.paymentMethod??'',// clientOrder.isPaid!?  'eWallet':'Cash On Delivery',
                   style: TextStyle(
                     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                     fontWeight: FontWeight.w500,

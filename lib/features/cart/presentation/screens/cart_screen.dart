@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/delivery_address_cart.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/outline_buttons.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
+import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
@@ -128,7 +129,7 @@ class _CartScreenState extends State<CartScreen>
                                 //                 ],),
                                 //             ),
                               ),
-                              OrderSummaryCard(screenWidth, screenHeight),
+                              OrderSummaryCard(screenWidth, screenHeight,ClientOrder(id: 0)),
                               OrderDeliveryCartWidget(),
                               BuildInfoAndAddToCartButton(
                                 screenWidth,

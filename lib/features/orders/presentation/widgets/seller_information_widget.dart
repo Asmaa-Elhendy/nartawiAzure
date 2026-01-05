@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
+import '../../domain/models/order_model.dart';
 import 'order_image_network_widget.dart';
 
-Widget OrderSellerInformationCard(double screenWidth, double screenHeight) {
+Widget OrderSellerInformationCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
   String imageUrl='';
 
   return Container(

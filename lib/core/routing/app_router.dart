@@ -90,8 +90,8 @@ class AppRouter {
       //   return MaterialPageRoute(builder: (_) => const ProductDetailScreen());
       case '/ordersScreen':
         return MaterialPageRoute(builder: (_) => const OrdersScreen());
-      case '/orderDetail':
-        return MaterialPageRoute(builder: (_) =>  OrderDetailScreen(orderStatus: '', paymentStatus: '',));
+      // case '/orderDetail':
+      //   return MaterialPageRoute(builder: (_) =>  OrderDetailScreen(orderStatus: '', paymentStatus: '',));
       case '/couponsScreen':
         return MaterialPageRoute(builder: (_) =>  CouponsScreen());
       case '/favouritesScreen':

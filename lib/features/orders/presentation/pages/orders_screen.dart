@@ -24,7 +24,13 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
     _tabController = TabController(length: 4, vsync: this);
 
     ordersController = OrdersController(dio: Dio());
-    ordersController.fetchOrders(executeClear: true); // ✅ تحميل كل الطلبات
+    
+    // ✅ Delay the fetch call to avoid calling notifyListeners during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ordersController.fetchOrders(executeClear: true); // ✅ تحميل كل الطلبات
+      }
+    });
   }
 
   @override

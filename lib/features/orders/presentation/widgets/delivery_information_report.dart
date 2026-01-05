@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/text_styles.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../domain/models/order_model.dart';
 
-Widget OrderDeliveryCard(double screenWidth, double screenHeight) {
+Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .02,
@@ -48,7 +49,7 @@ Widget OrderDeliveryCard(double screenWidth, double screenHeight) {
               children: [
                 Text('Delivery Address', style: AppTextStyles.textSummaryStyle),
                 Text(
-                  'Zone abc, Street 20, Building 21, Flat 22',
+                clientOrder.deliveryAddress??'',//  'Zone abc, Street 20, Building 21, Flat 22',
                   style: TextStyle(
                     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                     fontWeight: FontWeight.w500,

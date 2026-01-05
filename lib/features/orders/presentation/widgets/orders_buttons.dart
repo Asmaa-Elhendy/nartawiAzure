@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_alert_dialog.dart';
 import '../../../../core/theme/colors.dart';
 import '../pages/order_details.dart';
@@ -9,7 +10,8 @@ Widget BuildOrderButtons(
   double screenWidth,
   double screenHeight,
   String orderStatus,
-  String paymentStatus
+  String paymentStatus,
+  ClientOrder? clientOrder,
 ) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -19,7 +21,7 @@ Widget BuildOrderButtons(
             onTap: (){
               Navigator.push
                 (context, MaterialPageRoute(builder: (context)=>
-                  OrderDetailScreen(orderStatus: orderStatus,paymentStatus: paymentStatus,)));
+                  OrderDetailScreen(orderStatus: orderStatus,paymentStatus: paymentStatus,clientOrder:clientOrder!)));
 
             },
             child: Padding(
