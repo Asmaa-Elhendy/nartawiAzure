@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../auth/presentation/widgets/auth_buttons.dart';
-import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../../injection_container.dart';
 import '../../../profile/presentation/provider/address_controller.dart';
-import '../../../profile/presentation/widgets/add_new_address_alert.dart';
+import '../../../profile/domain/models/client_address.dart';
+import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../profile/presentation/widgets/address_card.dart';
 import 'change_address_alert.dart';
 
@@ -12,25 +12,33 @@ class OrderDeliveryCartWidget extends StatefulWidget {
   const OrderDeliveryCartWidget({super.key});
 
   @override
-  State<OrderDeliveryCartWidget> createState() =>
-      _OrderDeliveryCartWidgetState();
+  State<OrderDeliveryCartWidget> createState() => _OrderDeliveryCartWidgetState();
 }
 
 class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
   late AddressController addressController;
 
+  ClientAddress? _selectedAddress;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    addressController = AddressController(dio: Dio());
-    addressController.fetchAddresses(); // ✅ أول تحميل
+    // ✅ Use shared AddressController from DI container
+    addressController = sl<AddressController>();
+    
+    // ✅ Delay fetch to avoid build phase issues
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        addressController.fetchAddresses();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: screenHeight * .02),
       padding: EdgeInsets.symmetric(
@@ -45,7 +53,6 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Title
           Center(
             child: Text(
               'Delivery Address',
@@ -58,83 +65,98 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
           ),
           SizedBox(height: screenHeight * .02),
 
-          // Item 1
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BuildCardAddress(controller:addressController,
-                context,
-                screenHeight,
-                screenWidth,
-                fromCart: true,
+              AnimatedBuilder(
+                animation: addressController,
+                builder: (context, _) {
+                  if (addressController.isLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(color: AppColors.primary),
+                    );
+                  }
+
+                  if (addressController.error != null) {
+                    return Text(
+                      addressController.error!,
+                      style: const TextStyle(color: Colors.red),
+                    );
+                  }
+
+                  final list = addressController.addresses;
+
+                  if (list.isEmpty) {
+                    return Text(
+                      'No addresses found',
+                      style: TextStyle(
+                        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                        fontSize: screenWidth * .034,
+                      ),
+                    );
+                  }
+
+                  // ✅ لو مختار من dialog
+                  if (_selectedAddress != null) {
+                    return BuildCardAddress(
+                      context,
+                      screenHeight,
+                      screenWidth,
+                      controller: addressController,
+                      fromCart: true,
+                      address: _selectedAddress!,
+                    );
+                  }
+
+                  // ✅ default
+                  final defaultList = list.where((a) => a.isDefault == true).toList();
+                  if (defaultList.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No Default Address',
+                        style: TextStyle(
+                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          fontSize: screenWidth * .034,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return BuildCardAddress(
+                    context,
+                    screenHeight,
+                    screenWidth,
+                    controller: addressController,
+                    fromCart: true,
+                    address: defaultList.first,
+                  );
+                },
               ),
+
               OutlineAuthButton(
                 screenWidth,
                 screenHeight,
                 'Change Address',
-                    () {
-                  showDialog(
+                    () async {
+                  final selected = await showDialog<ClientAddress>(
                     context: context,
-                    builder: (ctx) =>
-                        ChangeAddressAlert(),
+                    builder: (ctx) => ChangeAddressAlert(),
                   );
+
+                  if (selected != null) {
+                    setState(() {
+                      _selectedAddress = selected;
+                    });
+                  }
                 },
                 fromDelivery: false,
-                icon:
-                'assets/images/profile/delivery/current_location.svg',
+                icon: 'assets/images/profile/delivery/current_location.svg',
               ),
-              // BuildCardAddress(
-              //   context,
-              //   screenHeight,
-              //   screenWidth,
-              //   work: true,
-              //   fromCart: true,
-              // ),
-              // BuildInfoAndAddToCartButton(
-              //   screenWidth,
-              //   screenHeight,
-              //   'Add New Address',
-              //   false,
-              //   () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (ctx) => AddAddressAlertDialog(),
-              //     );
-              //   },
-              //   fromDelivery: true,
-              // ),
-              // OutlineAuthButton(
-              //   screenWidth,
-              //   screenHeight,
-              //   'Use Current Location',
-              //   () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (ctx) => AddAddressAlertDialog(useGps: true),
-              //     );
-              //   },
-              //   fromDelivery: true,
-              //   icon: 'assets/images/profile/delivery/current_location.svg',
-              // ),
-              // OutlineAuthButton(
-              //   screenWidth,
-              //   screenHeight,
-              //   'Open Google Map',
-              //   () {
-              //     showDialog(
-              //       context: context,
-              //       builder: (ctx) => AddAddressAlertDialog(useGps: true),
-              //     );
-              //   },
-              //   fromDelivery: true,
-              //   icon: 'assets/images/profile/delivery/google maps.svg',
-              // ),
             ],
           ),
 
           SizedBox(height: screenHeight * .01),
-
-          // Item 2
         ],
       ),
     );

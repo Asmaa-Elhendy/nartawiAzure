@@ -1,13 +1,11 @@
-import 'package:dio/dio.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import 'package:geolocator/geolocator.dart';
-
-// ✅ OSM (No API Key)
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
+import '../../../../injection_container.dart';
 import '../../../../core/services/maps_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
@@ -31,6 +29,12 @@ class AddAddressAlertDialog extends StatefulWidget {
 }
 
 class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
+  @override
+  void initState() {
+    super.initState();
+    log(' AddAddressAlertDialog initState - useGps: ${widget.useGps}, pickFromMap: ${widget.pickFromMap}');
+    log(' _isGpsMode: $_isGpsMode, _isMapMode: $_isMapMode, _isManualMode: $_isManualMode');
+  }
   final TextEditingController _addressNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
@@ -50,24 +54,33 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   // ✅ GPS Helpers (NO SnackBars)
   // =========================
   Future<Position?> getCurrentPositionSafely() async {
+    log('🔥 Getting GPS position...');
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    log('🔥 Service enabled: $serviceEnabled');
+    
     if (!serviceEnabled) {
+      log('🔥 Opening location settings...');
       await Geolocator.openLocationSettings();
       return null;
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
+    log('🔥 Permission: $permission');
 
     if (permission == LocationPermission.denied) {
+      log('🔥 Permission denied, requesting...');
       permission = await Geolocator.requestPermission();
+      log('🔥 Permission after request: $permission');
       if (permission == LocationPermission.denied) return null;
     }
 
     if (permission == LocationPermission.deniedForever) {
+      log('🔥 Permission denied forever, opening app settings...');
       await Geolocator.openAppSettings();
       return null;
     }
 
+    log('🔥 Getting current position...');
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -113,6 +126,12 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     }
   }
 
+  // ✅ Helper to truncate address to 100 characters max
+  String _truncateAddress(String address) {
+    if (address.length <= 100) return address;
+    return '${address.substring(0, 97)}...';
+  }
+
   // =========================
   // ✅ OSM Map Picker (No API Key)
   // =========================
@@ -141,7 +160,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
   }
 
   // =========================
-  // ✅ API Call
+  // API Call
   // =========================
   Future<bool> handleAddNewAddress({
     required String title,
@@ -154,25 +173,42 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     double? latitude,
     double? longitude,
   }) async {
-    final controller = AddressController(dio: Dio());
+    // Use shared AddressController from DI container
+    final controller = sl<AddressController>();
+    
+    log(' handleAddNewAddress called with:');
+    log(' title: "$title"');
+    log(' address: "$address"');
+    log(' useGps: $useGps');
+    log(' latitude: $latitude');
+    log(' longitude: $longitude');
 
-    final success = await controller.addNewAddress(
-      AddAddressRequest(
-        title: title.trim(),
-        address: address.trim(),
-        areaId: 1,
-        latitude: useGps ? (latitude ?? 0) : 0,
-        longitude: useGps ? (longitude ?? 0) : 0,
-        streetNum: useGps ? null : int.tryParse(street),
-        buildingNum: useGps ? null : int.tryParse(building),
-        doorNumber: useGps ? null : int.tryParse(flat),
-        floorNum: null,
-        notes: null,
-      ),
-      refreshAfter: true,
+    final request = AddAddressRequest(
+      title: title.trim(),
+      address: address.trim(),
+      areaId: 1,
+      latitude: useGps ? (latitude ?? 0) : 0,
+      longitude: useGps ? (longitude ?? 0) : 0,
+      streetNum: useGps ? null : int.tryParse(street),
+      buildingNum: useGps ? null : int.tryParse(building),
+      doorNumber: useGps ? null : int.tryParse(flat),
+      floorNum: null,
+      notes: null,
     );
+    
+    log(' AddAddressRequest created: $request');
 
-    return success;
+    try {
+      final success = await controller.addNewAddress(
+        request,
+        refreshAfter: true,
+      );
+      log(' Server response: $success');
+      return success;
+    } catch (e) {
+      log(' Error adding address: $e');
+      return false;
+    }
   }
 
   @override
@@ -268,7 +304,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                       SizedBox(height: screenHeight * .01),
                       buildCustomeFullTextField(
                         'Flat Number',
-                        'Enter Flat Number',
+                        'Enter Flat Number',//k
                         isNumberKeyboard: true,
                         _flatNoController,
                         false,
@@ -289,8 +325,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                         () async {
                       if (_isSubmitting) return;
 
-                      // ✅ EXACTLY like your old file
-                      if (!(_formKey.currentState?.validate() ?? false)) return;
+                      // ✅ Skip form validation for GPS mode (fields are hidden)
+                      if (_isManualMode && !(_formKey.currentState?.validate() ?? false)) return;
 
                       setState(() => _isSubmitting = true);
 
@@ -299,17 +335,31 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                         // ✅ 1) GPS flow
                         // =========================
                         if (_isGpsMode) {
+                          log('🔥 GPS Mode Started');
                           final pos = await getCurrentPositionSafely();
-                          if (pos == null) return;
+                          log('🔥 GPS Position: $pos');
+                          
+                          if (pos == null) {
+                            log('🔥 GPS Position is null - returning');
+                            setState(() => _isSubmitting = false);
+                            return;
+                          }
 
+                          log('🔥 Getting address from coordinates');
                           final resolvedAddress = await getAddressFromLatLng(
                             pos.latitude,
                             pos.longitude,
                           );
+                          log('🔥 Resolved Address: $resolvedAddress');
+                          //j
+                          // ✅ Truncate address to 100 characters max
+                          final truncatedAddress = _truncateAddress(resolvedAddress);
+                          log('🔥 Truncated Address: "$truncatedAddress"');
 
+                          log('🔥 Adding address to server');
                           final ok = await handleAddNewAddress(
                             title: _addressNameController.text,
-                            address: resolvedAddress,
+                            address: truncatedAddress,
                             zone: '',
                             street: '',
                             building: '',
@@ -318,6 +368,7 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                             latitude: pos.latitude,
                             longitude: pos.longitude,
                           );
+                          log('🔥 Address added successfully: $ok');
 
                           if (ok) Navigator.pop(context, true);
                           return;
@@ -341,11 +392,16 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                             picked.latitude,
                             picked.longitude,
                           );
+                          log('🔥 Map Picker Resolved Address: $resolvedAddress');
+                          
+                          // Truncate address to 100 characters max
+                          final truncatedAddress = _truncateAddress(resolvedAddress);
+                          log('🔥 Map Picker Truncated Address: "$truncatedAddress"');
 
                           // 5) add address بالـ lat/lng المختارين
                           final ok = await handleAddNewAddress(
                             title: _addressNameController.text,
-                            address: resolvedAddress,
+                            address: truncatedAddress,
                             zone: '',
                             street: '',
                             building: '',
@@ -400,4 +456,3 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
     super.dispose();
   }
 }
-

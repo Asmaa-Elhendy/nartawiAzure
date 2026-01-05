@@ -1,15 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../provider/address_controller.dart';
-
 import '../widgets/add_new_address_alert.dart';
 import '../widgets/address_card.dart';
+import '../../../../injection_container.dart';
 
 class DeliveryAddressScreen extends StatefulWidget {
   const DeliveryAddressScreen({super.key});
@@ -21,15 +19,22 @@ class DeliveryAddressScreen extends StatefulWidget {
 class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
   late AddressController addressController;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    addressController = AddressController(dio: Dio());
-    addressController.fetchAddresses(); // ✅ أول تحميل
+    // ✅ Use shared AddressController from DI container
+    addressController = sl<AddressController>();
+    
+    // ✅ Delay fetch to avoid build phase issues
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        addressController.fetchAddresses(); // ✅ أول تحميل
+      }
+    });
   }
 
   @override

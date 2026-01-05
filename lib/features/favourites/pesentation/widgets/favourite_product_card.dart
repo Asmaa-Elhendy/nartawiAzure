@@ -159,8 +159,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(
-                              bottom: widget.screenHeight * .01,
-                              top: widget.screenHeight * .01,
+                              bottom: widget.screenHeight * .005,//edit design for mobile
+                              top: widget.screenHeight * .005,//edit design for mobile
                               right: widget.screenWidth * .03,
                               left: widget.screenWidth * .03,
                             ),

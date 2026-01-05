@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
@@ -128,10 +130,15 @@ class AddressController extends ChangeNotifier {
       final token = await AuthService.getToken();
       if (token == null) {
         createError = 'Authentication required';
+        log('🔥 AddressController: No token found');
         return false;
       }
+      
+      log('🔥 AddressController: Token found successfully');
 
       final url = '$base_url/v1/client/account/addresses';
+      log('🔥 AddressController: POST $url');
+      log('🔥 AddressController: Request data: ${request.toJson()}');
 
       final response = await dio.post(
         url,
@@ -144,6 +151,10 @@ class AddressController extends ChangeNotifier {
           },
         ),
       );
+
+      log('🔥 AddressController: Response received!');
+      log('🔥 AddressController: Response status: ${response.statusCode}');
+      log('🔥 AddressController: Response data: ${response.data}');
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         // ✅ لو الـ API رجّع address object
@@ -170,11 +181,16 @@ class AddressController extends ChangeNotifier {
         return true;
       } else {
         createError = 'Failed to create address (status: ${response.statusCode})';
+        log('🔥 AddressController: Failed with status ${response.statusCode}');
         return false;
       }
     } on DioException catch (e) {
       final data = e.response?.data;
       String msg = 'Failed to create address';
+      
+      log('🔥 AddressController: DioException - ${e.type}');
+      log('🔥 AddressController: Response status: ${e.response?.statusCode}');
+      log('🔥 AddressController: Response data: ${e.response?.data}');
 
       if (data is Map && data['title'] != null) {
         msg = data['title'].toString();
@@ -185,9 +201,11 @@ class AddressController extends ChangeNotifier {
       }
 
       createError = msg;
+      log('🔥 AddressController: Error message: $msg');
       return false;
     } catch (e) {
       createError = 'An unexpected error occurred: $e';
+      log('🔥 AddressController: Unexpected error: $e');
       return false;
     } finally {
       isCreating = false;

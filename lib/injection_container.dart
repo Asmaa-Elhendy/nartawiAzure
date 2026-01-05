@@ -9,6 +9,7 @@ import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
+import 'features/profile/presentation/provider/address_controller.dart';
 
 final sl = GetIt.instance;
 
@@ -34,7 +35,9 @@ Future<void> init() async {
   // Favorites Controller
   sl.registerFactory<FavoritesController>(() => FavoritesController(dio: sl<Dio>()));
 
+  // Address Controller - Use singleton to share same instance
+  sl.registerLazySingleton<AddressController>(() => AddressController(dio: sl<Dio>()));
+
   sl.registerFactory<SupplierReviewsController>(() => SupplierReviewsController(dio: sl<Dio>()));
   sl.registerFactory<OrdersController>(() => OrdersController(dio: sl<Dio>()));
-
 }
