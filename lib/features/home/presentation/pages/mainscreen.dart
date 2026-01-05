@@ -56,6 +56,8 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _onRefresh() async {
+    debugPrint('🔄 PULL TO REFRESH TRIGGERED');
+
     // ✅ Reload categories
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
 
@@ -71,7 +73,6 @@ class _MainScreenState extends State<MainScreen> {
     // ✅ Refresh slider (coupon balance API)
     _sliderKey.currentState?.refresh();
 
-    // optional delay to allow UI to show indicator briefly
     await Future.delayed(const Duration(milliseconds: 300));
   }
 
@@ -105,6 +106,12 @@ class _MainScreenState extends State<MainScreen> {
               child: RefreshIndicator(
                 color: AppColors.primary,
                 onRefresh: _onRefresh,
+
+                // ✅ أهم تعديل: امنعي refresh إلا لو المستخدم في أعلى الصفحة
+                notificationPredicate: (notification) {
+                  return notification.metrics.pixels <= 0;
+                },
+
                 child: CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
@@ -139,7 +146,7 @@ class _MainScreenState extends State<MainScreen> {
                                       .then((_) {
                                     context.read<ProductsBloc>().refresh();
                                     // ✅ optional: كمان حدثي السلايدر بعد الرجوع
-                                    _sliderKey.currentState?.refresh();
+                                    // _sliderKey.currentState?.refresh();
                                   });
                                 },
                                 child: Padding(
