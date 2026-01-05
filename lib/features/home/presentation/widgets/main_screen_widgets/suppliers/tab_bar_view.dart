@@ -308,7 +308,7 @@ class _StackOverState extends State<StackOver>
             top: h * 0.02,
             bottom: h * .02,
           ),
-          child: TabBarSecondPage(),
+          child: TabBarSecondPage(supplierId: widget.supplier!.id,),
         );
     }
   }
