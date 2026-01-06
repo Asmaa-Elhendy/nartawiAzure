@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/components/background_logo.dart';
+import '../../../Delivery_Man/home/presentation/screens/home_delivery.dart';
 import '../bloc/login_bloc.dart';
 import '../bloc/login_event.dart';
 import '../bloc/login_state.dart';
@@ -252,7 +253,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width,
                                 height,
                                 'Guest',
-                                _handleLogin,
+                                  (){}//  _handleLogin,
+                              ),SizedBox(width: width*.03,),
+                              CustomLoginButtons(
+                                  width,
+                                  height,
+                                  'Delivery',
+                                      (){Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreenDelivery()));}//  _handleLogin,
                               ),
                             ],
                           ),

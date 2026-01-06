@@ -143,6 +143,7 @@ flutter:
     - assets/images/navigation_bar/user-profile_navigation_bar.svg
     - assets/images/navigation_bar/Logosvg.svg
     - assets/images/app_icon/app_icon.jpeg
+    - assets/images/navigation_bar/work_history.svg
 
   fonts:
     - family: Poppins
