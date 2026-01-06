@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/icon_park_solid.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
@@ -12,6 +13,7 @@ Widget BuildOutlinedIconButton(
     double height,
     String title,
     void Function()? fun,
+    {bool fromDelivery=false}
 
 
     ) {
@@ -26,7 +28,7 @@ Widget BuildOutlinedIconButton(
         height:     height * .05,
         decoration: BoxDecoration(
           border: Border.all( // هنا أضفنا البوردر
-            color:isPhotoButton?AppColors.secondary: AppColors.blueBorder, // لون البوردر
+            color:fromDelivery?AppColors.secondary:isPhotoButton?AppColors.secondary: AppColors.blueBorder, // لون البوردر
             width: .5,               // سمك البوردر
           ),
           color: AppColors.whiteColor,
@@ -35,6 +37,8 @@ Widget BuildOutlinedIconButton(
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
+            title=='Mark As Delivered'?SvgPicture.asset("assets/images/delivery/orders/package-delivered.svg",
+              width: width * .042,color: AppColors.secondary):
          title=='Upload Photo'?
          Iconify(
            MaterialSymbols.upload_rounded, // 👈 اسم الأيقونة من Material Symbols
@@ -50,11 +54,11 @@ Widget BuildOutlinedIconButton(
               size:width*.052,
               color: AppColors.primary,
             ),
-            SizedBox(width: width*.02,),
+            SizedBox(width: fromDelivery?width*.01:width*.02,),
             Text(
               title,
               style: TextStyle(
-                color:isPhotoButton?AppColors.secondary: AppColors.primary,
+                color:fromDelivery?AppColors.secondary:isPhotoButton?AppColors.secondary: AppColors.primary,
                 fontSize: width*.034,
                 fontWeight: FontWeight.w500,
               ),

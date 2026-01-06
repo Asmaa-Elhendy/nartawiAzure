@@ -60,6 +60,7 @@ dependencies:
   geocoding: ^2.1.0
   flutter_map: ^6.1.0
   latlong2: ^0.9.1
+  flutter_typeahead: ^5.2.0
 
 
 
@@ -144,6 +145,10 @@ flutter:
     - assets/images/navigation_bar/Logosvg.svg
     - assets/images/app_icon/app_icon.jpeg
     - assets/images/navigation_bar/work_history.svg
+    - assets/images/delivery/location.svg
+    - assets/images/delivery/orders/maps-global-02.svg
+    - assets/images/delivery/orders/whatsapp.svg
+    - assets/images/delivery/orders/package-delivered.svg
 
   fonts:
     - family: Poppins

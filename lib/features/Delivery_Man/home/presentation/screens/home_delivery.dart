@@ -7,6 +7,9 @@ import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen
 import '../../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/pages/mainscreen.dart';
 import '../../../../profile/presentation/pages/profile.dart';
+import '../../../history/presentation/screens/history_delivery.dart';
+import '../../../orders/presentation/screens/assigned_orders_screen.dart';
+import '../../../profile/presentation/screens/delivery_profile.dart';
 import '../widgets/custom_navigation_bar_delivery.dart';
 
 
@@ -131,15 +134,15 @@ class _MainScreenDeliveryState extends State<MainScreenDelivery> with SingleTick
         Widget page;
         switch (index) {
           case 0:
-            page = const MyeWalletScreen();
+            page = const HistoryDelivery();
             break;
 
           case 1:
-            page = const OrdersScreen();
+            page = const AssignedOrderedScreen();
             break;
 
           case 2:
-            page = const ProfileScreen();
+            page = const DeliveryProfile();
             break;
           default:
             page = const SizedBox();

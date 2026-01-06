@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imageUrl,String localUrl){
+Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imageUrl,String localUrl,{bool fromDelivery=false}){
   // Validate imageUrl - check if it's null, empty, or invalid
   bool isValidImageUrl(String? url) {
     if (url == null || url.isEmpty) return false;
@@ -22,7 +22,7 @@ Widget BuildNetworkOrderImage(double screenWidth,double screenHeight,String imag
   
   return   Container(
     //    width: screenWidth*.1,
-    height: screenHeight * .09,
+    height: fromDelivery?screenHeight*.06:screenHeight * .09,
     decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.transparent
