@@ -7,7 +7,8 @@ Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{boo
     padding: EdgeInsets.symmetric(
         vertical:fromOrderDetail?screenHeight*.025: screenHeight * .01, horizontal: screenWidth * .02),
     decoration: BoxDecoration(
-      color: title == 'Delivered' ? AppColors.greenLight :title=='Pending'?AppColors.orangeLight :title =='On The Way'?AppColors.secondaryColorWithOpacity16:AppColors.redLight,
+      color: title == 'Delivered' ? AppColors.greenLight :title=='Pending'?AppColors.orangeLight :title =='On The Way'||title=='one Time'?
+      AppColors.secondaryColorWithOpacity16:title=='Coupon Based'?AppColors.secondaryColorWithOpacity8:AppColors.redLight,
       borderRadius: BorderRadius.circular(8),
     ),
     child: Center(
@@ -16,7 +17,7 @@ Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{boo
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: title == 'Delivered' ? AppColors.greenColor :
-          title=='Pending'?AppColors.orangeColor: title =='On The Way'?AppColors.secondary:
+          title=='Pending'?AppColors.orangeColor: title =='On The Way'||title=='one Time'?AppColors.secondary:title=='Coupon Based'?AppColors.secondary:
           AppColors
               .redColor,
           fontSize:fromDeliveryMan?screenWidth*.032: screenWidth * .034,

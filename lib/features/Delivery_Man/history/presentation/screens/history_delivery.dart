@@ -26,7 +26,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   static const List<String> _tabs = [
     'All',
     'Delivered',
-    'Cancelled',
+    'Canceled',
     'Disputed',
   ];
 
@@ -76,7 +76,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
       linkedAccountName: 'Gamal',
       issuedAt: DateTime.now().subtract(const Duration(days: 6, hours: 1)),
       completedAt: DateTime.now().subtract(const Duration(days: 6)),
-      status: 'Cancelled',
+      status: 'Canceled',
     ),
     WalletTransaction(
       id: 105,
@@ -116,7 +116,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
         // ✅ Delivered تشمل Completed كمان
         return s.contains('delivered') || s.contains('completed');
       }
-      if (tab == 'cancelled') {
+      if (tab == 'canceled') {
         return s.contains('cancel'); // cancelled/canceled
       }
       if (tab == 'disputed') {

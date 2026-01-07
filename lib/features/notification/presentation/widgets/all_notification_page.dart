@@ -8,7 +8,8 @@ import '../widgets/select_all_row.dart';
 import 'notification_card.dart';
 
 class AllNotificationPage extends StatelessWidget {
-  const AllNotificationPage({super.key});
+ bool fromDeliveryMan;
+ AllNotificationPage(this.fromDeliveryMan);
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,7 @@ class AllNotificationPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final item = state.notifications[index];
                   return NotificationCard(
+                    fromDeliveryMan: fromDeliveryMan,
                     screenHeight: screenHeight,
                     screenWidth: screenWidth,
                     notification: item,

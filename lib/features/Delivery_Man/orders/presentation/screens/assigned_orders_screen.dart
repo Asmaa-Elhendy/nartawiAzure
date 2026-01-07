@@ -105,7 +105,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
       }
 
       if (tabName == 'canceled') {
-        return status.contains('canceled') || status.contains('cancelled');
+        return status.contains('canceled') || status.contains('canceled');
       }
 
       if (tabName == 'disputed') {
@@ -331,7 +331,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                                     ClientOrder(id: 1,issueTime: DateTime.now(),statusName: 'On The Way',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
                                     ClientOrder(id: 3,issueTime: DateTime.now(),statusName: 'Delivered',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
                                     ClientOrder(id: 4,issueTime: DateTime.now(),statusName: 'Pending',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-                                    ClientOrder(id: 5,issueTime: DateTime.now(),statusName: 'Cancelled',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+                                    ClientOrder(id: 5,issueTime: DateTime.now(),statusName: 'Canceled',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
 
 
 

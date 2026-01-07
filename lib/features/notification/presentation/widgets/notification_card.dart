@@ -4,6 +4,7 @@ import 'package:iconify_flutter/icons/healthicons.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
+import '../../../orders/presentation/widgets/order_status_widget.dart';
 import '../bloc/notification_bloc/bloc.dart';
 import '../bloc/notification_bloc/event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +14,14 @@ class NotificationCard extends StatelessWidget {
   final double screenHeight;
   final double screenWidth;
   final NotificationItem notification;
+  bool fromDeliveryMan;
 
-  const NotificationCard({
+   NotificationCard({
     super.key,
     required this.screenHeight,
     required this.screenWidth,
     required this.notification,
+    this.fromDeliveryMan=false
   });
 
   @override
@@ -93,6 +96,13 @@ class NotificationCard extends StatelessWidget {
                         notification.title,
                         screenWidth,
                         screenHeight,
+                      ),
+                      BuildOrderStatus(
+                        fromDeliveryMan:fromDeliveryMan ,
+                        screenHeight,
+                        screenWidth, //hj
+                        'one Time', // ✅ هنا بس التعديل
+                        fromOrderDetail: false,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
