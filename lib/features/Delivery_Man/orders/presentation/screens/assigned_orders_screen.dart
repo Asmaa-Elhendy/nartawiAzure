@@ -59,19 +59,19 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
 
-    ordersController = OrdersController(dio: Dio());
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        ordersController.fetchOrders(executeClear: true);
-      }
-    });
+     ordersController = OrdersController(dio: Dio());
+    //
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (mounted) {
+    //     ordersController.fetchOrders(executeClear: true);
+    //   }
+    // });
   }
 
   @override
   void dispose() {//k
     _tabController.dispose();
-    ordersController.dispose();
+    // ordersController.dispose();
     zoneCtrl.dispose();
     streetCtrl.dispose();
     buildingCtrl.dispose();
@@ -91,7 +91,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
         // in case backend returns variations
         return status.contains('on the way') ||
             status.contains('ontheway') ||
-            status.contains('out for delivery') ||
+            status.contains('out for delivery_man') ||
             status.contains('on_way') ||
             status.contains('shipping');
       }
@@ -266,39 +266,39 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // FROM
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    customCouponAlertTitle(
-                                      'Filter By',
-                                      screenWidth,
-                                      screenHeight,//j
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {},
-                                      child:FilterByRowTypeAhead(
-                                        width: screenWidth,
-                                        height: screenHeight,
-                                        zones: zonesList,
-                                        streets: streetsList,
-                                        buildings: buildingsList,
-                                        zoneController: zoneCtrl,
-                                        streetController: streetCtrl,
-                                        buildingController: buildingCtrl,
-                                        onZoneSelected: (v) => setState(() {}),
-                                        onStreetSelected: (v) => setState(() {}),
-                                        onBuildingSelected: (v) => setState(() {}),
-                                        onClearZone: () => setState(() {}),
-                                        onClearStreet: () => setState(() {}),
-                                        onClearBuilding: () => setState(() {}),
-                                      ),
-
-
-
-
-                                    ),
-                                  ],
-                                ),
+                                // Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     customCouponAlertTitle(
+                                //       'Filter By',
+                                //       screenWidth,
+                                //       screenHeight,//j
+                                //     ),
+                                //     GestureDetector(
+                                //       onTap: () async {},
+                                //       child:FilterByRowTypeAhead(
+                                //         width: screenWidth,
+                                //         height: screenHeight,
+                                //         zones: zonesList,
+                                //         streets: streetsList,
+                                //         buildings: buildingsList,
+                                //         zoneController: zoneCtrl,
+                                //         streetController: streetCtrl,
+                                //         buildingController: buildingCtrl,
+                                //         onZoneSelected: (v) => setState(() {}),
+                                //         onStreetSelected: (v) => setState(() {}),
+                                //         onBuildingSelected: (v) => setState(() {}),
+                                //         onClearZone: () => setState(() {}),
+                                //         onClearStreet: () => setState(() {}),
+                                //         onClearBuilding: () => setState(() {}),
+                                //       ),
+                                //
+                                //
+                                //
+                                //
+                                //     ),
+                                //   ],
+                                // ),
 
                               ],
                             ),
@@ -326,7 +326,16 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                                     );
                                   }
 
-                                  final allOrders = ordersController.orders;
+                                  final allOrders =[
+                                    ClientOrder(id: 0,issueTime: DateTime.now(),statusName: 'Pending',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+                                    ClientOrder(id: 1,issueTime: DateTime.now(),statusName: 'On The Way',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+                                    ClientOrder(id: 3,issueTime: DateTime.now(),statusName: 'Delivered',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+                                    ClientOrder(id: 4,issueTime: DateTime.now(),statusName: 'Pending',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+                                    ClientOrder(id: 5,issueTime: DateTime.now(),statusName: 'Cancelled',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
+
+
+
+                                  ];// ordersController.orders;
 
                                   return TabBarView(
                                     controller: _tabController,
@@ -337,7 +346,10 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                                       return _buildOrdersList(
                                         screenHeight: screenHeight,
                                         screenWidth: screenWidth,
-                                        orders: filtered,
+                                        orders:
+                                        filtered
+
+                                        //filtered,
                                       );
                                     }),
                                   );

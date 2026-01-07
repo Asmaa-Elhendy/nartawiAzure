@@ -19,7 +19,7 @@ Widget BuildPaymentStatus(double screenWidth,double screenHeight,String status,{
     ),
     child: Center(
       child: Text(
-        status=='Paid'?'Paid':'Unpaid',
+        status,//=='Paid'?'Paid':'Unpaid',
         style: TextStyle(
           color:status=='Paid'? AppColors.greenColor:AppColors.orangeColor,
           fontSize: screenWidth*.034,

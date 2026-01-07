@@ -266,7 +266,7 @@ class _CouponeCardState extends State<CouponeCard> {
           SizedBox(height: screenHeight * .01),
 
           Text(
-            locationText.isEmpty ? 'No delivery address yet' : locationText,
+            locationText.isEmpty ? 'No delivery_man address yet' : locationText,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: screenWidth * .032,

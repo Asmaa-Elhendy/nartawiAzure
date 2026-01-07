@@ -45,7 +45,7 @@ class _RadioPaymentCardState extends State<RadioPaymentCard> {
                 _groupValue = val;
               });
             },
-            mainTitle: 'I confirm my order and agree to pay with my eWallet upon delivery',
+            mainTitle: 'I confirm my order and agree to pay with my eWallet upon delivery_man',
             firstText: 'Please have QAR 500.00 ready when your order arrives.',
             secondText: '',
           ),
@@ -61,7 +61,7 @@ class _RadioPaymentCardState extends State<RadioPaymentCard> {
                 _groupValue = val;
               });
             },
-            mainTitle: 'Cash on delivery',
+            mainTitle: 'Cash on delivery_man',
             firstText: 'Please have QAR 500.00 ready when your order arrives.',
             secondText: '',
           ),

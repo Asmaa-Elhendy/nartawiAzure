@@ -4,7 +4,8 @@ import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 
 import '../../../../core/theme/colors.dart';
 
-Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
+Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clientOrder,
+    {bool fromDeliveryMan=false}) {
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .0,
@@ -30,7 +31,14 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clie
       mainAxisSize: MainAxisSize.min,
       children: [
         // Title
-        Center(
+       fromDeliveryMan? Text(
+       'Order Summary',
+         style: TextStyle(
+           fontWeight: FontWeight.w700,
+           fontSize: screenWidth * .04,
+           color: AppColors.primary,
+         ),
+       ): Center(
           child: Text(
             'Order Summary',
             style: TextStyle(

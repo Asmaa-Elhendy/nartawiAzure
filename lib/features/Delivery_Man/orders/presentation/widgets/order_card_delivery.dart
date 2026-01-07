@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/oulined_icon_button.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/orders_buttons.dart';
@@ -102,12 +103,12 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
                   ),SizedBox(width: screenWidth*.1,),
                  Row(children: [
                    SvgPicture.asset(
-                     'assets/images/delivery/orders/whatsapp.svg',
+                     'assets/images/delivery_man/orders/whatsapp.svg',
                      width: screenWidth * .08,
                      // height: screenHeight*.1,
                    ),SizedBox(width: screenWidth*.05,),
                    SvgPicture.asset(
-                     'assets/images/delivery/orders/maps-global-02.svg',
+                     'assets/images/delivery_man/orders/maps-global-02.svg',
                      width: screenWidth * .08,
                      // height: screenHeight*.1,
                    ),
@@ -117,7 +118,7 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
             ),
             Row(children: [
               SvgPicture.asset(
-                'assets/images/delivery/location.svg'
+                'assets/images/delivery_man/location.svg'
                 ,color: Colors.black,
                 // height: screenHeight*.1,
               ),
@@ -175,52 +176,20 @@ Widget BuildOrderButtonsDelivery(
           onTap: (){
             Navigator.push
               (context, MaterialPageRoute(builder: (context)=>
-                OrderDetailScreen(orderStatus: orderStatus,paymentStatus: paymentStatus,clientOrder:clientOrder!)));
+                OrderDetailScreen(orderStatus: orderStatus,paymentStatus: paymentStatus,clientOrder:clientOrder!,fromDeliveryMan:true)));
 
           },
           child: Padding(
             padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
-            child: Container(
-              padding: EdgeInsetsGeometry.symmetric(
-                vertical: screenHeight * .01,
-                horizontal:orderStatus=='Pending'?screenWidth*.006: screenWidth * .015,
-              ),
-              height: screenHeight * .055,
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
+            child:CustomGradientButton( 'assets/images/orders/hugeicons_view.svg',
+   screenWidth * .015 ,'View Details', screenWidth, screenHeight)
 
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/orders/hugeicons_view.svg',
-                    color: AppColors.whiteColor,
-                    width: screenWidth * .05,
-                    // height: screenHeight*.1,
-                  ),
-                  SizedBox(width: screenWidth * .01),
-                  Flexible(
-                    child: Text(
-                      'View Details',
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: screenWidth * .029,
-                        fontWeight: FontWeight.w600,
-                      ),        overflow: TextOverflow.visible, // To avoid overflow text
-                      maxLines: 1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),
 
 
-      orderStatus == 'Pending'
+      orderStatus == 'On The Way'
           ? Expanded(
         child: InkWell(
           onTap: (){

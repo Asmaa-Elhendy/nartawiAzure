@@ -216,7 +216,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                     ).then((_) => addressController.refresh());
                   },
                   fromDelivery: true,
-                  icon: 'assets/images/profile/delivery/current_location.svg',
+                  icon: 'assets/images/profile/delivery_man/current_location.svg',
                 ),
 
                 OutlineAuthButton(
@@ -230,7 +230,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                     ).then((_) => addressController.refresh());
                   },
                   fromDelivery: true,
-                  icon: 'assets/images/profile/delivery/google maps.svg',
+                  icon: 'assets/images/profile/delivery_man/google maps.svg',
                 ),
 
                 CancelOrderWidget(

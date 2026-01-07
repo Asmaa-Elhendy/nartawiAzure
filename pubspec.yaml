@@ -145,10 +145,11 @@ flutter:
     - assets/images/navigation_bar/Logosvg.svg
     - assets/images/app_icon/app_icon.jpeg
     - assets/images/navigation_bar/work_history.svg
-    - assets/images/delivery/location.svg
-    - assets/images/delivery/orders/maps-global-02.svg
-    - assets/images/delivery/orders/whatsapp.svg
-    - assets/images/delivery/orders/package-delivered.svg
+    - assets/images/delivery_man/location.svg
+    - assets/images/delivery_man/orders/maps-global-02.svg
+    - assets/images/delivery_man/orders/whatsapp.svg
+    - assets/images/delivery_man/orders/package-delivered.svg
+    - assets/images/delivery_man/orders/delivery-tracking.svg
 
   fonts:
     - family: Poppins

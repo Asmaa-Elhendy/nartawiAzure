@@ -34,7 +34,7 @@ class _CouponsScreenState extends State<CouponsScreen>
 
     _couponsController = CouponsController(dio: Dio());
 
-    // ✅ نجيب الكل مرة واحدة عشان آخر delivery يبقى صح
+    // ✅ نجيب الكل مرة واحدة عشان آخر delivery_man يبقى صح
     _couponsController.fetchAllCoupons();
     _couponsController.fetchBundlePurchases();
 

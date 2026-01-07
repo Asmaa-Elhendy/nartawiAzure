@@ -1,4 +1,5 @@
 // filter_by_row_typeahead.dart
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../../../core/theme/colors.dart';
@@ -43,12 +44,11 @@ class FilterByRowTypeAhead extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // نفس فكرة توزيع المساحة بتاعتك
     final w = MediaQuery.of(context).size.width;
     final itemWidth = (w - (w * .12) - 20) / 3;
 
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: height*.01),
+      padding: EdgeInsets.symmetric(vertical: height * .01),
       child: Row(
         children: [
           SizedBox(
@@ -117,11 +117,11 @@ class _SearchablePillTypeAhead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pillH = height * .042;
+    final screenW = MediaQuery.of(context).size.width;
 
     return Container(
       height: pillH,
-
-      padding: EdgeInsets.symmetric(horizontal: width * .03), // ✅ padding ثابت زي ما تحبي
+      padding: EdgeInsets.symmetric(horizontal: width * .03),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(24),
@@ -133,111 +133,134 @@ class _SearchablePillTypeAhead extends StatelessWidget {
       alignment: Alignment.center,
       child: Row(
         children: [
-          // ✅ Expanded عشان النص ياخد مساحته ويظهر كامل
           Expanded(
-            child: TypeAheadField<String>(
-              controller: controller,
-              // عشان يشتغل كويس على اللمس
-              suggestionsCallback: (pattern) {
-                final q = pattern.trim().toLowerCase();
-                if (q.isEmpty) return items;
-                return items.where((e) => e.toLowerCase().contains(q)).toList();
-              },
-              itemBuilder: (context, suggestion) {
-                return ListTile(
-                  dense: true,
-                  tileColor: Colors.white, // ✅ الخلفية بيضا
-                  title: Text(
-                    suggestion,
-                    // maxLines: 1,
-                    // overflow: TextOverflow.ellipsis,
-                  //  softWrap: false,
-                    style: TextStyle(
-                      fontSize: width * .03,
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+            child: LayoutBuilder(
+              builder: (context, pillConstraints) {
+                final pillWidth = pillConstraints.maxWidth;
+
+                // ✅ عرض الـ suggestions: أكبر من الـ pill + لكن مايزيدش عن 92% من الشاشة
+                double suggestionsWidth = math.min(
+                  screenW * .98,                // ✅ تقريبًا عرض الشاشة
+                  pillWidth + (screenW * .55),  // ✅ أكبر بوضوح من قبل
                 );
-              },
-              emptyBuilder: (context) {
-                return Material(
-                  color: Colors.white, // ✅ خلفية بيضا
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: height * .012,
-                      horizontal: width * .02,
-                    ),
-                    child: Text(
-                      'No items found',
-                      // maxLines: 1,
-                      // overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: width * .028, // أصغر شوية
-                        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                        fontWeight: FontWeight.w400,
+
+
+                return TypeAheadField<String>(
+                  controller: controller,
+                  suggestionsCallback: (pattern) {
+                    final q = pattern.trim().toLowerCase();
+                    if (q.isEmpty) return items;
+                    return items.where((e) => e.toLowerCase().contains(q)).toList();
+                  },
+
+                  itemBuilder: (context, suggestion) {
+                    return Container(
+                      width: double.infinity, // ✅ مهم جدًا
+                      color: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * .01,
+                        vertical: height * .01,
                       ),
-                    ),
+                      child: Text(
+                        suggestion,
+                        maxLines: 2, // ✅ يسمح بسطرين فقط عند الحاجة
+                        overflow: TextOverflow.ellipsis, // ✅ لو أطول
+                        softWrap: true, // ✅ كسر ذكي على مستوى الكلمة
+                        style: TextStyle(
+                          fontSize: width * .03,
+                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                          fontWeight: FontWeight.w500,
+                          height: 1.3, // مسافة مريحة
+                        ),
+                      ),
+                    );
+                  },
+
+
+                  emptyBuilder: (context) {
+                    return Material(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: height * .012,
+                          horizontal: width * .03,
+                        ),
+                        child: Text(
+                          'No items found',
+                          maxLines: 1,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontSize: width * .028,
+                            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+
+                  onSelected: (suggestion) {
+                    controller.text = suggestion;
+                    onSelected(suggestion);
+                    FocusScope.of(context).unfocus();
+                  },
+
+                  builder: (context, textController, focusNode) {
+                    return TextField(
+                      controller: textController,
+                      focusNode: focusNode,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: width * .03,
+                        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                      ),
+                      decoration: InputDecoration(
+                        isDense: true,
+                        border: InputBorder.none,
+                        hintText: hint,
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: width * .03,
+                          color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                        ),
+                        contentPadding: EdgeInsets.only(
+                          left: width * .004,
+                          right: width * .004,
+                          top: height * .008,
+                          bottom: height * .008,
+                        ),
+                      ),
+                    );
+                  },
+
+                  decorationBuilder: (context, child) {
+                    return Material(
+                      elevation: 6,
+                      borderRadius: BorderRadius.circular(12),
+                      clipBehavior: Clip.antiAlias,
+                      color: Colors.white,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: suggestionsWidth,
+                          maxWidth: suggestionsWidth,
+                        ),
+                        child: child,
+                      ),
+                    );
+                  },
+
+                  constraints: BoxConstraints(
+                    maxHeight: height * .35,
                   ),
+                  hideOnEmpty: false,
+                  hideOnLoading: true,
+                  hideWithKeyboard: false,
                 );
               },
-
-              onSelected: (suggestion) {
-                controller.text = suggestion;
-                onSelected(suggestion);
-                FocusScope.of(context).unfocus();
-              },
-
-              // ✅ شكل الـ TextField جوه الـ pill
-              builder: (context, textController, focusNode) {
-                return TextField(
-                  controller: textController,
-                  focusNode: focusNode,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: width * .03,
-                    color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                    hintText: hint,
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: width * .03,
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                    ),
-                    contentPadding: EdgeInsets.only(
-                      left: width * .004,
-                      right: width * .004,
-                      top: height * .008,
-                      bottom: height * .008,
-                    ),
-                  ),
-                );
-              },
-
-              // ✅ شكل الـ dropdown suggestions
-              decorationBuilder: (context, child) {
-                return Material(
-                  elevation: 6,
-                  borderRadius: BorderRadius.circular(12),
-                  clipBehavior: Clip.antiAlias,
-                  child: child,
-                );
-              },
-
-              // ✅ خلي الـ suggestions width نفس الـ pill
-              constraints: BoxConstraints(
-                maxHeight: height * .35,
-              ),
-              hideOnEmpty: false,
-              hideOnLoading: true,
-              hideWithKeyboard: false,
             ),
           ),
 
-          // ✅ Icon: لو فيه text -> clear ، لو فاضي -> arrow
           if (controller.text.isNotEmpty)
             GestureDetector(
               onTap: () {

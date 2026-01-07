@@ -126,7 +126,7 @@ Widget BuildCardAddress(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SvgPicture.asset(
-                  'assets/images/profile/delivery/home.svg',
+                  'assets/images/profile/delivery_man/home.svg',
                   height: screenHeight * .03,
                  color:    selected?AppColors.whiteColor:AppColors.textLight
                 ),

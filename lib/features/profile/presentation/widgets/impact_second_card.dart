@@ -34,7 +34,7 @@ Widget impactSecondCard(double screenWidth, double screenHeight) {
           screenWidth: screenWidth,
           screenHeight: screenHeight,
           title: 'App Explorer',
-          description: 'Explored the MOYAH water delivery app features',
+          description: 'Explored the MOYAH water delivery_man app features',
           date: 'Unlocked: Mar 31, 2025',
           icon: Healthicons.award_trophy_outline,
         ),

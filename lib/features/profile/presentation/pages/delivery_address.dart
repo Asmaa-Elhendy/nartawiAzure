@@ -119,7 +119,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                             },
                             fromDelivery: true,
                             icon:
-                            'assets/images/profile/delivery/current_location.svg',
+                            'assets/images/profile/delivery_man/current_location.svg',
                           ),
                           OutlineAuthButton(
                             screenWidth,
@@ -134,7 +134,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                             },
                             fromDelivery: true,
                             icon:
-                            'assets/images/profile/delivery/google maps.svg',
+                            'assets/images/profile/delivery_man/google maps.svg',
                           ),
 
                           const SizedBox(height: 12),

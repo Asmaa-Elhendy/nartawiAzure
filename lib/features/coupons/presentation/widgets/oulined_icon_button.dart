@@ -37,7 +37,7 @@ Widget BuildOutlinedIconButton(
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
           children: [
 
-            title=='Mark As Delivered'?SvgPicture.asset("assets/images/delivery/orders/package-delivered.svg",
+            title=='Mark As Delivered'?SvgPicture.asset("assets/images/delivery_man/orders/package-delivered.svg",
               width: width * .042,color: AppColors.secondary):
          title=='Upload Photo'?
          Iconify(

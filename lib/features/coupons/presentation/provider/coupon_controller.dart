@@ -52,7 +52,7 @@ class CouponsController extends ChangeNotifier {
 
   bool get hasMore => pageNumber < totalPages;
 
-  /// ✅ جلب كل الصفحات مرة واحدة (عشان آخر delivery يبقى صح)
+  /// ✅ جلب كل الصفحات مرة واحدة (عشان آخر delivery_man يبقى صح)
   Future<void> fetchAllCoupons() async {
     if (isLoading) return;
 

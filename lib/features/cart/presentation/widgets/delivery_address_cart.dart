@@ -151,7 +151,7 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
                   }
                 },
                 fromDelivery: false,
-                icon: 'assets/images/profile/delivery/current_location.svg',
+                icon: 'assets/images/profile/delivery_man/current_location.svg',
               ),
             ],
           ),
