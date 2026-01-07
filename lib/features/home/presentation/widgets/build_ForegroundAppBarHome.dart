@@ -151,7 +151,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                       ? null
                       : Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => NotificationScreen()),
+                    MaterialPageRoute(builder: (_) => NotificationScreen(fromDeliveryMan:widget.fromDeliveryMan)),
                   );
                 },
                 child: Icon(

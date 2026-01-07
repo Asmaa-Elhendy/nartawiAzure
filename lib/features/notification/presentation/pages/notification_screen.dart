@@ -8,7 +8,8 @@ import '../bloc/notification_bloc/bloc.dart';
 import '../bloc/notification_bloc/state.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+ bool fromDeliveryMan;
+ NotificationScreen({this.fromDeliveryMan=false});
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
@@ -49,7 +50,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: widget.fromDeliveryMan,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Notifications',

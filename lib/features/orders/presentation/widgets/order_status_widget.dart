@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/colors.dart';
-Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{bool fromOrderDetail=false}) {
+Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{bool fromOrderDetail=false,bool fromDeliveryMan=false}) {
   return Container(
-    width:fromOrderDetail? screenWidth*.3:screenWidth*.36,
+    width:fromDeliveryMan?screenWidth*.25:fromOrderDetail? screenWidth*.3:screenWidth*.36,
     padding: EdgeInsets.symmetric(
         vertical:fromOrderDetail?screenHeight*.025: screenHeight * .01, horizontal: screenWidth * .02),
     decoration: BoxDecoration(
@@ -19,7 +19,7 @@ Widget BuildOrderStatus(double screenHeight,double screenWidth,String title,{boo
           title=='Pending'?AppColors.orangeColor: title =='On The Way'?AppColors.secondary:
           AppColors
               .redColor,
-          fontSize: screenWidth * .034,
+          fontSize:fromDeliveryMan?screenWidth*.032: screenWidth * .034,
         ),
       ),
     ),
