@@ -6,6 +6,7 @@ import '../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/custome_button.dart';
+import '../widgets/mark_delivered_alert.dart';
 
 
 class DeliveryConfirmationScreen extends StatefulWidget {
@@ -257,27 +258,42 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     title: "Mark As Delivered",
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
-                                    onTap: () {
-                                      // TODO
-                                    },
                                     isRed: false,
+                                    onTap: () {
+
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (_) => GpsRequiredAlert(
+                                          onOpenCamera: () {
+                                            // TODO: افتحي الكاميرا هنا
+                                            print("Open Camera");
+                                          },
+                                          onCancel: () {
+                                            // optional
+                                          },
+                                        ),
+                                      );
+
+                                    },
                                   ),
                                 ),
                                 SizedBox(width: screenWidth * .03),
                                 Expanded(
                                   child: CustomContainerButton(
-                                    icon: "", // مش محتاجين svg هنا
+                                    icon: "",
                                     title: "Mark As Canceled",
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
+                                    isRed: true,
                                     onTap: () {
                                       // TODO
                                     },
-                                    isRed: true,
                                   ),
                                 ),
                               ],
                             ),
+
 
 
                           ],
