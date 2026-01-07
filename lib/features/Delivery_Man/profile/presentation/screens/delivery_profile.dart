@@ -1,16 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
-import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
-import 'package:newwwwwwww/features/profile/presentation/pages/my_impact.dart';
-import 'package:newwwwwwww/features/profile/presentation/pages/settings.dart';
-import 'package:newwwwwwww/features/profile/presentation/widgets/impact_wallet_widget.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/profile_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/single_settings_profile.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import '../../../../profile/presentation/pages/delivery_address.dart';
 import '../../../../profile/presentation/provider/profile_controller.dart';
 class DeliveryProfile extends StatefulWidget {
   const DeliveryProfile({super.key});
@@ -20,23 +15,23 @@ class DeliveryProfile extends StatefulWidget {
 }
 
 class _DeliveryProfileState extends State<DeliveryProfile> {
-  late ProfileController profileController;
+  //late ProfileController profileController;
 
   @override
   void initState() {
     super.initState();
-    profileController = ProfileController(dio: Dio());
-    profileController.fetchProfile(); // ✅ load profile
+  //  profileController = ProfileController(dio: Dio());
+   // profileController.fetchProfile(); // ✅ load profile
   }
 
   @override
   void dispose() {
-    profileController.dispose();
+  //  profileController.dispose();
     super.dispose();
   }
 
   Future<void> _handleRefresh() async {
-    await profileController.fetchProfile();
+  //  await profileController.fetchProfile();
   }
 
   @override
@@ -75,41 +70,43 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenWidth * .06),
-                    child: AnimatedBuilder(
-                      animation: profileController,
-                      builder: (context, _) {
-                        // 🔄 Loading
-                        if (profileController.isLoading) {
-                          return SizedBox(
-                            height: screenHeight * .6,
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          );
-                        }
+                    child:
+                    // AnimatedBuilder(
+                    //   animation: profileController,
+                    //   builder: (context, _) {
+                        // // 🔄 Loading
+                        // // if (profileController.isLoading) {
+                        // //   return SizedBox(
+                        // //     height: screenHeight * .6,
+                        // //     child: Center(
+                        // //       child: CircularProgressIndicator(
+                        // //         color: AppColors.primary,
+                        // //       ),
+                        // //     ),
+                        // //   );
+                        // // }
+                        //
+                        // // ❌ Error
+                        // if (profileController.error != null) {
+                        //   return SizedBox(
+                        //     height: screenHeight * .6,
+                        //     child: Center(
+                        //       child: Text(
+                        //         profileController.error!,
+                        //         style: const TextStyle(color: Colors.red),
+                        //       ),
+                        //     ),
+                        //   );
+                        // }
 
-                        // ❌ Error
-                        if (profileController.error != null) {
-                          return SizedBox(
-                            height: screenHeight * .6,
-                            child: Center(
-                              child: Text(
-                                profileController.error!,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          );
-                        }
+                        // final profile = profileController.profile;
+                        //
+                        // if (profile == null) {
+                        //   return const SizedBox.shrink();
+                        // }
 
-                        final profile = profileController.profile;
-
-                        if (profile == null) {
-                          return const SizedBox.shrink();
-                        }
-
-                        return Column(
+                 //       return
+                    Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: screenHeight * .01),
@@ -126,7 +123,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                                 children: [
                                   Center(
                                     child: Text(
-                                      profile.enName,
+                                      'Ahmed Mohamed',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: screenWidth * .044,
@@ -135,7 +132,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                                   ),
                                   Center(
                                     child: Text(
-                                      profile.mobile,
+                                      '0121121212',
                                       style: TextStyle(
                                         color: AppColors
                                             .greyDarktextIntExtFieldAndIconsHome,
@@ -161,7 +158,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                                 final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => EditProfileScreen(),
+                                    builder: (_) => EditProfileScreen(fromDeliveryman:true),
                                   ),
                                 );
 
@@ -184,8 +181,8 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
 
                             SizedBox(height: screenHeight * .04),
                           ],
-                        );
-                      },
+                    //    );
+                      //},
                     ),
                   ),
                 ),

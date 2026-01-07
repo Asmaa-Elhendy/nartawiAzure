@@ -11,7 +11,8 @@ import '../widgets/custom_check_box.dart';
 import '../widgets/date_of_birth_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+bool fromDeliveryman;
+EditProfileScreen({this.fromDeliveryman=false});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -171,7 +172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: widget.fromDeliveryman,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Profile',
@@ -201,8 +202,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                           ),
                           children: [
                             buildCustomeFullTextField(
-                              'First Name',
-                              'Enter First Name',
+                              widget.fromDeliveryman?'UserName':   'First Name',
+                              widget.fromDeliveryman?'Enter UserName': 'Enter First Name',
                               _firstNameController,
                               false,
                               screenHeight,
@@ -210,15 +211,15 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             ),
                             SizedBox(height: screenHeight * .01),
                             buildCustomeFullTextField(
-                              'Last Name',
-                              'Enter Last Name',
+                              widget.fromDeliveryman?'Name':  'Last Name',
+                              widget.fromDeliveryman?'Enter Name': 'Enter Last Name',
                               _lastNameController,
                               false,
                               screenHeight,
                               fromEditProfile: true,
                             ),
                             SizedBox(height: screenHeight * .01),
-                            buildDateOfBirthWidget(
+                            widget.fromDeliveryman?SizedBox():     buildDateOfBirthWidget(
                               context,
                               screenHeight,
                               screenWidth,
@@ -256,75 +257,78 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             ),
 
                             SizedBox(height: screenHeight * .01),
-                            buildCustomeFullTextField(
+                        widget.fromDeliveryman?SizedBox():
+                        Column(children: [
+                          buildCustomeFullTextField(
                               'Alternative Phone Number',
                               'Enter Alternative phone number',
                               _emergencyphonenumberController,
                               false,
                               screenHeight,
                               fromEditProfile: true,
-                                countryCode:_countryCode
+                              countryCode:_countryCode
 
+                          ),
+                          SizedBox(height: screenHeight * .02),
+                          Text(
+                            'Gender',
+                            style: AppTextStyles.LabelInTextField,
+                          ),
+                          SizedBox(height: screenHeight * .01),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: screenWidth * .03,
+                              top: screenHeight * .01,
                             ),
-                            SizedBox(height: screenHeight * .02),
-                            Text(
-                              'Gender',
-                              style: AppTextStyles.LabelInTextField,
-                            ),
-                            SizedBox(height: screenHeight * .01),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: screenWidth * .03,
-                                top: screenHeight * .01,
-                              ),
-                              child: Row(
-                                children: [
-                                  _buildGenderRadio(
-                                    label: 'Male',
-                                    screenWidth: screenWidth,
-                                    screenHeight: screenHeight,
-                                  ),
-                                  SizedBox(width: screenWidth * .08),
-                                  _buildGenderRadio(
-                                    label: 'Female',
-                                    screenWidth: screenWidth,
-                                    screenHeight: screenHeight,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: screenHeight * .04),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Row(
                               children: [
-                                CustomRowCheckBox(
-                                  checkedValue: checkedValue,
+                                _buildGenderRadio(
+                                  label: 'Male',
                                   screenWidth: screenWidth,
                                   screenHeight: screenHeight,
-                                  onChanged: (newValue) {
-                                    setState(() => checkedValue = newValue);
-                                  },
-                                  title:
-                                  "Yes, I Want To Receive Offers And Discounts",
+                                ),
+                                SizedBox(width: screenWidth * .08),
+                                _buildGenderRadio(
+                                  label: 'Female',
+                                  screenWidth: screenWidth,
+                                  screenHeight: screenHeight,
                                 ),
                               ],
                             ),
-                            SizedBox(height: screenHeight * .03),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomRowCheckBox(
-                                  checkedValue: checkedValue2,
-                                  screenWidth: screenWidth,
-                                  screenHeight: screenHeight,
-                                  onChanged: (newValue) {
-                                    setState(() => checkedValue2 = newValue);
-                                  },
-                                  title: "Subscribe To Newsletter",
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: screenHeight * .03),
+                          ),
+                          SizedBox(height: screenHeight * .04),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomRowCheckBox(
+                                checkedValue: checkedValue,
+                                screenWidth: screenWidth,
+                                screenHeight: screenHeight,
+                                onChanged: (newValue) {
+                                  setState(() => checkedValue = newValue);
+                                },
+                                title:
+                                "Yes, I Want To Receive Offers And Discounts",
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * .03),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomRowCheckBox(
+                                checkedValue: checkedValue2,
+                                screenWidth: screenWidth,
+                                screenHeight: screenHeight,
+                                onChanged: (newValue) {
+                                  setState(() => checkedValue2 = newValue);
+                                },
+                                title: "Subscribe To Newsletter",
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * .03),
+                        ],),
                             BuildInfoAndAddToCartButton(
                               screenWidth,
                               screenHeight,
