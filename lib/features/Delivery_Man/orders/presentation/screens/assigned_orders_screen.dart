@@ -170,7 +170,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: true,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Orders',

@@ -79,7 +79,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: true,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'My e-Wallet',

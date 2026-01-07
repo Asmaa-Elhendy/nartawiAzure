@@ -24,6 +24,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
   String disabledNotification;
   String disabledGallon;
   GestureTapCallback? onReturnFromSupplierDetail;
+  bool fromDeliveryMan;
 
   BuildForegroundappbarhome({
     required this.screenHeight,
@@ -34,6 +35,7 @@ class BuildForegroundappbarhome extends StatefulWidget {
     this.disabledNotification = '',
     this.disabledGallon='',
     this.onReturnFromSupplierDetail=null,
+    this.fromDeliveryMan=false
   });
 
   @override
@@ -139,12 +141,51 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
               ),
             ],
           ),
+          widget.fromDeliveryMan
+              ? Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InkWell(
+                onTap: () {
+                  widget.disabledNotification == 'notifications'
+                      ? null
+                      : Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => NotificationScreen()),
+                  );
+                },
+                child: Icon(
+                  Icons.notifications,
+                  color: AppColors.whiteColor,
+                  size: widget.screenWidth * .05,
+                ),
+              ),
+              SizedBox(width: widget.screenWidth * .04),
+              InkWell(
+                onTap: () {},
+                child: SvgPicture.asset(
+                  "assets/images/home/Language.svg",
+                  width: widget.screenWidth * .05,
+                ),
+              ),
+              SizedBox(width: widget.screenWidth * .04),
+              InkWell(
+                onTap: () {},
+                child: SvgPicture.asset(
+                  "assets/images/home/headphone.svg",
+                  width: widget.screenWidth * .05,
+                ),
+              ),              SizedBox(width: widget.screenWidth * .02),
 
+            ],
+          )
+              :
           SizedBox(
             width: widget.screenWidth * .36,// edit *0.38
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                widget.fromDeliveryMan?SizedBox():
                 InkWell(
                   onTap: () {
                     widget.disabledGallon == 'Coupons'

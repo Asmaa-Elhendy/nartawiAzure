@@ -11,6 +11,7 @@ import 'package:newwwwwwww/features/orders/presentation/widgets/payment_informat
 import 'package:newwwwwwww/features/orders/presentation/widgets/reason_for_cancelation.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/seller_information_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../Delivery_Man/orders/presentation/screens/track_order.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/order_card.dart';
@@ -79,7 +80,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: widget.fromDeliveryMan,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Order Detail',
@@ -190,17 +191,22 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                           widget.orderStatus == 'On The Way'
                                       ? Padding(
                                         padding:  EdgeInsets.symmetric(vertical: screenHeight*.02),
-                                        child: CustomGradientButton(
-                                          widget.orderStatus ==
-                                               'On The Way'?
-                                          'assets/images/delivery_man/orders/package-delivered.svg': 'assets/images/delivery_man/orders/delivery-tracking.svg',
-                                            screenWidth * .015,
-                                            widget.orderStatus == 'Pending'
-                                                ? 'Start Delivery'
-                                                : 'Mark As Delivered',
-                                            screenWidth,
-                                            screenHeight,
-                                          ),
+                                        child: GestureDetector(
+                                          onTap: (){
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>TrackOrderScreen()));
+                                          },
+                                          child: CustomGradientButton(
+                                            widget.orderStatus ==
+                                                 'On The Way'?
+                                            'assets/images/delivery_man/orders/package-delivered.svg': 'assets/images/delivery_man/orders/delivery-tracking.svg',
+                                              screenWidth * .015,
+                                              widget.orderStatus == 'Pending'
+                                                  ? 'Start Delivery'
+                                                  : 'Mark As Delivered',
+                                              screenWidth,
+                                              screenHeight,
+                                            ),
+                                        ),
                                       )
                                       : SizedBox()
                                 : SizedBox(),

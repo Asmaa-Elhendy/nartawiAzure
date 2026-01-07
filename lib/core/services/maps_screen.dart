@@ -9,7 +9,8 @@ import '../theme/colors.dart';
 // =====================================================
 class OsmPickLocationScreen extends StatefulWidget {
   final LatLng initial;
-  const OsmPickLocationScreen({required this.initial});
+  bool fromDeliveryMan;
+   OsmPickLocationScreen({required this.initial,this.fromDeliveryMan=false});
 
   @override
   State<OsmPickLocationScreen> createState() => _OsmPickLocationScreenState();
@@ -57,10 +58,43 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
     }
   }
 
+  Future<void> _goTouserLocation() async {
+    if (_movingToMyLocation) return;
+
+    setState(() => _movingToMyLocation = true);
+    try {
+
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) return;
+      }
+      if (permission == LocationPermission.deniedForever) {
+        await Geolocator.openAppSettings();
+        return;
+      }
+
+
+      final me = LatLng(31.2653, 32.3019);
+
+      // move camera
+      _mapController.move(me, 16);
+
+      // optional: set marker to my location
+      setState(() => selected = me);
+    } finally {
+      if (mounted) setState(() => _movingToMyLocation = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double height=MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: const Text('Pick Location')),
+      appBar: widget.fromDeliveryMan
+          ? null // ✅ مفيش AppBar → مفيش مساحة
+          : AppBar(title: const Text('Pick Location')),
       body: Stack(
         children: [
           FlutterMap(
@@ -97,7 +131,7 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
           // ✅ زرار موقعي الحالي
           Positioned(
             right: 16,
-            bottom: 90, // فوق زر Use This Location
+            bottom: height*.11, // فوق زر Use This Location
             child: FloatingActionButton(backgroundColor: AppColors.backgrounHome,
               heroTag: 'my_location_btn',
               onPressed: _goToMyLocation,
@@ -110,8 +144,24 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
                   : const Icon(Icons.my_location,color: AppColors.primary),
             ),
           ),
-
-          Positioned(
+          widget.fromDeliveryMan  //user location
+              ? Positioned(
+            right: 16,
+            bottom: height*.02, // فوق زر Use This Location
+            child: FloatingActionButton(backgroundColor: AppColors.backgrounHome,
+              heroTag: 'my_location_btn',
+              onPressed: _goTouserLocation,
+              child: _movingToMyLocation
+                  ? const SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+                  : const Icon(Icons.account_circle,color: AppColors.primary),
+            ),
+          ):SizedBox(),
+          widget.fromDeliveryMan
+              ?SizedBox():      Positioned(
             left: 16,
             right: 16,
             bottom: 16,

@@ -58,7 +58,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
             color: AppColors.backgrounHome,
           ),
           buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
+          BuildForegroundappbarhome(fromDeliveryMan: true,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Profile',

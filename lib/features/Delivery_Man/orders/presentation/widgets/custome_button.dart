@@ -3,15 +3,20 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../../core/theme/colors.dart';
 
-Widget CustomGradientButton(String icon ,double paddingHorizontal,String title,double screenWidth,double screenHeight){
+Widget CustomGradientButton(String icon ,double paddingHorizontal,String title,double screenWidth,double screenHeight,
+    {bool ChangedColor=true}){
   return Container(
     padding: EdgeInsetsGeometry.symmetric(
       vertical: screenHeight * .01,
       horizontal:paddingHorizontal,
     ),
     height: screenHeight * .055,
-    decoration: BoxDecoration(
+    decoration:ChangedColor? BoxDecoration(
       gradient: AppColors.primaryGradient,
+
+      borderRadius: BorderRadius.circular(8),
+    ):BoxDecoration(
+     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
 
       borderRadius: BorderRadius.circular(8),
     ),
