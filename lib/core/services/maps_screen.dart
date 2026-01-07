@@ -1,16 +1,30 @@
+// osm_pick_location_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../theme/colors.dart';
+
+// ✅ Marker type to know which icon to show
+enum MarkerType {
+  myLocation,
+  userLocation,
+}
+
 // =====================================================
 // ✅ OSM Picker Screen (No API Key)
 // =====================================================
 class OsmPickLocationScreen extends StatefulWidget {
   final LatLng initial;
-  bool fromDeliveryMan;
-   OsmPickLocationScreen({required this.initial,this.fromDeliveryMan=false});
+  final bool fromDeliveryMan;
+
+  const OsmPickLocationScreen({
+    super.key,
+    required this.initial,
+    this.fromDeliveryMan = false,
+  });
 
   @override
   State<OsmPickLocationScreen> createState() => _OsmPickLocationScreenState();
@@ -18,7 +32,10 @@ class OsmPickLocationScreen extends StatefulWidget {
 
 class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
   final MapController _mapController = MapController();
+
   LatLng? selected;
+  MarkerType? markerType;
+
   bool _movingToMyLocation = false;
 
   Future<void> _goToMyLocation() async {
@@ -48,23 +65,22 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
 
       final me = LatLng(pos.latitude, pos.longitude);
 
-      // move camera
       _mapController.move(me, 16);
 
-      // optional: set marker to my location
-      setState(() => selected = me);
+      setState(() {
+        selected = me;
+        markerType = MarkerType.myLocation; // ✅ red marker
+      });
     } finally {
       if (mounted) setState(() => _movingToMyLocation = false);
     }
   }
 
-  Future<void> _goTouserLocation() async {
+  Future<void> _goToUserLocation() async {
     if (_movingToMyLocation) return;
 
     setState(() => _movingToMyLocation = true);
     try {
-
-
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -75,14 +91,15 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
         return;
       }
 
+      // ✅ Example user location (replace with real order/user latlng)
+      final user = LatLng(31.2653, 32.3019);
 
-      final me = LatLng(31.2653, 32.3019);
+      _mapController.move(user, 16);
 
-      // move camera
-      _mapController.move(me, 16);
-
-      // optional: set marker to my location
-      setState(() => selected = me);
+      setState(() {
+        selected = user;
+        markerType = MarkerType.userLocation; // ✅ svg marker
+      });
     } finally {
       if (mounted) setState(() => _movingToMyLocation = false);
     }
@@ -90,10 +107,12 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double height=MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: widget.fromDeliveryMan
-          ? null // ✅ مفيش AppBar → مفيش مساحة
+          ? null // ✅ no AppBar = no reserved space
           : AppBar(title: const Text('Pick Location')),
       body: Stack(
         children: [
@@ -102,7 +121,14 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
             options: MapOptions(
               initialCenter: widget.initial,
               initialZoom: 16,
-              onTap: (_, latLng) => setState(() => selected = latLng),
+              onTap: (_, latLng) {
+                // ✅ user manually picks: keep the SAME marker type if exists,
+                // or default to myLocation (red)
+                setState(() {
+                  selected = latLng;
+                  markerType ??= MarkerType.myLocation;
+                });
+              },
             ),
             children: [
               TileLayer(
@@ -110,16 +136,24 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
                 userAgentPackageName: 'com.example.newwwwwwww',
               ),
 
-              if (selected != null)
+              if (selected != null && markerType != null)
                 MarkerLayer(
                   markers: [
                     Marker(
                       point: selected!,
-                      width: 45,
-                      height: 45,
-                      child: const Icon(
+                      width: markerType == MarkerType.userLocation ? 80 : 40,
+                      height: markerType == MarkerType.userLocation ? 80 : 40,
+                      alignment: Alignment.bottomCenter,
+                      child: markerType == MarkerType.userLocation
+                          ? SvgPicture.asset(
+                        'assets/images/delivery_man/orders/client_location.svg',
+                        width: 70,
+                        height: 70,  fit: BoxFit.contain,
+
+                      )
+                          : const Icon(
                         Icons.location_pin,
-                        size: 45,
+                        size: 30,
                         color: Colors.red,
                       ),
                     ),
@@ -128,11 +162,12 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
             ],
           ),
 
-          // ✅ زرار موقعي الحالي
+          // ✅ My location button (red marker)
           Positioned(
             right: 16,
-            bottom: height*.11, // فوق زر Use This Location
-            child: FloatingActionButton(backgroundColor: AppColors.backgrounHome,
+            bottom: widget.fromDeliveryMan ? height * .11 : 90,
+            child: FloatingActionButton(
+              backgroundColor: AppColors.backgrounHome,
               heroTag: 'my_location_btn',
               onPressed: _goToMyLocation,
               child: _movingToMyLocation
@@ -141,44 +176,48 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
                 height: 22,
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
-                  : const Icon(Icons.my_location,color: AppColors.primary),
+                  : const Icon(Icons.my_location, color: AppColors.primary),
             ),
           ),
-          widget.fromDeliveryMan  //user location
-              ? Positioned(
-            right: 16,
-            bottom: height*.02, // فوق زر Use This Location
-            child: FloatingActionButton(backgroundColor: AppColors.backgrounHome,
-              heroTag: 'my_location_btn',
-              onPressed: _goTouserLocation,
-              child: _movingToMyLocation
-                  ? const SizedBox(
-                width: 22,
-                height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-                  : const Icon(Icons.account_circle,color: AppColors.primary),
-            ),
-          ):SizedBox(),
-          widget.fromDeliveryMan
-              ?SizedBox():      Positioned(
-            left: 16,
-            right: 16,
-            bottom: 16,
-            child:ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.backgrounHome, // ✅ لون الزرار
-                foregroundColor: AppColors.primary,        // ✅ لون النص
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+
+          // ✅ User location button (svg marker) - delivery man only
+          if (widget.fromDeliveryMan)
+            Positioned(
+              right: 16,
+              bottom: height * .02,
+              child: FloatingActionButton(
+                backgroundColor: AppColors.backgrounHome,
+                heroTag: 'user_location_btn',
+                onPressed: _goToUserLocation,
+                child: _movingToMyLocation
+                    ? const SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+                    : const Icon(Icons.account_circle, color: AppColors.primary),
               ),
-              onPressed: selected == null ? null : () => Navigator.pop(context, selected),
-              child: const Text('Use This Location'),
             ),
 
-          ),
+          // ✅ Use this location button (not for delivery man mode)
+          if (!widget.fromDeliveryMan)
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 16,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.backgrounHome,
+                  foregroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: selected == null ? null : () => Navigator.pop(context, selected),
+                child: const Text('Use This Location'),
+              ),
+            ),
         ],
       ),
     );

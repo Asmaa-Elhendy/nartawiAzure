@@ -150,6 +150,7 @@ flutter:
     - assets/images/delivery_man/orders/whatsapp.svg
     - assets/images/delivery_man/orders/package-delivered.svg
     - assets/images/delivery_man/orders/delivery-tracking.svg
+    - assets/images/delivery_man/orders/client_location.svg
 
   fonts:
     - family: Poppins
