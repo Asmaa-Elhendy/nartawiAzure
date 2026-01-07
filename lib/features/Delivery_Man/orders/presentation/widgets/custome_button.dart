@@ -45,3 +45,64 @@ icon,          color: AppColors.whiteColor,
   );
 }
 
+
+
+Widget CustomContainerButton({
+  required String icon,
+  required String title,
+  required double screenWidth,
+  required double screenHeight,
+  required VoidCallback onTap,
+  bool isRed = false, // للـ canceled
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      height: screenHeight * .055,
+      padding: EdgeInsets.symmetric(
+        vertical: screenHeight * .01,
+        horizontal: screenWidth * .02,
+      ),
+      decoration: BoxDecoration(
+        gradient: isRed ? null : AppColors.primaryGradient,
+        color: isRed ? const Color(0xFFF6D6D3) : null,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon
+          isRed
+              ? Icon(
+            Icons.close,
+            size: screenWidth * .05,
+            color: const Color(0xFFD24A3D),
+          )
+              : SvgPicture.asset(
+            icon,
+            color: AppColors.whiteColor,
+            width: screenWidth * .05,
+          ),
+
+          SizedBox(width: screenWidth * .01),
+
+          // Text (take remaining space)
+          Expanded(
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.visible, // زي ما انتي عاملاه
+              softWrap: false,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: isRed ? const Color(0xFFD24A3D) : AppColors.whiteColor,
+                fontSize: screenWidth * .029, // نفس ستايلك
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}

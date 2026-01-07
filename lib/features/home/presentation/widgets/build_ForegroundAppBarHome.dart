@@ -125,7 +125,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
               /// 👇 هنا بقى بنقيّد عرض العنوان + نخليه ellipsis
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: widget.screenWidth * 0.45, // حوالي نص المساحة الشمال
+                  maxWidth:widget.fromDeliveryMan?widget.screenWidth*.55: widget.screenWidth * 0.45, // حوالي نص المساحة الشمال
                 ),
                 child: Text(
                   widget.title,

@@ -6,6 +6,7 @@ import '../../../../../core/theme/colors.dart';
 import '../../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import 'delivery_confirmation_screen.dart';
 
 
 class TrackOrderScreen extends StatefulWidget {
@@ -84,8 +85,17 @@ class _TrackOrderScreenState extends State<TrackOrderScreen>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
 
-                            CustomGradientButton('assets/images/delivery_man/orders/package-delivered.svg',
-                                .015, 'Confirm Delivered', screenWidth, screenHeight,ChangedColor: confirmed),
+                            InkWell(
+                              onTap:(){
+                                setState(() {
+                                  confirmed=!confirmed;
+                                });
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                DeliveryConfirmationScreen(orderId: 0, orderDate: DateTime.now(), address: 'Zone abc, Street 20, Building 21, Flat 22',)));
+                              },
+                              child: CustomGradientButton('assets/images/delivery_man/orders/package-delivered.svg',
+                                  .015, 'Confirm Delivered', screenWidth, screenHeight,ChangedColor: confirmed),
+                            ),
                             AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               child:
