@@ -10,3 +10,7 @@ abstract class SuppliersEvent extends Equatable {
 class FetchSuppliers extends SuppliersEvent {
   const FetchSuppliers();
 }
+
+class FetchFeaturedSuppliers extends SuppliersEvent {
+  const FetchFeaturedSuppliers();
+}

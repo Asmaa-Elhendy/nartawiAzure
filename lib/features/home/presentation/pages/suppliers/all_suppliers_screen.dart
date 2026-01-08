@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_event.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_state.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_card.dart';
+import 'package:newwwwwwww/features/home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
+import '../../../../../injection_container.dart';
 
-class AllSuppliersScreen extends StatefulWidget {
-  List<Supplier> suppliers;
-  AllSuppliersScreen({required this.suppliers});
-
+class AllSuppliersScreen extends StatelessWidget {
   @override
-  State<AllSuppliersScreen> createState() => _AllSuppliersScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => sl<SuppliersBloc>()..add(FetchSuppliers()),
+      child: AllSuppliersView(),
+    );
+  }
 }
 
-class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
+class AllSuppliersView extends StatefulWidget {
+  @override
+  State<AllSuppliersView> createState() => _AllSuppliersViewState();
+}
+
+class _AllSuppliersViewState extends State<AllSuppliersView> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
-  List<bool> _suppliersData = List.generate(10, (index) => index.isEven);
 
   @override
   void initState() {
@@ -38,7 +49,6 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
     // محاكاة تحميل بيانات جديدة
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
-      _suppliersData.addAll(List.generate(5, (index) => index.isEven));
       _isLoadingMore = false;
     });
   }
@@ -73,32 +83,50 @@ class _AllSuppliersScreenState extends State<AllSuppliersScreen> {
             bottom: screenHeight*.05,
             child: Padding(
               padding: EdgeInsets.only(
-           //     top: screenHeight * .03,//05 handle design shimaa
                 right: screenWidth * .037,
                 left: screenWidth * .037,
                 bottom: screenHeight*.09
               ),
-              child: ListView.builder(
-                controller: _scrollController,
-                padding: EdgeInsets.zero,
-                itemCount:widget.suppliers.length,
-                itemBuilder: (context, index) {
-                  if (index < widget.suppliers.length) {
-                    return BuildCardSupplier(
-                      context,
-                      screenHeight,
-                      screenWidth,
-                      widget.suppliers[index],
+              child: BlocBuilder<SuppliersBloc, SuppliersState>(
+                builder: (context, state) {
+                  if (state is SuppliersInitial || state is SuppliersLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.primary,),
                     );
-                  } else {
-                    // Loader في أسفل الصفحة
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                      child: const Center(
-                        child: CircularProgressIndicator(),
+                  } else if (state is SuppliersError) {
+                    return Center(
+                      child: Text(
+                        'Failed to load suppliers: ${state.message}',
+                        style: const TextStyle(color: Colors.red),
                       ),
                     );
+                  } else if (state is SuppliersLoaded) {
+                    return ListView.builder(
+                      controller: _scrollController,
+                      padding: EdgeInsets.zero,
+                      itemCount: state.suppliers.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => SupplierDetails(
+                                  supplier: state.suppliers[index],
+                                ),
+                              ),
+                            );
+                          },
+                          child: BuildCardSupplier(
+                            context,
+                            screenHeight,
+                            screenWidth,
+                            state.suppliers[index],
+                          ),
+                        );
+                      },
+                    );
                   }
+                  return const SizedBox.shrink();
                 },
               ),
             ),

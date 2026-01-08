@@ -8,6 +8,7 @@ class Supplier extends Equatable {
   final String? logoUrl;
   final bool isVerified;
   final int? rating;
+  final int? favoriteCount;
 
   const Supplier({
     required this.id,
@@ -17,6 +18,7 @@ class Supplier extends Equatable {
     this.logoUrl,
     required this.isVerified,
     this.rating,
+    this.favoriteCount,
   });
 
   // factory Supplier.fromJson(Map<String, dynamic> json) {
@@ -54,9 +56,9 @@ class Supplier extends Equatable {
     return Supplier(
       id: pick<int>(['id']) ?? 0,
 
-      // ✅ دعم الشكلين: aR_NAME / arName
-      arName: (pick<String>(['aR_NAME', 'arName', 'AR_NAME', 'ArName']) ?? '').toString(),
-      enName: (pick<String>(['eN_NAME', 'enName', 'EN_NAME', 'EnName']) ?? '').toString(),
+      // ✅ دعم الشكلين: aR_NAME / arName / arabicName
+      arName: (pick<String>(['aR_NAME', 'arName', 'AR_NAME', 'ArName', 'arabicName']) ?? '').toString(),
+      enName: (pick<String>(['eN_NAME', 'enName', 'EN_NAME', 'EnName', 'englishName']) ?? '').toString(),
 
       // ✅ دعم الشكلين: iS_ACTIVE / isActive
       isActive: pick<bool>(['iS_ACTIVE', 'isActive', 'IS_ACTIVE']) ?? false,
@@ -69,6 +71,9 @@ class Supplier extends Equatable {
 
       // ✅ rating (لو مش موجود في favorites/vendors هتبقى null/0 حسب ما تحبي)
       rating: parseRating(pick<dynamic>(['rating', 'RATING'])) ?? 0,
+
+      // favoriteCount from featured suppliers API
+      favoriteCount: pick<int>(['favoriteCount']),
     );
   }
 
@@ -81,5 +86,6 @@ class Supplier extends Equatable {
     logoUrl,
     isVerified,
     rating,
+    favoriteCount,
   ];
 }

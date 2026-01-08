@@ -51,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
-    context.read<SuppliersBloc>().add(FetchSuppliers());
+    context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
     context.read<ProductsBloc>().add(FetchProducts(executeClear: true));
   }
 
@@ -61,8 +61,8 @@ class _MainScreenState extends State<MainScreen> {
     // ✅ Reload categories
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
 
-    // ✅ Reload suppliers
-    context.read<SuppliersBloc>().add(FetchSuppliers());
+    // ✅ Reload featured suppliers
+    context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
 
     // ✅ Reload products (first page)
     context.read<ProductsBloc>().refresh(
@@ -162,20 +162,17 @@ class _MainScreenState extends State<MainScreen> {
                             screenWidth,
                             "Featured Suppliers",
                                 () {
-                              final state = context.read<SuppliersBloc>().state;
-
-                              if (state is SuppliersLoaded) {
-                                Navigator.of(context)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (_) => AllSuppliersScreen(
-                                        suppliers: state.suppliers),
-                                  ),
-                                )
-                                    .then((_) {
-                                  context.read<ProductsBloc>().refresh();
-                                });
-                              }
+                              Navigator.of(context)
+                                  .push(
+                                MaterialPageRoute(
+                                  builder: (_) => AllSuppliersScreen(),
+                                ),
+                              )
+                                  .then((_) {
+                                context.read<ProductsBloc>().refresh();
+                                // Refresh featured suppliers when returning
+                                context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
+                              });
                             },
                           ),
                           SizedBox(
@@ -183,20 +180,63 @@ class _MainScreenState extends State<MainScreen> {
                             child: BlocBuilder<SuppliersBloc, SuppliersState>(
                               builder: (context, state) {
                                 if (state is SuppliersInitial ||
-                                    state is SuppliersLoading) {
+                                    state is SuppliersLoading ||
+                                    state is FeaturedSuppliersLoading) {
                                   return Center(
                                     child: CircularProgressIndicator(
                                       color: AppColors.primary,
                                     ),
                                   );
-                                } else if (state is SuppliersError) {
-                                  return const Center(
+                                } else if (state is SuppliersError ||
+                                    state is FeaturedSuppliersError) {
+                                  final errorMessage = state is SuppliersError 
+                                    ? state.message 
+                                    : (state as FeaturedSuppliersError).message;
+                                  return Center(
                                     child: Text(
-                                      'Failed to load suppliers',
+                                      errorMessage,
                                       style: TextStyle(color: Colors.red),
                                     ),
                                   );
+                                } else if (state is FeaturedSuppliersLoaded) {
+                                  if (state.featuredSuppliers.isEmpty) {
+                                    return const Center(
+                                      child: Text('No featured suppliers found'),
+                                    );
+                                  }
+
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: state.featuredSuppliers.length,
+                                    itemBuilder: (context, index) {
+                                      final supplier = state.featuredSuppliers[index];
+
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context)
+                                              .push(
+                                            MaterialPageRoute(
+                                              builder: (_) => SupplierDetails(
+                                                supplier: supplier,
+                                              ),
+                                            ),
+                                          )
+                                              .then((_) {
+                                            context
+                                                .read<ProductsBloc>()
+                                                .refresh();
+                                          });
+                                        },
+                                        child: StoreCard(
+                                          screenWidth: screenWidth,
+                                          screenHeight: screenHeight,
+                                          supplier: supplier,
+                                        ),
+                                      );
+                                    },
+                                  );
                                 } else if (state is SuppliersLoaded) {
+                                  // Fallback to regular suppliers if featured suppliers not loaded yet
                                   if (state.suppliers.isEmpty) {
                                     return const Center(
                                       child: Text('No suppliers found'),

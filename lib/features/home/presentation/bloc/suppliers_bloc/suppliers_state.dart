@@ -29,3 +29,23 @@ class SuppliersError extends SuppliersState {
   @override
   List<Object> get props => [message];
 }
+
+class FeaturedSuppliersLoading extends SuppliersState {}
+
+class FeaturedSuppliersLoaded extends SuppliersState {
+  final List<Supplier> featuredSuppliers;
+
+  const FeaturedSuppliersLoaded(this.featuredSuppliers);
+
+  @override
+  List<Object> get props => [featuredSuppliers];
+}
+
+class FeaturedSuppliersError extends SuppliersState {
+  final String message;
+
+  const FeaturedSuppliersError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
