@@ -146,7 +146,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     left: widget.screenWidth * 0.01,
                                     child: BuildIconOnProduct(
                                       true,  // fromFavouriteScreen
-                                      widget.favouriteProduct.productVsId,  // productVsId
+                                      widget.favouriteProduct.productVsId,  // productVsا
                                       widget.favouriteProduct.product?.enName,  // productName
                                       state.price,  // price
                                       widget.screenWidth,  // width

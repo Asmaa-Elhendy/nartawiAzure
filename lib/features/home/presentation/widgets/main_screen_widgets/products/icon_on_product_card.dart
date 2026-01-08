@@ -175,40 +175,78 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
                   // Add actual product data to cart with full product object
+                  // Check if product already exists in cart to avoid duplicates
+                  final cartState = context.read<CartBloc>().state;
+                  bool productAlreadyInCart = false;
+                  
+                  if (cartState is CartState) {
+                    for (final item in cartState.cartProducts) {
+                      if (item is Map<String, dynamic>) {
+                        final existingProductId = item['id'] as int? ?? 0;
+                        if (existingProductId == widget.productVsId) {
+                          productAlreadyInCart = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                  
                   if (widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For favorite products, create full product object
-                    context.read<CartBloc>().add(CartAddItem({
-                      'id': widget.productVsId,
-                      'name': widget.productName ?? 'Product ${widget.productVsId}',
-                      'price': widget.price,
-                      'fromFavorite': true,
-                      'product': {
+                    if (!productAlreadyInCart) {
+                      context.read<CartBloc>().add(CartAddItem({
                         'id': widget.productVsId,
-                        'vsId': widget.productVsId,
-                        'enName': widget.productName ?? 'Product ${widget.productVsId}',
-                        'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                        'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
-                        'isActive': true,
-                        'isCurrent': true,
-                      }
-                    }));
+                        'fromFavorite': true,
+                        'product': {
+                          'id': widget.productVsId,
+                          'vsId': widget.productVsId,
+                          'enName': widget.productName ?? 'Product ${widget.productVsId}',
+                          'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                          'price': widget.price,
+                          'isActive': true,
+                          'isCurrent': true,
+                        }
+                      }));
+                    } else {
+                      // Product already exists, increase quantity instead
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Product already in cart. Quantity increased.'),
+                          backgroundColor: AppColors.primary,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   } else if (!widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For regular products, add with proper data
-                    context.read<CartBloc>().add(CartAddItem({
-                      'id': widget.productVsId,
-                      'name': widget.productName ?? 'Product ${widget.productVsId}',
-                      'price': widget.price,
-                      'fromFavorite': false,
-                      'product': {
+                    if (!productAlreadyInCart) {
+                      context.read<CartBloc>().add(CartAddItem({
                         'id': widget.productVsId,
-                        'vsId': widget.productVsId,
-                        'enName': widget.productName ?? 'Product ${widget.productVsId}',
-                        'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                        'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
-                        'isActive': true,
-                        'isCurrent': true,
-                      }
-                    }));
+                        'fromFavorite': false,
+                        'product': {
+                          'id': widget.productVsId,
+                          'vsId': widget.productVsId,
+                          'enName': widget.productName ?? 'Product ${widget.productVsId}',
+                          'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                          'price': widget.price,
+                          'isActive': true,
+                          'isCurrent': true,
+                        }
+                      }));
+                    } else {
+                      // Product already exists, just show simple message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Product already in cart.'),
+                          backgroundColor: AppColors.primary,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   }
                 },
                 rightOnTap: () {
