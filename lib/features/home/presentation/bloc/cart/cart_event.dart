@@ -26,3 +26,13 @@ class CartRemoveItem extends CartEvent {
 class CartClear extends CartEvent {
   const CartClear();
 }
+
+class CartUpdateQuantity extends CartEvent {
+  final Object item;
+  final int quantity;
+  
+  const CartUpdateQuantity(this.item, this.quantity);
+
+  @override
+  List<Object?> get props => [item, quantity];
+}

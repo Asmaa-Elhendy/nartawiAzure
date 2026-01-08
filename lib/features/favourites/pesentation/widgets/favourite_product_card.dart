@@ -6,6 +6,8 @@ import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
+import '../../../home/presentation/bloc/cart/cart_bloc.dart';
+import '../../../home/presentation/bloc/cart/cart_event.dart';
 import '../../../home/presentation/pages/suppliers/product_details.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/price_widget.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/products/icon_on_product_card.dart';
@@ -35,32 +37,57 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityTwoController;
 
-  // Helper method to convert FavoriteProductItem to ClientProduct
-  ClientProduct _convertToClientProduct(FavoriteProductItem favoriteProduct) {
-    return ClientProduct(
-      id: favoriteProduct.id,
-      vsId: favoriteProduct.vsId,
-      enName: favoriteProduct.enName,
-      arName: favoriteProduct.arName,
-      isActive: favoriteProduct.isActive,
-      isCurrent: favoriteProduct.isCurrent,
-      price: favoriteProduct.price.toDouble(),
-      categoryId: favoriteProduct.categoryId,
-      categoryName: favoriteProduct.categoryName,
-      images: favoriteProduct.images.cast<String>(),
-      totalAvailableQuantity: favoriteProduct.totalAvailableQuantity.toInt(),
-      inventory: favoriteProduct.inventory.map((item) => ProductInventory(
-        id: item['id'] as int? ?? 0,
-        quantity: item['quantity'] as int? ?? 0,
-        location: item['location'] as String?,
-      )).toList(),
-    );
+  // Helper method to get product item for cart updates
+  Object _getProductItemForCart() {
+    if (widget.favouriteProduct.product != null) {
+      return {
+        'id': widget.favouriteProduct.product!.id,
+        'name': widget.favouriteProduct.product!.enName,
+        'price': widget.favouriteProduct.product!.price,
+      };
+    } else {
+      return 'Product_${widget.favouriteProduct.id}';
+    }
+  }
+
+  // Helper method to notify cart of quantity change
+  void _notifyCartQuantityChange(int quantity) {
+    if (widget.fromCartScreen) {
+      try {
+        final productItem = _getProductItemForCart();
+        final cartBloc = context.read<CartBloc>();
+        
+        // Check if the bloc is properly initialized
+        if (cartBloc.isClosed) {
+          return;
+        }
+        
+        cartBloc.add(CartUpdateQuantity(productItem, quantity));
+      } catch (e) {
+        // Handle any errors gracefully
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _quantityController = TextEditingController(text: '1');
+    
+    // Get initial quantity from cart state if in cart screen
+    int initialQuantity = 1;
+    if (widget.fromCartScreen) {
+      try {
+        final cartState = context.read<CartBloc>().state;
+        final productItem = _getProductItemForCart();
+        final productKey = _getProductKey(productItem);
+        initialQuantity = cartState.productQuantities?[productKey] ?? 1;
+      } catch (e) {
+        // Handle any errors gracefully
+        initialQuantity = 1;
+      }
+    }
+    
+    _quantityController = TextEditingController(text: initialQuantity.toString());
     
     // Check if product exists, otherwise use default price
     final productPrice = widget.favouriteProduct.product?.price.toDouble() ?? 0.0;
@@ -73,7 +100,17 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
-    _quantityTwoController = TextEditingController(text: '1');
+    _quantityTwoController = TextEditingController(text: initialQuantity.toString());
+  }
+
+  // Helper method to get product key from cart state logic
+  String _getProductKey(Object item) {
+    if (item is Map<String, dynamic>) {
+      return 'product_${item['id'] ?? 0}';
+    } else if (item.toString().contains('Product')) {
+      return item.toString();
+    }
+    return 'unknown_${item.hashCode}';
   }
 
   @override
@@ -266,19 +303,35 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                           isPlus: true,
 
                                           price: 0,
-                                          onIncrease: () => context
-                                              .read<ProductQuantityBloc>()
-                                              .add(IncreaseQuantity()),
-                                          onDecrease: () => context
-                                              .read<ProductQuantityBloc>()
-                                              .add(DecreaseQuantity()),
+                                          onIncrease: () {
+                                            context.read<ProductQuantityBloc>().add(IncreaseQuantity());
+                                            // Notify cart of quantity change after state updates
+                                            Future.delayed(Duration(milliseconds: 100), () {
+                                              final currentQuantity = int.tryParse(_quantityController.text) ?? 1;
+                                              _notifyCartQuantityChange(currentQuantity);
+                                            });
+                                          },
+                                          onDecrease: () {
+                                            context.read<ProductQuantityBloc>().add(DecreaseQuantity());
+                                            // Notify cart of quantity change after state updates
+                                            Future.delayed(Duration(milliseconds: 100), () {
+                                              final currentQuantity = int.tryParse(_quantityController.text) ?? 1;
+                                              _notifyCartQuantityChange(currentQuantity);
+                                            });
+                                          },
                                           quantityCntroller: _quantityController,
-                                          onTextfieldChanged: (value) => context
-                                              .read<ProductQuantityBloc>()
-                                              .add(QuantityChanged(value)),
-                                          onDone: () => context
-                                              .read<ProductQuantityBloc>()
-                                              .add(QuantityEditingComplete()),
+                                          onTextfieldChanged: (value) {
+                                            context.read<ProductQuantityBloc>().add(QuantityChanged(value));
+                                            // Notify cart of quantity change
+                                            final quantity = int.tryParse(value) ?? 1;
+                                            _notifyCartQuantityChange(quantity);
+                                          },
+                                          onDone: () {
+                                            context.read<ProductQuantityBloc>().add(QuantityEditingComplete());
+                                            // Notify cart of quantity change
+                                            final quantity = int.tryParse(_quantityController.text) ?? 1;
+                                            _notifyCartQuantityChange(quantity);
+                                          },
                                         ),//k
                                       ),
                                       SizedBox(width: widget.screenWidth*.01,),
@@ -340,41 +393,57 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                                               isPlus: true,
                                                               price: 0,
                                                               // Not used for the controls
-                                                              onIncrease: () => context
-                                                                  .read<
-                                                                    ProductQuantityBloc
-                                                                  >()
-                                                                  .add(
-                                                                    IncreaseQuantity(),
-                                                                  ),
-                                                              onDecrease: () => context
-                                                                  .read<
-                                                                    ProductQuantityBloc
-                                                                  >()
-                                                                  .add(
-                                                                    DecreaseQuantity(),
-                                                                  ),
+                                                              onIncrease: () {
+                                                                context
+                                                                    .read<ProductQuantityBloc>()
+                                                                    .add(
+                                                                      IncreaseQuantity(),
+                                                                    );
+                                                                // Notify cart of quantity change after state updates
+                                                                Future.delayed(Duration(milliseconds: 100), () {
+                                                                  final currentQuantity = int.tryParse(_quantityTwoController.text) ?? 1;
+                                                                  _notifyCartQuantityChange(currentQuantity);
+                                                                });
+                                                              },
+                                                              onDecrease: () {
+                                                                context
+                                                                    .read<ProductQuantityBloc>()
+                                                                    .add(
+                                                                      DecreaseQuantity(),
+                                                                    );
+                                                                // Notify cart of quantity change after state updates
+                                                                Future.delayed(Duration(milliseconds: 100), () {
+                                                                  final currentQuantity = int.tryParse(_quantityTwoController.text) ?? 1;
+                                                                  _notifyCartQuantityChange(currentQuantity);
+                                                                });
+                                                              },
                                                               quantityCntroller:
                                                                   _quantityTwoController,
                                                               onTextfieldChanged:
                                                                   (
                                                                     value,
-                                                                  ) => context
-                                                                      .read<
-                                                                        ProductQuantityBloc
-                                                                      >()
-                                                                      .add(
-                                                                        QuantityChanged(
-                                                                          value,
-                                                                        ),
+                                                                  ) {
+                                                                context
+                                                                    .read<ProductQuantityBloc>()
+                                                                    .add(
+                                                                      QuantityChanged(
+                                                                        value,
                                                                       ),
-                                                              onDone: () => context
-                                                                  .read<
-                                                                    ProductQuantityBloc
-                                                                  >()
-                                                                  .add(
-                                                                    QuantityEditingComplete(),
-                                                                  ),
+                                                                    );
+                                                                // Notify cart of quantity change
+                                                                final quantity = int.tryParse(value) ?? 1;
+                                                                _notifyCartQuantityChange(quantity);
+                                                              },
+                                                              onDone: () {
+                                                                context
+                                                                    .read<ProductQuantityBloc>()
+                                                                    .add(
+                                                                      QuantityEditingComplete(),
+                                                                    );
+                                                                // Notify cart of quantity change
+                                                                final quantity = int.tryParse(_quantityTwoController.text) ?? 1;
+                                                                _notifyCartQuantityChange(quantity);
+                                                              },
                                                               fromDetailedScreen:
                                                                   true,
                                                               title: '',

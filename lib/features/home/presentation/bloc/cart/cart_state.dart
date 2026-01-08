@@ -2,15 +2,28 @@ import 'package:equatable/equatable.dart';
 
 class CartState extends Equatable {
   final List<Object> cartProducts;
+  final Map<String, int>? productQuantities;
 
-  const CartState({required this.cartProducts});
+  const CartState({
+    required this.cartProducts,
+    this.productQuantities,
+  });
 
-  factory CartState.initial() => const CartState(cartProducts: []);
+  factory CartState.initial() => const CartState(
+        cartProducts: [],
+        productQuantities: {},
+      );
 
-  CartState copyWith({List<Object>? cartProducts}) {
-    return CartState(cartProducts: cartProducts ?? this.cartProducts);
+  CartState copyWith({
+    List<Object>? cartProducts,
+    Map<String, int>? productQuantities,
+  }) {
+    return CartState(
+      cartProducts: cartProducts ?? this.cartProducts,
+      productQuantities: productQuantities ?? this.productQuantities,
+    );
   }
 
   @override
-  List<Object?> get props => [cartProducts];
+  List<Object?> get props => [cartProducts, productQuantities];
 }

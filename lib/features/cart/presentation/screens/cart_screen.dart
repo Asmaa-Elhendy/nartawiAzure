@@ -18,18 +18,46 @@ import '../widgets/cart_store_card.dart';
 import '../widgets/payment_method_alert.dart';
 
 // Helper function to create ClientOrder from cart items
-ClientOrder _createOrderFromCart(List<Object> cartItems) {
+ClientOrder _createOrderFromCart(List<Object> cartItems, Map<String, int>? productQuantities) {
   double subtotal = 0.0;
+  final quantities = productQuantities ?? {};
+  List<Object> itemsWithQuantities = [];
   
-  // Calculate subtotal from cart items
+  // Calculate subtotal from cart items with quantities and create items with quantities
   for (final item in cartItems) {
+    String productKey;
+    double price = 0.0;
+    String name = 'Unknown Product';
+    
     if (item is Map<String, dynamic>) {
       // Handle new product data structure
-      final price = (item['price'] as num?)?.toDouble() ?? 0.0;
-      subtotal += price;
+      price = (item['price'] as num?)?.toDouble() ?? 0.0;
+      name = (item['name'] ?? item['enName'] ?? item['arName'] ?? 'Unknown Product').toString();
+      productKey = 'product_${item['id'] ?? 0}';
     } else if (item.toString().contains('Product')) {
       // Handle old string format for backward compatibility
-      subtotal += 25.0; // Default price per item
+      price = 25.0; // Default price per item
+      name = item.toString();
+      productKey = item.toString();
+    } else {
+      continue;
+    }
+    
+    final quantity = quantities[productKey] ?? 1;
+    subtotal += price * quantity;
+    
+    // Create item with quantity for OrderSummaryCard
+    if (item is Map<String, dynamic>) {
+      final itemWithQuantity = Map<String, dynamic>.from(item);
+      itemWithQuantity['quantity'] = quantity;
+      itemsWithQuantities.add(itemWithQuantity);
+    } else {
+      // For string items, create a map with quantity
+      itemsWithQuantities.add({
+        'name': name,
+        'price': price,
+        'quantity': quantity,
+      });
     }
   }
   
@@ -46,7 +74,7 @@ ClientOrder _createOrderFromCart(List<Object> cartItems) {
     deliveryCost: deliveryCost,
     total: total,
     isPaid: false,
-    items: cartItems,
+    items: itemsWithQuantities,
   );
 }
 
@@ -271,7 +299,7 @@ class _CartScreenState extends State<CartScreen>
                                   return OrderSummaryCard(
                                     screenWidth, 
                                     screenHeight, 
-                                    _createOrderFromCart(cartState.cartProducts)
+                                    _createOrderFromCart(cartState.cartProducts, cartState.productQuantities)
                                   );
                                 },
                               ),
