@@ -50,6 +50,15 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     }
   }
 
+  // Helper method to get product key that matches the one used in CartBloc
+  String _getProductKeyForCurrentItem() {
+    if (widget.favouriteProduct.product != null) {
+      return 'product_${widget.favouriteProduct.product!.id}';
+    } else {
+      return 'Product_${widget.favouriteProduct.id}';
+    }
+  }
+
   // Helper method to notify cart of quantity change
   void _notifyCartQuantityChange(int quantity) {
     if (widget.fromCartScreen) {
@@ -69,6 +78,20 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     }
   }
 
+  // Helper method to get the actual cart item that matches what's in the cart
+  Object _getActualCartItem() {
+    if (widget.favouriteProduct.product != null) {
+      // This should match exactly what's added to cart
+      return {
+        'id': widget.favouriteProduct.product!.id,
+        'name': widget.favouriteProduct.product!.enName,
+        'price': widget.favouriteProduct.product!.price,
+      };
+    } else {
+      return 'Product_${widget.favouriteProduct.id}';
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -78,8 +101,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     if (widget.fromCartScreen) {
       try {
         final cartState = context.read<CartBloc>().state;
-        final productItem = _getProductItemForCart();
-        final productKey = _getProductKey(productItem);
+        final productKey = _getProductKeyForCurrentItem();
         initialQuantity = cartState.productQuantities?[productKey] ?? 1;
       } catch (e) {
         // Handle any errors gracefully
@@ -96,11 +118,21 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
+    
     _quantityTwoBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
+    
     _quantityTwoController = TextEditingController(text: initialQuantity.toString());
+    
+    // Initialize the ProductQuantityBlocs after the frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && widget.fromCartScreen) {
+        _quantityBloc.add(QuantityChanged(initialQuantity.toString()));
+        _quantityTwoBloc.add(QuantityChanged(initialQuantity.toString()));
+      }
+    });
   }
 
   // Helper method to get product key from cart state logic
@@ -202,14 +234,14 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,state.price,
+                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,(widget.favouriteProduct.product?.price ?? 0.0).toDouble(),
                                           widget.screenWidth,
                                           widget.screenHeight,
                                           true, // plus icon
                                           isFavourite: true,
                                         ),
                                         //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,state.price,
+                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,(widget.favouriteProduct.product?.price ?? 0.0).toDouble(),
                                           widget.screenWidth,
                                           widget.screenHeight,
                                           false, // heart icon

@@ -251,7 +251,7 @@ class _CartScreenState extends State<CartScreen>
                                               return Padding(
                                                 padding: EdgeInsets.only(bottom: screenHeight * .02),
                                                 child: FavouriteProductCard(
-                                                  screenWidth: screenWidth,
+                                                  screenWidth: screenWidth,//kkjنjjت
                                                   screenHeight: screenHeight,
                                                   favouriteProduct: FavoriteProduct(
                                                     id: 0,

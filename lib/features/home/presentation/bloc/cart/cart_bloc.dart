@@ -14,7 +14,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final updated = List<Object>.from(state.cartProducts)..add(event.item);
     final productKey = _getProductKey(event.item);
     final quantities = Map<String, int>.from(state.productQuantities ?? {});
-    quantities[productKey] = (quantities[productKey] ?? 0) + 1;
+    
+    // Check if this is the first time adding this item, set quantity to 1
+    if (!quantities.containsKey(productKey)) {
+      quantities[productKey] = 1;
+    }
+    
     emit(state.copyWith(cartProducts: updated, productQuantities: quantities));
   }
 

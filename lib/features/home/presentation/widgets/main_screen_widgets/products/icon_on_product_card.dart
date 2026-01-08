@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:iconify_flutter/icons/ic.dart';
-import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:flutter/services.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/cart/cart_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/cart/cart_event.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/cart/cart_state.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_state.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
-import '../../../../domain/models/product_model.dart';
-import '../../../bloc/cart/cart_bloc.dart';
-import '../../../bloc/cart/cart_event.dart';
-import '../../../bloc/cart/cart_state.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
   final bool fromFavouriteScreen;
@@ -134,21 +132,31 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                   TextButton(
                     onPressed: () {
                       Navigator.pop(dialogContext, true);
-                      // Remove from cart using productVsId
-                      // Since we don't have the exact product object, we'll need to find it in the cart
+                      // Remove from cart using exact matching
                       final cartState = context.read<CartBloc>().state;
                       if (cartState is CartState) {
-                        // Find and remove the item by matching a pattern
-                        final updatedCart = cartState.cartProducts.where((item) {
-                          // Remove items that match this product's ID pattern
-                          final itemStr = item.toString();
-                          return !itemStr.contains('${widget.productVsId}');
-                        }).toList();
+                        // Find the exact item to remove
+                        Object? itemToRemove;
                         
-                        // Clear cart and add back remaining items
-                        context.read<CartBloc>().add(CartClear());
-                        for (final item in updatedCart) {
-                          context.read<CartBloc>().add(CartAddItem(item));
+                        for (final item in cartState.cartProducts) {
+                          if (item is Map<String, dynamic>) {
+                            // For Map items, match by ID exactly
+                            if (item['id'] == widget.productVsId) {
+                              itemToRemove = item;
+                              break;
+                            }
+                          } else if (item.toString().contains('Product')) {
+                            // For string items, match by productVsId pattern
+                            if (item.toString().contains('${widget.productVsId}')) {
+                              itemToRemove = item;
+                              break;
+                            }
+                          }
+                        }
+                        
+                        // Remove only the specific item
+                        if (itemToRemove != null) {
+                          context.read<CartBloc>().add(CartRemoveItem(itemToRemove));
                         }
                       }
                     },
@@ -158,8 +166,8 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               ),
             );
           },
-          child: Iconify(
-            MaterialSymbols.delete_outline_rounded,
+          child: Icon(
+            Icons.delete_outline,
             size: widget.height * .025,
             color: AppColors.primary,
           ),
@@ -194,7 +202,17 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                   if (widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For favorite products, create full product object
                     if (!productAlreadyInCart) {
-                      context.read<CartBloc>().add(CartAddItem({
+                      // Try to get quantity from parent ProductQuantityBloc
+                      int quantity = 1;
+                      try {
+                        // Look for ProductQuantityBloc in the widget tree
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantity = int.tryParse(quantityBloc.state.quantity) ?? 1;
+                      } catch (e) {
+                        quantity = 1;
+                      }
+                      
+                      final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
@@ -208,7 +226,12 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                           'isActive': true,
                           'isCurrent': true,
                         }
-                      }));
+                      };
+                      
+                      context.read<CartBloc>().add(CartAddItem(productItem));
+                      
+                      // Update quantity in CartState
+                      context.read<CartBloc>().add(CartUpdateQuantity(productItem, quantity));
                     } else {
                       // Product already exists, increase quantity instead
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -222,7 +245,17 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                   } else if (!widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For regular products, add with proper data
                     if (!productAlreadyInCart) {
-                      context.read<CartBloc>().add(CartAddItem({
+                      // Try to get quantity from parent ProductQuantityBloc
+                      int quantity = 1;
+                      try {
+                        // Look for ProductQuantityBloc in the widget tree
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantity = int.tryParse(quantityBloc.state.quantity) ?? 1;
+                      } catch (e) {
+                        quantity = 1;
+                      }
+                      
+                      final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
@@ -236,16 +269,12 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                           'isActive': true,
                           'isCurrent': true,
                         }
-                      }));
-                    } else {
-                      // Product already exists, just show simple message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Product already in cart.'),
-                          backgroundColor: AppColors.primary,
-                          duration: Duration(seconds: 2),
-                        ),
-                      );
+                      };
+                      
+                      context.read<CartBloc>().add(CartAddItem(productItem));
+                      
+                      // Update quantity in CartState
+                      context.read<CartBloc>().add(CartUpdateQuantity(productItem, quantity));
                     }
                   }
                 },
@@ -309,8 +338,8 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
           },
 
 
-          child: Iconify(
-            isFavourite ? Mdi.heart : Mdi.heart_outline,
+          child: Icon(
+            isFavourite ? Icons.favorite : Icons.favorite_border,
             color: isFavourite ? AppColors.redColor : AppColors.primary,
             size: widget.height * .025,
           ),
@@ -374,8 +403,8 @@ Widget BuildRoundedIconOnProduct({
             children: [
               GestureDetector(
                 onTap: onDecrease,
-                child: Iconify(
-                  Ic.baseline_minus, // استبدلها بالأيقونة اللي تحبها
+                child: Icon(
+                  Icons.remove,
                   size: height * .03,
                   color: AppColors.redColor,
                 ),
