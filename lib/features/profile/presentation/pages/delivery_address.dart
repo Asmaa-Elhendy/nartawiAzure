@@ -40,7 +40,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    addressController.dispose();
+    // Don't dispose shared AddressController - it's managed by DI container
     super.dispose();
   }
 

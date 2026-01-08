@@ -100,31 +100,86 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                 ),
 
                 widget.fromCouponCard
-                    ? Column(
-                  children: [
-                    BuildCardAddress(
-                      controller: addressController,
-                      context,
-                      screenHeight,
-                      screenWidth,
-                      selected: false,
-                      fromCart: true,
-                      fromCouponCard: widget.fromCouponCard,
-                    ),
-                    BuildCardAddress(
-                      controller: addressController,
-                      context,
-                      screenHeight,
-                      screenWidth,
-                      selected: true,
-                      fromCart: true,
-                      fromCouponCard: widget.fromCouponCard,
-                    ),
-                  ],
+                    ? AnimatedBuilder(
+                  animation: addressController,
+                  builder: (context, _) {
+                    // Check if widget is still mounted
+                    if (!mounted) {
+                      return SizedBox.shrink();
+                    }
+                    
+                    if (addressController.isLoading) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
+                        child: Center(
+                          child: CircularProgressIndicator(color: AppColors.primary),
+                        ),
+                      );
+                    }
+
+                    if (addressController.error != null) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: screenHeight * .01),
+                        child: Text(
+                          addressController.error!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      );
+                    }
+
+                    final list = addressController.addresses;
+
+                    if (list.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
+                        child: Text(
+                          'No addresses found',
+                          style: TextStyle(
+                            color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                            fontSize: screenWidth * .034,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Column(
+                      children: list.map((addr) {
+                        final isSelected = _selectedAddress?.id == addr.id;
+
+                        return BuildCardAddress(
+                          context,
+                          screenHeight,
+                          screenWidth,
+                          controller: addressController,
+                          fromCart: true,
+                          fromCouponCard: widget.fromCouponCard,
+                          address: addr,
+
+                          // نفس design (work=true border)
+                          selected: isSelected,
+
+                          // FIX: select tap جوّا الكارت نفسه
+                          selectable: true,
+                          onSelect: () {
+                            if (mounted) {
+                              setState(() {
+                                _selectedAddress = addr;
+                              });
+                            }
+                          },
+                        );
+                      }).toList(),
+                    );
+                  },
                 )
                     : AnimatedBuilder(
                   animation: addressController,
                   builder: (context, _) {
+                    // Check if widget is still mounted
+                    if (!mounted) {
+                      return SizedBox.shrink();
+                    }
+                    
                     if (addressController.isLoading) {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
@@ -178,9 +233,11 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                           // ✅ FIX: select tap جوّا الكارت نفسه
                           selectable: true,
                           onSelect: () {
-                            setState(() {
-                              _selectedAddress = addr;
-                            });
+                            if (mounted) {
+                              setState(() {
+                                _selectedAddress = addr;
+                              });
+                            }
                           },
                         );
                       }).toList(),
