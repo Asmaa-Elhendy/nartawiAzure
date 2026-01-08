@@ -36,6 +36,10 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   late final ProductQuantityBloc _quantityBloc;
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityTwoController;
+  
+  // Separate bloc for Weekly Sent Bundles
+  late final ProductQuantityBloc _weeklyBundlesBloc;
+  late final TextEditingController _weeklyBundlesController;
 
   // Helper method to get product item for cart updates
   Object _getProductItemForCart() {
@@ -126,11 +130,20 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     
     _quantityTwoController = TextEditingController(text: initialQuantity.toString());
     
+    // Initialize weekly bundles bloc (always starts with 1)
+    _weeklyBundlesBloc = ProductQuantityBloc(
+      calculateProductPrice: CalculateProductPrice(),
+      basePrice: productPrice,
+    );
+    _weeklyBundlesController = TextEditingController(text: '1');
+    
     // Initialize the ProductQuantityBlocs after the frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && widget.fromCartScreen) {
         _quantityBloc.add(QuantityChanged(initialQuantity.toString()));
         _quantityTwoBloc.add(QuantityChanged(initialQuantity.toString()));
+        // Weekly bundles always starts with 1
+        _weeklyBundlesBloc.add(QuantityChanged('1'));
       }
     });
   }
@@ -151,6 +164,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     _quantityBloc.close();
     _quantityTwoBloc.close();
     _quantityTwoController.dispose();
+    _weeklyBundlesController.dispose();
+    _weeklyBundlesBloc.close();
     super.dispose();
   }
 
@@ -388,7 +403,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     : SizedBox(),
                                 widget.fromCartScreen
                                     ? BlocProvider.value(
-                                        value: _quantityTwoBloc,
+                                        value: _weeklyBundlesBloc,
                                         child:
                                             BlocBuilder<
                                               ProductQuantityBloc,
@@ -396,11 +411,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                             >(
                                               builder: (context, state) {
                                                 // Update controller when state changes
-                                                if (_quantityTwoController
-                                                        .text !=
-                                                    state.quantity) {
-                                                  _quantityTwoController.text =
-                                                      state.quantity;
+                                                if (_weeklyBundlesController.text != state.quantity) {
+                                                  _weeklyBundlesController.text = state.quantity;
                                                 }
                                                 return Column(
                                                   crossAxisAlignment:
@@ -425,57 +437,41 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                                               isPlus: true,
                                                               price: 0,
                                                               // Not used for the controls
-                                                              onIncrease: () {
-                                                                context
-                                                                    .read<ProductQuantityBloc>()
-                                                                    .add(
-                                                                      IncreaseQuantity(),
-                                                                    );
-                                                                // Notify cart of quantity change after state updates
-                                                                Future.delayed(Duration(milliseconds: 100), () {
-                                                                  final currentQuantity = int.tryParse(_quantityTwoController.text) ?? 1;
-                                                                  _notifyCartQuantityChange(currentQuantity);
-                                                                });
-                                                              },
-                                                              onDecrease: () {
-                                                                context
-                                                                    .read<ProductQuantityBloc>()
-                                                                    .add(
-                                                                      DecreaseQuantity(),
-                                                                    );
-                                                                // Notify cart of quantity change after state updates
-                                                                Future.delayed(Duration(milliseconds: 100), () {
-                                                                  final currentQuantity = int.tryParse(_quantityTwoController.text) ?? 1;
-                                                                  _notifyCartQuantityChange(currentQuantity);
-                                                                });
-                                                              },
+                                                              onIncrease: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    IncreaseQuantity(),
+                                                                  ),
+                                                              onDecrease: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    DecreaseQuantity(),
+                                                                  ),
                                                               quantityCntroller:
-                                                                  _quantityTwoController,
+                                                                  _weeklyBundlesController,
                                                               onTextfieldChanged:
                                                                   (
                                                                     value,
-                                                                  ) {
-                                                                context
-                                                                    .read<ProductQuantityBloc>()
-                                                                    .add(
-                                                                      QuantityChanged(
-                                                                        value,
+                                                                  ) => context
+                                                                      .read<
+                                                                        ProductQuantityBloc
+                                                                      >()
+                                                                      .add(
+                                                                        QuantityChanged(
+                                                                          value,
+                                                                        ),
                                                                       ),
-                                                                    );
-                                                                // Notify cart of quantity change
-                                                                final quantity = int.tryParse(value) ?? 1;
-                                                                _notifyCartQuantityChange(quantity);
-                                                              },
-                                                              onDone: () {
-                                                                context
-                                                                    .read<ProductQuantityBloc>()
-                                                                    .add(
-                                                                      QuantityEditingComplete(),
-                                                                    );
-                                                                // Notify cart of quantity change
-                                                                final quantity = int.tryParse(_quantityTwoController.text) ?? 1;
-                                                                _notifyCartQuantityChange(quantity);
-                                                              },
+                                                              onDone: () => context
+                                                                  .read<
+                                                                    ProductQuantityBloc
+                                                                  >()
+                                                                  .add(
+                                                                    QuantityEditingComplete(),
+                                                                  ),
                                                               fromDetailedScreen:
                                                                   true,
                                                               title: '',
