@@ -212,11 +212,11 @@ class _ProductCardState extends State<ProductCard> {
                         children: [
                           BuildIconOnProduct(false,
                             widget.product!.vsId,
-                              state.price,
-                              widget.screenWidth,
-                              widget.screenHeight,
-                              true, // plus icon
-                              isFavourite: false,
+                            state.price,
+                            widget.screenWidth,
+                            widget.screenHeight,
+                            true, // plus icon
+                            isFavourite: false,
                           ),
                           //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
                           BuildIconOnProduct(false,widget.product!.vsId,state.price,

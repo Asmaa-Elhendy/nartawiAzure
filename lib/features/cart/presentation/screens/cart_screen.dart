@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/delivery_address_cart.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/outline_buttons.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
+import '../../../home/presentation/bloc/cart/cart_bloc.dart';
+import '../../../home/presentation/bloc/cart/cart_state.dart';
 import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../widgets/cart_store_card.dart';
 import '../widgets/payment_method_alert.dart';
@@ -97,25 +101,97 @@ class _CartScreenState extends State<CartScreen>
                                 padding: EdgeInsets.symmetric(
                                   vertical: screenHeight * .02,
                                 ),
-                                child: Column(
-                                  children: products
-                                      .map(
-                                        (p) => FavouriteProductCard(
-                                          screenWidth: screenWidth,
-                                          screenHeight: screenHeight,
-                                          favouriteProduct: FavoriteProduct(id: 0, productVsId: 0, createdAt: DateTime.now(),
-                                              product: FavoriteProductItem(id: 0, vsId: 0, enName: 'enName', arName: 'arName', isActive: false, isCurrent: false, price: 0, categoryId: 0, categoryName: 'categoryName', images: [], totalAvailableQuantity: 0, inventory: [])),
-                                          fromCartScreen: true,
+                                child: BlocBuilder<CartBloc, CartState>(
+                                  builder: (context, cartState) {
+                                    if (cartState.cartProducts.isEmpty) {
+                                      return Center(
+                                        child: Column(
+                                          children: [
+                                            Icon(
+                                              Icons.shopping_cart_outlined,
+                                              size: screenWidth * .1,
+                                              color: Colors.grey[400],
+                                            ),
+                                            SizedBox(height: screenHeight * .02),
+                                            Text(
+                                              'Your cart is empty',
+                                              style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: screenWidth * .04,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      )
-                                      .toList(),
-                                ),
+                                      );
+                                    }
 
-                                //
-                                // SizedBox(
-                                //               height:screenHeight*.45,
-                                //               child:ListView(shrinkWrap: true,
-                                //                 children: [
+                                    return Column(
+                                      children: cartState.cartProducts
+                                          .map((product) {
+                                            // Check if product is ClientProduct and display real product data
+                                            if (product is ClientProduct) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(bottom: screenHeight * .02),
+                                                child: FavouriteProductCard(
+                                                  screenWidth: screenWidth,
+                                                  screenHeight: screenHeight,
+                                                  favouriteProduct: FavoriteProduct(
+                                                    id: product.id,
+                                                    productVsId: product.vsId,
+                                                    createdAt: DateTime.now(),
+                                                    product: FavoriteProductItem(
+                                                      id: product.id,
+                                                      vsId: product.vsId,
+                                                      enName: product.enName,
+                                                      arName: product.arName,
+                                                      isActive: product.isActive,
+                                                      isCurrent: product.isCurrent,
+                                                      price: product.price,
+                                                      categoryId: product.categoryId,
+                                                      categoryName: product.categoryName,
+                                                      images: product.images,
+                                                      totalAvailableQuantity: product.totalAvailableQuantity,
+                                                      inventory: product.inventory,
+                                                    ),
+                                                  ),
+                                                  fromCartScreen: true,
+                                                ),
+                                              );
+                                            } else {
+                                              // Handle other product types if needed
+                                              return Padding(
+                                                padding: EdgeInsets.only(bottom: screenHeight * .02),
+                                                child: FavouriteProductCard(
+                                                  screenWidth: screenWidth,
+                                                  screenHeight: screenHeight,
+                                                  favouriteProduct: FavoriteProduct(
+                                                    id: 0,
+                                                    productVsId: 0,
+                                                    createdAt: DateTime.now(),
+                                                    product: FavoriteProductItem(
+                                                      id: 0,
+                                                      vsId: 0,
+                                                      enName: product.toString(),
+                                                      arName: product.toString(),
+                                                      isActive: false,
+                                                      isCurrent: false,
+                                                      price: 0,
+                                                      categoryId: 0,
+                                                      categoryName: 'Unknown',
+                                                      images: [],
+                                                      totalAvailableQuantity: 0,
+                                                      inventory: [],
+                                                    ),
+                                                  ),
+                                                  fromCartScreen: true,
+                                                ),
+                                              );
+                                            }
+                                          })
+                                          .toList(),
+                                    );
+                                  },
+                                ),
                                 //                   FavouriteProductCard(screenWidth: screenWidth,screenHeight:  screenHeight,
                                 //                     icon: 'assets/images/home/main_page/product.jpg',fromCartScreen:true
                                 //                   ),

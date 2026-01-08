@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
+import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
@@ -33,6 +34,28 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   late final ProductQuantityBloc _quantityBloc;
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityTwoController;
+
+  // Helper method to convert FavoriteProductItem to ClientProduct
+  ClientProduct _convertToClientProduct(FavoriteProductItem favoriteProduct) {
+    return ClientProduct(
+      id: favoriteProduct.id,
+      vsId: favoriteProduct.vsId,
+      enName: favoriteProduct.enName,
+      arName: favoriteProduct.arName,
+      isActive: favoriteProduct.isActive,
+      isCurrent: favoriteProduct.isCurrent,
+      price: favoriteProduct.price.toDouble(),
+      categoryId: favoriteProduct.categoryId,
+      categoryName: favoriteProduct.categoryName,
+      images: favoriteProduct.images.cast<String>(),
+      totalAvailableQuantity: favoriteProduct.totalAvailableQuantity.toInt(),
+      inventory: favoriteProduct.inventory.map((item) => ProductInventory(
+        id: item['id'] as int? ?? 0,
+        quantity: item['quantity'] as int? ?? 0,
+        location: item['location'] as String?,
+      )).toList(),
+    );
+  }
 
   @override
   void initState() {
@@ -252,7 +275,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                           onDone: () => context
                                               .read<ProductQuantityBloc>()
                                               .add(QuantityEditingComplete()),
-                                        ),
+                                        ),//k
                                       ),
                                       SizedBox(width: widget.screenWidth*.01,),
                                       BuildPriceContainer(

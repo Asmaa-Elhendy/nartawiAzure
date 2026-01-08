@@ -100,7 +100,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             Navigator.pop(dialogContext);
                             context
                                 .read<CartBloc>()
-                                .add(CartAddItem('Hand Pump'));
+                                .add(CartAddItem(widget.clientProduct!));
                             Navigator.pop(context);
                           },
                           rightOnTap: () {
@@ -343,13 +343,21 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                                 children: [
-                                  BuildIconOnProduct(widget.fromFavorite,widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
+                                  BuildIconOnProduct(
+                                    widget.fromFavorite,
+                                    widget.fromFavorite? 
+                                    widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
+                                    state.price,
                                     screenWidth,
                                     screenHeight,
                                     true,
-                                   isFavourite:  false,
+                                   isFavourite: false,
                                   ),
-                                  BuildIconOnProduct(widget.fromFavorite,widget.fromFavorite? widget.favoriteProduct!.productVsId:widget.clientProduct!.vsId,state.price,
+                                  BuildIconOnProduct(
+                                    widget.fromFavorite,
+                                    widget.fromFavorite? 
+                                    widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
+                                    state.price,
                                     screenWidth,
                                     screenHeight,
                                     false,

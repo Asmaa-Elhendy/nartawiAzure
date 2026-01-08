@@ -9,6 +9,7 @@ import 'package:newwwwwwww/core/theme/colors.dart';
 
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
+import '../../../../domain/models/product_model.dart';
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/cart/cart_event.dart';
 
@@ -25,9 +26,6 @@ class BuildIconOnProduct extends StatefulWidget {
   final bool isDelete;
   final double price;
 
-  /// 🔜 TODO: لازم تضيفيه لما تربطي API
-  /// final int productVsId;
-
   const BuildIconOnProduct(
       this.fromFavouriteScreen,
       this.productVsId,
@@ -37,8 +35,7 @@ class BuildIconOnProduct extends StatefulWidget {
       this.isPlus,{
         this.isFavourite=false,
         this.isDelete = false,
-        Key? key,
-      }) : super(key: key);
+      });
 
   @override
   _BuildIconOnProductState createState() => _BuildIconOnProductState();
@@ -123,7 +120,9 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 centerTitle: 'You\'ve added 1 item',
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
-                  context.read<CartBloc>().add(CartAddItem('Hand Pump'));
+                  // For now, add a placeholder since we don't have ClientProduct
+                  // In the future, you might want to fetch the product data or pass it differently
+                  context.read<CartBloc>().add(CartAddItem('Product ${widget.productVsId}'));
                 },
                 rightOnTap: () {
                   Navigator.pop(dialogContext);
