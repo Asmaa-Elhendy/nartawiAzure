@@ -9,9 +9,9 @@ import 'package:newwwwwwww/core/theme/colors.dart';
 
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
-import '../../../../domain/models/product_model.dart';
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/cart/cart_event.dart';
+import '../../../bloc/cart/cart_state.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
   final bool fromFavouriteScreen;
@@ -105,10 +105,62 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
       ),
       child: Center(
         child: widget.isDelete
-            ? Iconify(
-          MaterialSymbols.delete_outline_rounded,
-          size: widget.height * .025,
-          color: AppColors.primary,
+            ? InkWell(
+          onTap: () {
+            // Show confirmation dialog before deleting using same design as address deletion
+            showDialog(
+              context: context,
+              builder: (dialogContext) => AlertDialog(
+                title: Text(
+                  'Remove from cart',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: widget.width * .034,
+                  ),
+                ),
+                content: Text(
+                  'Are you sure you want to remove this item from cart?\nThis action cannot be undone.',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext, false),
+                    child: Text('Cancel', style: TextStyle(color: AppColors.primary)),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(dialogContext, true);
+                      // Remove from cart using productVsId
+                      // Since we don't have the exact product object, we'll need to find it in the cart
+                      final cartState = context.read<CartBloc>().state;
+                      if (cartState is CartState) {
+                        // Find and remove the item by matching a pattern
+                        final updatedCart = cartState.cartProducts.where((item) {
+                          // Remove items that match this product's ID pattern
+                          final itemStr = item.toString();
+                          return !itemStr.contains('${widget.productVsId}');
+                        }).toList();
+                        
+                        // Clear cart and add back remaining items
+                        context.read<CartBloc>().add(CartClear());
+                        for (final item in updatedCart) {
+                          context.read<CartBloc>().add(CartAddItem(item));
+                        }
+                      }
+                    },
+                    child: Text('Remove', style: TextStyle(color: Colors.red)),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: Iconify(
+            MaterialSymbols.delete_outline_rounded,
+            size: widget.height * .025,
+            color: AppColors.primary,
+          ),
         )
             : widget.isPlus
             ? InkWell(
