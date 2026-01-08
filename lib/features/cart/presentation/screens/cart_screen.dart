@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/delivery_address_cart.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/outline_buttons.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
@@ -7,13 +8,17 @@ import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../injection_container.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
 import '../../../home/presentation/bloc/cart/cart_bloc.dart';
 import '../../../home/presentation/bloc/cart/cart_state.dart';
-import '../../../profile/presentation/widgets/add_new_address_alert.dart';
+import '../../../home/presentation/bloc/cart/cart_event.dart';
+import '../../../profile/domain/models/client_address.dart';
+import '../../../orders/presentation/provider/order_controller.dart';
+import '../../../orders/domain/models/create_order_req.dart';
 import '../widgets/cart_store_card.dart';
 import '../widgets/payment_method_alert.dart';
 
@@ -79,6 +84,8 @@ ClientOrder _createOrderFromCart(List<Object> cartItems, Map<String, int>? produ
 }
 
 class CartScreen extends StatefulWidget {
+  const CartScreen({super.key});
+  
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
@@ -86,6 +93,8 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  ClientAddress? _selectedAddress;
+  final OrdersController _orderController = OrdersController(dio: sl());
 
   @override
   void initState() {
@@ -97,6 +106,105 @@ class _CartScreenState extends State<CartScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  void _createOrderWithPayment(int paymentMethod) async {
+    final cartState = context.read<CartBloc>().state;
+
+    if (_selectedAddress == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please Select address'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Build items
+    final List<CreateOrderItemRequest> orderItems = [];
+    for (final item in cartState.cartProducts) {
+      if (item is Map<String, dynamic>) {
+        final productId = item['id'] as int? ?? 0;
+        final quantity = cartState.productQuantities?['product_$productId'] ?? 1;
+
+        orderItems.add(CreateOrderItemRequest(
+          productId: productId,
+          quantity: quantity,
+          notes: '', // أو "string" لو لازم
+        ));
+      }
+    }
+
+   final orderRequest = CreateOrderRequest(
+  items: orderItems,
+  deliveryAddressId: _selectedAddress!.id!,
+  couponId: 0,
+  notes: 'string',
+  terminalId: 0,
+);
+
+debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
+
+
+    debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
+
+    try {
+      final createdOrder =
+      await _orderController.createOrder(request: orderRequest);
+
+      // حتى لو API بيرجع null مع 204، اعتبرها نجاح
+      if ((_orderController.error == null) &&
+          (createdOrder != null || true)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Order created successfully!'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+
+        context.read<CartBloc>().add(CartClear());
+
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed('/orders');
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_orderController.error ?? 'Failed to create order'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      debugPrint('🌐 DioException: ${e.response?.statusCode}');
+      debugPrint('🌐 Response data: ${e.response?.data}');
+
+      final data = e.response?.data;
+      final msg = (data is Map)
+          ? (data['message'] ?? data['title'] ?? data['error'] ?? 'Failed to create order').toString()
+          : 'Failed to create order';
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      debugPrint('💥 Unexpected error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to create order'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   String? imageUrl = null;
@@ -303,19 +411,45 @@ class _CartScreenState extends State<CartScreen>
                                   );
                                 },
                               ),
-                              OrderDeliveryCartWidget(),
+                              OrderDeliveryCartWidget(
+                                onAddressSelected: (address) {
+                                  setState(() {
+                                    _selectedAddress = address;
+                                  });
+                                },
+                              ),
                               BuildInfoAndAddToCartButton(
                                 screenWidth,
                                 screenHeight,
                                 'Proceed To Checkout',
                                 false,
                                 () {
-                                  showDialog(
+                                  // Check if there's a selected or default address before proceeding to payment
+                                  if (_selectedAddress == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Please Select address'),
+                                        behavior: SnackBarBehavior.floating,
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  
+                                  // Show payment method dialog
+                                  print('💳 Opening payment method dialog...');
+                                  showDialog<int>(
                                     context: context,
                                     builder: (ctx) => PaymentMethodAlert(),
-                                  );
+                                  ).then((paymentMethod) {
+                                    print('🔔 Payment method callback received: $paymentMethod');
+                                    if (paymentMethod != null) {
+                                      // After payment method is selected, create the order
+                                      _createOrderWithPayment(paymentMethod);
+                                    }
+                                  });
                                 },
-                              ),
+                              ),//k
                               RowOutlineButtons(
                                 context,
                                 screenWidth,

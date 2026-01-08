@@ -361,34 +361,34 @@ class _MainScreenState extends State<MainScreen> {
                             ),
                           ),
                           SizedBox(height: screenHeight * .01),
-                          BuildStretchTitleHome(
-                            screenWidth,
-                            "Popular Products",
-                                () {
-                              final productState =
-                                  context.read<ProductsBloc>().state;
-
-                              if (productState is ProductsLoaded) {
-                                Navigator.of(context)
-                                    .push(
-                                  MaterialPageRoute(
-                                    builder: (_) => AllProductScreen(),
-                                  ),
-                                )
-                                    .then((_) {
-                                  context.read<ProductsBloc>().refresh();
-                                });
-                              } else if (productState is ProductsLoading ||
-                                  productState is ProductsInitial) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        'Products are still loading, please try again.'),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
+                          // BuildStretchTitleHome(
+                          //   screenWidth,
+                          //   "Popular Products",
+                          //       () {
+                          //     final productState =
+                          //         context.read<ProductsBloc>().state;
+                          //
+                          //     if (productState is ProductsLoaded) {
+                          //       Navigator.of(context)
+                          //           .push(
+                          //         MaterialPageRoute(
+                          //           builder: (_) => AllProductScreen(),
+                          //         ),
+                          //       )
+                          //           .then((_) {
+                          //         context.read<ProductsBloc>().refresh();
+                          //       });
+                          //     } else if (productState is ProductsLoading ||
+                          //         productState is ProductsInitial) {
+                          //       ScaffoldMessenger.of(context).showSnackBar(
+                          //         const SnackBar(
+                          //           content: Text(
+                          //               'Products are still loading, please try again.'),
+                          //         ),
+                          //       );
+                          //     }
+                          //   },
+                          // ),
                         ]),
                       ),
                     ),

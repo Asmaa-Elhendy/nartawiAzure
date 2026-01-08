@@ -238,6 +238,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                         SnackBar(
                           content: Text('Product already in cart. Quantity increased.'),
                           backgroundColor: AppColors.primary,
+                          behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 2),
                         ),
                       );
@@ -275,6 +276,16 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       
                       // Update quantity in CartState
                       context.read<CartBloc>().add(CartUpdateQuantity(productItem, quantity));
+                    } else {
+                      // Product already exists, increase quantity instead
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Product already in cart. Quantity increased.'),
+                          backgroundColor: AppColors.primary,
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                     }
                   }
                 },

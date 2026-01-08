@@ -9,7 +9,9 @@ import '../../../profile/presentation/widgets/address_card.dart';
 import 'change_address_alert.dart';
 
 class OrderDeliveryCartWidget extends StatefulWidget {
-  const OrderDeliveryCartWidget({super.key});
+  final Function(ClientAddress?)? onAddressSelected;
+  
+  const OrderDeliveryCartWidget({super.key, this.onAddressSelected});
 
   @override
   State<OrderDeliveryCartWidget> createState() => _OrderDeliveryCartWidgetState();
@@ -148,6 +150,8 @@ class _OrderDeliveryCartWidgetState extends State<OrderDeliveryCartWidget> {
                     setState(() {
                       _selectedAddress = selected;
                     });
+                    // Notify parent widget about the selection
+                    widget.onAddressSelected?.call(_selectedAddress);
                   }
                 },
                 fromDelivery: false,

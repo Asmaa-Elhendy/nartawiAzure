@@ -32,7 +32,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _onClear(CartClear event, Emitter<CartState> emit) {
+    print('🧹 CartBloc: Received CartClear event');
+    print('📦 Current cart products: ${state.cartProducts.length}');
+    print('🔢 Current quantities: ${state.productQuantities}');
+    
     emit(state.copyWith(cartProducts: [], productQuantities: {}));
+    
+    print('✅ CartBloc: Cart cleared - new state: ${state.cartProducts.length} products');
   }
 
   void _onUpdateQuantity(CartUpdateQuantity event, Emitter<CartState> emit) {

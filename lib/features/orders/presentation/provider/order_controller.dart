@@ -353,10 +353,11 @@ class OrdersController extends ChangeNotifier {
       }
 
       final url = '$base_url/v1/client/orders';
+      debugPrint('🌍 FINAL URL: $url');
 
       final response = await dio.post(
         url,
-        data: request.toJson(),
+        data: request.toJson(), // Use custom API format
         options: Options(
           headers: {
             'accept': 'application/json',
@@ -364,9 +365,12 @@ class OrdersController extends ChangeNotifier {
             'Content-Type': 'application/json',
           },
           // allow 4xx to be handled gracefully
-          validateStatus: (code) => code != null && code < 500,
+            validateStatus: (_) => true,
+
         ),
       );
+      debugPrint('❗CREATE ORDER STATUS: ${response.statusCode}');
+      debugPrint('❗CREATE ORDER BODY: ${response.data}');
 
       // ✅ Most APIs: 201 Created (with body)
       if (response.statusCode == 201 || response.statusCode == 200) {
