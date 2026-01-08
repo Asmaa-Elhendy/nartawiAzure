@@ -6,9 +6,9 @@ import 'package:iconify_flutter/icons/ic.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
-
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
+import '../../../../domain/models/product_model.dart';
 import '../../../bloc/cart/cart_bloc.dart';
 import '../../../bloc/cart/cart_event.dart';
 import '../../../bloc/cart/cart_state.dart';
@@ -16,6 +16,7 @@ import '../../../bloc/cart/cart_state.dart';
 class BuildIconOnProduct extends StatefulWidget {
   final bool fromFavouriteScreen;
   final int productVsId;
+  final String? productName;
 
   final double width;
   final double height;
@@ -29,6 +30,7 @@ class BuildIconOnProduct extends StatefulWidget {
   const BuildIconOnProduct(
       this.fromFavouriteScreen,
       this.productVsId,
+      this.productName,
       this.price,
       this.width,
       this.height,
@@ -172,9 +174,42 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 centerTitle: 'You\'ve added 1 item',
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
-                  // For now, add a placeholder since we don't have ClientProduct
-                  // In the future, you might want to fetch the product data or pass it differently
-                  context.read<CartBloc>().add(CartAddItem('Product ${widget.productVsId}'));
+                  // Add actual product data to cart with full product object
+                  if (widget.fromFavouriteScreen && widget.isDelete == false) {
+                    // For favorite products, create full product object
+                    context.read<CartBloc>().add(CartAddItem({
+                      'id': widget.productVsId,
+                      'name': widget.productName ?? 'Product ${widget.productVsId}',
+                      'price': widget.price,
+                      'fromFavorite': true,
+                      'product': {
+                        'id': widget.productVsId,
+                        'vsId': widget.productVsId,
+                        'enName': widget.productName ?? 'Product ${widget.productVsId}',
+                        'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                        'price': widget.price,
+                        'isActive': true,
+                        'isCurrent': true,
+                      }
+                    }));
+                  } else if (!widget.fromFavouriteScreen && widget.isDelete == false) {
+                    // For regular products, add with proper data
+                    context.read<CartBloc>().add(CartAddItem({
+                      'id': widget.productVsId,
+                      'name': widget.productName ?? 'Product ${widget.productVsId}',
+                      'price': widget.price,
+                      'fromFavorite': false,
+                      'product': {
+                        'id': widget.productVsId,
+                        'vsId': widget.productVsId,
+                        'enName': widget.productName ?? 'Product ${widget.productVsId}',
+                        'arName': widget.productName ?? 'منتج ${widget.productVsId}',
+                        'price': widget.price,
+                        'isActive': true,
+                        'isCurrent': true,
+                      }
+                    }));
+                  }
                 },
                 rightOnTap: () {
                   Navigator.pop(dialogContext);

@@ -212,6 +212,7 @@ class _ProductCardState extends State<ProductCard> {
                         children: [
                           BuildIconOnProduct(false,
                             widget.product!.vsId,
+                            widget.product!.enName,
                             state.price,
                             widget.screenWidth,
                             widget.screenHeight,
@@ -219,7 +220,7 @@ class _ProductCardState extends State<ProductCard> {
                             isFavourite: false,
                           ),
                           //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                          BuildIconOnProduct(false,widget.product!.vsId,state.price,
+                          BuildIconOnProduct(false,widget.product!.vsId,widget.product!.enName,state.price,
                               widget.screenWidth,
                               widget.screenHeight,
                               false,isFavourite: false,

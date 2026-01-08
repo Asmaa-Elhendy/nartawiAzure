@@ -347,6 +347,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     widget.fromFavorite,
                                     widget.fromFavorite? 
                                     widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
+                                    widget.fromFavorite ? 
+                                    widget.favoriteProduct!.product?.enName : widget.clientProduct!.enName,
                                     state.price,
                                     screenWidth,
                                     screenHeight,
@@ -357,6 +359,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     widget.fromFavorite,
                                     widget.fromFavorite? 
                                     widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
+                                    widget.fromFavorite ? 
+                                    widget.favoriteProduct!.product?.enName : widget.clientProduct!.enName,
                                     state.price,
                                     screenWidth,
                                     screenHeight,

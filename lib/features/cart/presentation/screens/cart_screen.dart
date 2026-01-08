@@ -17,6 +17,39 @@ import '../../../profile/presentation/widgets/add_new_address_alert.dart';
 import '../widgets/cart_store_card.dart';
 import '../widgets/payment_method_alert.dart';
 
+// Helper function to create ClientOrder from cart items
+ClientOrder _createOrderFromCart(List<Object> cartItems) {
+  double subtotal = 0.0;
+  
+  // Calculate subtotal from cart items
+  for (final item in cartItems) {
+    if (item is Map<String, dynamic>) {
+      // Handle new product data structure
+      final price = (item['price'] as num?)?.toDouble() ?? 0.0;
+      subtotal += price;
+    } else if (item.toString().contains('Product')) {
+      // Handle old string format for backward compatibility
+      subtotal += 25.0; // Default price per item
+    }
+  }
+  
+  // Calculate delivery cost (you can make this dynamic)
+  final deliveryCost = 10.0;
+  
+  // Calculate total
+  final total = subtotal + deliveryCost;
+  
+  return ClientOrder(
+    id: 0,
+    subTotal: subtotal,
+    discount: 0.0,
+    deliveryCost: deliveryCost,
+    total: total,
+    isPaid: false,
+    items: cartItems,
+  );
+}
+
 class CartScreen extends StatefulWidget {
   @override
   State<CartScreen> createState() => _CartScreenState();
@@ -128,8 +161,36 @@ class _CartScreenState extends State<CartScreen>
                                     return Column(
                                       children: cartState.cartProducts
                                           .map((product) {
-                                            // Check if product is ClientProduct and display real product data
-                                            if (product is ClientProduct) {
+                                            // Check if product is Map with real data
+                                            if (product is Map<String, dynamic>) {
+                                              return Padding(
+                                                padding: EdgeInsets.only(bottom: screenHeight * .02),
+                                                child: FavouriteProductCard(
+                                                  screenWidth: screenWidth,
+                                                  screenHeight: screenHeight,
+                                                  favouriteProduct: FavoriteProduct(
+                                                    id: product['id'] ?? 0,
+                                                    productVsId: product['id'] ?? 0,
+                                                    createdAt: DateTime.now(),
+                                                    product: FavoriteProductItem(
+                                                      id: product['id'] ?? 0,
+                                                      vsId: product['id'] ?? 0,
+                                                      enName: product['name'] ?? 'Product',
+                                                      arName: product['name'] ?? 'منتج',
+                                                      isActive: true,
+                                                      isCurrent: true,
+                                                      price: (product['price'] as num?)?.toDouble() ?? 0.0,
+                                                      categoryId: 0,
+                                                      categoryName: 'General',
+                                                      images: [],
+                                                      totalAvailableQuantity: 0,
+                                                      inventory: [],
+                                                    ),
+                                                  ),
+                                                  fromCartScreen: true,
+                                                ),
+                                              );
+                                            } else if (product is ClientProduct) {
                                               return Padding(
                                                 padding: EdgeInsets.only(bottom: screenHeight * .02),
                                                 child: FavouriteProductCard(
@@ -158,7 +219,7 @@ class _CartScreenState extends State<CartScreen>
                                                 ),
                                               );
                                             } else {
-                                              // Handle other product types if needed
+                                              // Handle old string format for backward compatibility
                                               return Padding(
                                                 padding: EdgeInsets.only(bottom: screenHeight * .02),
                                                 child: FavouriteProductCard(
@@ -205,7 +266,15 @@ class _CartScreenState extends State<CartScreen>
                                 //                 ],),
                                 //             ),
                               ),
-                              OrderSummaryCard(screenWidth, screenHeight,ClientOrder(id: 0)),
+                              BlocBuilder<CartBloc, CartState>(
+                                builder: (context, cartState) {
+                                  return OrderSummaryCard(
+                                    screenWidth, 
+                                    screenHeight, 
+                                    _createOrderFromCart(cartState.cartProducts)
+                                  );
+                                },
+                              ),
                               OrderDeliveryCartWidget(),
                               BuildInfoAndAddToCartButton(
                                 screenWidth,

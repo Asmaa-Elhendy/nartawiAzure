@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'product_quantity_event.dart';
 import 'product_quantity_state.dart';
+import '../../../domain/models/product_model.dart';
 
 class CalculateProductPrice {
   double call(int quantity, double basePrice ) {
@@ -11,11 +12,13 @@ class CalculateProductPrice {
 class ProductQuantityBloc extends Bloc<ProductQuantityEvent, ProductQuantityState> {
   final CalculateProductPrice calculateProductPrice;
   final double basePrice;
+  final ClientProduct? product;
 
   ProductQuantityBloc({
     required this.calculateProductPrice,
-    required this.basePrice ,
-  }) : super(ProductQuantityState.initial(basePrice)) {
+    required this.basePrice,
+    this.product,
+  }) : super(ProductQuantityState.initial(basePrice, product)) {
     on<IncreaseQuantity>(_onIncreaseQuantity);
     on<DecreaseQuantity>(_onDecreaseQuantity);
     on<QuantityChanged>(_onQuantityChanged);

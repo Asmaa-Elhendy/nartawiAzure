@@ -11,7 +11,7 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clie
       vertical: screenHeight * .0,
     ),
     padding: EdgeInsets.symmetric(
-      vertical: screenHeight * .02,
+      vertical: screenHeight * .02,//k
       horizontal: screenWidth * .03,
     ),
     decoration: BoxDecoration(
