@@ -1,44 +1,142 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/text_styles.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
-
 import '../../../../core/theme/colors.dart';
 
-Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clientOrder,
-    {bool fromDeliveryMan=false}) {
+Widget OrderSummaryCard(
+    double screenWidth,
+    double screenHeight,
+    ClientOrder clientOrder, {
+      bool fromDeliveryMan = false,
+      bool fromCart = false,
+    }) {
+  // ===============================
+  // Extract items
+  // ===============================
+  final List<Object> items = clientOrder.items ?? [];
+
+  // ===============================
+  // Normalize & group items
+  // ===============================
+  List<Map<String, dynamic>> normalizeAndGroupItems(List<Object> rawItems) {
+    final Map<String, Map<String, dynamic>> grouped = {};
+
+    for (final item in rawItems) {
+      String name = 'Unknown Product';
+      double price = 0.0;
+      int quantity = 1;
+
+      if (item is Map<String, dynamic>) {
+        name = (item['name'] ??
+            item['enName'] ??
+            item['arName'] ??
+            'Unknown Product')
+            .toString();
+        price = (item['price'] as num?)?.toDouble() ?? 0.0;
+        quantity = (item['quantity'] as num?)?.toInt() ?? 1;
+      } else {
+        name = item.toString();
+        price = 0.0;
+        quantity = 1;
+      }
+
+      final key = '$name|$price';
+
+      if (grouped.containsKey(key)) {
+        grouped[key]!['quantity'] =
+            (grouped[key]!['quantity'] as int) + quantity;
+      } else {
+        grouped[key] = {
+          'name': name,
+          'price': price,
+          'quantity': quantity,
+        };
+      }
+    }
+
+    return grouped.values.toList();
+  }
+
+  final groupedItems = normalizeAndGroupItems(items);
+
+  // ===============================
+  // Calculations
+  // ===============================
+  final double itemsSubtotal = groupedItems.fold(
+    0.0,
+        (sum, item) =>
+    sum +
+        ((item['price'] as num).toDouble() *
+            (item['quantity'] as int)),
+  );
+
+  final num? deliveryFee = clientOrder.deliveryCost;
+  final double tax = 0.0; // 👈 عدليها بعدين لو VAT
+  final double total = itemsSubtotal + deliveryFee! + tax;
+
+  // ===============================
+  // UI Helpers
+  // ===============================
+  Widget buildItemRow(
+      String name, double price, int quantity) {
+    final double subtotal = price * quantity;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: screenHeight * .01),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: AppTextStyles.textSummaryStyle),
+                Text(
+                  'QAR ${price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    color:
+                    AppColors.greyDarktextIntExtFieldAndIconsHome,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$quantity × QAR ${price.toStringAsFixed(2)}',
+                style: AppTextStyles.textSummaryStyle,
+              ),
+              Text(
+                'Subtotal: QAR ${subtotal.toStringAsFixed(2)}',
+                style: AppTextStyles.textSummaryStyle,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ===============================
+  // UI
+  // ===============================
   return Container(
-    margin: EdgeInsets.symmetric(
-      vertical: screenHeight * .0,
-    ),
     padding: EdgeInsets.symmetric(
-      vertical: screenHeight * .02,//k
+      vertical: screenHeight * .02,
       horizontal: screenWidth * .03,
     ),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(16),
       color: AppColors.whiteColor,
-      // boxShadow: [
-      //   BoxShadow(
-      //     color: AppColors.shadowColor,
-      //     offset: Offset(0, 2),
-      //     blurRadius: 8,
-      //     spreadRadius: 0,
-      //   ),
-      // ],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        // Title
-       fromDeliveryMan? Text(
-       'Order Summary',
-         style: TextStyle(
-           fontWeight: FontWeight.w700,
-           fontSize: screenWidth * .04,
-           color: AppColors.primary,
-         ),
-       ): Center(
+        Center(
           child: Text(
             'Order Summary',
             style: TextStyle(
@@ -48,165 +146,129 @@ Widget OrderSummaryCard(double screenWidth, double screenHeight,ClientOrder clie
             ),
           ),
         ),
-         SizedBox(height:screenHeight*.02 ),
 
-        // Item 1
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Hand Pump Dispenser', style: AppTextStyles.textSummaryStyle),
-                  Text(
-                    'Company Hand Pump Dispenser-Pure Natureal......',
-                    style: TextStyle(
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('4*QAR 25.00', style: AppTextStyles.textSummaryStyle),
-                Text('Subtotal : 100', style: AppTextStyles.textSummaryStyle),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height:screenHeight*.01 ),
-        Divider(color: AppColors.backgrounHome,),
-        // Item 2
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('330 Ml x 24pcs (50packs)', style: AppTextStyles.textSummaryStyle),
-                  Text(
-                    'Company Boittles',
-                    style: TextStyle(
-                      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('1*QAR 24.00', style: AppTextStyles.textSummaryStyle),
-                Text('Subtotal : 24', style: AppTextStyles.textSummaryStyle),
-              ],
-            ),
-          ],
-        ),
-        SizedBox(height:screenHeight*.01 ),
+        SizedBox(height: screenHeight * .02),
 
-         Divider(color: AppColors.backgrounHome,),
-
-        SizedBox(height:screenHeight*.02 ),
-
-        // Subtotal & Delivery Fee
-        Row(
-          children: [
-            Expanded(
-              child: SizedBox(height: screenHeight*.1,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Items Subtotal', style: AppTextStyles.textSummaryStyle),
-                    SizedBox(height: 4),
-                    Text('QAR ${clientOrder.subTotal}', style: AppTextStyles.textSummaryStyle),
-                  ],
+        // ===============================
+        // Items List
+        // ===============================
+        if (!fromDeliveryMan) ...[
+          if (groupedItems.isNotEmpty) ...[
+            ...groupedItems.map((item) {
+              return buildItemRow(
+                item['name'],
+                (item['price'] as num).toDouble(),
+                item['quantity'],
+              );
+            }).toList(),
+            Divider(color: AppColors.backgrounHome),
+          ] else
+            Center(
+              child: Text(
+                'No items found',
+                style: TextStyle(
+                  color:
+                  AppColors.greyDarktextIntExtFieldAndIconsHome,
+                  fontSize: 12,
                 ),
               ),
             ),
+        ],
 
-            // هنا تعديل
+        SizedBox(height: screenHeight * .02),
+
+        // ===============================
+        // Subtotal & Delivery
+        // ===============================
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Items Subtotal',
+                      style: AppTextStyles.textSummaryStyle),
+                  SizedBox(height: 4),
+                  Text(
+                    'QAR ${itemsSubtotal.toStringAsFixed(2)}',
+                    style: AppTextStyles.textSummaryStyle,
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
-
-              height: screenHeight * 0.1,
-              width: 20,
+              height: screenHeight * .1,
               child: VerticalDivider(
                 color: AppColors.backgrounHome,
                 thickness: 1,
               ),
             ),
-
             Expanded(
-              child: SizedBox(height: screenHeight*.1,
-                child: Column(mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Delivery Fee', style: AppTextStyles.textSummaryStyle),
-                    SizedBox(height: 4),
-                    Text('QAR ${clientOrder.deliveryCost}', style: AppTextStyles.textSummaryStyle),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Delivery Fee',
+                      style: AppTextStyles.textSummaryStyle),
+                  SizedBox(height: 4),
+                  Text(
+                    'QAR ${deliveryFee.toStringAsFixed(2)}',
+                    style: AppTextStyles.textSummaryStyle,
+                  ),
+                ],
               ),
             ),
           ],
         ),
 
-        SizedBox(height:screenHeight*.02 ),
+        SizedBox(height: screenHeight * .02),
 
-
+        // ===============================
         // Tax & Total
+        // ===============================
         Row(
           children: [
             Expanded(
-              child: SizedBox(height: screenHeight*.1,
-                child: Column(mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Tax', style: AppTextStyles.textSummaryStyle),
-                    SizedBox(height: 4),
-                    Text('QAR 00,00', style: AppTextStyles.textSummaryStyle),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Tax',
+                      style: AppTextStyles.textSummaryStyle),
+                  SizedBox(height: 4),
+                  Text(
+                    'QAR ${tax.toStringAsFixed(2)}',
+                    style: AppTextStyles.textSummaryStyle,
+                  ),
+                ],
               ),
             ),
-
-            // هنا تعديل برضه
             SizedBox(
-              height: screenHeight*.1,
-              width: 20,
+              height: screenHeight * .1,
               child: VerticalDivider(
                 color: AppColors.backgrounHome,
                 thickness: 1,
               ),
             ),
-
             Expanded(
-              child: SizedBox(height: screenHeight*.1,
-                child: Container(
-                  padding:  EdgeInsets.symmetric(
-                    vertical: screenHeight*.02,
-                    horizontal: screenWidth*.03,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.backgrounHome,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Total :', style: AppTextStyles.textSummaryStyle),
-                      SizedBox(height: 4),
-                      Text('QAR ${clientOrder.total}', style: AppTextStyles.textSummaryStyle),
-                    ],
-                  ),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight * .02,
+                  horizontal: screenWidth * .03,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.backgrounHome,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Total',
+                        style: AppTextStyles.textSummaryStyle),
+                    SizedBox(height: 4),
+                    Text(
+                      'QAR ${total.toStringAsFixed(2)}',
+                      style: AppTextStyles.textSummaryStyle,
+                    ),
+                  ],
                 ),
               ),
             ),
