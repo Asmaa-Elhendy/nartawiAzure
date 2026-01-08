@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../../core/services/auth_service.dart';
 import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
+import '../../domain/models/create_order_req.dart';
 import '../../domain/models/order_model.dart';
 
 class OrdersQuery {
@@ -315,6 +316,132 @@ class OrdersController extends ChangeNotifier {
       error = 'An unexpected error occurred: $e';
       notifyListeners();
       return false;
+    }
+  }
+  /// ✅ POST /api/v1/client/orders
+  /// Create a new water delivery order.
+  /// Returns the created order (if API returns JSON), otherwise returns null.
+  /// If your API returns 201 with body => parsed.
+  /// If it returns 204 => success without body.
+  Future<ClientOrder?> createOrder({
+    required CreateOrderRequest request,
+    bool refreshAfter = true,
+  }) async {
+    error = null;
+    notifyListeners();
+
+    // Basic validation (client-side)
+    if (request.items.isEmpty) {
+      error = 'Please add at least one item';
+      notifyListeners();
+      return null;
+    }
+    for (final it in request.items) {
+      if (it.quantity <= 0) {
+        error = 'Quantity must be greater than 0';
+        notifyListeners();
+        return null;
+      }
+    }
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        error = 'Authentication required';
+        notifyListeners();
+        return null;
+      }
+
+      final url = '$base_url/v1/client/orders';
+
+      final response = await dio.post(
+        url,
+        data: request.toJson(),
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          // allow 4xx to be handled gracefully
+          validateStatus: (code) => code != null && code < 500,
+        ),
+      );
+
+      // ✅ Most APIs: 201 Created (with body)
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = response.data;
+
+        ClientOrder? created;
+        if (data is Map<String, dynamic>) {
+          // if API returns the created order object
+          created = ClientOrder.fromJson(data);
+        } else if (data is Map) {
+          created = ClientOrder.fromJson(Map<String, dynamic>.from(data));
+        } else {
+          created = null;
+        }
+
+        debugPrint('✅ Order created successfully (status: ${response.statusCode})');
+
+        if (refreshAfter) {
+          await refresh(); // reload orders list
+        }
+
+        return created;
+      }
+
+      // ✅ Some APIs: 204 No Content (success without body)
+      if (response.statusCode == 204) {
+        debugPrint('✅ Order created successfully (204 No Content)');
+
+        if (refreshAfter) {
+          await refresh();
+        }
+
+        return null;
+      }
+
+      // ❌ Failed
+      final data = response.data;
+      String msg = 'Failed to create order';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (data is String && data.trim().isNotEmpty) {
+        msg = data;
+      } else {
+        msg = 'Failed to create order (status: ${response.statusCode})';
+      }
+
+      error = msg;
+      notifyListeners();
+      return null;
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to create order';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      error = msg;
+      notifyListeners();
+      return null;
+    } catch (e) {
+      error = 'An unexpected error occurred: $e';
+      notifyListeners();
+      return null;
     }
   }
 
