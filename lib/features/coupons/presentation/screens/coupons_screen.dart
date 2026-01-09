@@ -37,6 +37,7 @@ class _CouponsScreenState extends State<CouponsScreen>
     // ✅ نجيب الكل مرة واحدة عشان آخر delivery_man يبقى صح
     _couponsController.fetchAllCoupons();
     _couponsController.fetchBundlePurchases();
+    _couponsController.fetchScheduledOrders();
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -215,6 +216,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                                   currentCoupon: lastDeliveredCoupons, // ✅ دايمًا List
                                   disbute: lastDeliveredCoupons.any((c) => c.status == 'Disputed'),
                                   onReorder: () async => _handleRefresh(),
+                                  couponsController: _couponsController,
                                 );
                               },
                             );

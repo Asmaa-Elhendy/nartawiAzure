@@ -6,6 +6,8 @@ import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
 import '../../domain/models/bundle_purchase.dart';
 import '../../domain/models/coupons_models.dart';
+import '../../data/models/scheduled_order_model.dart';
+import '../../data/datasources/scheduled_order_remote_datasource.dart';
 
 class CouponsQuery {
   final int? productVsid;
@@ -30,9 +32,11 @@ class CouponsQuery {
 
 class CouponsController extends ChangeNotifier {
   final Dio dio;
+  late final ScheduledOrderRemoteDataSource _scheduledOrderDataSource;
 
   CouponsController({required this.dio}) {
     debugPrint('🔥 CouponsController created');
+    _scheduledOrderDataSource = ScheduledOrderRemoteDataSourceImpl(dio: dio);
   }
 
   // ---------------- COUPONS ----------------
@@ -329,5 +333,130 @@ class CouponsController extends ChangeNotifier {
       isLoadingMoreBundles = false;
       notifyListeners();
     }
+  }
+
+  // ---------------- SCHEDULED ORDERS ----------------
+  final List<ScheduledOrderModel> _scheduledOrders = [];
+  bool _isLoadingSchedules = false;
+  String? _schedulesError;
+
+  List<ScheduledOrderModel> get scheduledOrders => _scheduledOrders;
+  bool get isLoadingSchedules => _isLoadingSchedules;
+  String? get schedulesError => _schedulesError;
+
+  Future<void> fetchScheduledOrders() async {
+    _isLoadingSchedules = true;
+    _schedulesError = null;
+    notifyListeners();
+
+    try {
+      _scheduledOrders.clear();
+      final orders = await _scheduledOrderDataSource.getScheduledOrders();
+      _scheduledOrders.addAll(orders);
+      debugPrint('✅ Fetched ${orders.length} scheduled orders');
+    } catch (e) {
+      _schedulesError = e.toString();
+      debugPrint('❌ Error fetching scheduled orders: $e');
+    } finally {
+      _isLoadingSchedules = false;
+      notifyListeners();
+    }
+  }
+
+  Future<ScheduledOrderModel?> createScheduledOrder({
+    required int productVsid,
+    required int weeklyFrequency,
+    required int bottlesPerDelivery,
+    required List<ScheduleEntry> schedule,
+    required int deliveryAddressId,
+    required bool autoRenewEnabled,
+    int? lowBalanceThreshold,
+  }) async {
+    try {
+      final request = CreateScheduledOrderRequest(
+        productVsid: productVsid,
+        weeklyFrequency: weeklyFrequency,
+        bottlesPerDelivery: bottlesPerDelivery,
+        schedule: schedule,
+        deliveryAddressId: deliveryAddressId,
+        autoRenewEnabled: autoRenewEnabled,
+        lowBalanceThreshold: lowBalanceThreshold,
+      );
+
+      final created = await _scheduledOrderDataSource.createScheduledOrder(request);
+      
+      await fetchScheduledOrders();
+      
+      debugPrint('✅ Created scheduled order #${created.id}');
+      return created;
+    } catch (e) {
+      _schedulesError = e.toString();
+      debugPrint('❌ Error creating scheduled order: $e');
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<ScheduledOrderModel?> updateScheduledOrder({
+    required int id,
+    int? weeklyFrequency,
+    int? bottlesPerDelivery,
+    List<ScheduleEntry>? schedule,
+    int? deliveryAddressId,
+    bool? autoRenewEnabled,
+    int? lowBalanceThreshold,
+  }) async {
+    try {
+      final request = UpdateScheduledOrderRequest(
+        weeklyFrequency: weeklyFrequency,
+        bottlesPerDelivery: bottlesPerDelivery,
+        schedule: schedule,
+        deliveryAddressId: deliveryAddressId,
+        autoRenewEnabled: autoRenewEnabled,
+        lowBalanceThreshold: lowBalanceThreshold,
+      );
+
+      final updated = await _scheduledOrderDataSource.updateScheduledOrder(id, request);
+      
+      await fetchScheduledOrders();
+      
+      debugPrint('✅ Updated scheduled order #$id');
+      return updated;
+    } catch (e) {
+      _schedulesError = e.toString();
+      debugPrint('❌ Error updating scheduled order: $e');
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<bool> deleteScheduledOrder(int id) async {
+    try {
+      await _scheduledOrderDataSource.deleteScheduledOrder(id);
+      
+      await fetchScheduledOrders();
+      
+      debugPrint('✅ Deleted scheduled order #$id');
+      return true;
+    } catch (e) {
+      _schedulesError = e.toString();
+      debugPrint('❌ Error deleting scheduled order: $e');
+      notifyListeners();
+      return false;
+    }
+  }
+
+  ScheduledOrderModel? getScheduleForProduct(int productVsid) {
+    try {
+      return _scheduledOrders.firstWhere(
+        (s) => s.productVsid == productVsid && s.isActive,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<ScheduledOrderModel> getSchedulesForProduct(int productVsid) {
+    return _scheduledOrders.where((s) => s.productVsid == productVsid).toList();
   }
 }

@@ -9,6 +9,10 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/prefered_days_g
 import 'package:newwwwwwww/features/coupons/presentation/widgets/refill_outline_button.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/snack_bar_warnning.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/view_Consumption_history_alert.dart';
+import 'package:newwwwwwww/features/coupons/presentation/widgets/scheduled_order_helper.dart';
+import 'package:newwwwwwww/features/coupons/data/models/scheduled_order_model.dart';
+import 'package:newwwwwwww/core/constants/time_slots.dart';
+import 'package:newwwwwwww/features/coupons/presentation/provider/coupon_controller.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/widgets/change_address_alert.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
@@ -30,6 +34,7 @@ class CouponeCard extends StatefulWidget {
   final List<WalletCoupon> currentCoupon;
 
   final BundlePurchase bundle;
+  final CouponsController? couponsController;
 
   const CouponeCard({
     Key? key,
@@ -37,6 +42,7 @@ class CouponeCard extends StatefulWidget {
     required this.bundle,
     this.disbute = false,
     required this.onReorder,
+    this.couponsController,
   }) : super(key: key);
 
   @override
@@ -53,6 +59,9 @@ class _CouponeCardState extends State<CouponeCard> {
   late final TextEditingController _quantityTwoController;
 
   final Set<int> _selectedPreferredDays = {};
+  int _selectedTimeSlotId = 2;
+  ScheduledOrderModel? _existingSchedule;
+  CouponsController? _couponsController;
 
   @override
   void initState() {
@@ -67,6 +76,36 @@ class _CouponeCardState extends State<CouponeCard> {
     _quantityController = TextEditingController(text: '1');
     _quantityTwoController = TextEditingController(text: '1');
     super.initState();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadScheduleData();
+    });
+  }
+
+  void _loadScheduleData() {
+    _couponsController = widget.couponsController;
+
+    if (_couponsController != null && widget.bundle.productVsid != null) {
+      final schedule = _couponsController!.getScheduleForProduct(widget.bundle.productVsid!);
+      
+      if (schedule != null && mounted) {
+        setState(() {
+          _existingSchedule = schedule;
+          _quantityController.text = schedule.weeklyFrequency.toString();
+          _quantityTwoController.text = schedule.bottlesPerDelivery.toString();
+          _isSwitched = schedule.autoRenewEnabled;
+          
+          _selectedPreferredDays.clear();
+          for (var entry in schedule.schedule) {
+            _selectedPreferredDays.add(entry.dayOfWeek);
+            _selectedTimeSlotId = entry.timeSlotId;
+          }
+        });
+        
+        _quantityBloc.add(QuantityChanged(schedule.weeklyFrequency.toString()));
+        _quantityTwoBloc.add(QuantityChanged(schedule.bottlesPerDelivery.toString()));
+      }
+    }
   }
 
   @override
@@ -417,8 +456,177 @@ class _CouponeCardState extends State<CouponeCard> {
           NextRefillButton(
             selectedDays: _selectedPreferredDays.toList(),
           ),
+
+          SizedBox(height: screenHeight * .02),
+
+          customCouponPrimaryTitle('Preferred Time Slot', screenWidth, screenHeight),
+          SizedBox(height: screenHeight * .01),
+          
+          DropdownButtonFormField<int>(
+            value: _selectedTimeSlotId,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: screenWidth * .04,
+                vertical: screenHeight * .015,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
+              ),
+            ),
+            items: TimeSlots.all.map((slot) {
+              return DropdownMenuItem(
+                value: slot.id,
+                child: Text(
+                  slot.displayTime,
+                  style: TextStyle(fontSize: screenWidth * .036),
+                ),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null) {
+                setState(() => _selectedTimeSlotId = value);
+              }
+            },
+          ),
+
+          SizedBox(height: screenHeight * .02),
+
+          if (_existingSchedule != null) ..[
+            Container(
+              padding: EdgeInsets.all(screenWidth * .03),
+              decoration: BoxDecoration(
+                color: ScheduledOrderHelper.getApprovalStatusColor(_existingSchedule!.approvalStatus).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: ScheduledOrderHelper.getApprovalStatusColor(_existingSchedule!.approvalStatus),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: ScheduledOrderHelper.getApprovalStatusColor(_existingSchedule!.approvalStatus),
+                    size: screenWidth * .05,
+                  ),
+                  SizedBox(width: screenWidth * .02),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Schedule Status: ${ScheduledOrderHelper.getApprovalStatusDisplay(_existingSchedule!.approvalStatus)}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: screenWidth * .036,
+                          ),
+                        ),
+                        if (_existingSchedule!.rejectionReason != null)
+                          Text(
+                            _existingSchedule!.rejectionReason!,
+                            style: TextStyle(
+                              fontSize: screenWidth * .032,
+                              color: Colors.red,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.visibility, size: screenWidth * .05),
+                    onPressed: () => ScheduledOrderHelper.showScheduleStatus(
+                      context,
+                      schedule: _existingSchedule!,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: screenHeight * .02),
+          ],
+
+          ElevatedButton(
+            onPressed: _couponsController != null ? _saveSchedule : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              minimumSize: Size(double.infinity, screenHeight * .06),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(
+              _existingSchedule != null ? 'Update Schedule' : 'Save Schedule',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: screenWidth * .04,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+
+          if (_existingSchedule != null) ..[
+            SizedBox(height: screenHeight * .01),
+            OutlinedButton(
+              onPressed: _couponsController != null ? _deleteSchedule : null,
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: const BorderSide(color: Colors.red),
+                minimumSize: Size(double.infinity, screenHeight * .06),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                'Cancel Schedule',
+                style: TextStyle(
+                  fontSize: screenWidth * .04,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  Future<void> _saveSchedule() async {
+    if (_couponsController == null) return;
+
+    final weeklyFreq = int.tryParse(_quantityController.text) ?? 0;
+    final bottlesPerDelivery = int.tryParse(_quantityTwoController.text) ?? 0;
+
+    await ScheduledOrderHelper.saveSchedule(
+      context: context,
+      controller: _couponsController!,
+      bundle: widget.bundle,
+      weeklyFrequency: weeklyFreq,
+      bottlesPerDelivery: bottlesPerDelivery,
+      selectedDays: _selectedPreferredDays,
+      timeSlotId: _selectedTimeSlotId,
+      autoRenewEnabled: _isSwitched,
+      lowBalanceThreshold: 5,
+      existingSchedule: _existingSchedule,
+    );
+
+    _loadScheduleData();
+  }
+
+  Future<void> _deleteSchedule() async {
+    if (_couponsController == null || _existingSchedule == null) return;
+
+    await ScheduledOrderHelper.deleteSchedule(
+      context: context,
+      controller: _couponsController!,
+      schedule: _existingSchedule!,
+    );
+
+    setState(() {
+      _existingSchedule = null;
+    });
   }
 }

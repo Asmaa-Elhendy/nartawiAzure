@@ -12,6 +12,7 @@ class BundlePurchase {
   final String vendorSkuPrefix;
   final DateTime purchasedAt;
   final String status;
+  final int? productVsid;
 
   BundlePurchase({
     required this.id,
@@ -27,6 +28,7 @@ class BundlePurchase {
     required this.vendorSkuPrefix,
     required this.purchasedAt,
     required this.status,
+    this.productVsid,
   });
 
   factory BundlePurchase.fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class BundlePurchase {
       vendorSkuPrefix: (json['vendorSkuPrefix'] ?? '').toString(),
       purchasedAt: DateTime.parse(json['purchasedAt'].toString()),
       status: (json['status'] ?? '').toString(),
+      productVsid: json['productVsid'] as int?,
     );
   }
 }
