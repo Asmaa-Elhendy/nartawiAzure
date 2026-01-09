@@ -12,6 +12,7 @@ class ProductsEvent extends Equatable {
   final String? sortBy;
   final bool? isDescending;
   final bool? executeClear;
+  final bool? isBundle;
 
   const ProductsEvent({
     this.categoryId,
@@ -25,6 +26,7 @@ class ProductsEvent extends Equatable {
     this.sortBy,
     this.isDescending,
     this.executeClear,
+    this.isBundle,
   });
 
   @override
@@ -40,6 +42,7 @@ class ProductsEvent extends Equatable {
         sortBy,
         isDescending,
         executeClear,
+        isBundle,
       ];
 }
 
@@ -56,5 +59,6 @@ class FetchProducts extends ProductsEvent {
     super.sortBy,
     super.isDescending,
     super.executeClear = false,
+    super.isBundle,
   });
 }

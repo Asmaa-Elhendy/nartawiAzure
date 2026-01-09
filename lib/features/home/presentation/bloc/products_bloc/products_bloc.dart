@@ -72,6 +72,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         if (event.maxPrice != null) 'MaxPrice': event.maxPrice,
         if (event.isActive != null) 'IsActive': event.isActive,
         if (event.supplierId != null) 'SupplierId': event.supplierId,
+        if (event.isBundle != null) 'IsBundle': event.isBundle,
         'PageSize': pageSize,
         'PageIndex': pageToFetch,
         if (event.searchTerm != null && event.searchTerm!.isNotEmpty)
@@ -163,6 +164,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     String? searchTerm,
     String? sortBy,
     bool? isDescending,
+    bool? isBundle,
   }) {
     _currentPage = 1;
     _hasReachedMax = false;
@@ -178,6 +180,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       searchTerm: searchTerm,
       sortBy: sortBy,
       isDescending: isDescending,
+      isBundle: isBundle,
     ));
   }
 
@@ -191,6 +194,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     String? searchTerm,
     String? sortBy,
     bool? isDescending,
+    bool? isBundle,
   }) {
     if (!_hasReachedMax) {
       add(FetchProducts(
@@ -204,6 +208,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         searchTerm: searchTerm,
         sortBy: sortBy,
         isDescending: isDescending,
+        isBundle: isBundle,
       ));
     }
   }
