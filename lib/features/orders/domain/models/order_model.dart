@@ -1,3 +1,6 @@
+import 'order_confirmation_model.dart';
+import 'dispute_model.dart';
+
 class ClientOrder {
   final int id;
   final DateTime? issueTime;
@@ -26,6 +29,9 @@ class ClientOrder {
 
   final dynamic confirmation;
   final dynamic vendors;
+  
+  final OrderConfirmation? orderConfirmation;
+  final Dispute? dispute;
 
   ClientOrder({
     required this.id,
@@ -48,6 +54,8 @@ class ClientOrder {
     this.terminalId,
     this.confirmation,
     this.vendors,
+    this.orderConfirmation,
+    this.dispute,
   });
 
   factory ClientOrder.fromJson(Map<String, dynamic> json) {
@@ -62,6 +70,24 @@ class ClientOrder {
       if (v == null) return null;
       if (v is num) return v;
       return num.tryParse(v.toString());
+    }
+
+    OrderConfirmation? orderConfirmation;
+    if (json['orderConfirmation'] != null) {
+      try {
+        orderConfirmation = OrderConfirmation.fromJson(json['orderConfirmation']);
+      } catch (e) {
+        orderConfirmation = null;
+      }
+    }
+    
+    Dispute? dispute;
+    if (json['dispute'] != null) {
+      try {
+        dispute = Dispute.fromJson(json['dispute']);
+      } catch (e) {
+        dispute = null;
+      }
     }
 
     return ClientOrder(
@@ -85,6 +111,8 @@ class ClientOrder {
       terminalId: json['terminalId'] as int?,
       confirmation: json['confirmation'],
       vendors: json['vendors'],
+      orderConfirmation: orderConfirmation,
+      dispute: dispute,
     );
   }
 }

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/custome_button.dart';
 import '../widgets/mark_delivered_alert.dart';
+import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
+import '../../../../../core/services/auth_service.dart';
 
 
 class DeliveryConfirmationScreen extends StatefulWidget {
@@ -32,6 +38,17 @@ class DeliveryConfirmationScreen extends StatefulWidget {
 
 class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen> {
   final TextEditingController _commentCtrl = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  late OrderConfirmationDatasource _podDatasource;
+  
+  Position? _currentPosition;
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _podDatasource = OrderConfirmationDatasource(dio: Dio());
+  }
 
   @override
   void dispose() {
@@ -40,6 +57,111 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
   }
 
   String formatDateOnly(DateTime d) => DateFormat('MMM d, y').format(d);
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          throw Exception('Location permissions are denied');
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        throw Exception('Location permissions are permanently denied');
+      }
+
+      _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to get location: $e')),
+      );
+    }
+  }
+
+  Future<void> _capturePhotoAndSubmit() async {
+    await _getCurrentLocation();
+
+    if (_currentPosition == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enable location services')),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => GpsRequiredAlert(
+        onOpenCamera: () async {
+          Navigator.pop(context);
+          await _openCameraAndSubmit();
+        },
+        onCancel: () {
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  Future<void> _openCameraAndSubmit() async {
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      );
+
+      if (photo != null && _currentPosition != null) {
+        await _submitPOD(photo);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to capture photo: $e')),
+      );
+    }
+  }
+
+  Future<void> _submitPOD(XFile photo) async {
+    setState(() => _isSubmitting = true);
+
+    try {
+      final bytes = await photo.readAsBytes();
+      final base64Photo = base64Encode(bytes);
+
+      await _podDatasource.submitPOD(
+        orderId: widget.orderId,
+        photoBase64: base64Photo,
+        latitude: _currentPosition!.latitude,
+        longitude: _currentPosition!.longitude,
+        notes: _commentCtrl.text.trim().isEmpty ? null : _commentCtrl.text.trim(),
+      );
+
+      setState(() => _isSubmitting = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Delivery confirmed successfully'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context, true);
+    } catch (e) {
+      setState(() => _isSubmitting = false);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to submit POD: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -259,23 +381,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
                                     isRed: false,
-                                    onTap: () {
-
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (_) => GpsRequiredAlert(
-                                          onOpenCamera: () {
-                                            // TODO: افتحي الكاميرا هنا
-                                            print("Open Camera");
-                                          },
-                                          onCancel: () {
-                                            // optional
-                                          },
-                                        ),
-                                      );
-
-                                    },
+                                    onTap: _isSubmitting ? null : _capturePhotoAndSubmit,
                                   ),
                                 ),
                                 SizedBox(width: screenWidth * .03),
