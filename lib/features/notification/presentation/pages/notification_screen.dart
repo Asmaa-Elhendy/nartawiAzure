@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:newwwwwwww/features/notification/presentation/widgets/all_notification_page.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../bloc/notification_bloc/bloc.dart';
 import '../bloc/notification_bloc/state.dart';
+import '../provider/notification_controller.dart';
+import '../../domain/notification_model.dart';
 
 class NotificationScreen extends StatefulWidget {
   bool fromDeliveryMan;
@@ -18,6 +21,8 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late NotificationController _notificationController;
+  late ScrollController _scrollController;
 
   // ✅ Tabs for normal user
   static const List<String> _tabsUser = [
@@ -46,6 +51,31 @@ class _NotificationScreenState extends State<NotificationScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    _scrollController = ScrollController();
+    _notificationController = NotificationController(dio: Dio());
+    
+    _notificationController.fetchNotifications();
+    
+    _startPolling();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _startPolling() {
+    Future.delayed(Duration(seconds: 60), () {
+      if (mounted) {
+        _notificationController.refreshUnreadCount();
+        _startPolling();
+      }
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= 
+        _scrollController.position.maxScrollExtent - 200) {
+      if (_notificationController.hasMore && !_notificationController.isLoading) {
+        _notificationController.fetchNotifications(loadMore: true);
+      }
+    }
   }
 
   @override
@@ -63,17 +93,157 @@ class _NotificationScreenState extends State<NotificationScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
+    _notificationController.dispose();
     super.dispose();
   }
 
   String? imageUrl = null;
 
-  // ✅ helper to build each tab page (نفس UI اللي عندك)
-  Widget _buildTabPage(List<NotificationItem> items) {
-    return BlocProvider(
-      create: (_) => NotificationBloc(initialNotifications: items),
-      child: AllNotificationPage(widget.fromDeliveryMan),
+  Widget _buildTabPage(String tabName) {
+    return ListenableBuilder(
+      listenable: _notificationController,
+      builder: (context, child) {
+        if (_notificationController.isLoading && 
+            _notificationController.allNotifications.isEmpty) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (_notificationController.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 60, color: Colors.red),
+                SizedBox(height: 16),
+                Text('Error: ${_notificationController.error}'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _notificationController.fetchNotifications(),
+                  child: Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final notifications = _notificationController.getNotificationsByTab(tabName);
+
+        if (notifications.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.notifications_none, size: 80, color: Colors.grey),
+                SizedBox(height: 16),
+                Text('No notifications', style: TextStyle(color: Colors.grey)),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () => _notificationController.fetchNotifications(),
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: EdgeInsets.symmetric(vertical: 8),
+            itemCount: notifications.length + 
+                (_notificationController.isLoading && _notificationController.hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index >= notifications.length) {
+                return Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              final notification = notifications[index];
+              return _buildNotificationCard(notification);
+            },
+          ),
+        );
+      },
     );
+  }
+
+  Widget _buildNotificationCard(NotificationModel notification) {
+    return InkWell(
+      onTap: () => _handleNotificationTap(notification),
+      child: Container(
+        color: notification.isRead 
+            ? Colors.white 
+            : Colors.blue.withOpacity(0.05),
+        padding: EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: notification.iconColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                notification.icon,
+                color: notification.iconColor,
+                size: 20,
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          style: TextStyle(
+                            fontWeight: notification.isRead 
+                                ? FontWeight.normal 
+                                : FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      if (!notification.isRead)
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    notification.message,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    notification.timeAgo,
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleNotificationTap(NotificationModel notification) async {
+    if (!notification.isRead) {
+      await _notificationController.markAsRead(notification.id);
+    }
   }
 
   @override
@@ -158,181 +328,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                         height: screenHeight * .7,
                         child: TabBarView(
                           controller: _tabController,
-
-                          // ✅ Pages dynamic (عددهم = عدد التابات)
-                          children: widget.fromDeliveryMan
-                              ? [
-                            // Delivery Man (7)
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 2,
-                                  title: "Order Placed Successfully",
-                                  description:
-                                  "Your order #30 has been placed successfully and is being processed.",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 3,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: true),
-                              NotificationItem(
-                                  id: 4,
-                                  title: "Report",
-                                  description: "Submit monthly report",
-                                  isRead: true),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 11,
-                                  title: "New Notification",
-                                  description: "You have a new task",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 12,
-                                  title: "New Order",
-                                  description: "Order #55 is assigned to you",
-                                  isRead: false),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 21,
-                                  title: "Read Notification",
-                                  description: "Old message",
-                                  isRead: true),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 31,
-                                  title: "One time",
-                                  description: "One-time request received",
-                                  isRead: false),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 41,
-                                  title: "Coupon",
-                                  description: "New coupon is available",
-                                  isRead: false),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 51,
-                                  title: "Dispute",
-                                  description: "Order #20 has a dispute",
-                                  isRead: false),
-                            ]),
-
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 61,
-                                  title: "Canceled",
-                                  description: "Order #18 was canceled",
-                                  isRead: true),
-                            ]),
-                          ]
-                              : [
-                            // User (6)
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 2,
-                                  title: "Order Placed Successfully",
-                                  description:
-                                  "Your order #30 has been placed successfully and is being processed.",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 3,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: true),
-                              NotificationItem(
-                                  id: 4,
-                                  title: "Report",
-                                  description: "Submit monthly report",
-                                  isRead: true),
-                            ]),
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 2,
-                                  title: "Order Placed Successfully",
-                                  description:
-                                  "Your order #30 has been placed successfully and is being processed.",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 3,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: false),
-                              NotificationItem(
-                                  id: 4,
-                                  title: "Report",
-                                  description: "Submit monthly report",
-                                  isRead: false),
-                            ]),
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: true),
-                              NotificationItem(
-                                  id: 2,
-                                  title: "Order Placed Successfully",
-                                  description:
-                                  "Your order #30 has been placed successfully and is being processed.",
-                                  isRead: true),
-                              NotificationItem(
-                                  id: 3,
-                                  title: "Meeting",
-                                  description: "Team sync at 10 AM",
-                                  isRead: true),
-                              NotificationItem(
-                                  id: 4,
-                                  title: "Report",
-                                  description: "Submit monthly report",
-                                  isRead: true),
-                            ]),
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Orders",
-                                  description: "Order update",
-                                  isRead: false),
-                            ]),
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Coupons",
-                                  description: "New coupon available",
-                                  isRead: false),
-                            ]),
-                            _buildTabPage([
-                              NotificationItem(
-                                  id: 1,
-                                  title: "Promos",
-                                  description: "New promo available",
-                                  isRead: false),
-                            ]),
-                          ],
+                          children: _tabs.map((tab) => _buildTabPage(tab)).toList(),
                         ),
                       ),
                     ],

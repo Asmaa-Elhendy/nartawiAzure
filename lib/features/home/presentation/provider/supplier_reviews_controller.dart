@@ -69,4 +69,61 @@ class SupplierReviewsController extends ChangeNotifier {
   Future<void> refresh(int supplierId) async {
     await fetchSupplierReviews(supplierId);
   }
+
+  Future<bool> submitReview({
+    required int orderId,
+    required int supplierId,
+    required int rating,
+    String? comment,
+  }) async {
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        error = 'Authentication required';
+        notifyListeners();
+        return false;
+      }
+
+      final url = '$base_url/v1/client/reviews';
+
+      final response = await dio.post(
+        url,
+        data: {
+          'orderId': orderId,
+          'supplierId': supplierId,
+          'rating': rating,
+          if (comment != null && comment.isNotEmpty) 'comment': comment,
+        },
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        debugPrint('✅ Review submitted successfully');
+        return true;
+      } else {
+        error = 'Failed to submit review (status: ${response.statusCode})';
+        notifyListeners();
+        return false;
+      }
+    } on DioException catch (e) {
+      final d = e.response?.data;
+      String msg = 'Failed to submit review';
+      if (d is Map && d['title'] != null) msg = d['title'].toString();
+      else if (d is Map && d['message'] != null) msg = d['message'].toString();
+      else if (e.message != null) msg = e.message!;
+      error = msg;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      error = 'An unexpected error occurred: $e';
+      notifyListeners();
+      return false;
+    }
+  }
 }

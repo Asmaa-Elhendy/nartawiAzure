@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/coupon_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
@@ -10,6 +11,7 @@ import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_i
 import '../widgets/add_new_address_alert.dart';
 import '../widgets/change password.dart';
 import '../widgets/setting_card.dart';
+import '../../../notification/data/datasources/notification_preferences_datasource.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -20,21 +22,70 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen>
     with SingleTickerProviderStateMixin {
+  late NotificationPreferencesDataSourceImpl _prefsDataSource;
 
+  bool _orderUpdates = true;
+  bool _scheduledOrderReminders = true;
+  bool _disputeUpdates = true;
+  bool _marketing = false;
+  bool _systemNotifications = true;
+  bool _isLoadingPrefs = true;
 
   @override
   void initState() {
     super.initState();
+    _prefsDataSource = NotificationPreferencesDataSourceImpl(dio: Dio());
+    _loadPreferences();
   }
+
+  Future<void> _loadPreferences() async {
+    try {
+      final prefs = await _prefsDataSource.getPreferences();
+      if (mounted) {
+        setState(() {
+          _orderUpdates = prefs.orderUpdates;
+          _scheduledOrderReminders = prefs.scheduledOrderReminders;
+          _disputeUpdates = prefs.disputeUpdates;
+          _marketing = prefs.marketing;
+          _systemNotifications = prefs.systemNotifications;
+          _isLoadingPrefs = false;
+        });
+      }
+    } catch (e) {
+      print('Error loading preferences: $e');
+      if (mounted) {
+        setState(() => _isLoadingPrefs = false);
+      }
+    }
+  }
+
+  Future<void> _updatePreferences() async {
+    try {
+      final prefs = NotificationPreferences(
+        orderUpdates: _orderUpdates,
+        scheduledOrderReminders: _scheduledOrderReminders,
+        disputeUpdates: _disputeUpdates,
+        marketing: _marketing,
+        systemNotifications: _systemNotifications,
+      );
+
+      await _prefsDataSource.updatePreferences(prefs);
+    } catch (e) {
+      print('Error updating preferences: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save preferences')),
+        );
+      }
+    }
+  }
+
   String _selectedLanguage = 'Male';
 
   @override
   void dispose() {
-
     super.dispose();
   }
-
-  String? imageUrl = null;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
       backgroundColor: Colors.transparent,
-      // في حالة الصورة في الخلفية
       body: Stack(
         children: [
           Container(
@@ -57,44 +106,160 @@ class _SettingsScreenState extends State<SettingsScreen>
             screenHeight: screenHeight,
             screenWidth: screenWidth,
             title: 'Settings',
-            is_returned: true, //edit back from orders
+            is_returned: true,
           ),
           Positioned.fill(
             top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            bottom: screenHeight*.05,
+            bottom: screenHeight * .05,
             child: Padding(
               padding: EdgeInsets.only(
-                top: screenHeight * .03,// edit top height under appbar.03),//04 handle design shimaa
+                top: screenHeight * .03,
                 bottom: screenHeight * .1,
               ),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding:  EdgeInsets.only(left: screenWidth*.04,right: screenWidth*.04,bottom: screenHeight*.04),
-
+                  padding: EdgeInsets.only(
+                      left: screenWidth * .04, right: screenWidth * .04, bottom: screenHeight * .04),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-
                       Text(
                         'Notification Preferences',
-                        style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.04),
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: screenWidth * .04),
                       ),
-                      SettingCard(title: 'Low Coupon Alerts', description: 'Get notified when your coupon balance is running low', quantityLabel: 'Coupons'),
+                      SizedBox(height: screenHeight * .01),
 
-                      SettingCard(title: 'Wallet Balance Alerts', description: 'Get alerts when your wallet balance is low', quantityLabel: 'QAR'),
-
-                      SettingCard(title: 'Order Updates', description: 'Receive notifications about your order status', quantityLabel: '',isIncrease: false,),
-
-                      SettingCard(title: 'Refill Updates', description: 'Get notified when your bottles have been refilled', quantityLabel: '',isIncrease: false,),
-
-                      SettingCard(title: 'Promotions & Offers', description: 'Receive notifications about promotions and special offers', quantityLabel: '',isIncrease: false,),
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: screenHeight * .01),
-                      padding: EdgeInsets.symmetric(
-                        vertical: screenHeight * .01,
-                        horizontal: screenWidth * .03,
-                      ),
+                      if (_isLoadingPrefs)
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      else ...[
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.whiteColor,
+                          ),
+                          child: SwitchListTile(
+                            title: Text(
+                              'Order Updates',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text('Receive notifications about your order status'),
+                            value: _orderUpdates,
+                            onChanged: (value) {
+                              setState(() => _orderUpdates = value);
+                              _updatePreferences();
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.whiteColor,
+                          ),
+                          child: SwitchListTile(
+                            title: Text(
+                              'Scheduled Order Reminders',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text('Low balance, upcoming deliveries'),
+                            value: _scheduledOrderReminders,
+                            onChanged: (value) {
+                              setState(() => _scheduledOrderReminders = value);
+                              _updatePreferences();
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.whiteColor,
+                          ),
+                          child: SwitchListTile(
+                            title: Text(
+                              'Dispute Updates',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text('Dispute status changes'),
+                            value: _disputeUpdates,
+                            onChanged: (value) {
+                              setState(() => _disputeUpdates = value);
+                              _updatePreferences();
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.whiteColor,
+                          ),
+                          child: SwitchListTile(
+                            title: Text(
+                              'Marketing & Promotions',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text('Special offers and deals'),
+                            value: _marketing,
+                            onChanged: (value) {
+                              setState(() => _marketing = value);
+                              _updatePreferences();
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
+                          padding: EdgeInsets.all(screenWidth * .03),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: AppColors.whiteColor,
+                          ),
+                          child: SwitchListTile(
+                            title: Text(
+                              'System Notifications',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: Text('App updates, maintenance'),
+                            value: _systemNotifications,
+                            onChanged: (value) {
+                              setState(() => _systemNotifications = value);
+                              _updatePreferences();
+                            },
+                          ),
+                        ),
+                      ],
+                      SizedBox(height: screenHeight * .02),
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: screenHeight * .01),
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenHeight * .01,
+                          horizontal: screenWidth * .03,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: AppColors.whiteColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: screenHeight * .01),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
                         color: AppColors.whiteColor,
