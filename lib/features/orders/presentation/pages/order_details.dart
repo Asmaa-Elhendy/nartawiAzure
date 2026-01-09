@@ -154,6 +154,91 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     );
   }
 
+  Future<void> _handleStartDelivery() async {
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Start Delivery'),
+        content: Text(
+          'Are you ready to start delivery for Order #${widget.clientOrder.id}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            child: Text('Start', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Center(child: CircularProgressIndicator()),
+      );
+
+      final dio = Dio();
+      final token = await AuthService.getToken();
+
+      // Call API to change status to "On The Way" (status ID: 3)
+      final response = await dio.post(
+        'https://nartawi.smartvillageqatar.com/api/v1/client/orders/${widget.clientOrder.id}/ChangeStatus',
+        data: {
+          'statusId': 3, // 3 = "Out for Delivery" / "On The Way"
+          'notes': 'Driver started delivery',
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      // Close loading
+      Navigator.pop(context);
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        // Success - update UI
+        setState(() {
+          widget.orderStatus = 'On The Way';
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Delivery started successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        throw Exception('Failed to start delivery');
+      }
+    } catch (e) {
+      // Close loading if still open
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      // Show error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to start delivery: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<void> _cancelOrder() async {
     try {
       final dio = Dio();
@@ -314,8 +399,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                       ? Padding(
                                         padding:  EdgeInsets.symmetric(vertical: screenHeight*.02),
                                         child: GestureDetector(
-                                          onTap: (){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>TrackOrderScreen()));
+                                          onTap: () async {
+                                            if (widget.orderStatus == 'Pending') {
+                                              // Start Delivery - change status to On The Way
+                                              await _handleStartDelivery();
+                                            } else {
+                                              // Mark As Delivered - navigate to POD screen
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => TrackOrderScreen(),
+                                                ),
+                                              );
+                                            }
                                           },
                                           child: CustomGradientButton(
                                             widget.orderStatus ==

@@ -15,23 +15,23 @@ class DeliveryProfile extends StatefulWidget {
 }
 
 class _DeliveryProfileState extends State<DeliveryProfile> {
-  //late ProfileController profileController;
+  late ProfileController profileController;
 
   @override
   void initState() {
     super.initState();
-  //  profileController = ProfileController(dio: Dio());
-   // profileController.fetchProfile(); // ✅ load profile
+    profileController = ProfileController(dio: Dio());
+    profileController.fetchProfile();
   }
 
   @override
   void dispose() {
-  //  profileController.dispose();
+    profileController.dispose();
     super.dispose();
   }
 
   Future<void> _handleRefresh() async {
-  //  await profileController.fetchProfile();
+    await profileController.fetchProfile();
   }
 
   @override
@@ -70,43 +70,51 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: screenWidth * .06),
-                    child:
-                    // AnimatedBuilder(
-                    //   animation: profileController,
-                    //   builder: (context, _) {
-                        // // 🔄 Loading
-                        // // if (profileController.isLoading) {
-                        // //   return SizedBox(
-                        // //     height: screenHeight * .6,
-                        // //     child: Center(
-                        // //       child: CircularProgressIndicator(
-                        // //         color: AppColors.primary,
-                        // //       ),
-                        // //     ),
-                        // //   );
-                        // // }
-                        //
-                        // // ❌ Error
-                        // if (profileController.error != null) {
-                        //   return SizedBox(
-                        //     height: screenHeight * .6,
-                        //     child: Center(
-                        //       child: Text(
-                        //         profileController.error!,
-                        //         style: const TextStyle(color: Colors.red),
-                        //       ),
-                        //     ),
-                        //   );
-                        // }
+                    child: AnimatedBuilder(
+                      animation: profileController,
+                      builder: (context, _) {
+                        // Loading state
+                        if (profileController.isLoading) {
+                          return SizedBox(
+                            height: screenHeight * .6,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          );
+                        }
 
-                        // final profile = profileController.profile;
-                        //
-                        // if (profile == null) {
-                        //   return const SizedBox.shrink();
-                        // }
+                        // Error state
+                        if (profileController.error != null) {
+                          return SizedBox(
+                            height: screenHeight * .6,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    profileController.error!,
+                                    style: const TextStyle(color: Colors.red),
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: _handleRefresh,
+                                    child: Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
 
-                 //       return
-                    Column(
+                        final profile = profileController.profile;
+
+                        if (profile == null) {
+                          return const SizedBox.shrink();
+                        }
+
+                        return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: screenHeight * .01),
@@ -123,7 +131,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                                 children: [
                                   Center(
                                     child: Text(
-                                      'Ahmed Mohamed',
+                                      profile.enName ?? profile.arName ?? 'Driver',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: screenWidth * .044,
@@ -132,7 +140,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
                                   ),
                                   Center(
                                     child: Text(
-                                      '0121121212',
+                                      profile.mobile ?? '',
                                       style: TextStyle(
                                         color: AppColors
                                             .greyDarktextIntExtFieldAndIconsHome,
@@ -181,8 +189,8 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
 
                             SizedBox(height: screenHeight * .04),
                           ],
-                    //    );
-                      //},
+                        );
+                      },
                     ),
                   ),
                 ),

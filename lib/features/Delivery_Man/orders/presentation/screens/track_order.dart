@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
 import '../../../../../core/services/maps_screen.dart';
 import '../../../../../core/theme/colors.dart';
@@ -35,6 +36,37 @@ class _TrackOrderScreenState extends State<TrackOrderScreen>
   }
 
   String? imageUrl = null;
+
+  Future<void> _openGoogleMaps() async {
+    // Hardcoded coordinates for now - should be passed from order data
+    // TODO: Pass actual customer address coordinates when navigating to this screen
+    const lat = 25.276987;
+    const lng = 51.520008;
+
+    final url = Uri.parse(
+      'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng&travelmode=driving'
+    );
+
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        await launchUrl(url);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to open Google Maps: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,8 +154,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen>
                               screenWidth,
                               screenHeight,
                               'Open Google Map',
-                                  () {
-
+                              () async {
+                                await _openGoogleMaps();
                               },
                               fromDelivery: true,
                               icon: 'assets/images/profile/delivery/google maps.svg',

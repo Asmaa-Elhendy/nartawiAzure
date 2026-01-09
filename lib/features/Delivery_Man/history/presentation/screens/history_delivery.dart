@@ -1,13 +1,15 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
-import 'package:newwwwwwww/features/profile/presentation/widgets/transaction_card.dart';
+import 'package:dio/dio.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import '../../../../profile/domain/models/wallet_transaction.dart';
 import '../../../../profile/presentation/widgets/filter_date_widget.dart';
+import '../../../../orders/presentation/provider/orders_controller.dart';
+import '../../../../orders/domain/models/order_model.dart';
+import '../widgets/delivery_history_card.dart';
 
 class HistoryDelivery extends StatefulWidget {
   const HistoryDelivery({super.key});
@@ -22,6 +24,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   DateTime? selectedToDate;
 
   late final TabController _tabController;
+  late OrdersController ordersController;
 
   static const List<String> _tabs = [
     'All',
@@ -30,104 +33,52 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
     'Disputed',
   ];
 
-  // ✅ Static list
-  late final List<WalletTransaction> txs = [
-    WalletTransaction(
-      id: 101,
-      type: 'TopUp',
-      amount: 150,
-      currency: 'QAR',
-      description: 'Wallet Top Up',
-      linkedAccountName: 'Mohamed Ali',
-      issuedAt: DateTime.now().subtract(const Duration(days: 1, hours: 2)),
-      completedAt: DateTime.now().subtract(const Duration(days: 1, hours: 1)),
-      status: 'Completed',
-    ),
-    WalletTransaction(
-      id: 102,
-      type: 'BundlePurchase',
-      amount: -45,
-      currency: 'QAR',
-      description: 'Bundle Purchase',
-      linkedAccountName: 'Ahmed',
-      issuedAt: DateTime.now().subtract(const Duration(days: 2, hours: 3)),
-      completedAt: DateTime.now().subtract(
-        const Duration(days: 2, hours: 2, minutes: 30),
-      ),
-      status: 'Delivered',
-    ),
-    WalletTransaction(
-      id: 103,
-      type: 'Transfer',
-      amount: -20,
-      currency: 'QAR',
-      description: 'Transfer to Seller',
-      linkedAccountName: 'Ali Mostafa',
-      issuedAt: DateTime.now().subtract(const Duration(days: 4, hours: 5)),
-      completedAt: null,
-      status: 'Pending',
-    ),
-    WalletTransaction(
-      id: 104,
-      type: 'Refund',
-      amount: 30,
-      currency: 'QAR',
-      description: 'Order Refund',
-      linkedAccountName: 'Gamal',
-      issuedAt: DateTime.now().subtract(const Duration(days: 6, hours: 1)),
-      completedAt: DateTime.now().subtract(const Duration(days: 6)),
-      status: 'Canceled',
-    ),
-    WalletTransaction(
-      id: 105,
-      type: 'Refund',
-      amount: 30,
-      currency: 'QAR',
-      description: 'Order Dispute',
-      linkedAccountName: 'Hany',
-      issuedAt: DateTime.now().subtract(const Duration(days: 7, hours: 1)),
-      completedAt: null,
-      status: 'Disputed',
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    ordersController = OrdersController(dio: Dio());
+    
+    // Fetch delivered orders on init
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ordersController.fetchOrders(
+          statusId: 4, // Delivered status
+          executeClear: true,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    ordersController.dispose();
     super.dispose();
   }
 
-  // ✅ فلترة التابات حسب status الحقيقي
-  List<WalletTransaction> _filterByTab(List<WalletTransaction> all, int tabIndex) {
+  List<ClientOrder> _filterByTab(List<ClientOrder> all, int tabIndex) {
     if (tabIndex == 0) return all;
 
     final tab = _tabs[tabIndex].toLowerCase();
 
-    return all.where((t) {
-      final s = t.status.toLowerCase();
+    return all.where((order) {
+      final status = (order.statusName ?? '').toLowerCase();
 
       if (tab == 'delivered') {
-        // ✅ Delivered تشمل Completed كمان
-        return s.contains('delivered') || s.contains('completed');
+        return status.contains('delivered');
       }
       if (tab == 'canceled') {
-        return s.contains('cancel'); // cancelled/canceled
+        return status.contains('cancel');
       }
       if (tab == 'disputed') {
-        return s.contains('dispute');
+        return status.contains('dispute');
       }
       return true;
     }).toList();
   }
 
-  // ✅ فلترة بالتاريخ (اختياري)
-  List<WalletTransaction> _applyDateFilter(List<WalletTransaction> list) {
+  List<ClientOrder> _applyDateFilter(List<ClientOrder> list) {
     final from = selectedFromDate;
     final to = selectedToDate;
 
@@ -136,8 +87,9 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
     DateTime dayStart(DateTime d) => DateTime(d.year, d.month, d.day);
     DateTime dayEnd(DateTime d) => DateTime(d.year, d.month, d.day, 23, 59, 59);
 
-    return list.where((t) {
-      final d = (t.completedAt ?? t.issuedAt).toLocal();
+    return list.where((order) {
+      final d = order.issueTime?.toLocal();
+      if (d == null) return false;
       if (from != null && d.isBefore(dayStart(from))) return false;
       if (to != null && d.isAfter(dayEnd(to))) return false;
       return true;
@@ -323,41 +275,94 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
 
                     SizedBox(height: screenHeight * .02),
 
-                    // ✅ Scroll الحقيقي للـ transactions
+                    // ✅ Orders history list
                     Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: List.generate(_tabs.length, (tabIndex) {
-                          final filteredByTab = _filterByTab(txs, tabIndex);
-                          final finalList = _applyDateFilter(filteredByTab);
-
-                          if (finalList.isEmpty) {
+                      child: AnimatedBuilder(
+                        animation: ordersController,
+                        builder: (context, _) {
+                          if (ordersController.isLoading) {
                             return Center(
-                              child: Text(
-                                'No orders found',
-                                style: TextStyle(
-                                  fontSize: screenWidth * .04,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              child: CircularProgressIndicator(
+                                color: AppColors.primary,
                               ),
                             );
                           }
 
-                          return ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(bottom: screenHeight * .06),
-                            itemCount: finalList.length,
-                            itemBuilder: (context, index) {
-                              final tx = finalList[index];
-                              return TransactionCard(
-                                screenHeight,
-                                screenWidth,
-                                tx,
-                                fromDeliveryMan: true,
+                          if (ordersController.error != null) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    ordersController.error!,
+                                    style: const TextStyle(color: Colors.red),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      ordersController.fetchOrders(
+                                        statusId: 4,
+                                        executeClear: true,
+                                      );
+                                    },
+                                    child: Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return TabBarView(
+                            controller: _tabController,
+                            children: List.generate(_tabs.length, (tabIndex) {
+                              final allOrders = ordersController.orders;
+                              final filteredByTab = _filterByTab(allOrders, tabIndex);
+                              final finalList = _applyDateFilter(filteredByTab);
+
+                              if (finalList.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    'No orders found',
+                                    style: TextStyle(
+                                      fontSize: screenWidth * .04,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              return RefreshIndicator(
+                                color: AppColors.primary,
+                                onRefresh: () async {
+                                  await ordersController.fetchOrders(
+                                    statusId: tabIndex == 0 ? null : (tabIndex == 1 ? 4 : tabIndex == 2 ? 5 : 6),
+                                    executeClear: true,
+                                  );
+                                },
+                                child: ListView.builder(
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  padding: EdgeInsets.only(bottom: screenHeight * .06),
+                                  itemCount: finalList.length,
+                                  itemBuilder: (context, index) {
+                                    final order = finalList[index];
+                                    return Padding(
+                                      padding: EdgeInsets.only(bottom: screenHeight * .015),
+                                      child: BuildOrderDeliveryCard(
+                                        context,
+                                        screenHeight,
+                                        screenWidth,
+                                        order.statusName ?? 'Unknown',
+                                        order.isPaid == true ? 'Paid' : 'Pending Payment',
+                                        order: order,
+                                      ),
+                                    );
+                                  },
+                                ),
                               );
-                            },
+                            }),
                           );
-                        }),
+                        },
                       ),
                     ),
                   ],

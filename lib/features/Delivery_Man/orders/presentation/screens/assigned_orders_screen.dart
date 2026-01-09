@@ -60,18 +60,18 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     _tabController = TabController(length: _tabs.length, vsync: this);
 
      ordersController = OrdersController(dio: Dio());
-    //
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (mounted) {
-    //     ordersController.fetchOrders(executeClear: true);
-    //   }
-    // });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ordersController.fetchOrders(executeClear: true);
+      }
+    });
   }
 
   @override
-  void dispose() {//k
+  void dispose() {
     _tabController.dispose();
-    // ordersController.dispose();
+    ordersController.dispose();
     zoneCtrl.dispose();
     streetCtrl.dispose();
     buildingCtrl.dispose();
@@ -326,16 +326,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                                     );
                                   }
 
-                                  final allOrders =[
-                                    ClientOrder(id: 0,issueTime: DateTime.now(),statusName: 'Pending',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-                                    ClientOrder(id: 1,issueTime: DateTime.now(),statusName: 'On The Way',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-                                    ClientOrder(id: 3,issueTime: DateTime.now(),statusName: 'Delivered',isPaid: true,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-                                    ClientOrder(id: 4,issueTime: DateTime.now(),statusName: 'Pending',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-                                    ClientOrder(id: 5,issueTime: DateTime.now(),statusName: 'Canceled',isPaid: false,subTotal: 55,total: 60,deliveryCost: 5,deliveryAddress: 'Zone abc, Street 20, Building 21'),
-
-
-
-                                  ];// ordersController.orders;
+                                  final allOrders = ordersController.orders;
 
                                   return TabBarView(
                                     controller: _tabController,
