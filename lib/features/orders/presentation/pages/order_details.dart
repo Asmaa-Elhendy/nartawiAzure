@@ -190,13 +190,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       final dio = Dio();
       final token = await AuthService.getToken();
 
-      // Call API to change status to "On The Way" (status ID: 3)
+      // Call new BE v1.0.21 Start Delivery endpoint
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/v1/client/orders/${widget.clientOrder.id}/ChangeStatus',
-        data: {
-          'statusId': 3, // 3 = "Out for Delivery" / "On The Way"
-          'notes': 'Driver started delivery',
-        },
+        'https://nartawi.smartvillageqatar.com/api/v1/delivery/orders/${widget.clientOrder.id}/start',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

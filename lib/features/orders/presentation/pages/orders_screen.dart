@@ -43,6 +43,95 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
 
   String? imageUrl = null;
 
+  Widget _buildOrderList(int? statusId) {
+    return AnimatedBuilder(
+      animation: ordersController,
+      builder: (context, _) {
+        final screenHeight = MediaQuery.of(context).size.height;
+        final screenWidth = MediaQuery.of(context).size.width;
+
+        if (ordersController.isLoading) {
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          );
+        }
+
+        if (ordersController.error != null) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 60, color: Colors.red),
+                SizedBox(height: 16),
+                Text(
+                  ordersController.error!,
+                  style: TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => ordersController.fetchOrders(executeClear: true),
+                  child: Text('Retry'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        List<ClientOrder> orders;
+        if (statusId == null) {
+          orders = ordersController.orders;
+        } else {
+          orders = ordersController.orders
+              .where((order) => order.statusId == statusId)
+              .toList();
+        }
+
+        if (orders.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.shopping_bag_outlined, size: 60, color: Colors.grey),
+                SizedBox(height: 16),
+                Text(
+                  'No orders found',
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          color: AppColors.primary,
+          onRefresh: () async {
+            await ordersController.fetchOrders(executeClear: true);
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.only(bottom: screenHeight * .06),
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              final statusText = order.statusName ?? 'Unknown';
+              final paymentText = order.isPaid == true ? 'Paid' : 'Pending Payment';
+
+              return BuildOrderCard(
+                order: order,
+                context,
+                screenHeight,
+                screenWidth,
+                statusText,
+                paymentText,
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -159,102 +248,11 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                             SizedBox(height: screenHeight*.65,
                               child: TabBarView(
                                 controller: _tabController,
-
                                 children: [
-                                  // Container(
-                                  //   child:ListView(
-                                  //     padding: EdgeInsetsGeometry.only(bottom: screenHeight*.06),
-                                  //     children: [
-                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
-                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                  //       BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
-                                  //     ],),
-                                  // ) // first tab bar view widget
-                                AnimatedBuilder(
-                                animation: ordersController,
-                                builder: (context, _) {
-
-                                  // 🔄 Loading
-                                  if (ordersController.isLoading) {
-                                    return Center(
-                                      child: CircularProgressIndicator(color: AppColors.primary),
-                                    );
-                                  }
-
-                                  // ❌ Error
-                                  if (ordersController.error != null) {
-                                    return Center(
-                                      child: Text(
-                                        ordersController.error!,
-                                        style: const TextStyle(color: Colors.red),
-                                      ),
-                                    );
-                                  }
-
-                                  final List<ClientOrder> orders = ordersController.orders;
-
-                                  if (orders.isEmpty) {
-                                    return const Center(child: Text('No orders found'));
-                                  }
-
-                                  return  RefreshIndicator(
-                                    color: AppColors.primary,
-                                    onRefresh: () async {
-                                      await ordersController.fetchOrders(executeClear: true);
-                                    },
-                                    child: ListView.builder(
-                                      physics: const AlwaysScrollableScrollPhysics(), // 👈 مهم
-                                      padding: EdgeInsets.only(bottom: screenHeight * .06),
-                                      itemCount: orders.length,
-                                      itemBuilder: (context, index) {
-                                        final order = orders[index];
-
-                                        final statusText = order.statusName ?? 'Unknown';
-                                        final paymentText =
-                                        order.isPaid == true ? 'Paid' : 'Pending Payment';
-
-                                        return BuildOrderCard(
-                                         order:  order!,
-                                          context,
-                                          screenHeight,
-                                          screenWidth,
-                                          statusText,
-                                          paymentText,
-                                        );
-                                      },
-                                    ),
-                                  );
-
-                                },
-                              )
-                                ,
-                                  Container(
-                                    child:ListView(
-                                      padding: EdgeInsetsGeometry.zero,
-                                      children: [
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Paid'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Pending','Pending Payment'),
-                                      ],),
-                                  ),
-                                  Container(
-                                    child:ListView(
-                                      padding: EdgeInsetsGeometry.zero,
-                                      children: [
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Paid'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Pending Payment'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Delivered','Pending Payment'),
-                                      ],),
-                                  ),
-                                  Container(
-                                    child:ListView(
-                                      padding: EdgeInsetsGeometry.zero,
-                                      children: [
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Paid'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
-                                        BuildOrderCard(context, screenHeight, screenWidth, 'Canceled','Pending Payment'),
-                                      ],),
-                                  )
+                                  _buildOrderList(null),     // All orders
+                                  _buildOrderList(1),        // Pending (statusId = 1)
+                                  _buildOrderList(4),        // Delivered (statusId = 4)
+                                  _buildOrderList(5),        // Canceled (statusId = 5)
                                 ],
                               ),
                             ),

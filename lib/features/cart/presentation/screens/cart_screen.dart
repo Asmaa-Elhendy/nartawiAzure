@@ -8,6 +8,7 @@ import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../../injection_container.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -106,6 +107,74 @@ class _CartScreenState extends State<CartScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Future<void> _clearCart() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Clear Cart'),
+        content: Text('Remove all items from your cart?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            child: Text(
+              'Clear All',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => Center(child: CircularProgressIndicator()),
+        );
+
+        final token = await AuthService.getToken();
+        final dio = Dio();
+
+        final response = await dio.delete(
+          'https://nartawi.smartvillageqatar.com/api/v1/client/cart/clear',
+          options: Options(
+            headers: {'Authorization': 'Bearer $token'},
+          ),
+        );
+
+        Navigator.pop(context);
+
+        if (response.statusCode == 200 || response.statusCode == 204) {
+          context.read<CartBloc>().add(CartClear());
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Cart cleared successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        if (Navigator.canPop(context)) Navigator.pop(context);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to clear cart: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _createOrderWithPayment(int paymentMethod) async {
@@ -456,8 +525,12 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 screenHeight,
                                 'Continue Shopping',
                                 'Clear Cart',
-                                () {},
-                                () {},
+                                () {
+                                  Navigator.pushNamed(context, '/main');
+                                },
+                                () {
+                                  _clearCart();
+                                },
                               ),
                               SizedBox(height: screenHeight * .04),
                             ],

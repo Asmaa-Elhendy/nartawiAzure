@@ -1,32 +1,86 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:dio/dio.dart';
 import '../../../../core/theme/colors.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_title_widget.dart';
 
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  final String email;
+  
+  const VerificationScreen({super.key, required this.email});
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-
-
-
-
+  String _otpCode = '';
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
   }
 
-  void _handleSend() {
-    Navigator.pushNamed(context, '/resetPassword');
+  Future<void> _verifyOTP() async {
+    if (_otpCode.length != 4) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter 4-digit OTP'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
+    setState(() => _isLoading = true);
+
+    try {
+      final dio = Dio();
+      final response = await dio.post(
+        'https://nartawi.smartvillageqatar.com/api/v1/auth/verify-otp',
+        data: {
+          'email': widget.email,
+          'otp': _otpCode,
+        },
+      );
+
+      setState(() => _isLoading = false);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('OTP verified successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushNamed(
+          context,
+          '/resetPassword',
+          arguments: {
+            'email': widget.email,
+            'verificationToken': response.data['verificationToken'],
+          },
+        );
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid OTP. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _handleSend() {
+    _verifyOTP();
   }
 
 
@@ -34,6 +88,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -68,14 +128,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       textStyle: TextStyle(fontSize: 20, color: AppColors.textLight, fontWeight: FontWeight.w500),
                       decoration: BoxDecoration(
                         border: Border.all(color: AppColors.primary),
-                        borderRadius: BorderRadius.circular(28), // Makes it circular
+                        borderRadius: BorderRadius.circular(28),
                       ),
                     ),
-                    length: 4, // Number of OTP digits
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 👈 evenly stretch the fields
-                    onCompleted: (pin) => print(pin),
-                    //separatorBuilder: (index) => SizedBox(width: width * 0.07), // Adjust as needed
-
+                    length: 4,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    onChanged: (pin) => setState(() => _otpCode = pin),
+                    onCompleted: (pin) => setState(() => _otpCode = pin),
                   ),
                 ),
                 SizedBox(height:height*.08,),

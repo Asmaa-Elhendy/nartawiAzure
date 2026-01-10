@@ -8,6 +8,7 @@ import 'package:newwwwwwww/features/profile/presentation/widgets/impact_wallet_w
 import 'package:newwwwwwww/features/profile/presentation/widgets/profile_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/single_settings_profile.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/services/auth_service.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../provider/profile_controller.dart';
@@ -231,8 +232,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               screenHeight,
                               'assets/images/profile/logout.svg',
                               'Log Out',
-                                  () {
-                                // TODO: logout
+                                  () async {
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Text('Log Out'),
+                                    content: Text('Are you sure you want to log out?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(ctx, false),
+                                        child: Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.pop(ctx, true),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                        ),
+                                        child: Text(
+                                          'Log Out',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+
+                                if (confirmed == true) {
+                                  await AuthService.deleteToken();
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    '/login',
+                                    (route) => false,
+                                  );
+                                }
                               },
                             ),
 

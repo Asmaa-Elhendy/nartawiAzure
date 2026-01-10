@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/components/background_logo.dart';
 import '../widgets/auth_buttons.dart';
@@ -16,6 +17,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool checkedValue = false;
   final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -24,21 +26,88 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // Form is valid, proceed with login
-      print('Email: ${_confirmPasswordController.text}');
-      print('Password: ${_passwordController.text}');
+  Future<void> _resetPassword() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Passwords do not match'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (_passwordController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password must be at least 8 characters'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      final email = args['email'];
+      final verificationToken = args['verificationToken'];
+
+      final dio = Dio();
+      final response = await dio.post(
+        'https://nartawi.smartvillageqatar.com/api/v1/auth/reset-password',
+        data: {
+          'email': email,
+          'verificationToken': verificationToken,
+          'newPassword': _passwordController.text,
+        },
+      );
+
+      setState(() => _isLoading = false);
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password reset successfully. Please login.'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
+
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/login',
+            (route) => false,
+          );
+        });
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to reset password. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
-  void _handleSend() {
-    Navigator.pushNamed(context, '/home');
 
+  void _handleSend() {
+    _resetPassword();
   }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
