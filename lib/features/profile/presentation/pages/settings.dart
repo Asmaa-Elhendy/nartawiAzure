@@ -24,11 +24,12 @@ class _SettingsScreenState extends State<SettingsScreen>
     with SingleTickerProviderStateMixin {
   late NotificationPreferencesDataSourceImpl _prefsDataSource;
 
-  bool _orderUpdates = true;
-  bool _scheduledOrderReminders = true;
-  bool _disputeUpdates = true;
-  bool _marketing = false;
-  bool _systemNotifications = true;
+  // Only 4 dynamic preferences for alerts
+  bool _lowCouponsAlerts = true;
+  int _lowCouponsThreshold = 100;
+  bool _walletBalanceAlerts = true;
+  double _walletBalanceThreshold = 100.0;
+
   bool _isLoadingPrefs = true;
 
   @override
@@ -43,11 +44,10 @@ class _SettingsScreenState extends State<SettingsScreen>
       final prefs = await _prefsDataSource.getPreferences();
       if (mounted) {
         setState(() {
-          _orderUpdates = prefs.orderUpdates;
-          _scheduledOrderReminders = prefs.scheduledOrderReminders;
-          _disputeUpdates = prefs.disputeUpdates;
-          _marketing = prefs.marketing;
-          _systemNotifications = prefs.systemNotifications;
+          _lowCouponsAlerts = prefs.lowCouponsAlerts;
+          _lowCouponsThreshold = prefs.lowCouponsThreshold;
+          _walletBalanceAlerts = prefs.walletBalanceAlerts;
+          _walletBalanceThreshold = prefs.walletBalanceThreshold;
           _isLoadingPrefs = false;
         });
       }
@@ -62,11 +62,10 @@ class _SettingsScreenState extends State<SettingsScreen>
   Future<void> _updatePreferences() async {
     try {
       final prefs = NotificationPreferences(
-        orderUpdates: _orderUpdates,
-        scheduledOrderReminders: _scheduledOrderReminders,
-        disputeUpdates: _disputeUpdates,
-        marketing: _marketing,
-        systemNotifications: _systemNotifications,
+        lowCouponsAlerts: _lowCouponsAlerts,
+        lowCouponsThreshold: _lowCouponsThreshold,
+        walletBalanceAlerts: _walletBalanceAlerts,
+        walletBalanceThreshold: _walletBalanceThreshold,
       );
 
       await _prefsDataSource.updatePreferences(prefs);
@@ -138,105 +137,70 @@ class _SettingsScreenState extends State<SettingsScreen>
                           ),
                         )
                       else ...[
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
-                          padding: EdgeInsets.all(screenWidth * .03),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: SwitchListTile(
-                            title: Text(
-                              'Order Updates',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text('Receive notifications about your order status'),
-                            value: _orderUpdates,
-                            onChanged: (value) {
-                              setState(() => _orderUpdates = value);
-                              _updatePreferences();
-                            },
-                          ),
+                        SettingCard(
+                          title: 'Low Coupon Alerts',
+                          description: 'Get notified when your coupon balance is running low',
+                          quantityLabel: 'Coupons',
+                          isIncrease: true,
+                          initialSwitchValue: _lowCouponsAlerts,
+                          initialThresholdValue: _lowCouponsThreshold,
+                          onSwitchChanged: (value) {
+                            setState(() => _lowCouponsAlerts = value);
+                            _updatePreferences();
+                          },
+                          onThresholdChanged: (value) {
+                            setState(() => _lowCouponsThreshold = value);
+                            _updatePreferences();
+                          },
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
-                          padding: EdgeInsets.all(screenWidth * .03),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: SwitchListTile(
-                            title: Text(
-                              'Scheduled Order Reminders',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text('Low balance, upcoming deliveries'),
-                            value: _scheduledOrderReminders,
-                            onChanged: (value) {
-                              setState(() => _scheduledOrderReminders = value);
-                              _updatePreferences();
-                            },
-                          ),
+                        SettingCard(
+                          title: 'Wallet Balance Alerts',
+                          description: 'Get alerts when your wallet balance is low',
+                          quantityLabel: 'QAR',
+                          isIncrease: true,
+                          initialSwitchValue: _walletBalanceAlerts,
+                          initialThresholdValue: _walletBalanceThreshold.toInt(),
+                          onSwitchChanged: (value) {
+                            setState(() => _walletBalanceAlerts = value);
+                            _updatePreferences();
+                          },
+                          onThresholdChanged: (value) {
+                            setState(() => _walletBalanceThreshold = value.toDouble());
+                            _updatePreferences();
+                          },
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
-                          padding: EdgeInsets.all(screenWidth * .03),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: SwitchListTile(
-                            title: Text(
-                              'Dispute Updates',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text('Dispute status changes'),
-                            value: _disputeUpdates,
-                            onChanged: (value) {
-                              setState(() => _disputeUpdates = value);
-                              _updatePreferences();
-                            },
-                          ),
+                        SettingCard(
+                          title: 'Order Updates',
+                          description: 'Receive notifications about your order status',
+                          quantityLabel: '',
+                          isIncrease: false,
+                          initialSwitchValue: true,
+                          onSwitchChanged: (value) {
+                            // Static preference - always true, just save to backend
+                            _updatePreferences();
+                          },
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
-                          padding: EdgeInsets.all(screenWidth * .03),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: SwitchListTile(
-                            title: Text(
-                              'Marketing & Promotions',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text('Special offers and deals'),
-                            value: _marketing,
-                            onChanged: (value) {
-                              setState(() => _marketing = value);
-                              _updatePreferences();
-                            },
-                          ),
+                        SettingCard(
+                          title: 'Refill Updates',
+                          description: 'Get notified when your bottles have been refilled',
+                          quantityLabel: '',
+                          isIncrease: false,
+                          initialSwitchValue: true,
+                          onSwitchChanged: (value) {
+                            // Static preference - always true, just save to backend
+                            _updatePreferences();
+                          },
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: screenHeight * .005),
-                          padding: EdgeInsets.all(screenWidth * .03),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.whiteColor,
-                          ),
-                          child: SwitchListTile(
-                            title: Text(
-                              'System Notifications',
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                            subtitle: Text('App updates, maintenance'),
-                            value: _systemNotifications,
-                            onChanged: (value) {
-                              setState(() => _systemNotifications = value);
-                              _updatePreferences();
-                            },
-                          ),
+                        SettingCard(
+                          title: 'Promotions & Offers',
+                          description: 'Receive notifications about promotions and special offers',
+                          quantityLabel: '',
+                          isIncrease: false,
+                          initialSwitchValue: true,
+                          onSwitchChanged: (value) {
+                            // Static preference - always true, just save to backend
+                            _updatePreferences();
+                          },
                         ),
                       ],
                       SizedBox(height: screenHeight * .02),

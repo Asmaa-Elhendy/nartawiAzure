@@ -84,13 +84,12 @@ class SupplierReviewsController extends ChangeNotifier {
         return false;
       }
 
-      final url = '$base_url/v1/client/reviews';
+      final url = '$base_url/v1/client/suppliers/$supplierId/reviews';
 
       final response = await dio.post(
         url,
         data: {
           'orderId': orderId,
-          'supplierId': supplierId,
           'rating': rating,
           if (comment != null && comment.isNotEmpty) 'comment': comment,
         },

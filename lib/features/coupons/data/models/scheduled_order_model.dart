@@ -65,6 +65,7 @@ class ScheduledOrderModel {
   final int id;
   final int customerId;
   final String? customerName;
+  final int bundlePurchaseId;
   final int productVsid;
   final String? productName;
   final int? vendorId;
@@ -93,6 +94,7 @@ class ScheduledOrderModel {
     required this.id,
     required this.customerId,
     this.customerName,
+    required this.bundlePurchaseId,
     required this.productVsid,
     this.productName,
     this.vendorId,
@@ -123,6 +125,7 @@ class ScheduledOrderModel {
       id: json['id'] as int,
       customerId: json['customerId'] as int,
       customerName: json['customerName'] as String?,
+      bundlePurchaseId: json['bundlePurchaseId'] as int,
       productVsid: json['productVsid'] as int,
       productName: json['productName'] as String?,
       vendorId: json['vendorId'] as int?,
@@ -160,7 +163,7 @@ class ScheduledOrderModel {
 }
 
 class CreateScheduledOrderRequest {
-  final int productVsid;
+  final int bundlePurchaseId;
   final int weeklyFrequency;
   final int bottlesPerDelivery;
   final List<ScheduleEntry> schedule;
@@ -169,7 +172,7 @@ class CreateScheduledOrderRequest {
   final int? lowBalanceThreshold;
 
   CreateScheduledOrderRequest({
-    required this.productVsid,
+    required this.bundlePurchaseId,
     required this.weeklyFrequency,
     required this.bottlesPerDelivery,
     required this.schedule,
@@ -180,7 +183,7 @@ class CreateScheduledOrderRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'productVsid': productVsid,
+      'bundlePurchaseId': bundlePurchaseId,
       'weeklyFrequency': weeklyFrequency,
       'bottlesPerDelivery': bottlesPerDelivery,
       'schedule': schedule.map((s) => s.toJson()).toList(),

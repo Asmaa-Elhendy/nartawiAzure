@@ -2,37 +2,43 @@ import 'package:dio/dio.dart';
 import '../../../../core/services/auth_service.dart';
 
 class NotificationPreferences {
-  final bool orderUpdates;
-  final bool scheduledOrderReminders;
-  final bool disputeUpdates;
-  final bool marketing;
-  final bool systemNotifications;
+  // Only 4 dynamic fields that user can control via UI
+  final bool lowCouponsAlerts;
+  final int lowCouponsThreshold;
+  final bool walletBalanceAlerts;
+  final double walletBalanceThreshold;
 
   NotificationPreferences({
-    required this.orderUpdates,
-    required this.scheduledOrderReminders,
-    required this.disputeUpdates,
-    required this.marketing,
-    required this.systemNotifications,
+    required this.lowCouponsAlerts,
+    required this.lowCouponsThreshold,
+    required this.walletBalanceAlerts,
+    required this.walletBalanceThreshold,
   });
 
   factory NotificationPreferences.fromJson(Map<String, dynamic> json) {
     return NotificationPreferences(
-      orderUpdates: json['orderUpdates'] as bool? ?? true,
-      scheduledOrderReminders: json['scheduledOrderReminders'] as bool? ?? true,
-      disputeUpdates: json['disputeUpdates'] as bool? ?? true,
-      marketing: json['marketing'] as bool? ?? false,
-      systemNotifications: json['systemNotifications'] as bool? ?? true,
+      lowCouponsAlerts: json['lowCouponsAlerts'] as bool? ?? true,
+      lowCouponsThreshold: json['lowCouponsThreshold'] as int? ?? 100,
+      walletBalanceAlerts: json['walletBalanceAlerts'] as bool? ?? true,
+      walletBalanceThreshold: (json['walletBalanceThreshold'] as num?)?.toDouble() ?? 100.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'orderUpdates': orderUpdates,
-      'scheduledOrderReminders': scheduledOrderReminders,
-      'disputeUpdates': disputeUpdates,
-      'marketing': marketing,
-      'systemNotifications': systemNotifications,
+      // Dynamic alert preferences (controlled by UI)
+      'lowCouponsAlerts': lowCouponsAlerts,
+      'lowCouponsThreshold': lowCouponsThreshold,
+      'walletBalanceAlerts': walletBalanceAlerts,
+      'walletBalanceThreshold': walletBalanceThreshold,
+      
+      // Static hardcoded values (always sent as specified)
+      'disputes': true,
+      'orderUpdates': true,
+      'system': true,
+      'promotions': true,
+      'pushEnabled': true,
+      'emailEnabled': false,
     };
   }
 }

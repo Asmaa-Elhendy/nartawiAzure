@@ -100,7 +100,18 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccess) {
             // ✅ استنى لما يحفظ الأول
             await _handleRememberMeOnSuccess();
-            Navigator.pushReplacementNamed(context, '/home');
+            
+            // Check if user has Delivery role
+            if (state.roles.contains('Delivery')) {
+              debugPrint('✅ User has Delivery role, navigating to delivery home');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MainScreenDelivery()),
+              );
+            } else {
+              // Regular client navigation
+              Navigator.pushReplacementNamed(context, '/home');
+            }
           }
 
           if (state is LoginFailure) {
@@ -254,12 +265,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height,
                                 'Guest',
                                   (){}//  _handleLogin,
-                              ),SizedBox(width: width*.03,),
-                              CustomLoginButtons(
-                                  width,
-                                  height,
-                                  'Delivery',
-                                      (){Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreenDelivery()));}//  _handleLogin,
                               ),
                             ],
                           ),

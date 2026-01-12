@@ -11,7 +11,14 @@ class AuthInitial extends AuthState {}
 /// LOGIN
 class LoginLoading extends AuthState {}
 
-class LoginSuccess extends AuthState {}
+class LoginSuccess extends AuthState {
+  final List<String> roles;
+
+  LoginSuccess({required this.roles});
+
+  @override
+  List<Object?> get props => [roles];
+}
 
 class LoginFailure extends AuthState {
   final String error;

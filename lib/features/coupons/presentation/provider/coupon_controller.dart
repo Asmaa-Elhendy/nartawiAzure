@@ -364,7 +364,7 @@ class CouponsController extends ChangeNotifier {
   }
 
   Future<ScheduledOrderModel?> createScheduledOrder({
-    required int productVsid,
+    required int bundlePurchaseId,
     required int weeklyFrequency,
     required int bottlesPerDelivery,
     required List<ScheduleEntry> schedule,
@@ -374,7 +374,7 @@ class CouponsController extends ChangeNotifier {
   }) async {
     try {
       final request = CreateScheduledOrderRequest(
-        productVsid: productVsid,
+        bundlePurchaseId: bundlePurchaseId,
         weeklyFrequency: weeklyFrequency,
         bottlesPerDelivery: bottlesPerDelivery,
         schedule: schedule,
@@ -446,6 +446,22 @@ class CouponsController extends ChangeNotifier {
     }
   }
 
+  ScheduledOrderModel? getScheduleForBundle(int bundlePurchaseId) {
+    try {
+      return _scheduledOrders.firstWhere(
+        (s) => s.bundlePurchaseId == bundlePurchaseId && s.isActive,
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  List<ScheduledOrderModel> getSchedulesForBundle(int bundlePurchaseId) {
+    return _scheduledOrders.where((s) => s.bundlePurchaseId == bundlePurchaseId).toList();
+  }
+
+  // Deprecated methods for backward compatibility
+  @Deprecated('Use getScheduleForBundle instead')
   ScheduledOrderModel? getScheduleForProduct(int productVsid) {
     try {
       return _scheduledOrders.firstWhere(
@@ -456,6 +472,7 @@ class CouponsController extends ChangeNotifier {
     }
   }
 
+  @Deprecated('Use getSchedulesForBundle instead')
   List<ScheduledOrderModel> getSchedulesForProduct(int productVsid) {
     return _scheduledOrders.where((s) => s.productVsid == productVsid).toList();
   }

@@ -85,8 +85,8 @@ class _CouponeCardState extends State<CouponeCard> {
   void _loadScheduleData() {
     _couponsController = widget.couponsController;
 
-    if (_couponsController != null && widget.bundle.productVsid != null) {
-      final schedule = _couponsController!.getScheduleForProduct(widget.bundle.productVsid!);
+    if (_couponsController != null) {
+      final schedule = _couponsController!.getScheduleForBundle(widget.bundle.id);
       
       if (schedule != null && mounted) {
         setState(() {

@@ -208,16 +208,6 @@ class ScheduledOrderHelper {
     int? lowBalanceThreshold,
     ScheduledOrderModel? existingSchedule,
   }) async {
-    if (bundle.productVsid == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Product information missing. Cannot create schedule.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
     if (weeklyFrequency <= 0 || weeklyFrequency > 7) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -282,7 +272,7 @@ class ScheduledOrderHelper {
         }
       } else {
         final created = await controller.createScheduledOrder(
-          productVsid: bundle.productVsid!,
+          bundlePurchaseId: bundle.id,
           weeklyFrequency: weeklyFrequency,
           bottlesPerDelivery: bottlesPerDelivery,
           schedule: scheduleEntries,

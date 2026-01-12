@@ -48,7 +48,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final token = response.data['accessToken'];
       if (token != null) {
         await AuthService.saveToken(token);
-        emit(LoginSuccess());
+        
+        // Extract roles from response
+        final List<String> roles = [];
+        if (response.data['roles'] is List) {
+          roles.addAll((response.data['roles'] as List).map((e) => e.toString()));
+        }
+        debugPrint('✅ User roles: $roles');
+        
+        emit(LoginSuccess(roles: roles));
       } else {
         emit(LoginFailure('No access token received'));
       }

@@ -10,11 +10,27 @@ import '../../../home/presentation/bloc/product_quantity/product_quantity_state.
 
 
 class SettingCard extends StatefulWidget {
- String title;
- String description;
-  String quantityLabel;
-  bool isIncrease;
-  SettingCard({required  this.title,required this.description,required this.quantityLabel,this.isIncrease=true});
+  final String title;
+  final String description;
+  final String quantityLabel;
+  final bool isIncrease;
+  
+  // NEW: External state management callbacks
+  final bool? initialSwitchValue;
+  final int? initialThresholdValue;
+  final Function(bool)? onSwitchChanged;
+  final Function(int)? onThresholdChanged;
+  
+  SettingCard({
+    required this.title,
+    required this.description,
+    required this.quantityLabel,
+    this.isIncrease = true,
+    this.initialSwitchValue,
+    this.initialThresholdValue,
+    this.onSwitchChanged,
+    this.onThresholdChanged,
+  });
 
   @override
   State<SettingCard> createState() => _SettingCardState();
@@ -22,21 +38,25 @@ class SettingCard extends StatefulWidget {
 
 class _SettingCardState extends State<SettingCard> {
   String imageUrl = '';
-  bool _isSwitched = false; // Initial state of the switch
+  late bool _isSwitched; // Will be initialized in initState from external value
   late final ProductQuantityBloc _quantityBloc;
   late final TextEditingController _quantityController;
 
   @override
   void initState() {
+    super.initState();
+    
+    // Initialize switch from external value or default to false
+    _isSwitched = widget.initialSwitchValue ?? false;
+    
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: 100.0,
     );
 
-    _quantityController = TextEditingController(text: '1');
-
-
-    super.initState();
+    // Initialize threshold from external value or default to '1'
+    final initialValue = widget.initialThresholdValue?.toString() ?? '1';
+    _quantityController = TextEditingController(text: initialValue);
   }
 
   void dispose() {
@@ -93,6 +113,10 @@ class _SettingCardState extends State<SettingCard> {
                       setState(() {
                         _isSwitched = value;
                       });
+                      // Notify parent of switch change
+                      if (widget.onSwitchChanged != null) {
+                        widget.onSwitchChanged!(value);
+                      }
                     },
                   ),
                 ),
@@ -130,16 +154,35 @@ class _SettingCardState extends State<SettingCard> {
                               isPlus: true,
                               price: 0,
                               // Not used for the controls
-                              onIncrease: () => context
-                                  .read<ProductQuantityBloc>()
-                                  .add(IncreaseQuantity()),
-                              onDecrease: () => context
-                                  .read<ProductQuantityBloc>()
-                                  .add(DecreaseQuantity()),
+                              onIncrease: () {
+                                context.read<ProductQuantityBloc>().add(IncreaseQuantity());
+                                // Notify parent after increment
+                                if (widget.onThresholdChanged != null) {
+                                  Future.delayed(Duration(milliseconds: 100), () {
+                                    final newValue = int.tryParse(_quantityController.text) ?? 1;
+                                    widget.onThresholdChanged!(newValue);
+                                  });
+                                }
+                              },
+                              onDecrease: () {
+                                context.read<ProductQuantityBloc>().add(DecreaseQuantity());
+                                // Notify parent after decrement
+                                if (widget.onThresholdChanged != null) {
+                                  Future.delayed(Duration(milliseconds: 100), () {
+                                    final newValue = int.tryParse(_quantityController.text) ?? 1;
+                                    widget.onThresholdChanged!(newValue);
+                                  });
+                                }
+                              },
                               quantityCntroller: _quantityController,
-                              onTextfieldChanged: (value) => context
-                                  .read<ProductQuantityBloc>()
-                                  .add(QuantityChanged(value)),
+                              onTextfieldChanged: (value) {
+                                context.read<ProductQuantityBloc>().add(QuantityChanged(value));
+                                // Notify parent on text change
+                                if (widget.onThresholdChanged != null) {
+                                  final newValue = int.tryParse(value) ?? 1;
+                                  widget.onThresholdChanged!(newValue);
+                                }
+                              },
                               onDone: () => context
                                   .read<ProductQuantityBloc>()
                                   .add(QuantityEditingComplete()),
