@@ -59,7 +59,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
 
-     ordersController = OrdersController(dio: Dio());
+     ordersController = OrdersController(dio: Dio(), userRole: 'Delivery');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {

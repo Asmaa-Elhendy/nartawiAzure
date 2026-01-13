@@ -25,9 +25,9 @@ Widget BuildOrderButtons(
 
             },
             child: Padding(
-              padding: EdgeInsetsGeometry.only(right: screenWidth * .01),
+              padding: EdgeInsets.only(right: screenWidth * .01),
               child: Container(
-                padding: EdgeInsetsGeometry.symmetric(
+                padding: EdgeInsets.symmetric(
                   vertical: screenHeight * .01,
                   horizontal:orderStatus=='Pending'?screenWidth*.006: screenWidth * .015,
                 ),

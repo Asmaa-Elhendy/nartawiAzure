@@ -36,6 +36,7 @@ class OrdersQuery {
   Map<String, dynamic> toQueryParams({
     required int pageIndex,
     required int pageSize,
+    bool isDeliveryRole = false,
   }) {
     String? dt(DateTime? d) => d?.toUtc().toIso8601String();
 
@@ -57,8 +58,11 @@ class OrdersQuery {
       if (sortBy != null && sortBy!.trim().isNotEmpty) 'sortBy': sortBy,
       if (isDescending != null) 'isDescending': isDescending,
 
-      // pagination
-      'pageIndex': pageIndex,
+      // pagination - use correct param name based on role
+      if (isDeliveryRole)
+        'page': pageIndex
+      else
+        'pageIndex': pageIndex,
       'pageSize': pageSize,
     };
   }
@@ -66,9 +70,57 @@ class OrdersQuery {
 
 class OrdersController extends ChangeNotifier {
   final Dio dio;
+  final String? userRole; // 'Delivery' or null/other for client
 
-  OrdersController({required this.dio}) {
-    debugPrint('🔥 OrdersController created');
+  OrdersController({required this.dio, this.userRole}) {
+    debugPrint('🔥 OrdersController created for role: ${userRole ?? "Client"}');
+  }
+  
+  /// Determine endpoint based on user role
+  String get _ordersEndpoint {
+    if (userRole == 'Delivery') {
+      return '$base_url/v1/delivery/orders';
+    }
+    return '$base_url/v1/client/orders';
+  }
+
+  /// Normalize delivery API response to match client API format
+  Map<String, dynamic> _normalizeResponse(Map<String, dynamic> data) {
+    // If already in client format, return as-is
+    if (data.containsKey('pageIndex')) return data;
+
+    // Convert delivery format to client format
+    final normalized = Map<String, dynamic>.from(data);
+    
+    // Map: page → pageIndex
+    if (data.containsKey('page')) {
+      normalized['pageIndex'] = data['page'];
+    }
+    
+    // Map items: orderId → id, totalAmount → total for each order
+    if (data['items'] is List) {
+      normalized['items'] = (data['items'] as List).map((item) {
+        if (item is Map<String, dynamic>) {
+          final orderMap = Map<String, dynamic>.from(item);
+          // Map: orderId → id
+          if (item.containsKey('orderId') && !item.containsKey('id')) {
+            orderMap['id'] = item['orderId'];
+          }
+          // Map: totalAmount → total
+          if (item.containsKey('totalAmount') && !item.containsKey('total')) {
+            orderMap['total'] = item['totalAmount'];
+          }
+          // Map: issueTime (rename if delivery uses different key)
+          if (item.containsKey('issueTime')) {
+            orderMap['issueTime'] = item['issueTime'];
+          }
+          return orderMap;
+        }
+        return item;
+      }).toList();
+    }
+    
+    return normalized;
   }
 
   // ---------------- ORDERS ----------------
@@ -115,13 +167,14 @@ class OrdersController extends ChangeNotifier {
         return;
       }
 
-      final url = '$base_url/v1/client/orders';
+      final url = _ordersEndpoint;
 
       final response = await dio.get(
         url,
         queryParameters: _query.toQueryParams(
           pageIndex: pageIndex,
           pageSize: pageSize,
+          isDeliveryRole: userRole == 'Delivery',
         ),
         options: Options(
           headers: {
@@ -136,7 +189,9 @@ class OrdersController extends ChangeNotifier {
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
 
-        final parsed = ClientOrdersResponse.fromJson(data);
+        // Normalize delivery API response to match client format
+        final normalized = _normalizeResponse(data);
+        final parsed = ClientOrdersResponse.fromJson(normalized);
 
         totalCount = parsed.totalCount;
         totalPages = parsed.totalPages;
@@ -188,13 +243,14 @@ class OrdersController extends ChangeNotifier {
         return;
       }
 
-      final url = '$base_url/v1/client/orders';
+      final url = _ordersEndpoint;
 
       final response = await dio.get(
         url,
         queryParameters: _query.toQueryParams(
           pageIndex: pageIndex,
           pageSize: pageSize,
+          isDeliveryRole: userRole == 'Delivery',
         ),
         options: Options(
           headers: {
@@ -209,7 +265,9 @@ class OrdersController extends ChangeNotifier {
             ? response.data as Map<String, dynamic>
             : <String, dynamic>{};
 
-        final parsed = ClientOrdersResponse.fromJson(data);
+        // Normalize delivery API response to match client format
+        final normalized = _normalizeResponse(data);
+        final parsed = ClientOrdersResponse.fromJson(normalized);
 
         totalCount = parsed.totalCount;
         totalPages = parsed.totalPages;

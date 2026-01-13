@@ -45,7 +45,7 @@ class SendOtp extends AuthEvent {
 
   SendOtp({
     required this.email,
-    this.purpose = "Auth",
+    this.purpose = "reset_password",
   });
 
   @override

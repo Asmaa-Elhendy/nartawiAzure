@@ -467,7 +467,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                   () {
                                                     showDialog(
                                                       context: context,
-                                                      builder: (ctx) => ReviewAlertDialog(),
+                                                      builder: (ctx) => ReviewAlertDialog(
+                                                        orderId: widget.clientOrder.id ?? 0,
+                                                        supplierId: widget.clientOrder.supplierId ?? 0,
+                                                        supplierName: widget.clientOrder.supplierName ?? 'Unknown',
+                                                      ),
                                                     );
                                                   },
                                                   fromOrderDetail: true,
