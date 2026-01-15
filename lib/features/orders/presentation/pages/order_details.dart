@@ -421,10 +421,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                               await _handleStartDelivery();
                                             } else {
                                               // Mark As Delivered - navigate to POD screen
-                                              Navigator.push(
+Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => TrackOrderScreen(),
+                                                  builder: (context) => TrackOrderScreen(order: widget.clientOrder),
                                                 ),
                                               );
                                             }

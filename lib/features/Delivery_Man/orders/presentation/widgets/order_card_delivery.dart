@@ -208,10 +208,10 @@ Widget BuildOrderButtonsDelivery(
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TrackOrderScreen(),
+                builder: (context) => TrackOrderScreen(order: clientOrder!,),
               ),
             );
-          },fromDelivery: true),
+          },fromDelivery: true),//
         ),
       )
           : SizedBox(),

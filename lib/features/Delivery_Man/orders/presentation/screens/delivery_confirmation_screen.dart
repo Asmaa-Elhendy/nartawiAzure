@@ -13,23 +13,43 @@ import '../widgets/custome_button.dart';
 import '../widgets/mark_delivered_alert.dart';
 import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
 import '../../../../../core/services/auth_service.dart';
+import '../../../../orders/domain/models/order_model.dart';
 
 
 class DeliveryConfirmationScreen extends StatefulWidget {
   final bool fromDeliveryMan;
-
-  // Replace with your real data later
-  final int orderId;
-  final DateTime orderDate;
-  final String address;
+  final ClientOrder order;
 
   const DeliveryConfirmationScreen({
     super.key,
     this.fromDeliveryMan = true,
-    required this.orderId,
-    required this.orderDate,
-    required this.address,
+    required this.order,
   });
+
+  // Helper getters for backward compatibility
+  int get orderId => order.id ?? 0;
+  DateTime get orderDate => order.issueTime ?? DateTime.now();
+  String get address {
+    final addr = order.deliveryAddress;
+    if (addr == null) return 'No address provided';
+    
+    // Handle both Map and Address object cases
+    final building = addr is Map ? addr['building'] : addr.building;
+    final address = addr is Map ? addr['address'] : addr.address;
+    final floor = addr is Map ? addr['floor'] : addr.floor;
+    final apartment = addr is Map ? addr['apartment'] : addr.apartment;
+    final notes = addr is Map ? addr['notes'] : addr.notes;
+    
+    final parts = [
+      building,
+      address,
+      floor,
+      apartment,
+      notes,
+    ].where((part) => part != null && part.toString().isNotEmpty).toList();
+    
+    return parts.join(', ');
+  }
 
   @override
   State<DeliveryConfirmationScreen> createState() =>
@@ -56,7 +76,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     super.dispose();
   }
 
-  String formatDateOnly(DateTime d) => DateFormat('MMM d, y').format(d);
+  String formatDateOnly(DateTime d) => DateFormat('MMM d, y HH:mm').format(d);
 
   Future<void> _getCurrentLocation() async {
     try {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
+import '../../../../orders/domain/models/order_model.dart';
 import '../../../../../core/services/maps_screen.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../auth/presentation/widgets/auth_buttons.dart';
@@ -11,8 +12,12 @@ import 'delivery_confirmation_screen.dart';
 
 
 class TrackOrderScreen extends StatefulWidget {
+  final ClientOrder order;
 
-
+  const TrackOrderScreen({
+    super.key,
+    required this.order,
+  });
 
   @override
   State<TrackOrderScreen> createState() => _TrackOrderScreenState();
@@ -122,8 +127,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen>
                                 setState(() {
                                   confirmed=!confirmed;
                                 });
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                DeliveryConfirmationScreen(orderId: 0, orderDate: DateTime.now(), address: 'Zone abc, Street 20, Building 21, Flat 22',)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => DeliveryConfirmationScreen(order: widget.order)));
                               },
                               child: CustomGradientButton('assets/images/delivery_man/orders/package-delivered.svg',
                                   .015, 'Confirm Delivered', screenWidth, screenHeight,ChangedColor: confirmed),
