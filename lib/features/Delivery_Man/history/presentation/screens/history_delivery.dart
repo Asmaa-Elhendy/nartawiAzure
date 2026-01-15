@@ -24,7 +24,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   DateTime? selectedToDate;
 
   late final TabController _tabController;
-  late WalletTransactionController transactionController;
+  late WalletTransactionsController transactionController;
 
   static const List<String> _tabs = [
     'All',
@@ -37,7 +37,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-    transactionController = WalletTransactionController(dio: Dio());
+    transactionController = WalletTransactionsController(dio: Dio());
     
     // Fetch delivery history transactions
     WidgetsBinding.instance.addPostFrameCallback((_) {

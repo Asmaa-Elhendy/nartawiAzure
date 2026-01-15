@@ -381,7 +381,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
                                     isRed: false,
-                                    onTap: _isSubmitting ? null : _capturePhotoAndSubmit,
+                                    onTap: _isSubmitting ? (){} : _capturePhotoAndSubmit,
                                   ),
                                 ),
                                 SizedBox(width: screenWidth * .03),

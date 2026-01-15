@@ -65,8 +65,8 @@ class AppRouter {
             child: const ForgetPasswordScreen(),
           ),
         );
-      case '/verification':
-        return MaterialPageRoute(builder: (_) => const VerificationScreen());
+      // case '/verification':
+      //   return MaterialPageRoute(builder: (_) => const VerificationScreen());
       case '/resetPassword':
         return MaterialPageRoute(builder: (_) => const ResetPasswordScreen());
       case '/home':

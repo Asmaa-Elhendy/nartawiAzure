@@ -126,31 +126,32 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
 
         )),
           ],),SizedBox(height: screenHeight*.01,),
-            Container(
-              padding: EdgeInsetsGeometry.symmetric(
-                vertical: screenHeight * .01,
-                horizontal: screenWidth * .015,
-              ),
-              height: screenHeight * .055,
-              decoration: BoxDecoration(
-                color: AppColors.backgrounHome,
-
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-
-                  Text(
-                    'Amount to be collected',
-                    style: TextStyle(
-                      fontSize: screenWidth * .034,
-                      fontWeight: FontWeight.w600,
-                    ),        overflow: TextOverflow.visible, // To avoid overflow text
-                  ),Text('QAR 134',style: TextStyle(color: AppColors.secondary,fontWeight: FontWeight.w600,fontSize: screenWidth*.034),)
-                ],
-              ),
-            ),SizedBox(height: screenHeight*.01,),
+          //  Container(
+            //   padding: EdgeInsetsGeometry.symmetric(
+            //     vertical: screenHeight * .01,
+            //     horizontal: screenWidth * .015,
+            //   ),
+            //   height: screenHeight * .055,
+            //   decoration: BoxDecoration(
+            //     color: AppColors.backgrounHome,
+            //
+            //     borderRadius: BorderRadius.circular(8),
+            //   ),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //
+            //       Text(
+            //         'Amount to be collected',
+            //         style: TextStyle(
+            //           fontSize: screenWidth * .034,
+            //           fontWeight: FontWeight.w600,
+            //         ),        overflow: TextOverflow.visible, // To avoid overflow text
+            //       ),Text('QAR 134',style: TextStyle(color: AppColors.secondary,fontWeight: FontWeight.w600,fontSize: screenWidth*.034),)
+            //     ],
+            //   ),
+            // ),
+             SizedBox(height: screenHeight*.01,),
             BuildOrderButtonsDelivery(context,screenWidth, screenHeight, orderStatus,paymentStatus,order)
           ],
         ),

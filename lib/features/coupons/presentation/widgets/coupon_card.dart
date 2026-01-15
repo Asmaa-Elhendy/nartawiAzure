@@ -496,7 +496,7 @@ class _CouponeCardState extends State<CouponeCard> {
 
           SizedBox(height: screenHeight * .02),
 
-          if (_existingSchedule != null) ..[
+          if (_existingSchedule != null) ...[
             Container(
               padding: EdgeInsets.all(screenWidth * .03),
               decoration: BoxDecoration(
@@ -568,7 +568,7 @@ class _CouponeCardState extends State<CouponeCard> {
             ),
           ),
 
-          if (_existingSchedule != null) ..[
+          if (_existingSchedule != null) ...[
             SizedBox(height: screenHeight * .01),
             OutlinedButton(
               onPressed: _couponsController != null ? _deleteSchedule : null,
