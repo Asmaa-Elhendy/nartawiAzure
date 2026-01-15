@@ -87,15 +87,20 @@ class OrdersController extends ChangeNotifier {
   /// Normalize delivery API response to match client API format
   Map<String, dynamic> _normalizeResponse(Map<String, dynamic> data) {
     // If already in client format, return as-is
-    if (data.containsKey('pageIndex')) return data;
+    if (data.containsKey('pageIndex') && data.containsKey('totalPages')) {
+      return data;
+    }
 
     // Convert delivery format to client format
     final normalized = Map<String, dynamic>.from(data);
     
-    // Map: page → pageIndex
-    if (data.containsKey('page')) {
-      normalized['pageIndex'] = data['page'];
-    }
+    // Map pagination fields
+    normalized['pageIndex'] = data['page'] ?? 1;
+    normalized['pageSize'] = data['pageSize'] ?? 20;
+    normalized['totalCount'] = data['totalCount'] ?? 0;
+    normalized['totalPages'] = data['totalPages'] ?? 1;
+    normalized['hasPreviousPage'] = (data['page'] ?? 1) > 1;
+    normalized['hasNextPage'] = (data['page'] ?? 1) < (data['totalPages'] ?? 1);
     
     // Map items: orderId → id, totalAmount → total for each order
     if (data['items'] is List) {
@@ -116,6 +121,22 @@ class OrdersController extends ChangeNotifier {
           // Map: issueTime
           if (item.containsKey('issueTime')) {
             orderMap['issueTime'] = item['issueTime'];
+          }
+          
+          // Map status fields if they exist at the root level
+          if (item.containsKey('statusId') && !item.containsKey('status')) {
+            orderMap['status'] = {
+              'id': item['statusId'],
+              'name': item['statusName'] ?? 'Pending',
+            };
+          }
+          
+          // Map customer info if it exists at the root level
+          if (item.containsKey('customerName') || item.containsKey('customerPhone')) {
+            orderMap['customer'] = {
+              'name': item['customerName'] ?? '',
+              'phone': item['customerPhone'] ?? '',
+            };
           }
           
           // Normalize nested items array (order items/products)
@@ -196,6 +217,22 @@ class OrdersController extends ChangeNotifier {
             normalizedAddr['isActive'] ??= true;
             
             orderMap['deliveryAddress'] = normalizedAddr;
+          } else if (item.containsKey('deliveryAddress')) {
+            // If deliveryAddress is not a map but exists, create a basic one
+            orderMap['deliveryAddress'] = {
+              'id': 0,
+              'title': '',
+              'areaId': 0,
+              'building': '',
+              'address': '',
+              'floor': '',
+              'apartment': '',
+              'notes': '',
+              'isDefault': false,
+              'isActive': true,
+              'latitude': 0,
+              'longitude': 0,
+            };
           }
           
           // Add missing arrays with empty defaults
@@ -209,6 +246,8 @@ class OrdersController extends ChangeNotifier {
         }
         return item;
       }).toList();
+    } else {
+      normalized['items'] = [];
     }
     
     return normalized;

@@ -25,6 +25,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late OrdersController ordersController;
+  final ScrollController _scrollController = ScrollController();
 // ====== Filter data (TEMP / Example) ======
   final List<String> zonesList = ["Zone 1", "Zone 2", "Zone 3"];
   final List<String> streetsList = ["Street A", "Street B", "Street C"];
@@ -58,18 +59,33 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    ordersController = OrdersController(dio: Dio(), userRole: 'Delivery');
 
-     ordersController = OrdersController(dio: Dio(), userRole: 'Delivery');
+    // Add scroll listener
+    _scrollController.addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
+      if (mounted) {//j
         ordersController.fetchOrders(executeClear: true);
       }
     });
   }
 
+  // Handle scroll events
+  void _onScroll() {
+    if (_scrollController.position.pixels >= 
+        _scrollController.position.maxScrollExtent * 0.9) {
+      if (!ordersController.isLoadingMore && 
+          ordersController.hasMore && 
+          !ordersController.isLoading) {
+        ordersController.loadMore();
+      }
+    }
+  }
+
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     ordersController.dispose();
     zoneCtrl.dispose();
@@ -122,8 +138,13 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     required double screenWidth,
     required List<ClientOrder> orders,
   }) {
-    if (orders.isEmpty) {
-      return const Center(child: Text('No orders found'));
+    if (orders.isEmpty && !ordersController.isLoading && !ordersController.isLoadingMore) {
+      return const Center(
+        child: Text(
+          'No orders found',
+          style: TextStyle(color: Colors.grey),
+        ),
+      );
     }
 
     return RefreshIndicator(
@@ -132,12 +153,24 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
         await ordersController.fetchOrders(executeClear: true);
       },
       child: ListView.builder(
+        controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.only(bottom: screenHeight * .06),
-        itemCount: orders.length,
+        itemCount: orders.length + (ordersController.hasMore ? 1 : 0),
         itemBuilder: (context, index) {
-          final order = orders[index];
+          // Show loading indicator at the bottom when loading more
+          if (index >= orders.length) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primary,
+                ),
+              ),
+            );
+          }
 
+          final order = orders[index];
           final statusText = order.statusName ?? 'Unknown';
           final paymentText = order.isPaid == true ? 'Paid' : 'Pending Payment';
 
@@ -309,7 +342,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                               child: AnimatedBuilder(
                                 animation: ordersController,
                                 builder: (context, _) {
-                                  if (ordersController.isLoading) {
+                                  if (ordersController.isLoading && ordersController.orders.isEmpty) {
                                     return Center(
                                       child: CircularProgressIndicator(
                                         color: AppColors.primary,
@@ -331,16 +364,21 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                                   return TabBarView(
                                     controller: _tabController,
                                     children: List.generate(_tabs.length, (tabIndex) {
-                                      final filtered =
-                                      _filterOrdersByTab(allOrders, tabIndex);
+                                      final filtered = _filterOrdersByTab(allOrders, tabIndex);
+                                      
+                                      if (filtered.isEmpty && !ordersController.isLoading && !ordersController.isLoadingMore) {
+                                        return const Center(
+                                          child: Text(
+                                            'No orders found',
+                                            style: TextStyle(color: Colors.grey),
+                                          ),
+                                        );
+                                      }
 
                                       return _buildOrdersList(
                                         screenHeight: screenHeight,
                                         screenWidth: screenWidth,
-                                        orders:
-                                        filtered
-
-                                        //filtered,
+                                        orders: filtered,
                                       );
                                     }),
                                   );
