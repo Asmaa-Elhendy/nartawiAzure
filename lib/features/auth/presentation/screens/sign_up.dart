@@ -1,3 +1,6 @@
+// ============================
+// File: signup_screen.dart  (COMPLETED)
+// ============================
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +37,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
+  // ✅ Field keys (validate per-field only)
+  final _userNameKey = GlobalKey<FormFieldState>();
+  final _firstNameKey = GlobalKey<FormFieldState>();
+  final _lastNameKey = GlobalKey<FormFieldState>();
+  final _emailKey = GlobalKey<FormFieldState>();
+  final _phoneKey = GlobalKey<FormFieldState>();
+  final _altPhoneKey = GlobalKey<FormFieldState>();
+  final _passwordKey = GlobalKey<FormFieldState>();
+  final _confirmPasswordKey = GlobalKey<FormFieldState>();
+
   @override
   void dispose() {
     _userNameController.dispose();
@@ -48,29 +61,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
+  // --------- validators ----------
+  String? _required(String? v, String label) {
+    if ((v ?? '').trim().isEmpty) return '$label is required';
+    return null;
+  }
+
+  String? _emailValidator(String? v) {
+    final value = (v ?? '').trim();
+    if (value.isEmpty) return 'Email Address is required';
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+    return null;
+  }
+
+  String? _passwordValidator(String? v) {
+    final value = (v ?? '');
+    if (value.trim().isEmpty) return 'Password is required';
+    if (value.length < 6) return 'Password must be at least 6 characters';
+    return null;
+  }
+
+  String? _confirmPasswordValidator(String? v) {
+    final confirm = (v ?? '');
+    if (confirm.trim().isEmpty) return 'Confirm Password is required';
+    if (confirm != _passwordController.text) return "Password doesn't match";
+    return null;
+  }
+
   void _handleSignUp() {
     final isValid = _formKey.currentState?.validate() ?? false;
     if (!isValid) return;
 
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password & Confirm Password do not match'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
     final fullName =
     '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'
         .trim();
-
-    debugPrint('📤 Register payload:'
-        '\nusername: ${_userNameController.text.trim()}'
-        '\nemail: ${_emailController.text.trim()}'
-        '\nfullName: $fullName'
-        '\nphone: ${_phoneNumberController.text.trim()}');
 
     context.read<AuthBloc>().add(
       PerformRegister(
@@ -78,8 +103,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
         fullName: fullName,
-        phoneNumber: _phoneNumberController.text.trim(), confirmPassword: _confirmPasswordController.text,
-        // role: 'Client', // مش لازم تبعتيها هنا لو ليها default في الـ event
+        phoneNumber: _phoneNumberController.text.trim(),
+        confirmPassword: _confirmPasswordController.text,
       ),
     );
   }
@@ -100,7 +125,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 backgroundColor: Colors.green,
               ),
             );
-            // ✅ رجوع لصفحة اللوجين بعد ما الأكاونت يتعمل
             Navigator.pop(context);
           }
 
@@ -127,87 +151,110 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   child: Form(
                     key: _formKey,
+
+                    // ✅ IMPORTANT: stop validating all fields while typing
+                    autovalidateMode: AutovalidateMode.disabled,
+
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BuildBackgroundLogo(width, height),
 
-                          // username (required = true)
                           buildCustomeFullTextField(
                             'UserName',
                             'Enter Username',
                             _userNameController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _userNameKey,
+                            validator: (v) => _required(v, 'UserName'),
                           ),
 
-                          // first name (required)
                           buildCustomeFullTextField(
                             'First Name',
                             'Enter First Name',
                             _firstNameController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _firstNameKey,
+                            validator: (v) => _required(v, 'First Name'),
                           ),
 
-                          // last name (required)
                           buildCustomeFullTextField(
                             'Last Name',
                             'Enter Last Name',
                             _lastNameController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _lastNameKey,
+                            validator: (v) => _required(v, 'Last Name'),
                           ),
 
-                          // email (required)
                           buildCustomeFullTextField(
                             'Email Address',
                             'Ex: abc@example.com',
                             _emailController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _emailKey,
+                            validator: _emailValidator,
                           ),
 
-                          // phone (required)
                           buildCustomeFullTextField(
                             'Phone',
                             'Enter Phone Number',
                             _phoneNumberController,
-                            true, // required
+                            true,
                             height,
+                            isNumberKeyboard: true,
+                            fieldKey: _phoneKey,
+                            validator: (v) => _required(v, 'Phone'),
                           ),
                           buildInfoPhoneInfo(width),
 
-                          // alternative phone (optional)
                           buildCustomeFullTextField(
                             'Alternative Phone Number',
                             'Enter Alternative phone number',
                             _emergencyphonenumberController,
-                            false, // NOT required
+                            false,
                             height,
+                            isNumberKeyboard: true,
+                            fieldKey: _altPhoneKey,
                           ),
                           buildInfoPhoneInfo(width),
 
-                          // password (required)
+                          // ✅ Password: validate itself + revalidate confirm if typed
                           buildCustomeFullTextField(
                             'Password',
                             'Enter Password ',
                             _passwordController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _passwordKey,
+                            validator: _passwordValidator,
+                            onChanged: (_) {
+                              _passwordKey.currentState?.validate();
+                              if (_confirmPasswordController.text.isNotEmpty) {
+                                _confirmPasswordKey.currentState?.validate();
+                              }
+                            },
                           ),
 
-                          // confirm password (required)
+                          // ✅ Confirm Password: validate live mismatch only
                           buildCustomeFullTextField(
                             'Confirm Password',
                             'Enter Confirmed Password',
                             _confirmPasswordController,
-                            true, // required
+                            true,
                             height,
+                            fieldKey: _confirmPasswordKey,
+                            validator: _confirmPasswordValidator,
+                            onChanged: (_) {
+                              _confirmPasswordKey.currentState?.validate();
+                            },
                           ),
 
-                          // 🔵 زرار SignUp – يتقفل بس لو في Loading
                           AuthButton(
                             width,
                             height,
@@ -231,7 +278,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
 
-              // 🔥 overlay اللودينج
               if (isLoading)
                 Positioned.fill(
                   child: Container(
@@ -243,9 +289,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
+                          children: [
                             SizedBox(
                               width: 22,
                               height: 22,
