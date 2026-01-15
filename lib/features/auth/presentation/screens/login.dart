@@ -47,7 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       debugPrint(
-          '✅ Loaded email: ${_emailController.text}, password: ${_passwordController.text}');
+        '✅ Loaded email: ${_emailController.text}, password: ${_passwordController.text}',
+      );
     }
   }
 
@@ -60,10 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     context.read<AuthBloc>().add(
-      PerformLogin(
-        _emailController.text.trim(),
-        _passwordController.text,
-      ),
+      PerformLogin(_emailController.text.trim(), _passwordController.text),
     );
   }
 
@@ -87,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final width  = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     const dividerColor = AppColors.BorderAnddividerAndIconColor;
@@ -100,10 +98,12 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccess) {
             // ✅ استنى لما يحفظ الأول
             await _handleRememberMeOnSuccess();
-            
+
             // Check if user has Delivery role
             if (state.roles.contains('Delivery')) {
-              debugPrint('✅ User has Delivery role, navigating to delivery home');
+              debugPrint(
+                '✅ User has Delivery role, navigating to delivery home',
+              );
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => MainScreenDelivery()),
@@ -116,10 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           if (state is LoginFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.error),
-                backgroundColor: Colors.red,
-              ),
+              SnackBar(content: Text(state.error), backgroundColor: Colors.red),
             );
           }
         },
@@ -160,11 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         Padding(
-                          padding:
-                          const EdgeInsets.only(right: 8.0, top: 8.0),
+                          padding: const EdgeInsets.only(right: 8.0, top: 8.0),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
@@ -172,12 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     value: checkedValue,
                                     activeColor: AppColors.primary,
                                     onChanged: (newValue) {
-                                      setState(
-                                              () => checkedValue = newValue!);
+                                      setState(() => checkedValue = newValue!);
                                     },
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
                                   const Text(
@@ -193,7 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context, '/forgetPassword');
+                                    context,
+                                    '/forgetPassword',
+                                  );
                                 },
                                 child: const Text(
                                   "Forgot Password?",
@@ -208,48 +203,42 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        AuthButton(
-                          width,
-                          height,
-                          'Login',
-                              () {
-                            if (_formKey.currentState?.validate() ??
-                                false) {
-                              _handleLogin();
-                            }
-                          },
-                        ),
+                        AuthButton(width, height, 'Login', () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            _handleLogin();
+                          }
+                        }),
+                        SizedBox(height: height * .02),
 
-                        _buildDivider('Or Login With', dividerColor),
+                        //        _buildDivider('Or Login With', dividerColor),
 
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: height * 0.01,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                "assets/images/auth/google.png",
-                                height: height * 0.051,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: width * 0.08,
-                                ),
-                                child: Image.asset(
-                                  "assets/images/auth/ios.png",
-                                  height: height * 0.051,
-                                ),
-                              ),
-                              Image.asset(
-                                "assets/images/auth/facebook.png",
-                                height: height * 0.051,
-                              ),
-                            ],
-                          ),
-                        ),
-
+                        // Padding(
+                        //   padding: EdgeInsets.symmetric(
+                        //     vertical: height * 0.01,
+                        //   ),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        //       Image.asset(
+                        //         "assets/images/auth/google.png",
+                        //         height: height * 0.051,
+                        //       ),
+                        //       Padding(
+                        //         padding: EdgeInsets.symmetric(
+                        //           horizontal: width * 0.08,
+                        //         ),
+                        //         child: Image.asset(
+                        //           "assets/images/auth/ios.png",
+                        //           height: height * 0.051,
+                        //         ),
+                        //       ),
+                        //       Image.asset(
+                        //         "assets/images/auth/facebook.png",
+                        //         height: height * 0.051,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         _buildDivider('Or Continue As', dividerColor),
 
                         Padding(
@@ -264,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width,
                                 height,
                                 'Guest',
-                                  (){}//  _handleLogin,
+                                () {}, //  _handleLogin,
                               ),
                             ],
                           ),
@@ -276,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           context,
                           'Don’t have an account?',
                           " Sign Up",
-                              () {
+                          () {
                             Navigator.pushNamed(context, '/signUp');
                           },
                         ),
@@ -307,8 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 22,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.5,
-                                valueColor:
-                                const AlwaysStoppedAnimation<Color>(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
                                   AppColors.primary,
                                 ),
                               ),
@@ -321,13 +309,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.black87,
-                                  decoration: TextDecoration.none,        // لا underline
+                                  decoration: TextDecoration.none,
+                                  // لا underline
                                   decorationColor: Colors.transparent,
-                                  backgroundColor: Colors.transparent,    // لو في أي هايلايت
+                                  backgroundColor:
+                                      Colors.transparent, // لو في أي هايلايت
                                 ),
-                              )
-                            )
-
+                              ),
+                            ),
                           ],
                         ),
                       ),
