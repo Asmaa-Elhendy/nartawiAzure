@@ -193,7 +193,7 @@ Widget BuildOrderButtonsDelivery(
       ),
 
 
-      orderStatus == 'On The Way'
+      orderStatus == 'In Progress'
           ? Expanded(
         child: InkWell(
           onTap: (){

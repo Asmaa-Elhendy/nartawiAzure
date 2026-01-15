@@ -177,7 +177,7 @@ GET `/v1/client/orders` supports:
 **Status IDs:**
 - 1 = Pending
 - 2 = Accepted
-- 3 = On The Way
+- 3 = In Progress
 - 4 = Delivered
 - 5 = Canceled
 

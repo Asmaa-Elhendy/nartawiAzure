@@ -85,10 +85,10 @@ SCHEDULED_ORDER table columns:
    └─ Tab 3: Profile (delivery_profile.dart) - Driver profile
 
 2. Assigned Orders Screen (assigned_orders_screen.dart)
-   - Shows orders with tabs: All, Pending, On The Way, Delivered, Canceled, Disputed
+   - Shows orders with tabs: All, Pending, In Progress, Delivered, Canceled, Disputed
    - Each order card shows:
      * View Details button → OrderDetailScreen
-     * Mark As Delivered button (for "On The Way" status only)
+     * Mark As Delivered button (for "In Progress" status only)
 
 3. Order Details → Track Order (track_order.dart)
    - Shows map with customer location
@@ -106,7 +106,7 @@ SCHEDULED_ORDER table columns:
 
 From `order_card_delivery.dart` line 192:
 ```dart
-orderStatus == 'On The Way'
+orderStatus == 'In Progress'
     ? Expanded(child: InkWell(
         onTap: () { showDialog(CancelAlertDialog) },
         child: BuildOutlinedIconButton('Mark As Delivered')
@@ -114,13 +114,13 @@ orderStatus == 'On The Way'
 ```
 
 **KEY FINDING:** 
-- Orders must ALREADY be in "On The Way" status to show "Mark As Delivered"
-- This implies there's a MISSING step: **"Start Delivery"** that changes status from "Pending/Accepted" → "On The Way"
+- Orders must ALREADY be in "In Progress" status to show "Mark As Delivered"
+- This implies there's a MISSING step: **"Start Delivery"** that changes status from "Pending/Accepted" → "In Progress"
 
 **Expected Workflow:**
 ```
 1. Order assigned to driver (status: Pending or Accepted)
-2. Driver taps "Start Delivery" → Status becomes "On The Way" ← MISSING UI
+2. Driver taps "Start Delivery" → Status becomes "In Progress" ← MISSING UI
 3. Driver navigates to customer
 4. Driver taps "Mark As Delivered" → Opens POD screen
 5. Driver captures photo + GPS → Submits POD
@@ -130,8 +130,8 @@ orderStatus == 'On The Way'
 **Current UI Gap:**
 - No "Start Delivery" button visible in assigned_orders_screen.dart
 - Only "View Details" button shown for all orders
-- "Mark As Delivered" only appears for "On The Way" status
-- **Missing: UI to transition Pending/Accepted → On The Way**
+- "Mark As Delivered" only appears for "In Progress" status
+- **Missing: UI to transition Pending/Accepted → In Progress**
 
 ---
 
@@ -198,14 +198,14 @@ SELECT o.*
 FROM CUSTOMER_ORDER o
 INNER JOIN SCHEDULED_ORDER so ON o.SCHEDULED_ORDER_ID = so.ID
 WHERE so.ASSIGNED_DELIVERY_MAN_ID = @DriverAccountId
-  AND o.STATUS_ID IN (1, 2, 3) -- Pending, Accepted, On The Way
+  AND o.STATUS_ID IN (1, 2, 3) -- Pending, Accepted, In Progress
 ```
 
 ### Finding #2: Start Delivery Missing UI
 
 **Problem:**
-- Orders card only shows "Mark As Delivered" for "On The Way" status
-- No button to START delivery (change Pending → On The Way)
+- Orders card only shows "Mark As Delivered" for "In Progress" status
+- No button to START delivery (change Pending → In Progress)
 
 **Where it should be:**
 ```dart
@@ -217,14 +217,14 @@ if (orderStatus == 'Pending' || orderStatus == 'Accepted') {
   Expanded(
     child: InkWell(
       onTap: () {
-        // Call API to change status to "On The Way"
+        // Call API to change status to "In Progress"
         // POST /api/v1/client/orders/{id}/ChangeStatus
         // OR POST /api/v1/delivery/orders/{id}/start
       },
       child: BuildOutlinedIconButton('Start Delivery', ...),
     ),
   )
-} else if (orderStatus == 'On The Way') {
+} else if (orderStatus == 'In Progress') {
   // Show "Mark As Delivered" button (existing)
 }
 ```
@@ -234,7 +234,7 @@ From SSoT, line 4755:
 ```
 POST /api/v1/client/orders/{id}/ChangeStatus
 {
-  "statusId": 3,  // 3 = "Out for Delivery" (On The Way)
+  "statusId": 3,  // 3 = "Out for Delivery" (In Progress)
   "notes": "Started delivery"
 }
 ```
@@ -362,7 +362,7 @@ Pending (1)
   ↓ [Vendor accepts]
 Accepted (2)
   ↓ [Driver taps "Start Delivery"] ← MISSING UI
-On The Way / Out for Delivery (3)
+In Progress / Out for Delivery (3)
   ↓ [Driver taps "Mark As Delivered"]
   ↓ [Opens POD screen, captures photo+GPS]
 Delivered (4)

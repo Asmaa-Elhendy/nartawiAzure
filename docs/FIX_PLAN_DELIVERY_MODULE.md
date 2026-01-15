@@ -169,7 +169,7 @@ int? _getStatusIdForTab(int tabIndex) {
   switch (tabIndex) {
     case 0: return null;      // All
     case 1: return 1;         // Pending
-    case 2: return 3;         // On The Way (Out for Delivery)
+    case 2: return 3;         // In Progress (Out for Delivery)
     case 3: return 4;         // Delivered
     case 4: return 5;         // Canceled
     case 5: return 6;         // Disputed
@@ -601,7 +601,7 @@ Future<void> _handleLogin(String username, String password) async {
 
 **Current Issue:**
 - No "Start Delivery" button
-- No status transition from "Pending" to "On The Way"
+- No status transition from "Pending" to "In Progress"
 - Drivers cannot signal they started delivery
 
 **Backend Status:**
@@ -688,8 +688,8 @@ Widget BuildOrderButtonsDelivery(
           ),
         ),
 
-      // Existing Mark As Delivered button for On The Way orders
-      if (orderStatus == 'On The Way')
+      // Existing Mark As Delivered button for In Progress orders
+      if (orderStatus == 'In Progress')
         Expanded(
           child: InkWell(
             onTap: () {

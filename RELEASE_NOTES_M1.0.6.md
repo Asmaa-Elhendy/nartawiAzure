@@ -19,19 +19,19 @@ This release resolves **5 critical blockers** in the Delivery Driver module, tra
 
 ### 1. **Start Delivery Functionality** 🆕
 - Drivers can now signal when they start a delivery
-- Order status automatically transitions: Pending → Accepted → **On The Way** → Delivered
+- Order status automatically transitions: Pending → Accepted → **In Progress** → Delivered
 - Confirmation dialog prevents accidental status changes
 - Real-time status update with user feedback
 
 **API Integration:**
 - `POST /api/v1/client/orders/{id}/ChangeStatus`
-- Status ID: 3 ("On The Way")
+- Status ID: 3 ("In Progress")
 
 **User Journey:**
 1. Driver opens order details for a Pending/Accepted order
 2. Taps "Start Delivery" button
 3. Confirms action in dialog
-4. Order status changes to "On The Way"
+4. Order status changes to "In Progress"
 5. Button changes to "Mark As Delivered"
 
 ---
@@ -170,7 +170,7 @@ This release resolves **5 critical blockers** in the Delivery Driver module, tra
 
 ### Customers
 - ✅ Receive accurate order status updates
-- ✅ Can track driver when "On The Way"
+- ✅ Can track driver when "In Progress"
 - ✅ POD photos available in order details
 
 ---
@@ -208,7 +208,7 @@ This release resolves **5 critical blockers** in the Delivery Driver module, tra
 - ✅ Error handling scenarios
 
 ### Integration Testing
-- ✅ Order status transitions (Pending → On The Way → Delivered)
+- ✅ Order status transitions (Pending → In Progress → Delivered)
 - ✅ Tab filtering across all status types
 - ✅ Date range filtering in history
 - ✅ Profile data loading and refresh

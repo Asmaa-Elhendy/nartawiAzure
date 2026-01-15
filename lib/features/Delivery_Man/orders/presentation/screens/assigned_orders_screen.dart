@@ -39,7 +39,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   static const List<String> _tabs = [
     'All',
     'Pending',
-    'On The Way',
+    'In Progress',
     'Delivered',
     'Canceled',
     'Disputed',
@@ -87,9 +87,9 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
       final status = (order.statusName ?? '').toLowerCase();
 
       // ✅ status matching
-      if (tabName == 'on the way') {
+      if (tabName == 'In Progress') {
         // in case backend returns variations
-        return status.contains('on the way') ||
+        return status.contains('In Progress') ||
             status.contains('ontheway') ||
             status.contains('out for delivery_man') ||
             status.contains('on_way') ||

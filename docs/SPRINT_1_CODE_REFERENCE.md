@@ -535,7 +535,7 @@ import 'package:dio/dio.dart';
 1. Login as delivery driver
 2. View assigned order
 3. Click "Start Delivery"
-4. ✅ Status should change to "On The Way"
+4. ✅ Status should change to "In Progress"
 
 # Test 5: OTP Verification
 1. Click "Forgot Password"

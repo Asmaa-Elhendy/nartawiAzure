@@ -227,7 +227,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       if (response.statusCode == 200 || response.statusCode == 204) {
         // Success - update UI
         setState(() {
-          widget.orderStatus = 'On The Way';
+          widget.orderStatus = 'In Progress';
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -411,13 +411,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                             ),
                             widget.fromDeliveryMan
                                 ? widget.orderStatus == 'Pending' ||
-                                          widget.orderStatus == 'On The Way'
+                                          widget.orderStatus == 'In Progress'
                                       ? Padding(
                                         padding:  EdgeInsets.symmetric(vertical: screenHeight*.02),
                                         child: GestureDetector(
                                           onTap: () async {
                                             if (widget.orderStatus == 'Pending') {
-                                              // Start Delivery - change status to On The Way
+                                              // Start Delivery - change status to In Progress
                                               await _handleStartDelivery();
                                             } else {
                                               // Mark As Delivered - navigate to POD screen
@@ -431,7 +431,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                           },
                                           child: CustomGradientButton(
                                             widget.orderStatus ==
-                                                 'On The Way'?
+                                                 'In Progress'?
                                             'assets/images/delivery_man/orders/package-delivered.svg': 'assets/images/delivery_man/orders/delivery-tracking.svg',
                                               screenWidth * .015,
                                               widget.orderStatus == 'Pending'

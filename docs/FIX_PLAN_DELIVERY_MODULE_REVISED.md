@@ -65,7 +65,7 @@ SCHEDULED_ORDER
 CUSTOMER_ORDER
 ├─ ID (PK)
 ├─ SCHEDULED_ORDER_ID (FK to SCHEDULED_ORDER) ✅ LINK
-├─ STATUS_ID (1=Pending, 2=Accepted, 3=On The Way, 4=Delivered)
+├─ STATUS_ID (1=Pending, 2=Accepted, 3=In Progress, 4=Delivered)
 └─ ISSUE_TIME
 ```
 
@@ -76,7 +76,7 @@ SELECT co.*
 FROM CUSTOMER_ORDER co
 INNER JOIN SCHEDULED_ORDER so ON co.SCHEDULED_ORDER_ID = so.ID
 WHERE so.ASSIGNED_DELIVERY_MAN_ID = @CurrentDriverId
-  AND co.STATUS_ID IN (1, 2, 3)  -- Pending, Accepted, On The Way
+  AND co.STATUS_ID IN (1, 2, 3)  -- Pending, Accepted, In Progress
 ORDER BY co.ISSUE_TIME DESC
 ```
 
@@ -87,14 +87,14 @@ ORDER BY co.ISSUE_TIME DESC
    ↓
 2. Accepted (2)         - Vendor confirms order
    ↓
-3. On The Way (3)       - Driver starts delivery ← MISSING UI
+3. In Progress (3)       - Driver starts delivery ← MISSING UI
    ↓
 4. Delivered (4)        - Driver submits POD
 ```
 
 **Missing UI Element:**
-- **"Start Delivery" button** must change status from Pending/Accepted → On The Way
-- Currently only "Mark As Delivered" appears for "On The Way" status
+- **"Start Delivery" button** must change status from Pending/Accepted → In Progress
+- Currently only "Mark As Delivered" appears for "In Progress" status
 - No way for driver to signal delivery started
 
 ---
@@ -184,7 +184,7 @@ GET /api/v1/delivery/orders?status=delivered&sort=desc
 
 **File:** `lib/features/Delivery_Man/orders/presentation/widgets/order_card_delivery.dart`
 
-**Issue:** Missing UI to transition order status from Pending/Accepted → On The Way
+**Issue:** Missing UI to transition order status from Pending/Accepted → In Progress
 
 **Current Code (Line 163-209):**
 ```dart
@@ -207,8 +207,8 @@ Widget BuildOrderButtonsDelivery(
         ),
       ),
 
-      // Mark As Delivered (only for "On The Way")
-      orderStatus == 'On The Way'
+      // Mark As Delivered (only for "In Progress")
+      orderStatus == 'In Progress'
           ? Expanded(
               child: InkWell(
                 onTap: () { showDialog(CancelAlertDialog) },
@@ -304,8 +304,8 @@ Widget BuildOrderButtonsDelivery(
             )
           : SizedBox(),
 
-      // Mark As Delivered button (for "On The Way" status)
-      orderStatus == 'On The Way'
+      // Mark As Delivered button (for "In Progress" status)
+      orderStatus == 'In Progress'
           ? Expanded(
               child: InkWell(
                 onTap: () {
@@ -350,7 +350,7 @@ Future<void> _startDelivery(BuildContext context, int orderId) async {
     final response = await dio.post(
       'https://nartawi.smartvillageqatar.com/api/v1/client/orders/$orderId/ChangeStatus',
       data: {
-        'statusId': 3,  // 3 = "Out for Delivery" / "On The Way"
+        'statusId': 3,  // 3 = "Out for Delivery" / "In Progress"
         'notes': 'Driver started delivery',
       },
       options: Options(
@@ -407,7 +407,7 @@ Body: { "statusId": 3, "notes": "Driver started delivery" }
 
 **Button Logic:**
 - **Pending/Accepted orders:** Show "Start Delivery" button
-- **On The Way orders:** Show "Track & Deliver" button
+- **In Progress orders:** Show "Track & Deliver" button
 - **Delivered/Canceled:** Show nothing (only View Details)
 
 **Effort:** 1.5 hours  
@@ -653,17 +653,17 @@ Priority order based on criticality:
 **Start Delivery (FIX #4):**
 - [ ] "Start Delivery" button appears for Pending orders
 - [ ] "Start Delivery" button appears for Accepted orders
-- [ ] Button does NOT appear for On The Way orders
+- [ ] Button does NOT appear for In Progress orders
 - [ ] Button does NOT appear for Delivered orders
 - [ ] Tapping button shows confirmation dialog
 - [ ] Confirming calls API and changes status
-- [ ] Status updates to "On The Way" (ID: 3)
+- [ ] Status updates to "In Progress" (ID: 3)
 - [ ] "Track & Deliver" button appears after start
 - [ ] Error message shows if API fails
 
 **Assigned Orders (FIX #1):**
 - [ ] Orders load from backend on app open
-- [ ] Tab filtering works (All, Pending, On The Way, etc.)
+- [ ] Tab filtering works (All, Pending, In Progress, etc.)
 - [ ] Pull to refresh reloads orders
 - [ ] Empty state shows if no orders
 - [ ] Loading indicator appears
@@ -724,7 +724,7 @@ Priority order based on criticality:
 ### **Phase 1 Complete When:**
 - ✅ POD photos show timestamp overlay (date + time + GPS)
 - ✅ "Start Delivery" button visible for Pending/Accepted orders
-- ✅ Status changes to "On The Way" when button tapped
+- ✅ Status changes to "In Progress" when button tapped
 - ✅ Driver can see real assigned orders from backend
 - ✅ Driver profile loads real name and phone
 - ✅ Navigation to Google Maps works
@@ -747,9 +747,9 @@ Priority order based on criticality:
 - **Must be fixed before any POD submissions**
 
 ### **2. Start Delivery is Workflow Blocker**
-- Orders cannot transition from Pending → On The Way → Delivered
+- Orders cannot transition from Pending → In Progress → Delivered
 - Drivers have no way to signal "I started this delivery"
-- "Mark As Delivered" only shows for "On The Way" status
+- "Mark As Delivered" only shows for "In Progress" status
 - **Workflow is broken without this button**
 
 ### **3. Driver Assignment via SCHEDULED_ORDER**

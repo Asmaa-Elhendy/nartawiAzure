@@ -170,7 +170,7 @@ All 6 P0 critical issues have been successfully fixed and implemented. The mobil
 - [ ] Click "Start Delivery" button
 - [ ] Verify confirmation dialog
 - [ ] Confirm start delivery
-- [ ] Order status should change to "On The Way"
+- [ ] Order status should change to "In Progress"
 - [ ] Success message should display
 - [ ] Backend should log new endpoint call
 

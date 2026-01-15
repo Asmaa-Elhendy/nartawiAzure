@@ -123,7 +123,7 @@ ordersController = OrdersController(dio: Dio());
 // assigned_orders_screen.dart:329-338
 final allOrders = [
   ClientOrder(id: 0, issueTime: DateTime.now(), statusName: 'Pending', isPaid: true, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
-  ClientOrder(id: 1, issueTime: DateTime.now(), statusName: 'On The Way', isPaid: true, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
+  ClientOrder(id: 1, issueTime: DateTime.now(), statusName: 'In Progress', isPaid: true, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
   ClientOrder(id: 3, issueTime: DateTime.now(), statusName: 'Delivered', isPaid: true, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
   ClientOrder(id: 4, issueTime: DateTime.now(), statusName: 'Pending', isPaid: false, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
   ClientOrder(id: 5, issueTime: DateTime.now(), statusName: 'Canceled', isPaid: false, subTotal: 55, total: 60, deliveryCost: 5, deliveryAddress: 'Zone abc, Street 20, Building 21'),
@@ -137,7 +137,7 @@ final allOrders = [
 static const List<String> _tabs = [
   'All',
   'Pending',
-  'On The Way',
+  'In Progress',
   'Delivered',
   'Canceled',
   'Disputed',
@@ -152,8 +152,8 @@ List<ClientOrder> _filterOrdersByTab(List<ClientOrder> allOrders, int tabIndex) 
   return allOrders.where((order) {
     final status = (order.statusName ?? '').toLowerCase();
 
-    if (tabName == 'on the way') {
-      return status.contains('on the way') || status.contains('ontheway') ||
+    if (tabName == 'In Progress') {
+      return status.contains('In Progress') || status.contains('ontheway') ||
              status.contains('out for delivery_man') || status.contains('on_way') ||
              status.contains('shipping');
     }
@@ -209,7 +209,7 @@ int? _getStatusIdForTab(int tabIndex) {
   switch (tabIndex) {
     case 0: return null;  // All
     case 1: return 1;     // Pending
-    case 2: return 3;     // On The Way
+    case 2: return 3;     // In Progress
     case 3: return 4;     // Delivered
     case 4: return 5;     // Canceled
     case 5: return null;  // Disputed (filter by dispute != null)
@@ -239,7 +239,7 @@ final allOrders = ordersController.orders;  // ✅ Real data
 - `6.2.Order Details delivered.png`
 - `6.3.Order Details canceled.png`
 - `6.4.Order Details disputed.png`
-- `6.5.Order Details on the way.png`
+- `6.5.Order Details In Progress.png`
 
 **Implementation Files:**
 - Reuses `lib/features/orders/presentation/pages/order_details.dart`
@@ -287,7 +287,7 @@ Navigator.push(
 **Status:** ❌ **MISSING**
 
 **Expected Feature:**
-- Button to mark order as "Started" or "On The Way"
+- Button to mark order as "Started" or "In Progress"
 - Notification to customer when driver starts
 - Status update in backend
 
@@ -1089,7 +1089,7 @@ static const List<String> _tabsDelivery = [
 
 **Problem:**
 - No button to start delivery
-- No status transition from "Pending" to "On The Way"
+- No status transition from "Pending" to "In Progress"
 - Customers don't know when driver departed
 
 **Fix:**

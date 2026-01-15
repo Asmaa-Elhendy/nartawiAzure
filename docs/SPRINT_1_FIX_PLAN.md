@@ -551,7 +551,7 @@ if (response.statusCode == 200 || response.statusCode == 204) {
   
   // Success - update UI
   setState(() {
-    widget.orderStatus = 'On The Way';  // Frontend display name
+    widget.orderStatus = 'In Progress';  // Frontend display name
   });
 
   ScaffoldMessenger.of(context).showSnackBar(
@@ -569,7 +569,7 @@ if (response.statusCode == 200 || response.statusCode == 204) {
 
 ### **Testing Checklist**
 - [ ] "Start Delivery" button calls new endpoint
-- [ ] Order status updates to "On The Way"
+- [ ] Order status updates to "In Progress"
 - [ ] Success message displays
 - [ ] Backend logs show new endpoint called
 - [ ] Database shows status = 3 (In Progress)

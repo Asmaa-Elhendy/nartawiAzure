@@ -466,7 +466,7 @@ flutter run
 #### **Test 4: Delivery POD Submission (Happy Path)**
 1. Login as delivery person
 2. Navigate to assigned order
-3. Tap "Start Delivery" to change status to "On The Way"
+3. Tap "Start Delivery" to change status to "In Progress"
 4. Navigate to delivery confirmation screen
 5. Ensure you're within 100m of delivery address
 6. Tap "Mark As Delivered"

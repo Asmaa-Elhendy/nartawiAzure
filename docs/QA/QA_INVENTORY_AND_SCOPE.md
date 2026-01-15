@@ -375,7 +375,7 @@
 7. `6.2.Order Details delivered.png` - Delivered order (driver)
 8. `6.3.Order Details canceled.png` - Cancelled order (driver)
 9. `6.4.Order Details disputed.png` - Disputed order (driver)
-10. `6.5.Order Details on the way.png` - In-transit order (driver)
+10. `6.5.Order Details In Progress.png` - In-transit order (driver)
 11. `7.confirmation.png` - Delivery confirmation variant 1
 12. `8.confirmation.png` - Delivery confirmation variant 2
 13. `9.confirmation.png` - Delivery confirmation variant 3
@@ -395,7 +395,7 @@
 | DEL-003 | Driver OTP Verification | Verify driver account | 3.Verification.png | ✅ To Verify |
 | DEL-004 | View Assigned Orders | See orders to deliver | 5.orders.png | ✅ To Verify |
 | DEL-005 | Order Details (All Statuses) | View order details by status | 6.1-6.5.png | ✅ To Verify |
-| DEL-006 | Start Delivery | Change status to "On The Way" | 6.1.png | ✅ To Verify |
+| DEL-006 | Start Delivery | Change status to "In Progress" | 6.1.png | ✅ To Verify |
 | DEL-007 | Navigate to Customer | Open maps for navigation | N/A | ✅ To Verify |
 | DEL-008 | Submit POD | Capture delivery photo with GPS | 10-11.delivery confirmation.png | ✅ Implemented (M1.0.5) |
 | DEL-009 | Delivery Confirmation | Confirm successful delivery | 7-9.confirmation.png | ✅ To Verify |

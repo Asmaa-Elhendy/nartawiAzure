@@ -180,7 +180,7 @@ Column(
     // Delivery-only section
     if (widget.fromDeliveryMan) ...[
       CustomerCardInformation(...),
-      if (widget.orderStatus == 'Pending' || widget.orderStatus == 'On The Way')
+      if (widget.orderStatus == 'Pending' || widget.orderStatus == 'In Progress')
         CustomGradientButton('Start Delivery', ...),
     ],
   ],

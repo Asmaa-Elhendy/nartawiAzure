@@ -128,7 +128,7 @@ This release addresses **6 critical P0 issues** identified in the comprehensive 
 - **Backend Compatibility:** Requires BE v1.0.21+
 - **User Experience (Driver):**
   - Click "Start Delivery" on confirmed order
-  - Order status changes to "On The Way"
+  - Order status changes to "In Progress"
   - Seamless integration with new delivery module
 
 ---

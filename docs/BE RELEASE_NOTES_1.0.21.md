@@ -24,7 +24,7 @@ This release completes the **Delivery Module** by implementing two critical deli
 2. Driver clicks "Start Delivery" button in mobile app
 3. Order status updates to **In Progress** (Status ID = 3)
 4. Customer receives real-time notification
-5. Frontend displays status as "On The Way" to customer
+5. Frontend displays status as "In Progress" to customer
 6. Creates audit trail in `ORDER_EVENT_LOG`
 
 **Benefits:**
@@ -141,16 +141,16 @@ Authorization: Bearer {delivery_person_token}
    ↓ [Vendor confirms]
 2. Confirmed (2)
    ↓ [Driver starts delivery] ← NEW!
-3. In Progress (3)  [FE displays as "On The Way"]
+3. In Progress (3)  [FE displays as "In Progress"]
    ↓ [Driver submits PoD] ← FIXED!
 4. Delivered (4)
 ```
 
 **Note for Frontend Team:**
 - Database stores Status 3 as "In Progress" 
-- Mobile/Web apps should display as "On The Way" to customers
+- Mobile/Web apps should display as "In Progress" to customers
 - Translation mapping:
-  - `EN_NAME = "In Progress"` → Display: "On The Way"
+  - `EN_NAME = "In Progress"` → Display: "In Progress"
   - `AR_NAME = "قيد التنفيذ"` → Display: "في الطريق"
 
 ---
@@ -200,7 +200,7 @@ Authorization: Bearer {delivery_person_token}
 - [ ] Cannot start delivery on already Delivered order (returns 400)
 - [ ] Status updates to In Progress (3)
 - [ ] Event log created with correct ACTION_ID (3)
-- [ ] Frontend displays "On The Way" status
+- [ ] Frontend displays "In Progress" status
 - [ ] Customer receives push notification (if implemented)
 
 ### PoD Submission:
@@ -265,7 +265,7 @@ curl -X POST https://api.nartawi.com/api/v1/delivery/pod \
 
 3. **Status Display Mapping:**
    - When `statusId = 3` and `statusName = "In Progress"`
-   - Display to customer as: **"On The Way"** / **"في الطريق"**
+   - Display to customer as: **"In Progress"** / **"في الطريق"**
 
 ---
 
@@ -310,7 +310,7 @@ curl -X POST https://api.nartawi.com/api/v1/delivery/pod \
 - ✅ Professional delivery documentation
 
 ### For Customers:
-- ✅ Real-time delivery status ("On The Way")
+- ✅ Real-time delivery status ("In Progress")
 - ✅ Transparent delivery process
 - ✅ Photographic proof of delivery for disputes
 
