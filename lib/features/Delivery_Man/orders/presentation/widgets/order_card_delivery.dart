@@ -154,7 +154,7 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
             //   ),
             // ),
              SizedBox(height: screenHeight*.01,),
-            BuildOrderButtonsDelivery(context,screenWidth, screenHeight, 'On The Way',paymentStatus,order)
+            BuildOrderButtonsDelivery(context,screenWidth, screenHeight, orderStatus,paymentStatus,order)
           ],
         ),
       ),
