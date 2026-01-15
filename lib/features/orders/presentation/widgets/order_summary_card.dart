@@ -29,13 +29,22 @@ Widget OrderSummaryCard(
       int quantity = 1;
 
       if (item is Map<String, dynamic>) {
-        name = (item['name'] ??
-            item['enName'] ??
-            item['arName'] ??
-            'Unknown Product')
-            .toString();
-        price = (item['price'] as num?)?.toDouble() ?? 0.0;
-        quantity = (item['quantity'] as num?)?.toInt() ?? 1;
+        // Check for the new format first (from delivery man)
+        if (item.containsKey('productName')) {
+          name = item['productName']?.toString() ?? 'Unknown Product';
+          price = (item['price'] as num?)?.toDouble() ?? 0.0;
+          quantity = (item['quantity'] as num?)?.toInt() ?? 1;
+        } 
+        // Handle the old format
+        else {
+          name = (item['name'] ??
+                  item['enName'] ??
+                  item['arName'] ??
+                  'Unknown Product')
+              .toString();
+          price = (item['price'] as num?)?.toDouble() ?? 0.0;
+          quantity = (item['quantity'] as num?)?.toInt() ?? 1;
+        }
       } else {
         name = item.toString();
         price = 0.0;
@@ -126,56 +135,113 @@ Widget OrderSummaryCard(
   // UI
   // ===============================
   return Container(
+    width: screenWidth,
     padding: EdgeInsets.symmetric(
+      horizontal: screenWidth * .04,
       vertical: screenHeight * .02,
-      horizontal: screenWidth * .03,
     ),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16),
       color: AppColors.whiteColor,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.shadowColor,
+          offset: const Offset(0, 2),
+          blurRadius: 8,
+          spreadRadius: 0,
+        ),
+      ],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Text(
-            'Order Summary',
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: screenWidth * .04,
-              color: AppColors.primary,
-            ),
+        Text(
+          'Order Summary',
+          style: AppTextStyles.textSummaryStyle.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
+        
+        // Display items list
+        if (groupedItems.isNotEmpty) ...[
 
-        SizedBox(height: screenHeight * .02),
+          const SizedBox(height: 8),
+          ...groupedItems.map((item) {
+            final price = (item['price'] as num).toDouble();
+            final quantity = item['quantity'] as int;
+            final subtotal = price * quantity;
+            
+            return Container(
+              margin: EdgeInsets.only(bottom: screenHeight * .01),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item['name'],
+                              style: AppTextStyles.textSummaryStyle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),SizedBox(height: screenHeight*.01,),
 
-        // ===============================
-        // Items List
-        // ===============================
-        if (!fromDeliveryMan) ...[
-          if (groupedItems.isNotEmpty) ...[
-            ...groupedItems.map((item) {
-              return buildItemRow(
-                item['name'],
-                (item['price'] as num).toDouble(),
-                item['quantity'],
-              );
-            }).toList(),
-            Divider(color: AppColors.backgrounHome),
-          ] else
-            Center(
+                      Text(
+                              'Item Description',
+                              style: TextStyle(
+                                color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '$quantity * QAR ${price.toStringAsFixed(2)}',
+                            style: AppTextStyles.textSummaryStyle,
+                          ),SizedBox(height: screenHeight*.01,),
+                          Text(
+                            'Subtotal: ${subtotal.toStringAsFixed(2)}',
+                            style: AppTextStyles.textSummaryStyle,
+                          ),
+
+
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: screenHeight*.01,),
+                  Divider(
+                    //height: 12,
+                    thickness: 1,
+                    color: AppColors.backgrounHome,
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ] else ...[
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
                 'No items found',
                 style: TextStyle(
-                  color:
-                  AppColors.greyDarktextIntExtFieldAndIconsHome,
+                  color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                   fontSize: 12,
                 ),
               ),
             ),
+          ),
         ],
-
         SizedBox(height: screenHeight * .02),
 
         // ===============================
