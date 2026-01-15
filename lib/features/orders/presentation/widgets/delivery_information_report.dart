@@ -4,6 +4,28 @@ import 'package:newwwwwwww/core/theme/text_styles.dart';
 import '../../../../core/theme/colors.dart';
 import '../../domain/models/order_model.dart';
 
+String formatDeliveryAddress(dynamic addr) {
+  if (addr == null) return 'No address provided';
+  if (addr is String) return addr;
+  if (addr is Map<String, dynamic>) {
+    final area = addr['areaName'] ?? '';
+    final street = addr['address'] ?? addr['streetNum'] ?? '';
+    final building = addr['building'] ?? addr['buildingNum'] ?? '';
+    final apartment = addr['apartment'] ?? addr['doorNumber'] ?? '';
+    final floor = addr['floor'] ?? addr['floorNum'] ?? '';
+    
+    List<String> parts = [];
+    if (area.isNotEmpty) parts.add(area);
+    if (street.isNotEmpty) parts.add(street);
+    if (building.isNotEmpty) parts.add('Building $building');
+    if (floor.isNotEmpty) parts.add('Floor $floor');
+    if (apartment.isNotEmpty) parts.add('Flat $apartment');
+    
+    return parts.isEmpty ? 'No address details' : parts.join(', ');
+  }
+  return addr.toString();
+}
+
 Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
   return Container(
     margin: EdgeInsets.symmetric(
@@ -49,7 +71,7 @@ Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder cli
               children: [
                 Text('Delivery Address', style: AppTextStyles.textSummaryStyle),
                 Text(
-                clientOrder.deliveryAddress??'',//  'Zone abc, Street 20, Building 21, Flat 22',
+                  formatDeliveryAddress(clientOrder.deliveryAddress),
                   style: TextStyle(
                     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                     fontWeight: FontWeight.w500,

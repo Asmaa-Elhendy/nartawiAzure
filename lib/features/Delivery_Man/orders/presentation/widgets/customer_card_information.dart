@@ -5,6 +5,28 @@ import '../../../../../core/theme/colors.dart';
 import '../../../../orders/domain/models/order_model.dart';
 import '../../../../orders/presentation/widgets/order_image_network_widget.dart';
 
+String _formatDeliveryAddress(dynamic addr) {
+  if (addr == null) return 'No address provided';
+  if (addr is String) return addr;
+  if (addr is Map<String, dynamic>) {
+    final area = addr['areaName'] ?? '';
+    final street = addr['address'] ?? addr['streetNum'] ?? '';
+    final building = addr['building'] ?? addr['buildingNum'] ?? '';
+    final apartment = addr['apartment'] ?? addr['doorNumber'] ?? '';
+    final floor = addr['floor'] ?? addr['floorNum'] ?? '';
+    
+    List<String> parts = [];
+    if (area.isNotEmpty) parts.add(area);
+    if (street.isNotEmpty) parts.add(street);
+    if (building.isNotEmpty) parts.add('Building $building');
+    if (floor.isNotEmpty) parts.add('Floor $floor');
+    if (apartment.isNotEmpty) parts.add('Flat $apartment');
+    
+    return parts.isEmpty ? 'No address details' : parts.join(', ');
+  }
+  return addr.toString();
+}
+
 Widget CustomerCardInformation(
   double screenWidth,
   double screenHeight,
@@ -66,7 +88,7 @@ Widget CustomerCardInformation(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    'Company 1',
+                    clientOrder.customerName ?? 'Unknown Customer',
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: screenWidth * .037,
@@ -112,7 +134,7 @@ Widget CustomerCardInformation(
               // height: screenHeight*.1,
             ),
             Text(
-              'Zone abc, Street 20, Building 21, Flat 22',
+              _formatDeliveryAddress(clientOrder.deliveryAddress),
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: screenWidth * .034,

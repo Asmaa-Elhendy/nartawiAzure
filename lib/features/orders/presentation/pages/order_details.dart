@@ -119,6 +119,26 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     }
   }
 
+  int _getSupplierId(ClientOrder order) {
+    if (order.vendors is List && (order.vendors as List).isNotEmpty) {
+      final vendor = (order.vendors as List).first;
+      if (vendor is Map<String, dynamic>) {
+        return vendor['supplierId'] ?? vendor['id'] ?? 0;
+      }
+    }
+    return 0;
+  }
+
+  String _getSupplierName(ClientOrder order) {
+    if (order.vendors is List && (order.vendors as List).isNotEmpty) {
+      final vendor = (order.vendors as List).first;
+      if (vendor is Map<String, dynamic>) {
+        return vendor['supplierName'] ?? vendor['name'] ?? 'Unknown Supplier';
+      }
+    }
+    return 'Unknown Supplier';
+  }
+
   void _showCancelConfirmation() {
     showDialog(
       context: context,
@@ -469,8 +489,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                                       context: context,
                                                       builder: (ctx) => ReviewAlertDialog(
                                                         orderId: widget.clientOrder.id ?? 0,
-                                                        supplierId: widget.clientOrder.supplierId ?? 0,
-                                                        supplierName: widget.clientOrder.supplierName ?? 'Unknown',
+                                                        supplierId: _getSupplierId(widget.clientOrder),
+                                                        supplierName: _getSupplierName(widget.clientOrder),
                                                       ),
                                                     );
                                                   },

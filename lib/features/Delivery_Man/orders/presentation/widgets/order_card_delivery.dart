@@ -89,7 +89,7 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
+                      Text(order?.customerName ?? 'Unknown Customer',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
 
                           Padding(
                             padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),

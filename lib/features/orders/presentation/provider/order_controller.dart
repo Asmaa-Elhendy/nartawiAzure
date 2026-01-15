@@ -102,18 +102,109 @@ class OrdersController extends ChangeNotifier {
       normalized['items'] = (data['items'] as List).map((item) {
         if (item is Map<String, dynamic>) {
           final orderMap = Map<String, dynamic>.from(item);
+          
           // Map: orderId → id
           if (item.containsKey('orderId') && !item.containsKey('id')) {
             orderMap['id'] = item['orderId'];
           }
+          
           // Map: totalAmount → total
           if (item.containsKey('totalAmount') && !item.containsKey('total')) {
             orderMap['total'] = item['totalAmount'];
           }
-          // Map: issueTime (rename if delivery uses different key)
+          
+          // Map: issueTime
           if (item.containsKey('issueTime')) {
             orderMap['issueTime'] = item['issueTime'];
           }
+          
+          // Normalize nested items array (order items/products)
+          if (item['items'] is List) {
+            orderMap['items'] = (item['items'] as List).map((orderItem) {
+              if (orderItem is Map<String, dynamic>) {
+                final normalizedItem = Map<String, dynamic>.from(orderItem);
+                
+                // Delivery API: price → Client API: unitPrice
+                if (orderItem.containsKey('price') && !orderItem.containsKey('unitPrice')) {
+                  normalizedItem['unitPrice'] = orderItem['price'];
+                }
+                
+                // Calculate totalPrice if not present
+                if (!orderItem.containsKey('totalPrice')) {
+                  final qty = orderItem['quantity'] ?? 0;
+                  final price = orderItem['price'] ?? 0;
+                  normalizedItem['totalPrice'] = qty * price;
+                }
+                
+                // Add name alias for productName (order_summary_card compatibility)
+                if (orderItem.containsKey('productName') && !orderItem.containsKey('name')) {
+                  normalizedItem['name'] = orderItem['productName'];
+                }
+                
+                // Add missing fields with defaults
+                normalizedItem['productId'] ??= 0;
+                normalizedItem['notes'] ??= '';
+                normalizedItem['categoryName'] ??= '';
+                normalizedItem['imageUrl'] ??= '';
+                
+                return normalizedItem;
+              }
+              return orderItem;
+            }).toList();
+          }
+          
+          // Normalize nested deliveryAddress fields
+          if (item['deliveryAddress'] is Map<String, dynamic>) {
+            final deliveryAddr = item['deliveryAddress'] as Map<String, dynamic>;
+            final normalizedAddr = Map<String, dynamic>.from(deliveryAddr);
+            
+            // buildingNum → building
+            if (deliveryAddr.containsKey('buildingNum')) {
+              normalizedAddr['building'] = deliveryAddr['buildingNum'];
+            }
+            
+            // streetNum → address
+            if (deliveryAddr.containsKey('streetNum')) {
+              normalizedAddr['address'] = deliveryAddr['streetNum'];
+            }
+            
+            // floorNum → floor
+            if (deliveryAddr.containsKey('floorNum')) {
+              normalizedAddr['floor'] = deliveryAddr['floorNum'];
+            }
+            
+            // doorNumber → apartment
+            if (deliveryAddr.containsKey('doorNumber')) {
+              normalizedAddr['apartment'] = deliveryAddr['doorNumber'];
+            }
+            
+            // geoLocation → latitude & longitude
+            if (deliveryAddr.containsKey('geoLocation')) {
+              final geoStr = deliveryAddr['geoLocation'].toString();
+              final parts = geoStr.split(',');
+              if (parts.length == 2) {
+                normalizedAddr['latitude'] = double.tryParse(parts[0].trim()) ?? 0;
+                normalizedAddr['longitude'] = double.tryParse(parts[1].trim()) ?? 0;
+              }
+            }
+            
+            // Add missing client-only fields with defaults
+            normalizedAddr['id'] ??= 0;
+            normalizedAddr['title'] ??= '';
+            normalizedAddr['areaId'] ??= 0;
+            normalizedAddr['isDefault'] ??= false;
+            normalizedAddr['isActive'] ??= true;
+            
+            orderMap['deliveryAddress'] = normalizedAddr;
+          }
+          
+          // Add missing arrays with empty defaults
+          orderMap['vendors'] ??= [];
+          orderMap['eventLogs'] ??= [];
+          
+          // Add missing client-only fields
+          orderMap['confirmation'] ??= null;
+          
           return orderMap;
         }
         return item;
