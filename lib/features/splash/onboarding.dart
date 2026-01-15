@@ -97,7 +97,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: _goToNextPage,
+                          onPressed: () {
+                            Navigator.of(context).pushReplacementNamed('/login');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             padding: EdgeInsets.symmetric(vertical: height * 0.02),
