@@ -3,38 +3,47 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../../../core/theme/colors.dart';
 
-Widget CustomGradientButton(String icon ,double paddingHorizontal,String title,double screenWidth,double screenHeight,
-    {bool ChangedColor=true}){
+Widget CustomGradientButton(
+    String icon,
+    double paddingHorizontal,
+    String title,
+    double screenWidth,
+    double screenHeight, {
+      bool ChangedColor = true,
+    }) {
   return Container(
-    padding: EdgeInsetsGeometry.symmetric(
+    padding: EdgeInsets.symmetric(
       vertical: screenHeight * .01,
-      horizontal:paddingHorizontal,
+      horizontal: paddingHorizontal,
     ),
     height: screenHeight * .055,
-    decoration:ChangedColor? BoxDecoration(
+    decoration: ChangedColor
+        ? BoxDecoration(
       gradient: AppColors.primaryGradient,
-
       borderRadius: BorderRadius.circular(8),
-    ):BoxDecoration(
-     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-
+    )
+        : BoxDecoration(
+      color: AppColors.greyDarktextIntExtFieldAndIconsHome,
       borderRadius: BorderRadius.circular(8),
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset(
-icon,          color: AppColors.whiteColor,
-          width: screenWidth * .042,
-          // height: screenHeight*.1,
+          icon,
+          color: AppColors.whiteColor,
+          width: screenWidth * .05,
         ),
-        SizedBox(width: screenWidth * .01),
+        SizedBox(width: screenWidth * .02),
+
+        // ✅ FIX: no overflow outside + no cut letters
         Flexible(
           child: Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis, // ✅
-            softWrap: false,                 // ✅
+            softWrap: false, // ✅
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.whiteColor,
               fontSize: screenWidth * .029,
@@ -42,13 +51,10 @@ icon,          color: AppColors.whiteColor,
             ),
           ),
         ),
-
       ],
     ),
   );
 }
-
-
 
 Widget CustomContainerButton({
   required String icon,
@@ -74,11 +80,10 @@ Widget CustomContainerButton({
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icon
           isRed
               ? Icon(
             Icons.close,
-            size: screenWidth * .04,
+            size: screenWidth * .05,
             color: const Color(0xFFD24A3D),
           )
               : SvgPicture.asset(
@@ -86,16 +91,15 @@ Widget CustomContainerButton({
             color: AppColors.whiteColor,
             width: screenWidth * .05,
           ),
+          SizedBox(width: screenWidth * .02),
 
-          SizedBox(width: screenWidth * .01),
-
-          // Text (take remaining space)
+          // ✅ FIX: no overflow outside + no cut letters
           Flexible(
             child: Text(
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis, // ✅
-              softWrap: false,
+              softWrap: false, // ✅
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: isRed ? const Color(0xFFD24A3D) : AppColors.whiteColor,
@@ -104,8 +108,6 @@ Widget CustomContainerButton({
               ),
             ),
           ),
-
-
         ],
       ),
     ),
