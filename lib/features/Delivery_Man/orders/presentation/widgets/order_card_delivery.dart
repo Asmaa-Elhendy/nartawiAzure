@@ -13,6 +13,7 @@ import '../../../../orders/presentation/widgets/order_image_network_widget.dart'
 import '../../../../orders/presentation/widgets/order_status_widget.dart';
 import '../screens/track_order.dart';
 
+import 'dart:io' show Platform;
 
 String formatOrderDate(DateTime? date) {
   if (date == null) return '';
@@ -101,13 +102,13 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
                       ),
 
                     ],
-                  ),SizedBox(width: screenWidth*.1,),
+                  ),SizedBox(width:Platform.isAndroid ? screenWidth*.09:screenWidth*.06,),
                  Row(children: [
                    SvgPicture.asset(
                      'assets/images/delivery_man/orders/whatsapp.svg',
                      width: screenWidth * .08,
                      // height: screenHeight*.1,
-                   ),SizedBox(width: screenWidth*.05,),
+                   ),SizedBox(width:Platform.isAndroid ? screenWidth*.05:screenWidth*.04,),
                    SvgPicture.asset(
                      'assets/images/delivery_man/orders/maps-global-02.svg',
                      width: screenWidth * .08,
@@ -153,7 +154,7 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
             //   ),
             // ),
              SizedBox(height: screenHeight*.01,),
-            BuildOrderButtonsDelivery(context,screenWidth, screenHeight, orderStatus,paymentStatus,order)
+            BuildOrderButtonsDelivery(context,screenWidth, screenHeight, 'On The Way',paymentStatus,order)
           ],
         ),
       ),

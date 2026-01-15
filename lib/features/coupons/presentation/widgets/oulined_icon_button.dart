@@ -59,7 +59,7 @@ Widget BuildOutlinedIconButton(
               title,
               style: TextStyle(
                 color:fromDelivery?AppColors.secondary:isPhotoButton?AppColors.secondary: AppColors.primary,
-                fontSize: width*.034,
+                fontSize:fromDelivery?  width * .029: width*.034,
                 fontWeight: FontWeight.w500,
               ),
             ),

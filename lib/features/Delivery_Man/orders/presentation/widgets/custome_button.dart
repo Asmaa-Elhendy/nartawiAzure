@@ -25,21 +25,24 @@ Widget CustomGradientButton(String icon ,double paddingHorizontal,String title,d
       children: [
         SvgPicture.asset(
 icon,          color: AppColors.whiteColor,
-          width: screenWidth * .05,
+          width: screenWidth * .042,
           // height: screenHeight*.1,
         ),
         SizedBox(width: screenWidth * .01),
         Flexible(
           child: Text(
             title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis, // ✅
+            softWrap: false,                 // ✅
             style: TextStyle(
               color: AppColors.whiteColor,
               fontSize: screenWidth * .029,
               fontWeight: FontWeight.w600,
-            ),        overflow: TextOverflow.visible, // To avoid overflow text
-            maxLines: 1,
+            ),
           ),
         ),
+
       ],
     ),
   );
@@ -75,7 +78,7 @@ Widget CustomContainerButton({
           isRed
               ? Icon(
             Icons.close,
-            size: screenWidth * .05,
+            size: screenWidth * .04,
             color: const Color(0xFFD24A3D),
           )
               : SvgPicture.asset(
@@ -87,20 +90,22 @@ Widget CustomContainerButton({
           SizedBox(width: screenWidth * .01),
 
           // Text (take remaining space)
-          Expanded(
+          Flexible(
             child: Text(
               title,
               maxLines: 1,
-              overflow: TextOverflow.visible, // زي ما انتي عاملاه
+              overflow: TextOverflow.ellipsis, // ✅
               softWrap: false,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: isRed ? const Color(0xFFD24A3D) : AppColors.whiteColor,
-                fontSize: screenWidth * .029, // نفس ستايلك
+                fontSize: screenWidth * .029,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
+
+
         ],
       ),
     ),

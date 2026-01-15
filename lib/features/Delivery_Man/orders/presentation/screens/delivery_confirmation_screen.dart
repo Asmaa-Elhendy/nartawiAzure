@@ -216,7 +216,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * .05,
+                          horizontal: screenWidth * .04,
                           vertical: screenHeight * .02,
                         ),
                         decoration: BoxDecoration(
@@ -384,7 +384,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     onTap: _isSubmitting ? (){} : _capturePhotoAndSubmit,
                                   ),
                                 ),
-                                SizedBox(width: screenWidth * .03),
+                                SizedBox(width: screenWidth * .02),
                                 Expanded(
                                   child: CustomContainerButton(
                                     icon: "",
