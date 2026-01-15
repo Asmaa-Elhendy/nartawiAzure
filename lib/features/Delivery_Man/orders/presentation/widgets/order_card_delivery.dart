@@ -11,6 +11,7 @@ import '../../../../orders/presentation/pages/order_details.dart';
 import '../../../../orders/presentation/widgets/cancel_alert_dialog.dart';
 import '../../../../orders/presentation/widgets/order_image_network_widget.dart';
 import '../../../../orders/presentation/widgets/order_status_widget.dart';
+import '../screens/track_order.dart';
 
 
 String formatOrderDate(DateTime? date) {
@@ -201,7 +202,14 @@ Widget BuildOrderButtonsDelivery(
             );
 
           },
-          child: BuildOutlinedIconButton(screenWidth, screenHeight, 'Mark As Delivered', (){},fromDelivery: true),
+          child: BuildOutlinedIconButton(screenWidth, screenHeight, 'Mark As Delivered', (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TrackOrderScreen(),
+              ),
+            );
+          },fromDelivery: true),
         ),
       )
           : SizedBox(),
