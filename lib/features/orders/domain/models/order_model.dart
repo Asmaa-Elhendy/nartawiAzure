@@ -18,7 +18,7 @@ class ClientOrder {
   final String? transactionReference;
 
   // nullable fields from API (keep as dynamic or specific models later)
-  final dynamic items;
+final List<dynamic>? items;
   final dynamic eventLogs;
   final dynamic deliveryAddress;
   final String? customerName;

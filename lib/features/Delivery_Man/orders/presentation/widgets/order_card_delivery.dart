@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/oulined_icon_button.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
+import 'package:newwwwwwww/features/orders/presentation/widgets/delivery_information_report.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/orders_buttons.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
 import '../../../../../core/theme/colors.dart';
@@ -124,7 +125,7 @@ Widget BuildOrderDeliveryCard(BuildContext context,double screenHeight,double sc
                 ,color: Colors.black,
                 // height: screenHeight*.1,
               ),
-        Text('Zone abc, Street 20, Building 21, Flat 22',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.034,
+        Text(formatDeliveryAddress(order?.deliveryAddress),style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.034,
 
         )),
           ],),SizedBox(height: screenHeight*.01,),

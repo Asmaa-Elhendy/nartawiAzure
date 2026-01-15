@@ -13,12 +13,14 @@ Widget OrderSummaryCard(
   // ===============================
   // Extract items
   // ===============================
-  final List<Object> items = clientOrder.items ?? [];
+ final List<dynamic> items = clientOrder.items != null 
+    ? (clientOrder.items is List ? List.from(clientOrder.items!) : [clientOrder.items])
+    : [];
 
   // ===============================
   // Normalize & group items
   // ===============================
-  List<Map<String, dynamic>> normalizeAndGroupItems(List<Object> rawItems) {
+  List<Map<String, dynamic>> normalizeAndGroupItems(List<dynamic> rawItems) {
     final Map<String, Map<String, dynamic>> grouped = {};
 
     for (final item in rawItems) {
@@ -72,8 +74,7 @@ Widget OrderSummaryCard(
 
   final num? deliveryFee = clientOrder.deliveryCost;
   final double tax = 0.0; // 👈 عدليها بعدين لو VAT
-  final double total = itemsSubtotal + deliveryFee! + tax;
-
+  final double total = itemsSubtotal + (deliveryFee ?? 0.0) + tax;
   // ===============================
   // UI Helpers
   // ===============================
@@ -210,10 +211,10 @@ Widget OrderSummaryCard(
                   Text('Delivery Fee',
                       style: AppTextStyles.textSummaryStyle),
                   SizedBox(height: 4),
-                  Text(
-                    'QAR ${deliveryFee.toStringAsFixed(2)}',
-                    style: AppTextStyles.textSummaryStyle,
-                  ),
+                 Text(
+  'QAR ${(clientOrder.deliveryCost ?? 0).toStringAsFixed(2)}',
+  style: AppTextStyles.textSummaryStyle,
+),
                 ],
               ),
             ),
