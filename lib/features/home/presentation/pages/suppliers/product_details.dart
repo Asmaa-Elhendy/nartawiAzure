@@ -166,7 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     CrossAxisAlignment.start,
                                     children: [
                                       ProductTitle(
-                                          screenHeight, screenWidth),
+                                          screenHeight, screenWidth,widget.fromFavorite?widget.favoriteProduct?.product?.supplierName??'':widget.clientProduct?.supplierName??''),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                           vertical: screenHeight * .01,

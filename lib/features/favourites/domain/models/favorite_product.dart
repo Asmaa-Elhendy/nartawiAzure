@@ -37,14 +37,24 @@ class FavoriteProductItem extends Equatable {
   final String arName;
   final bool isActive;
   final bool isCurrent;
-  final num price;
+  final double price;
   final int categoryId;
   final String categoryName;
-  final List<dynamic> images;
-  final num totalAvailableQuantity;
+  final List<String> images;
+  final int? supplierId;
+  final String? supplierName;
+  final String? supplierLogo;
+  final double? supplierRating;
+  final bool? supplierIsVerified;
+  final String? description;
+  final String? brand;
+  final bool? isPinned;
+  final String? productType;
+  final List<dynamic>? specifications;
+  final int totalAvailableQuantity;
   final List<dynamic> inventory;
 
-  const FavoriteProductItem({
+  FavoriteProductItem({
     required this.id,
     required this.vsId,
     required this.enName,
@@ -55,6 +65,16 @@ class FavoriteProductItem extends Equatable {
     required this.categoryId,
     required this.categoryName,
     required this.images,
+    this.supplierId,
+    this.supplierName,
+    this.supplierLogo,
+    this.supplierRating,
+    this.supplierIsVerified,
+    this.description,
+    this.brand,
+    this.isPinned,
+    this.productType,
+    this.specifications,
     required this.totalAvailableQuantity,
     required this.inventory,
   });
@@ -67,12 +87,22 @@ class FavoriteProductItem extends Equatable {
       arName: (json['arName'] as String?) ?? '',
       isActive: (json['isActive'] as bool?) ?? false,
       isCurrent: (json['isCurrent'] as bool?) ?? false,
-      price: (json['price'] ?? 0) as num,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
       categoryId: (json['categoryId'] ?? 0) as int,
       categoryName: (json['categoryName'] as String?) ?? '',
-      images: (json['images'] as List?) ?? const [],
-      totalAvailableQuantity: (json['totalAvailableQuantity'] ?? 0) as num,
-      inventory: (json['inventory'] as List?) ?? const [],
+      images: (json['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      supplierId: json['supplierId'] as int?,
+      supplierName: json['supplierName'] as String?,
+      supplierLogo: json['supplierLogo'] as String?,
+      supplierRating: (json['supplierRating'] as num?)?.toDouble(),
+      supplierIsVerified: json['supplierIsVerified'] as bool?,
+      description: json['description'] as String?,
+      brand: json['brand'] as String?,
+      isPinned: (json['isPinned'] as bool?) ?? false,
+      productType: json['productType'] as String?,
+      specifications: (json['specifications'] as List<dynamic>?)?.cast<dynamic>() ?? [],
+      totalAvailableQuantity: (json['totalAvailableQuantity'] ?? 0) as int,
+      inventory: (json['inventory'] as List<dynamic>?) ?? const [],
     );
   }
 
@@ -88,7 +118,25 @@ class FavoriteProductItem extends Equatable {
     categoryId,
     categoryName,
     images,
+    supplierId,
+    supplierName,
+    supplierLogo,
+    supplierRating,
+    supplierIsVerified,
+    description,
+    brand,
+    isPinned,
+    productType,
+    specifications,
     totalAvailableQuantity,
     inventory,
   ];
+  
+  // Helper method to get display name based on locale
+  String getDisplayName(String locale) {
+    return locale == 'ar' ? arName : enName;
+  }
+  
+  // Helper method to check if product is a bundle
+  bool get isBundle => productType == 'bundle';
 }

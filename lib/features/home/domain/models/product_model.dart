@@ -34,6 +34,16 @@ class ClientProduct extends Equatable {
   final int categoryId;
   final String categoryName;
   final List<String> images;
+  final int supplierId;
+  final String supplierName;
+  final String? supplierLogo;
+  final double? supplierRating;
+  final bool supplierIsVerified;
+  final String? description;
+  final String? brand;
+  final bool isPinned;
+  final String productType;
+  final List<dynamic> specifications;
   final int totalAvailableQuantity;
   final List<ProductInventory> inventory;
 
@@ -48,6 +58,16 @@ class ClientProduct extends Equatable {
     required this.categoryId,
     required this.categoryName,
     required this.images,
+    required this.supplierId,
+    required this.supplierName,
+    this.supplierLogo,
+    this.supplierRating,
+    required this.supplierIsVerified,
+    this.description,
+    this.brand,
+    required this.isPinned,
+    required this.productType,
+    required this.specifications,
     required this.totalAvailableQuantity,
     required this.inventory,
   });
@@ -64,6 +84,16 @@ class ClientProduct extends Equatable {
       categoryId: json['categoryId'] as int? ?? 0,
       categoryName: json['categoryName'] as String? ?? '',
       images: (json['images'] as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      supplierId: json['supplierId'] as int? ?? 0,
+      supplierName: json['supplierName'] as String? ?? '',
+      supplierLogo: json['supplierLogo'] as String?,
+      supplierRating: (json['supplierRating'] as num?)?.toDouble(),
+      supplierIsVerified: json['supplierIsVerified'] as bool? ?? false,
+      description: json['description'] as String?,
+      brand: json['brand'] as String?,
+      isPinned: json['isPinned'] as bool? ?? false,
+      productType: json['productType'] as String? ?? 'one-time',
+      specifications: (json['specifications'] as List<dynamic>?)?.cast<dynamic>() ?? [],
       totalAvailableQuantity: json['totalAvailableQuantity'] as int? ?? 0,
       inventory: (json['inventory'] as List<dynamic>?)
               ?.map((e) => ProductInventory.fromJson(e as Map<String, dynamic>))
@@ -83,9 +113,27 @@ class ClientProduct extends Equatable {
         categoryId,
         categoryName,
         images,
+        supplierId,
+        supplierName,
+        supplierLogo,
+        supplierRating,
+        supplierIsVerified,
+        description,
+        brand,
+        isPinned,
+        productType,
+        specifications,
         totalAvailableQuantity,
         inventory,
       ];
+      
+  // Helper method to check if product is a bundle
+  bool get isBundle => productType == 'bundle';
+  
+  // Helper method to get display name based on locale
+  String getDisplayName(String locale) {
+    return locale == 'ar' ? arName : enName;
+  }
 }
 
 class ProductsResponse extends Equatable {

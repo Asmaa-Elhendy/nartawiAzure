@@ -282,7 +282,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     ? SizedBox()
                                     : ProductTitle(
                                         widget.screenHeight,
-                                        widget.screenWidth,
+                                        widget.screenWidth,widget.favouriteProduct.product?.supplierName??''
                                       ),
                                 Padding(
                                   padding: EdgeInsets.only(

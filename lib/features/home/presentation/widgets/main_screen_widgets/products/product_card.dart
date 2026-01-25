@@ -114,7 +114,7 @@ class _ProductCardState extends State<ProductCard> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ProductTitle(widget.screenHeight, widget.screenWidth),
+                              ProductTitle(widget.screenHeight, widget.screenWidth,widget.product?.supplierName??""),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.01),
                                 child: Text(
@@ -245,47 +245,70 @@ class _ProductCardState extends State<ProductCard> {
   }
 }
 
-Widget ProductTitle(double screenHeight,double screenWidth){ // need handle from api supplier name,rate ,product image
-  return  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Row(
-        children: [
-          Container(
-            //   width: widget.screenWidth * .04,
-            // الحجم العرض
-            height: screenHeight * .03,
-            // الحجم الارتفاع
-            decoration: BoxDecoration(
-              color: AppColors.backgrounHome, // لون الخلفية
-              shape: BoxShape.circle, // يجعله دائري
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
+Widget ProductTitle(double screenHeight, double screenWidth, String title) {
+  return SizedBox(
+    width: double.infinity,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                height: screenHeight * .03,
+                decoration: BoxDecoration(
+                  color: AppColors.backgrounHome,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Image.asset(
-              "assets/images/home/main_page/company.png",
-              height: screenHeight * .03,//
-              fit: BoxFit.cover,
-            ),
-          ),SizedBox(width: screenWidth*.02,),
-          Text('Company',style: TextStyle(fontSize: screenWidth*.032,fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,)
-        ],
-      ),
-      Row(mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Iconify(
-            MaterialSymbols.star,  // This uses the Material Symbols "star" icon
-            size: screenHeight*.025,
-            color: Colors.amber,
+                child: Image.asset(
+                  "assets/images/home/main_page/company.png",
+                  height: screenHeight * .03,
+                  width: screenHeight * .03,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(width: screenWidth * .02),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: screenWidth * .032,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          SizedBox(width: screenWidth*.01,),
-          Text('5.0',style: TextStyle(fontSize: screenWidth*.03,fontWeight: FontWeight.w500))
-        ],
-      ),
-    ],
+        ),
+        SizedBox(width: screenWidth * .02),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Iconify(
+              MaterialSymbols.star,
+              size: screenHeight * .025,
+              color: Colors.amber,
+            ),
+            SizedBox(width: screenWidth * .01),
+            Text(
+              '5.0',
+              style: TextStyle(
+                fontSize: screenWidth * .03,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
   );
 }
