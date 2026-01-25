@@ -65,7 +65,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     _scrollController.addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {//j
+      if (mounted) {//jh
         ordersController.fetchOrders(executeClear: true);
       }
     });
@@ -103,17 +103,16 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
       final status = (order.statusName ?? '').toLowerCase();
 
       // ✅ status matching
-      if (tabName == 'In Progress') {
-        // in case backend returns variations
-        return status.contains('In Progress') ||
-            status.contains('ontheway') ||
-            status.contains('out for delivery_man') ||
-            status.contains('on_way') ||
-            status.contains('shipping');
+      if (tabName == 'in progress') {
+        // Check for variations of 'in progress' status
+        return status == 'in progress' || 
+               status.contains('in progress') ||
+               status == 'in_progress' ||
+               status.contains('in_progress');
       }
 
       if (tabName == 'pending') {
-        return status.contains('pending');
+        return status == 'pending' || status.contains('pending');
       }
 
       if (tabName == 'delivered') {
