@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:newwwwwwww/features/auth/presentation/screens/login.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/my_impact.dart';
@@ -259,11 +260,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                 if (confirmed == true) {
                                   await AuthService.deleteToken();
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/login',
-                                    (route) => false,
-                                  );
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginScreen()),
+                                      (context)=>true);
                                 }
                               },
                             ),

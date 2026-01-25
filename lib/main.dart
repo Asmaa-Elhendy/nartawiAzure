@@ -11,6 +11,7 @@ import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppli
 import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_controller.dart';
 import 'core/routing/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/event.dart';
@@ -34,6 +35,9 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>(),
+        ),
         BlocProvider<NotificationBloc>(
           create: (_) => sl<NotificationBloc>()..add(LoadNotifications()),
         ),
