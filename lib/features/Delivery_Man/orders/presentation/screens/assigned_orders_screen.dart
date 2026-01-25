@@ -55,6 +55,32 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   final TextEditingController zoneCtrl = TextEditingController();
   final TextEditingController streetCtrl = TextEditingController();
   final TextEditingController buildingCtrl = TextEditingController();
+  // Get status ID based on tab index
+  int? _getStatusIdForTab(String tabName) {
+    switch (tabName.toLowerCase()) {
+      case 'all': return null;
+      case 'pending': return 1;
+      case 'in progress': return 3;
+      case 'delivered': return 4;
+      case 'canceled': return 5;
+      case 'disputed': return 6; // Adjust this ID based on your API
+      default: return null;
+    }
+  }
+
+  // Fetch orders for the current tab
+  Future<void> _fetchOrdersForTab() async {
+    if (ordersController.isLoading) return;
+    
+    final statusId = _getStatusIdForTab(_tabs[_tabController.index]);
+    
+    // Set the query with the current status filter
+    ordersController.setQuery(OrdersQuery(statusId: statusId));
+    
+    // Clear existing orders and fetch fresh ones with the current filter
+    await ordersController.fetchOrders(executeClear: true);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,10 +89,23 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
 
     // Add scroll listener
     _scrollController.addListener(_onScroll);
+    
+    // Add tab change listener
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        // Reset scroll position when changing tabs
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(0);
+        }
+        // Fetch orders for the newly selected tab
+        _fetchOrdersForTab();
+      }
+    });
 
+    // Initial load
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {//jh
-        ordersController.fetchOrders(executeClear: true);
+      if (mounted) {
+        _fetchOrdersForTab();
       }
     });
   }
@@ -78,6 +117,9 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
       if (!ordersController.isLoadingMore && 
           ordersController.hasMore && 
           !ordersController.isLoading) {
+        // Update the query before loading more
+        final statusId = _getStatusIdForTab(_tabs[_tabController.index]);
+        ordersController.setQuery(OrdersQuery(statusId: statusId));
         ordersController.loadMore();
       }
     }
@@ -94,42 +136,11 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     super.dispose();
   }
 
+  // This method is kept for backward compatibility
+  // but won't be used for filtering since we're using server-side filtering now
   List<ClientOrder> _filterOrdersByTab(List<ClientOrder> allOrders, int tabIndex) {
-    if (tabIndex == 0) return allOrders;
-
-    final tabName = _tabs[tabIndex].toLowerCase();
-
-    return allOrders.where((order) {
-      final status = (order.statusName ?? '').toLowerCase();
-
-      // ✅ status matching
-      if (tabName == 'in progress') {
-        // Check for variations of 'in progress' status
-        return status == 'in progress' || 
-               status.contains('in progress') ||
-               status == 'in_progress' ||
-               status.contains('in_progress');
-      }
-
-      if (tabName == 'pending') {
-        return status == 'pending' || status.contains('pending');
-      }
-
-      if (tabName == 'delivered') {
-        return status.contains('delivered');
-      }
-
-      if (tabName == 'canceled') {
-        return status.contains('canceled') || status.contains('canceled');
-      }
-
-      if (tabName == 'disputed') {
-        return status.contains('disputed') || status.contains('dispute');
-      }
-
-      // fallback (shouldn’t happen)
-      return false;
-    }).toList();
+    // No filtering needed as we're using server-side filtering
+    return allOrders;
   }
 
   Widget _buildOrdersList({
@@ -148,9 +159,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
 
     return RefreshIndicator(
       color: AppColors.primary,
-      onRefresh: () async {
-        await ordersController.fetchOrders(executeClear: true);
-      },
+      onRefresh: _fetchOrdersForTab,
       child: ListView.builder(
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),

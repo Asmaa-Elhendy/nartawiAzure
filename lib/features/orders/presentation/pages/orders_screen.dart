@@ -17,27 +17,83 @@ class OrdersScreen extends StatefulWidget {
 class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late OrdersController ordersController;
+  final ScrollController _scrollController = ScrollController();
+
+  // Get status ID based on tab index
+  int? _getStatusIdForIndex(int index) {
+    switch (index) {
+      case 0: return null;        // All
+      case 1: return 1;           // Pending
+      case 2: return 3;           // In Progress
+      case 3: return 4;           // Delivered
+      case 4: return 5;           // Canceled
+      default: return null;
+    }
+  }
+
+  // Fetch orders for the current tab
+  Future<void> _fetchOrdersForCurrentTab() async {
+    if (ordersController.isLoading) return;
+    
+    final statusId = _getStatusIdForIndex(_tabController.index);
+    
+    // Set the query with the current status filter
+    ordersController.setQuery(OrdersQuery(statusId: statusId));
+    
+    // Clear existing orders and fetch fresh ones with the current filter
+    await ordersController.fetchOrders(executeClear: true);
+  }
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
 
     ordersController = OrdersController(dio: Dio());
     
-    // ✅ Delay the fetch call to avoid calling notifyListeners during build
+    // Add scroll listener
+    _scrollController.addListener(_onScroll);
+    
+    // Add tab change listener
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        // Reset scroll position when changing tabs
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(0);
+        }
+        // Fetch orders for the newly selected tab
+        _fetchOrdersForCurrentTab();
+      }
+    });
+    
+    // Initial fetch for the first tab
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        ordersController.fetchOrders(executeClear: true); // ✅ تحميل كل الطلبات
+        _fetchOrdersForCurrentTab();
       }
     });
   }
 
+  // Handle scroll events
+  void _onScroll() {
+    if (_scrollController.position.pixels >= 
+        _scrollController.position.maxScrollExtent * 0.9) {
+      if (!ordersController.isLoadingMore && 
+          ordersController.hasMore && 
+          !ordersController.isLoading) {
+        // Update the query before loading more
+        final statusId = _getStatusIdForIndex(_tabController.index);
+        ordersController.setQuery(OrdersQuery(statusId: statusId));
+        ordersController.loadMore();
+      }
+    }
+  }
+
   @override
   void dispose() {
+    _scrollController.dispose();
     _tabController.dispose();
     ordersController.dispose();
-
     super.dispose();
   }
 
@@ -109,10 +165,22 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
             await ordersController.fetchOrders(executeClear: true);
           },
           child: ListView.builder(
+            controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: EdgeInsets.only(bottom: screenHeight * .06),
-            itemCount: orders.length,
+            itemCount: orders.length + (ordersController.hasMore ? 1 : 0),
             itemBuilder: (context, index) {
+              // Show loading indicator at the bottom when loading more
+              if (index >= orders.length) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                );
+              }
               final order = orders[index];
               final statusText = order.statusName ?? 'Unknown';
               final paymentText = order.isPaid == true ? 'Paid' : 'Pending Payment';
@@ -180,68 +248,45 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
+                            Text(//lkj jk
                               'My Orders',
                               style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(vertical: screenHeight*.004,horizontal: screenWidth*.004),
-                              margin: EdgeInsets.symmetric(horizontal: screenWidth*.04,vertical: screenHeight*.03),
-                              height: screenHeight*.05,
-                              // width: widget.width-widget.width*.04,
+                              padding: EdgeInsets.symmetric(
+                                vertical: screenHeight * .004,
+                                horizontal: screenWidth * .004,
+                              ),
+                              margin: EdgeInsets.only(
+                                bottom: screenHeight * .02,
+                              ),
+                              height: screenHeight * .05,
                               decoration: BoxDecoration(
                                 color: AppColors.tabViewBackground,
-                                borderRadius: BorderRadius.circular(
-                                  8,
-                                ),
-
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                              child:
-                              TabBar(
+                              child: TabBar(
+                                isScrollable: true, // Make tabs scrollable
                                 padding: EdgeInsets.zero,
-                                labelPadding: EdgeInsets.symmetric(horizontal: screenWidth*.01),
+                                labelPadding: EdgeInsets.symmetric(horizontal: screenWidth * .03),
                                 controller: _tabController,
-                                // give the indicator a decoration (color and border radius)
                                 indicator: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    8,
-                                  ),
-
+                                  borderRadius: BorderRadius.circular(8),
                                   color: AppColors.whiteColor,
-                                ),indicatorSize: TabBarIndicatorSize.tab,dividerColor: Colors.transparent,
-                                labelStyle: TextStyle(fontWeight: FontWeight.w600,color: AppColors.primary),
+                                ),
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                dividerColor: Colors.transparent,
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ),
                                 unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
-
                                 tabs: [
-                                  // first tab [you can add an icon using the icon property]
-                                  SizedBox(
-                                   width:screenWidth*.25,
-                                    child: Tab(
-                                      text: 'All',
-
-                                    ),
-                                  ),
-
-                                  // second tab [you can add an icon using the icon property]
-                                  SizedBox(
-                                    width:screenWidth*.25,
-                                    child: Tab(
-                                      text: 'Pending',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:screenWidth*.25,
-                                    child: Tab(
-                                      text: 'Delivered',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width:screenWidth*.25,
-                                    child: Tab(
-                                      text: 'Canceled',
-
-                                    ),
-                                  ),
+                                  Tab(text: 'All'),
+                                  Tab(text: 'Pending'),
+                                  Tab(text: 'In Progress'),
+                                  Tab(text: 'Delivered'),
+                                  Tab(text: 'Canceled'),
                                 ],
                               ),
                             ),
@@ -251,6 +296,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                 children: [
                                   _buildOrderList(null),     // All orders
                                   _buildOrderList(1),        // Pending (statusId = 1)
+                                  _buildOrderList(3),        // In Progress (statusId = 3)
                                   _buildOrderList(4),        // Delivered (statusId = 4)
                                   _buildOrderList(5),        // Canceled (statusId = 5)
                                 ],
