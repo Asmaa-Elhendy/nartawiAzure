@@ -22,7 +22,12 @@ class ProductDetailScreen extends StatefulWidget {
   ClientProduct? clientProduct;
   FavoriteProduct? favoriteProduct;
   bool fromFavorite;
-  ProductDetailScreen({ this.clientProduct=null,this.favoriteProduct=null,this.fromFavorite=false});
+
+  ProductDetailScreen({
+    this.clientProduct = null,
+    this.favoriteProduct = null,
+    this.fromFavorite = false,
+  });
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -43,8 +48,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     _quantityController = TextEditingController(text: '1');
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
-      basePrice:widget.fromFavorite? widget.favoriteProduct!.product!.price.toDouble()
-:      widget.clientProduct!.price.toDouble(),
+      basePrice: widget.fromFavorite
+          ? widget.favoriteProduct!.product!.price.toDouble()
+          : widget.clientProduct!.price.toDouble(),
     );
   }
 
@@ -95,12 +101,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         builder: (dialogContext) => ConfirmationAlert(
                           price: state.price,
                           centerTitle:
-                          "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
+                              "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
                           leftOnTap: () {
                             Navigator.pop(dialogContext);
-                            context
-                                .read<CartBloc>()
-                                .add(CartAddItem(widget.clientProduct!));
+                            context.read<CartBloc>().add(
+                              CartAddItem(widget.clientProduct!),
+                            );
                             Navigator.pop(context);
                           },
                           rightOnTap: () {
@@ -163,16 +169,52 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       ProductTitle(
-                                          screenHeight, screenWidth,widget.fromFavorite?widget.favoriteProduct?.product?.supplierName??'':widget.clientProduct?.supplierName??''),
+                                        screenHeight,
+                                        screenWidth,
+                                        widget.fromFavorite
+                                            ? widget
+                                                      .favoriteProduct
+                                                      ?.product
+                                                      ?.supplierName ??
+                                                  ''
+                                            : widget
+                                                      .clientProduct
+                                                      ?.supplierName ??
+                                                  '',
+                                        widget.fromFavorite
+                                            ? widget
+                                                  .favoriteProduct!
+                                                  .product!
+                                                  .supplierRating
+                                                  .toString()
+                                            : widget
+                                                  .clientProduct!
+                                                  .supplierRating
+                                                  .toString(),
+                                        supplierLogo: widget.fromFavorite
+                                            ? widget
+                                                  .favoriteProduct
+                                                  ?.product
+                                                  ?.supplierLogo
+                                            : widget
+                                                  .clientProduct
+                                                  ?.supplierLogo,
+                                      ),
+
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                           vertical: screenHeight * .01,
                                         ),
                                         child: Text(
-                                          widget.fromFavorite?widget.favoriteProduct!.product!.enName:widget.clientProduct!.enName,
+                                          widget.fromFavorite
+                                              ? widget
+                                                    .favoriteProduct!
+                                                    .product!
+                                                    .enName
+                                              : widget.clientProduct!.enName,
                                           style: TextStyle(
                                             fontSize: screenWidth * .028,
                                             fontWeight: FontWeight.w600,
@@ -181,7 +223,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         ),
                                       ),
                                       Text(
-                                        'company hand pump dispenser-pure natural...',
+                                        widget.fromFavorite
+                                            ? widget
+                                                      .favoriteProduct
+                                                      ?.product
+                                                      ?.description ??
+                                                  'company hand pump dispenser-pure natural...'
+                                            : widget
+                                                      .clientProduct
+                                                      ?.description ??
+                                                  'company hand pump dispenser-pure natural...',
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -195,8 +246,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           vertical: screenHeight * .01,
                                         ),
                                         child: Text(
-                                          "QAR ${ widget.fromFavorite?widget.favoriteProduct!.product!.price:widget.clientProduct!.price
-            }",
+                                          "QAR ${widget.fromFavorite ? widget.favoriteProduct!.product!.price : widget.clientProduct!.price}",
                                           style: TextStyle(
                                             fontSize: screenWidth * .038,
                                             fontWeight: FontWeight.w600,
@@ -204,7 +254,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         ),
                                       ),
                                       Text(
-                                        'one-time purchase',
+                                        widget.fromFavorite
+                                            ? widget
+                                                      .favoriteProduct
+                                                      ?.product
+                                                      ?.productType ??
+                                                  'one-time purchase'
+                                            : widget
+                                                      .clientProduct
+                                                      ?.productType ??
+                                                  'one-time purchase',
                                         style: TextStyle(
                                           fontSize: screenWidth * .028,
                                           fontWeight: FontWeight.w500,
@@ -225,36 +284,32 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                 isPlus: true,
                                                 price: 0,
                                                 onIncrease: () => context
-                                                    .read<
-                                                    ProductQuantityBloc>()
+                                                    .read<ProductQuantityBloc>()
                                                     .add(IncreaseQuantity()),
                                                 onDecrease: () => context
-                                                    .read<
-                                                    ProductQuantityBloc>()
+                                                    .read<ProductQuantityBloc>()
                                                     .add(DecreaseQuantity()),
                                                 quantityCntroller:
-                                                _quantityController,
+                                                    _quantityController,
                                                 onTextfieldChanged: (value) =>
                                                     context
                                                         .read<
-                                                        ProductQuantityBloc>()
+                                                          ProductQuantityBloc
+                                                        >()
                                                         .add(
-                                                      QuantityChanged(
-                                                        value,
-                                                      ),
-                                                    ),
+                                                          QuantityChanged(
+                                                            value,
+                                                          ),
+                                                        ),
                                                 onDone: () => context
-                                                    .read<
-                                                    ProductQuantityBloc>()
+                                                    .read<ProductQuantityBloc>()
                                                     .add(
-                                                  QuantityEditingComplete(),
-                                                ),
+                                                      QuantityEditingComplete(),
+                                                    ),
                                                 fromDetailedScreen: true,
                                               ),
                                             ),
-                                            SizedBox(
-                                              width: screenWidth * .04,
-                                            ),
+                                            SizedBox(width: screenWidth * .04),
                                             BuildPriceContainer(
                                               screenWidth,
                                               screenHeight,
@@ -275,18 +330,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                         height: screenHeight * .05,
                                         decoration: BoxDecoration(
                                           color: AppColors.tabViewBackground,
-                                          borderRadius:
-                                          BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: TabBar(
                                           controller: _tabController,
                                           indicator: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                             color: AppColors.whiteColor,
                                           ),
                                           indicatorSize:
-                                          TabBarIndicatorSize.tab,
+                                              TabBarIndicatorSize.tab,
                                           dividerColor: Colors.transparent,
                                           labelStyle: TextStyle(
                                             fontWeight: FontWeight.w600,
@@ -303,9 +360,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                             ),
                                             SizedBox(
                                               width: screenWidth * .5,
-                                              child: const Tab(
-                                                text: 'Reviews',
-                                              ),
+                                              child: const Tab(text: 'Reviews'),
                                             ),
                                           ],
                                         ),
@@ -341,26 +396,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               left: screenWidth * 0.02,
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   BuildIconOnProduct(
                                     widget.fromFavorite,
-                                    widget.fromFavorite? 
-                                    widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
-                                    widget.fromFavorite ? 
-                                    widget.favoriteProduct!.product?.enName : widget.clientProduct!.enName,
+                                    widget.fromFavorite
+                                        ? widget.favoriteProduct!.productVsId
+                                        : widget.clientProduct!.vsId,
+                                    widget.fromFavorite
+                                        ? widget
+                                              .favoriteProduct!
+                                              .product
+                                              ?.enName
+                                        : widget.clientProduct!.enName,
                                     state.price,
                                     screenWidth,
                                     screenHeight,
                                     true,
-                                   isFavourite: false,
+                                    isFavourite: false,
                                   ),
                                   BuildIconOnProduct(
                                     widget.fromFavorite,
-                                    widget.fromFavorite? 
-                                    widget.favoriteProduct!.productVsId : widget.clientProduct!.vsId,
-                                    widget.fromFavorite ? 
-                                    widget.favoriteProduct!.product?.enName : widget.clientProduct!.enName,
+                                    widget.fromFavorite
+                                        ? widget.favoriteProduct!.productVsId
+                                        : widget.clientProduct!.vsId,
+                                    widget.fromFavorite
+                                        ? widget
+                                              .favoriteProduct!
+                                              .product
+                                              ?.enName
+                                        : widget.clientProduct!.enName,
                                     state.price,
                                     screenWidth,
                                     screenHeight,

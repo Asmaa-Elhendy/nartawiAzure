@@ -87,7 +87,7 @@ class ClientProduct extends Equatable {
       supplierId: json['supplierId'] as int? ?? 0,
       supplierName: json['supplierName'] as String? ?? '',
       supplierLogo: json['supplierLogo'] as String?,
-      supplierRating: (json['supplierRating'] as num?)?.toDouble(),
+      supplierRating: (json['supplierRating'] as num?)?.toDouble()??0.0,
       supplierIsVerified: json['supplierIsVerified'] as bool? ?? false,
       description: json['description'] as String?,
       brand: json['brand'] as String?,

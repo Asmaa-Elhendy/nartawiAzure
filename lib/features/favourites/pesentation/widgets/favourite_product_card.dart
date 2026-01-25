@@ -17,8 +17,8 @@ import '../../../profile/presentation/widgets/quantity_increase_Decrease.dart';
 class FavouriteProductCard extends StatefulWidget {
   double screenWidth;
   double screenHeight;
-FavoriteProduct favouriteProduct;
-    bool fromCartScreen;
+  FavoriteProduct favouriteProduct;
+  bool fromCartScreen;
 
   FavouriteProductCard({
     required this.screenWidth,
@@ -36,7 +36,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   late final ProductQuantityBloc _quantityBloc;
   late final ProductQuantityBloc _quantityTwoBloc;
   late final TextEditingController _quantityTwoController;
-  
+
   // Separate bloc for Weekly Sent Bundles
   late final ProductQuantityBloc _weeklyBundlesBloc;
   late final TextEditingController _weeklyBundlesController;
@@ -69,12 +69,12 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       try {
         final productItem = _getProductItemForCart();
         final cartBloc = context.read<CartBloc>();
-        
+
         // Check if the bloc is properly initialized
         if (cartBloc.isClosed) {
           return;
         }
-        
+
         cartBloc.add(CartUpdateQuantity(productItem, quantity));
       } catch (e) {
         // Handle any errors gracefully
@@ -99,7 +99,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   @override
   void initState() {
     super.initState();
-    
+
     // Get initial quantity from cart state if in cart screen
     int initialQuantity = 1;
     if (widget.fromCartScreen) {
@@ -112,31 +112,36 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
         initialQuantity = 1;
       }
     }
-    
-    _quantityController = TextEditingController(text: initialQuantity.toString());
-    
+
+    _quantityController = TextEditingController(
+      text: initialQuantity.toString(),
+    );
+
     // Check if product exists, otherwise use default price
-    final productPrice = widget.favouriteProduct.product?.price.toDouble() ?? 0.0;
-    
+    final productPrice =
+        widget.favouriteProduct.product?.price.toDouble() ?? 0.0;
+
     _quantityBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
-    
+
     _quantityTwoBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
-    
-    _quantityTwoController = TextEditingController(text: initialQuantity.toString());
-    
+
+    _quantityTwoController = TextEditingController(
+      text: initialQuantity.toString(),
+    );
+
     // Initialize weekly bundles bloc (always starts with 1)
     _weeklyBundlesBloc = ProductQuantityBloc(
       calculateProductPrice: CalculateProductPrice(),
       basePrice: productPrice,
     );
     _weeklyBundlesController = TextEditingController(text: '1');
-    
+
     // Initialize the ProductQuantityBlocs after the frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && widget.fromCartScreen) {
@@ -172,9 +177,14 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => ProductDetailScreen(favoriteProduct: widget.favouriteProduct,fromFavorite: true,)));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ProductDetailScreen(
+              favoriteProduct: widget.favouriteProduct,
+              fromFavorite: true,
+            ),
+          ),
+        );
       },
       child: BlocProvider.value(
         value: _quantityBloc,
@@ -185,8 +195,10 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
               _quantityController.text = state.quantity;
             }
             double containerHeight = widget.fromCartScreen
-                ? widget.screenHeight * .29//.33 handle design shimaa
-                : widget.screenHeight * .257; //handle height of favourite product card handle design dhimaa
+                ? widget.screenHeight *
+                      .29 //.33 handle design shimaa
+                : widget.screenHeight *
+                      .257; //handle height of favourite product card handle design dhimaa
             return Padding(
               padding: EdgeInsets.only(
                 bottom: widget.screenHeight * .02,
@@ -215,7 +227,6 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                 bottomLeft: Radius.circular(20),
                               ),
                               child: Image.asset(
-
                                 'assets/images/home/main_page/product.jpg',
                                 width: widget.screenWidth * .31,
                                 // match or be smaller than containe
@@ -224,20 +235,29 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            widget.fromCartScreen//j
+                            widget
+                                    .fromCartScreen //j
                                 ? Positioned(
                                     top: widget.screenHeight * 0.01,
                                     left: widget.screenWidth * 0.01,
                                     child: BuildIconOnProduct(
-                                      true,  // fromFavouriteScreen
-                                      widget.favouriteProduct.productVsId,  // productVsا
-                                      widget.favouriteProduct.product?.enName,  // productName
-                                      state.price,  // price
-                                      widget.screenWidth,  // width
-                                      widget.screenHeight,  // height
-                                      false,  // isPlus (false for delete)
-                                      isFavourite: true,  // isFavourite
-                                      isDelete: true,  // isDelete = true
+                                      true,
+                                      // fromFavouriteScreen
+                                      widget.favouriteProduct.productVsId,
+                                      // productVsا
+                                      widget.favouriteProduct.product?.enName,
+                                      // productName
+                                      state.price,
+                                      // price
+                                      widget.screenWidth,
+                                      // width
+                                      widget.screenHeight,
+                                      // height
+                                      false,
+                                      // isPlus (false for delete)
+                                      isFavourite: true,
+                                      // isFavourite
+                                      isDelete: true, // isDelete = true
                                     ),
                                   )
                                 : Positioned(
@@ -249,17 +269,43 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,(widget.favouriteProduct.product?.price ?? 0.0).toDouble(),
+                                        BuildIconOnProduct(
+                                          true,
+                                          widget.favouriteProduct.productVsId,
+                                          widget
+                                              .favouriteProduct
+                                              .product
+                                              ?.enName,
+                                          (widget
+                                                      .favouriteProduct
+                                                      .product
+                                                      ?.price ??
+                                                  0.0)
+                                              .toDouble(),
                                           widget.screenWidth,
                                           widget.screenHeight,
-                                          true, // plus icon
+                                          true,
+                                          // plus icon
                                           isFavourite: true,
                                         ),
                                         //      SizedBox(width: widget.screenWidth * 0.02), // Spacing between icons
-                                        BuildIconOnProduct(true,widget.favouriteProduct.productVsId,widget.favouriteProduct.product?.enName,(widget.favouriteProduct.product?.price ?? 0.0).toDouble(),
+                                        BuildIconOnProduct(
+                                          true,
+                                          widget.favouriteProduct.productVsId,
+                                          widget
+                                              .favouriteProduct
+                                              .product
+                                              ?.enName,
+                                          (widget
+                                                      .favouriteProduct
+                                                      .product
+                                                      ?.price ??
+                                                  0.0)
+                                              .toDouble(),
                                           widget.screenWidth,
                                           widget.screenHeight,
-                                          false, // heart icon
+                                          false,
+                                          // heart icon
                                           isFavourite: true,
                                         ),
                                       ],
@@ -270,8 +316,10 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(
-                              bottom: widget.screenHeight * .005,//edit design for mobile
-                              top: widget.screenHeight * .005,//edit design for mobile
+                              bottom: widget.screenHeight * .005,
+                              //edit design for mobile
+                              top: widget.screenHeight * .005,
+                              //edit design for mobile
                               right: widget.screenWidth * .03,
                               left: widget.screenWidth * .03,
                             ),
@@ -282,7 +330,21 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     ? SizedBox()
                                     : ProductTitle(
                                         widget.screenHeight,
-                                        widget.screenWidth,widget.favouriteProduct.product?.supplierName??''
+                                        widget.screenWidth,
+                                        widget
+                                                .favouriteProduct
+                                                .product
+                                                ?.supplierName ??
+                                            '',
+                                        widget
+                                            .favouriteProduct!
+                                            .product!
+                                            .supplierRating
+                                            .toString(),
+                                        supplierLogo: widget
+                                            .favouriteProduct
+                                            .product
+                                            ?.supplierLogo,
                                       ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -292,7 +354,8 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     bottom: widget.screenHeight * .01,
                                   ),
                                   child: Text(
-                                   widget.favouriteProduct.product?.enName ?? 'Product',
+                                    widget.favouriteProduct.product?.enName ??
+                                        'Product',
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .03, //.028
@@ -302,7 +365,11 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                   ),
                                 ),
                                 Text(
-                                  'company hand pump dispenser-pure natural...',
+                                  widget
+                                          .favouriteProduct
+                                          .product
+                                          ?.description ??
+                                      'company hand pump dispenser-pure natural...',
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -325,7 +392,11 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                   ),
                                 ),
                                 Text(
-                                  'one-time purchase',
+                                  widget
+                                          .favouriteProduct
+                                          .product
+                                          ?.productType ??
+                                      'One Time Purchase',
                                   style: TextStyle(
                                     fontSize: widget.screenWidth * .028,
                                     fontWeight: FontWeight.w500,
@@ -351,37 +422,69 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
 
                                           price: 0,
                                           onIncrease: () {
-                                            context.read<ProductQuantityBloc>().add(IncreaseQuantity());
+                                            context
+                                                .read<ProductQuantityBloc>()
+                                                .add(IncreaseQuantity());
                                             // Notify cart of quantity change after state updates
-                                            Future.delayed(Duration(milliseconds: 100), () {
-                                              final currentQuantity = int.tryParse(_quantityController.text) ?? 1;
-                                              _notifyCartQuantityChange(currentQuantity);
-                                            });
+                                            Future.delayed(
+                                              Duration(milliseconds: 100),
+                                              () {
+                                                final currentQuantity =
+                                                    int.tryParse(
+                                                      _quantityController.text,
+                                                    ) ??
+                                                    1;
+                                                _notifyCartQuantityChange(
+                                                  currentQuantity,
+                                                );
+                                              },
+                                            );
                                           },
                                           onDecrease: () {
-                                            context.read<ProductQuantityBloc>().add(DecreaseQuantity());
+                                            context
+                                                .read<ProductQuantityBloc>()
+                                                .add(DecreaseQuantity());
                                             // Notify cart of quantity change after state updates
-                                            Future.delayed(Duration(milliseconds: 100), () {
-                                              final currentQuantity = int.tryParse(_quantityController.text) ?? 1;
-                                              _notifyCartQuantityChange(currentQuantity);
-                                            });
+                                            Future.delayed(
+                                              Duration(milliseconds: 100),
+                                              () {
+                                                final currentQuantity =
+                                                    int.tryParse(
+                                                      _quantityController.text,
+                                                    ) ??
+                                                    1;
+                                                _notifyCartQuantityChange(
+                                                  currentQuantity,
+                                                );
+                                              },
+                                            );
                                           },
-                                          quantityCntroller: _quantityController,
+                                          quantityCntroller:
+                                              _quantityController,
                                           onTextfieldChanged: (value) {
-                                            context.read<ProductQuantityBloc>().add(QuantityChanged(value));
+                                            context
+                                                .read<ProductQuantityBloc>()
+                                                .add(QuantityChanged(value));
                                             // Notify cart of quantity change
-                                            final quantity = int.tryParse(value) ?? 1;
+                                            final quantity =
+                                                int.tryParse(value) ?? 1;
                                             _notifyCartQuantityChange(quantity);
                                           },
                                           onDone: () {
-                                            context.read<ProductQuantityBloc>().add(QuantityEditingComplete());
+                                            context
+                                                .read<ProductQuantityBloc>()
+                                                .add(QuantityEditingComplete());
                                             // Notify cart of quantity change
-                                            final quantity = int.tryParse(_quantityController.text) ?? 1;
+                                            final quantity =
+                                                int.tryParse(
+                                                  _quantityController.text,
+                                                ) ??
+                                                1;
                                             _notifyCartQuantityChange(quantity);
                                           },
-                                        ),//k
+                                        ), //k
                                       ),
-                                      SizedBox(width: widget.screenWidth*.01,),
+                                      SizedBox(width: widget.screenWidth * .01),
                                       BuildPriceContainer(
                                         widget.screenWidth,
                                         widget.screenHeight,
@@ -411,8 +514,12 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                             >(
                                               builder: (context, state) {
                                                 // Update controller when state changes
-                                                if (_weeklyBundlesController.text != state.quantity) {
-                                                  _weeklyBundlesController.text = state.quantity;
+                                                if (_weeklyBundlesController
+                                                        .text !=
+                                                    state.quantity) {
+                                                  _weeklyBundlesController
+                                                          .text =
+                                                      state.quantity;
                                                 }
                                                 return Column(
                                                   crossAxisAlignment:

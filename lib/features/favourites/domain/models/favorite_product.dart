@@ -94,7 +94,7 @@ class FavoriteProductItem extends Equatable {
       supplierId: json['supplierId'] as int?,
       supplierName: json['supplierName'] as String?,
       supplierLogo: json['supplierLogo'] as String?,
-      supplierRating: (json['supplierRating'] as num?)?.toDouble(),
+      supplierRating: (json['supplierRating'] as num?)?.toDouble()??0.0,
       supplierIsVerified: json['supplierIsVerified'] as bool?,
       description: json['description'] as String?,
       brand: json['brand'] as String?,
