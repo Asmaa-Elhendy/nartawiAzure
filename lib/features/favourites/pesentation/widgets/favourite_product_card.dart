@@ -248,12 +248,17 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                       widget.favouriteProduct.product?.enName,
                                       // productName
                                       state.price,
+
                                       // price
                                       widget.screenWidth,
                                       // width
                                       widget.screenHeight,
                                       // height
                                       false,
+                                     widget.favouriteProduct.product?.supplierId?.toString() ?? '0',
+                                      widget.favouriteProduct.product?.supplierName ?? 'Unknown Supplier',
+                                      widget.favouriteProduct.product?.supplierRating,
+                                      widget.favouriteProduct.product?.supplierLogo,
                                       // isPlus (false for delete)
                                       isFavourite: true,
                                       // isFavourite
@@ -284,7 +289,11 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                               .toDouble(),
                                           widget.screenWidth,
                                           widget.screenHeight,
-                                          true,
+                                          true,//kj
+                                          widget.favouriteProduct.product?.supplierId?.toString() ?? '0',
+                                          widget.favouriteProduct.product?.supplierName ?? 'Unknown Supplier',
+                                          widget.favouriteProduct.product?.supplierRating,
+                                          widget.favouriteProduct.product?.supplierLogo,
                                           // plus icon
                                           isFavourite: true,
                                         ),
@@ -305,6 +314,10 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                           widget.screenWidth,
                                           widget.screenHeight,
                                           false,
+                                          widget.favouriteProduct.product?.supplierId?.toString() ?? '0',
+                                          widget.favouriteProduct.product?.supplierName ?? 'Unknown Supplier',
+                                          widget.favouriteProduct.product?.supplierRating,
+                                          widget.favouriteProduct.product?.supplierLogo,
                                           // heart icon
                                           isFavourite: true,
                                         ),

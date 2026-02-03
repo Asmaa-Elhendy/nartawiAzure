@@ -413,6 +413,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     screenWidth,
                                     screenHeight,
                                     true,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierId?.toString() ?? '0'
+                                        : widget.clientProduct!.supplierId.toString(),
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierName ?? 'Unknown Supplier'
+                                        : widget.clientProduct!.supplierName,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierRating
+                                        : widget.clientProduct!.supplierRating,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierLogo
+                                        : widget.clientProduct!.supplierLogo,
                                     isFavourite: false,
                                   ),
                                   BuildIconOnProduct(
@@ -430,6 +454,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                     screenWidth,
                                     screenHeight,
                                     false,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierId?.toString() ?? '0'
+                                        : widget.clientProduct!.supplierId.toString(),
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierName ?? 'Unknown Supplier'
+                                        : widget.clientProduct!.supplierName,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierRating
+                                        : widget.clientProduct!.supplierRating,
+                                    widget.fromFavorite
+                                        ? widget
+                                        .favoriteProduct!
+                                        .product
+                                        ?.supplierLogo
+                                        : widget.clientProduct!.supplierLogo,
                                     isFavourite: false,
                                   ),
                                 ],

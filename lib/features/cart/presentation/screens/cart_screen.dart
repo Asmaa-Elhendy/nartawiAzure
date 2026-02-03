@@ -183,12 +183,42 @@ class _CartScreenState extends State<CartScreen>
     if (_selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please Select address'),
+          content: Text('Please Select address'),//k
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
       );
       return;
+    }
+
+    // Check if all products are from the same supplier
+    String? firstSupplierId;
+    for (final item in cartState.cartProducts) {
+      String currentSupplierId = '0';
+      
+      if (item is Map<String, dynamic>) {
+        if (item['product'] is Map<String, dynamic>) {
+          currentSupplierId = item['product']['SupplierId']?.toString() ?? '0';
+        } else {
+          currentSupplierId = item['SupplierId']?.toString() ?? '0';
+        }
+      } else if (item is ClientProduct) {
+        currentSupplierId = item.supplierId.toString();
+      }
+      
+      if (firstSupplierId == null) {
+        firstSupplierId = currentSupplierId;
+      } else if (firstSupplierId != currentSupplierId) {
+        // Different supplier found
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All order Products Must be from Same Supplier'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
     }
 
     // Build items
@@ -390,6 +420,9 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                                       images: [],
                                                       totalAvailableQuantity: 0,
                                                       inventory: [],
+                                                      supplierId: int.tryParse(product['SupplierId']?.toString() ?? '0') ?? 0,
+                                                      supplierName: product['SupplierName']?.toString() ?? 'Unknown Supplier',
+                                                     
                                                     ),
                                                   ),
                                                   fromCartScreen: true,
@@ -406,6 +439,9 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                                     productVsId: product.vsId,
                                                     createdAt: DateTime.now(),
                                                     product: FavoriteProductItem(
+                                                      supplierId: product.supplierId,
+                                                      supplierLogo: product.supplierLogo,
+                                                      supplierName: product.supplierName,
                                                       id: product.id,
                                                       vsId: product.vsId,
                                                       enName: product.enName,
@@ -418,6 +454,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                                       images: product.images,
                                                       totalAvailableQuantity: product.totalAvailableQuantity,
                                                       inventory: product.inventory,
+                                                   
                                                     ),
                                                   ),
                                                   fromCartScreen: true,
@@ -447,6 +484,9 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                                       images: [],
                                                       totalAvailableQuantity: 0,
                                                       inventory: [],
+                                                      supplierId: 0,
+                                                      supplierName: 'Unknown Supplier',
+                                                  
                                                     ),
                                                   ),
                                                   fromCartScreen: true,
@@ -493,6 +533,35 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 'Proceed To Checkout',
                                 false,
                                 () {
+                                        
+                                  // Print all supplier IDs from cart products
+                                  final cartState = context.read<CartBloc>().state;
+                                  print('🛒 Cart Products Supplier IDs:');
+                                  for (final product in cartState.cartProducts) {
+                                    if (product is Map<String, dynamic>) {
+                                      // Check if supplier info is in nested 'product' object or at top level
+                                      String supplierId = '0';
+                                      double? supplierRating;
+                                      String? supplierLogo;
+                                      String productName = product['name']?.toString() ?? 'Unknown Product';
+                                      
+                                      if (product['product'] is Map<String, dynamic>) {
+                                        // Supplier info is in nested product object
+                                        supplierId = product['product']['SupplierId']?.toString() ?? '0';
+                                        supplierRating = (product['product']['SupplierRating'] as num?)?.toDouble();
+                                        supplierLogo = product['product']['SupplierLogo']?.toString();
+                                      } else {
+                                        // Try to get from top level (fallback)
+                                        supplierId = product['SupplierId']?.toString() ?? '0';
+                                        supplierRating = (product['SupplierRating'] as num?)?.toDouble();
+                                        supplierLogo = product['SupplierLogo']?.toString();
+                                      }
+                                      
+                                      print('  - Product: $productName, Supplier ID: $supplierId, Rating: ${supplierRating ?? 'N/A'}, Logo: ${supplierLogo ?? 'N/A'}');
+                                    } else if (product is ClientProduct) {
+                                      print('  - Product: ${product.enName}, Supplier ID: ${product.supplierId}, Rating: ${product.supplierRating ?? 'N/A'}, Logo: ${product.supplierLogo ?? 'N/A'}');
+                                    }
+                                  }
                                   // Check if there's a selected or default address before proceeding to payment
                                   if (_selectedAddress == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -504,6 +573,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                     );
                                     return;
                                   }
+
                                   
                                   // Show payment method dialog
                                   print('💳 Opening payment method dialog...');
