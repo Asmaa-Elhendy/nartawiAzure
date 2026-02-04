@@ -49,3 +49,23 @@ class FeaturedSuppliersError extends SuppliersState {
   @override
   List<Object> get props => [message];
 }
+
+class SupplierDetailLoading extends SuppliersState {}
+
+class SupplierDetailLoaded extends SuppliersState {
+  final Supplier supplier;
+
+  const SupplierDetailLoaded(this.supplier);
+
+  @override
+  List<Object> get props => [supplier];
+}
+
+class SupplierDetailError extends SuppliersState {
+  final String message;
+
+  const SupplierDetailError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

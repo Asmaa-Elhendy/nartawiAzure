@@ -13,6 +13,7 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
   SuppliersBloc({required this.dio}) : super(SuppliersInitial()) {
     on<FetchSuppliers>(_onFetchSuppliers);
     on<FetchFeaturedSuppliers>(_onFetchFeaturedSuppliers);
+    on<FetchSupplierById>(_onFetchSupplierById);
   }
 
   Future<void> _onFetchSuppliers(
@@ -143,6 +144,66 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
       emit(FeaturedSuppliersError('${code ?? ''} $msg'.trim()));
     } catch (e) {
       emit(FeaturedSuppliersError('An unexpected error occurred: $e'));
+    }
+  }
+
+  Future<void> _onFetchSupplierById(
+      FetchSupplierById event,
+      Emitter<SuppliersState> emit,
+      ) async {
+    emit(SupplierDetailLoading());
+
+    try {
+      final token = await AuthService.getToken();
+      if (token == null) {
+        emit(const SupplierDetailError('Authentication required'));
+        return;
+      }
+
+      final url = '$base_url/v1/admin/suppliers/public/${event.supplierId}';
+
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        if (data is! Map<String, dynamic>) {
+          emit(const SupplierDetailError('Invalid response format (expected object)'));
+          return;
+        }
+
+        final supplier = Supplier.fromJson(data);
+        emit(SupplierDetailLoaded(supplier));
+      } else {
+        emit(SupplierDetailError(
+            'Failed to load supplier (status: ${response.statusCode})'));
+      }
+    } on DioException catch (e) {
+      String msg = 'Failed to load supplier';
+
+      final data = e.response?.data;
+      final code = e.response?.statusCode;
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (data is String && data.isNotEmpty) {
+        msg = data;
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      emit(SupplierDetailError('${code ?? ''} $msg'.trim()));
+    } catch (e) {
+      emit(SupplierDetailError('An unexpected error occurred: $e'));
     }
   }
 }

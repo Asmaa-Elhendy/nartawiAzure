@@ -1,15 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/cart/presentation/widgets/widget_view_detail_store.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_bloc.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_event.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_state.dart';
 import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
-import '../../../home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import 'outline_buttons.dart';
+//get suupier with id
+//navigate to detail with this supplier 
 
+Widget CartStoreCard(
+  BuildContext context,
+  double screenWidth,
+  double screenHeight, {
+  String? supplierId,
+  String? supplierName,
+  double? supplierRating,
+  String? supplierLogo,
+}) {
+  // Fetch supplier details if supplierId is available
+  if (supplierId != null) {
+    final supplierIdInt = int.tryParse(supplierId);
+    if (supplierIdInt != null) {
+      context.read<SuppliersBloc>().add(FetchSupplierById(supplierIdInt));
+    }
+  }
 
-Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight){
-  return  Container(
+  return BlocBuilder<SuppliersBloc, SuppliersState>(
+    builder: (context, state) {
+      Supplier? detailedSupplier;
+      
+      if (state is SupplierDetailLoaded) {
+        detailedSupplier = state.supplier;
+      } else if (supplierId != null && supplierName != null) {
+        // Use original supplier data as fallback
+        detailedSupplier = Supplier(
+          id: int.tryParse(supplierId) ?? 0,
+          arName: supplierName,
+          enName: supplierName,
+          isActive: true,
+          isVerified: false,
+          rating: supplierRating?.toInt(),
+          logoUrl: supplierLogo,
+        );
+      }
+
+      return Container(
     // height: screenHeight*.3,
     padding:  EdgeInsets.symmetric(vertical: screenHeight*.01,horizontal: screenWidth*.01),
     decoration: BoxDecoration(
@@ -39,11 +78,24 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                   ),
                 ],
               ),
-              child: Image.asset(
-                "assets/images/home/main_page/company.png",
-                height: screenHeight * .03,
-                fit: BoxFit.cover,
-              ),
+              child: supplierLogo != null && supplierLogo.isNotEmpty
+                  ? Image.network(
+                      supplierLogo,
+                      height: screenHeight * .03,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          "assets/images/home/main_page/company.png",
+                          height: screenHeight * .03,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Image.asset(
+                      "assets/images/home/main_page/company.png",
+                      height: screenHeight * .03,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(width: screenWidth*.01,),
             Expanded(
@@ -54,10 +106,10 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                   children: [
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
+                      Text(supplierName ?? 'Company 1', style: TextStyle(fontWeight: FontWeight.w600, fontSize: screenWidth*.036),),
                       Padding(
                         padding:  EdgeInsets.only(right: screenWidth*.02),
-                        child: BuildRowRating(screenWidth, screenHeight,title: 'New'),
+                        child: BuildRowRating(screenWidth, screenHeight, title: supplierRating?.toString() ?? '0'),
                       ),
                     ],
                   ),
@@ -66,7 +118,7 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                       children: [
 
                         viewStoreWithoutFlexible((){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: Supplier(id: 0, arName: 'arName', enName: 'enName', isActive: true, isVerified: false))));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SupplierDetails(supplier: detailedSupplier ?? Supplier(id: int.tryParse(supplierId ?? '0') ?? 0, arName: supplierName ?? 'Unknown', enName: supplierName ?? 'Unknown', isActive: true, isVerified: false))));
 
                         }, 'View Store', screenWidth, screenHeight),
 
@@ -77,7 +129,8 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
                               barrierLabel: '',
                               barrierColor: Colors.black54, // خلفية شفافة
                               pageBuilder: (ctx, anim1, anim2) {
-                              return  ViewDetailSupplierAlert(ctx,screenWidth,screenHeight);
+                              return
+                                ViewDetailSupplierAlert(ctx,screenWidth,screenHeight, supplier: detailedSupplier);
                               },
                           );
                               }
@@ -94,7 +147,8 @@ Widget CartStoreCard(BuildContext context,double screenWidth,double screenHeight
         ),
 
       ],
-    ),
-  );
+    ));
+        },
+      );
 }
 

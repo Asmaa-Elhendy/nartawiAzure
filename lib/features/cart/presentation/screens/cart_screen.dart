@@ -183,7 +183,7 @@ class _CartScreenState extends State<CartScreen>
     if (_selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please Select address'),//k
+          content: Text('Please Select address'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -363,7 +363,54 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CartStoreCard(context, screenWidth, screenHeight),
+                              BlocBuilder<CartBloc, CartState>(
+                                builder: (context, cartState) {
+                                  // Only show CartStoreCard if there are products in cart
+                                  if (cartState.cartProducts.isEmpty) {
+                                    return SizedBox.shrink();
+                                  }
+
+                                  // Extract supplier information from first cart product
+                                  String? supplierId;
+                                  String? supplierName;
+                                  double? supplierRating;
+                                  String? supplierLogo;
+
+                                  if (cartState.cartProducts.isNotEmpty) {
+                                    final firstProduct = cartState.cartProducts.first;
+                                    if (firstProduct is Map<String, dynamic>) {
+                                      if (firstProduct['product'] is Map<String, dynamic>) {
+                                        // Supplier info is in nested product object
+                                        supplierId = firstProduct['product']['SupplierId']?.toString();
+                                        supplierName = firstProduct['product']['SupplierName']?.toString();
+                                        supplierRating = (firstProduct['product']['SupplierRating'] as num?)?.toDouble();
+                                        supplierLogo = firstProduct['product']['SupplierLogo']?.toString();
+                                      } else {
+                                        // Try to get from top level
+                                        supplierId = firstProduct['SupplierId']?.toString();
+                                        supplierName = firstProduct['SupplierName']?.toString();
+                                        supplierRating = (firstProduct['SupplierRating'] as num?)?.toDouble();
+                                        supplierLogo = firstProduct['SupplierLogo']?.toString();
+                                      }
+                                    } else if (firstProduct is ClientProduct) {
+                                      supplierId = firstProduct.supplierId.toString();
+                                      supplierName = firstProduct.supplierName;
+                                      supplierRating = firstProduct.supplierRating;
+                                      supplierLogo = firstProduct.supplierLogo;
+                                    }
+                                  }
+
+                                  return CartStoreCard(
+                                    context,
+                                    screenWidth,
+                                    screenHeight,
+                                    supplierId: supplierId,
+                                    supplierName: supplierName,
+                                    supplierRating: supplierRating,
+                                    supplierLogo: supplierLogo,
+                                  );
+                                },
+                              ),
 
                               Padding(
                                 padding: EdgeInsets.symmetric(
@@ -513,6 +560,10 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                               ),
                               BlocBuilder<CartBloc, CartState>(
                                 builder: (context, cartState) {
+                                  // Only show OrderSummaryCard if there are products in cart
+                                  if (cartState.cartProducts.isEmpty) {
+                                    return SizedBox.shrink();
+                                  }
                                   return OrderSummaryCard(
                                     screenWidth, 
                                     screenHeight, 
