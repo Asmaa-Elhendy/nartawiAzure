@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../../../core/services/auth_service.dart';
+import '../../../../../core/services/dio_service.dart';
 import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
 import '../../../domain/models/supplier_model.dart';
@@ -8,9 +9,9 @@ import 'suppliers_event.dart';
 import 'suppliers_state.dart';
 
 class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
-  final Dio dio;
+  Dio get dio => DioService.dio;
 
-  SuppliersBloc({required this.dio}) : super(SuppliersInitial()) {
+  SuppliersBloc() : super(SuppliersInitial()) {
     on<FetchSuppliers>(_onFetchSuppliers);
     on<FetchFeaturedSuppliers>(_onFetchFeaturedSuppliers);
     on<FetchSupplierById>(_onFetchSupplierById);
@@ -24,10 +25,10 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        emit(const SuppliersError('Authentication required'));
-        return;
-      }
+      print('🔑 SuppliersBloc token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/admin/suppliers/public';
 
@@ -90,10 +91,10 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        emit(const FeaturedSuppliersError('Authentication required'));
-        return;
-      }
+      print('🔑 FeaturedSuppliersBloc token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/admin/suppliers/featured';
 
@@ -155,10 +156,10 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        emit(const SupplierDetailError('Authentication required'));
-        return;
-      }
+      print('🔑 SupplierDetailBloc token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/admin/suppliers/public/${event.supplierId}';
 

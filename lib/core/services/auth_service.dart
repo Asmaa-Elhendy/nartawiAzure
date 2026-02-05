@@ -13,6 +13,7 @@ class AuthService {
     return prefs.getString(_tokenKey);
   }
 
+//klk
   static Future<void> deleteToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_tokenKey);

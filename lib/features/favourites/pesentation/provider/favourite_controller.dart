@@ -36,10 +36,10 @@ class FavoritesController extends ChangeNotifier {
       favorites.clear();
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 FavoritesController fetchFavoriteProducts token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/favorites/products';
 
@@ -106,10 +106,10 @@ class FavoritesController extends ChangeNotifier {
       favoriteVendors.clear();
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        vendorsError = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 FavoritesController fetchFavoriteVendors token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/favorites/vendors';
 
@@ -207,11 +207,10 @@ class FavoritesController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        notifyListeners();
-        return ApiMessageResponse(success: false, message: error);
-      }
+      debugPrint('🔑 FavoritesController token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/favorites/products/$productVsId';
 
@@ -295,15 +294,10 @@ class FavoritesController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        // rollback
-        favorites
-          ..clear()
-          ..addAll(backup);
-        notifyListeners();
-        return ApiMessageResponse(success: false, message: error);
-      }
+      debugPrint('🔑 FavoritesController removeFavoriteProduct token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/favorites/products/$productVsId';
 

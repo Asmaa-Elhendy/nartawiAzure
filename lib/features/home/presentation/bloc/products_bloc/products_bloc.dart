@@ -47,10 +47,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       final token = await AuthService.getToken();
       print('🔑 token = $token');
 
-      if (token == null) {
-        emit(const ProductsError('Authentication required'));
-        return;
-      }
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       // ⬅️ نحسب الصفحة الأول
       final int pageToFetch = event.pageIndex ?? _currentPage;

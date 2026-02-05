@@ -18,6 +18,9 @@ import 'features/notification/presentation/bloc/notification_bloc/event.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'injection_container.dart';
 import 'injection_container.dart' as di;
+import 'core/interceptors/auth_interceptor.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +35,11 @@ Future<void> main() async {
     DeviceOrientation.portraitDown, // لو عايزة تقفيل كامل للعرض
   ]);
   await init();
+  
+  // Set the global navigator key for 401 handling
+  print('Setting navigatorKey: $navigatorKey');
+  AuthInterceptor.setNavigatorKey(navigatorKey);
+  
   runApp(
     MultiProvider(
       providers: [
@@ -77,6 +85,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'NARTAWI',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

@@ -71,10 +71,10 @@ class CouponsController extends ChangeNotifier {
       totalCount = 0;
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 CouponsController token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/wallet/coupons';
 
@@ -231,10 +231,10 @@ class CouponsController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        bundlesError = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 fetchBundlePurchases token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/wallet/bundle-purchases';
 
@@ -289,10 +289,10 @@ class CouponsController extends ChangeNotifier {
       bundlesPageNumber += 1;
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        bundlesError = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 fetchMoreBundlePurchases token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       // ✅ خليها نفس شكل endpoint الأساسي لو ده الصحيح عندك
       final url = '$base_url/v1/client/wallet/bundle-purchases';

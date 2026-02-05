@@ -8,6 +8,7 @@ import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/profile/presentation/provider/address_controller.dart';
 
@@ -18,10 +19,10 @@ Future<void> init() async {
   sl.registerLazySingleton<Dio>(() => Dio());
 
   // Blocs
-  sl.registerFactory(() => ProductCategoriesBloc(dio: sl<Dio>()));
+  sl.registerFactory(() => ProductCategoriesBloc(dio: DioService.dio));
 
-  sl.registerFactory(() => SuppliersBloc(dio: sl<Dio>()));
-  sl.registerFactory(() => ProductsBloc(dio: sl<Dio>()));
+  sl.registerFactory(() => SuppliersBloc());
+  sl.registerFactory(() => ProductsBloc(dio: DioService.dio));
 
 
 
@@ -30,14 +31,14 @@ Future<void> init() async {
 
 
 
-  sl.registerFactory<AuthBloc>(() => AuthBloc(dio: sl<Dio>()));
+  sl.registerFactory<AuthBloc>(() => AuthBloc(dio: DioService.dio));
 
   // Favorites Controller
-  sl.registerFactory<FavoritesController>(() => FavoritesController(dio: sl<Dio>()));
+  sl.registerFactory<FavoritesController>(() => FavoritesController(dio: DioService.dio));
 
   // Address Controller - Use singleton to share same instance
-  sl.registerLazySingleton<AddressController>(() => AddressController(dio: sl<Dio>()));
+  sl.registerLazySingleton<AddressController>(() => AddressController(dio: DioService.dio));
 
-  sl.registerFactory<SupplierReviewsController>(() => SupplierReviewsController(dio: sl<Dio>()));
-  sl.registerFactory<OrdersController>(() => OrdersController(dio: sl<Dio>()));
+  sl.registerFactory<SupplierReviewsController>(() => SupplierReviewsController(dio: DioService.dio));
+  sl.registerFactory<OrdersController>(() => OrdersController(dio: DioService.dio));
 }

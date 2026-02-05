@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/services/dio_service.dart';
 import '../../../profile/domain/models/coupon_balance_item.dart';
 import 'custom_text.dart';
 
@@ -159,10 +160,13 @@ class _LatestCouponTrackerFromApiState extends State<LatestCouponTrackerFromApi>
   }
 
   Future<CouponBalanceItem?> _fetchLastCouponBalance() async {
-    final dio = Dio();
+    final dio = DioService.dio;
 
     final token = await AuthService.getToken();
-    if (token == null) return null;
+    print('🔑 LatestCouponTracker token = $token');
+
+    // Don't check for null token - let the API call happen to trigger 401
+    // This will allow AuthInterceptor to handle the 401 and navigate to login
 
     final url = '$base_url/v1/client/wallet/balance';
 
