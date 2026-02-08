@@ -111,12 +111,13 @@ class _CartScreenState extends State<CartScreen>
     super.dispose();
   }
 
-  Future<void> _clearCart() async {
+  Future<void> _clearCart(double width) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Clear Cart'),
-        content: Text('Remove all items from your cart?'),
+        title: Text('Clear Cart',style: TextStyle(fontSize: width*.036,    fontWeight: FontWeight.w600,
+        ),),
+        content: Text('Remove all items from your cart?',style: TextStyle(  color: Colors.grey[600],),),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -638,7 +639,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                   Navigator.pushNamed(context, '/main');
                                 },
                                 () {
-                                  _clearCart();
+                                  _clearCart(screenWidth);
                                 },
                               ),
                               SizedBox(height: screenHeight * .04),

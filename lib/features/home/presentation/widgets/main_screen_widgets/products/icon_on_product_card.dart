@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
-import '../../../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
-import 'package:newwwwwwww/features/home/presentation/bloc/cart/cart_event.dart';
-import 'package:newwwwwwww/features/home/presentation/bloc/cart/cart_state.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
-import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_state.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
+import '../../../../../cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
+import '../../../bloc/cart/cart_event.dart';
+import '../../../bloc/cart/cart_state.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
   final bool fromFavouriteScreen;
@@ -123,7 +122,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                   'Remove from cart',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: widget.width * .034,
+                    fontSize: widget.width * .036,
                   ),
                 ),
                 content: Text(
@@ -242,27 +241,53 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       };
                       
                       context.read<CachedCartBloc>().add(CartAddItem(productItem));
+                      
+                      // Reset controller to 1
+                      try {
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantityBloc.add(QuantityChanged('1'));
+                      } catch (e) {
+                        // Ignore if can't reset
+                      }
                     } else {
-                      // Product already exists, increase quantity instead
+                      // Product already exists, add controller quantity to existing quantity
+                      int controllerQuantity = 1;
+                      try {
+                        // Get quantity from parent ProductQuantityBloc
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        controllerQuantity = int.tryParse(quantityBloc.state.quantity) ?? 1;
+                      } catch (e) {
+                        controllerQuantity = 1;
+                      }
+                      
+                      // Get current quantity from cart
+                      final cartState = context.read<CachedCartBloc>().state;
+                      final productKey = 'product_${widget.productVsId}';
+                      final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
+                      final newQuantity = currentQuantity + controllerQuantity;
+                      
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
                         'fromFavorite': true,
+                        'quantity': newQuantity, // Use new total quantity
                       };
                       
-                      // Get current quantity and increase by 1
-                      final cartState = context.read<CachedCartBloc>().state;
-                      final productKey = 'product_${widget.productVsId}';
-                      final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
-                      final newQuantity = currentQuantity + 1;
-                      
-                      // Update quantity
+                      // Update with new total quantity
                       context.read<CachedCartBloc>().add(CartUpdateQuantity(productItem, newQuantity));
+                      
+                      // Reset controller to 1
+                      try {
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantityBloc.add(QuantityChanged('1'));
+                      } catch (e) {
+                        // Ignore if can't reset
+                      }
                       
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Product already in cart. Quantity increased to $newQuantity.'),
+                          content: Text('Product already in cart. Quantity updated to $newQuantity.'),
                           backgroundColor: AppColors.primary,
                           behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 2),
@@ -304,27 +329,53 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       };
                       
                       context.read<CachedCartBloc>().add(CartAddItem(productItem));
+                      
+                      // Reset controller to 1
+                      try {
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantityBloc.add(QuantityChanged('1'));
+                      } catch (e) {
+                        // Ignore if can't reset
+                      }
                     } else {
-                      // Product already exists, increase quantity instead
+                      // Product already exists, add controller quantity to existing quantity
+                      int controllerQuantity = 1;
+                      try {
+                        // Get quantity from parent ProductQuantityBloc
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        controllerQuantity = int.tryParse(quantityBloc.state.quantity) ?? 1;
+                      } catch (e) {
+                        controllerQuantity = 1;
+                      }
+                      
+                      // Get current quantity from cart
+                      final cartState = context.read<CachedCartBloc>().state;
+                      final productKey = 'product_${widget.productVsId}';
+                      final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
+                      final newQuantity = currentQuantity + controllerQuantity;
+                      
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
                         'price': widget.price,
                         'fromFavorite': false,
+                        'quantity': newQuantity, // Use new total quantity
                       };
                       
-                      // Get current quantity and increase by 1
-                      final cartState = context.read<CachedCartBloc>().state;
-                      final productKey = 'product_${widget.productVsId}';
-                      final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
-                      final newQuantity = currentQuantity + 1;
-                      
-                      // Update quantity
+                      // Update with new total quantity
                       context.read<CachedCartBloc>().add(CartUpdateQuantity(productItem, newQuantity));
+                      
+                      // Reset controller to 1
+                      try {
+                        final quantityBloc = context.read<ProductQuantityBloc>();
+                        quantityBloc.add(QuantityChanged('1'));
+                      } catch (e) {
+                        // Ignore if can't reset
+                      }
                       
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Product already in cart. Quantity increased to $newQuantity.'),
+                          content: Text('Product already in cart. Quantity updated to $newQuantity.'),
                           backgroundColor: AppColors.primary,
                           behavior: SnackBarBehavior.floating,
                           duration: Duration(seconds: 2),
