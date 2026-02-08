@@ -120,7 +120,7 @@ class _CartScreenState extends State<CartScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Cancel'),
+            child: Text('Cancel',style: TextStyle(color: AppColors.primary),),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -138,34 +138,20 @@ class _CartScreenState extends State<CartScreen>
 
     if (confirmed == true) {
       try {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => Center(child: CircularProgressIndicator()),
-        );
 
-        final token = await AuthService.getToken();
-        final dio = DioService.dio;
 
-        final response = await dio.delete(
-          '$base_url/v1/client/cart/clear',
-          options: Options(
-            headers: {'Authorization': 'Bearer $token'},
-          ),
-        );
 
-        Navigator.pop(context);
 
-        if (response.statusCode == 200 || response.statusCode == 204) {
+
           context.read<CartBloc>().add(CartClear());
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Cart cleared successfully'),
+              content: Text('Cart cleared successfully'),behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
             ),
           );
-        }
+
       } catch (e) {
         if (Navigator.canPop(context)) Navigator.pop(context);
 
