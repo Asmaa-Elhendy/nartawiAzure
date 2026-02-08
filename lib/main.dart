@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:newwwwwwww/features/home/presentation/provider/supplier_reviews_controller.dart';
 import 'package:newwwwwwww/features/home/presentation/provider/supplier_reviews_controller.dart';
 import 'package:newwwwwwww/features/orders/presentation/provider/order_controller.dart';
@@ -15,7 +17,7 @@ import 'features/auth/presentation/bloc/login_bloc.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/notification/presentation/bloc/notification_bloc/event.dart';
-import 'features/home/presentation/bloc/cart/cart_bloc.dart';
+import 'features/cart/presentation/bloc/cached_cart_bloc.dart';
 import 'injection_container.dart';
 import 'injection_container.dart' as di;
 import 'core/interceptors/auth_interceptor.dart';
@@ -24,6 +26,14 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize logging
+  Logger.root.level = kDebugMode ? Level.ALL : Level.WARNING;
+  Logger.root.onRecord.listen((record) {
+    if (kDebugMode) {
+      print('${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}');
+    }
+  });
   // لو لسه عايزة تقفلي الـ orientation
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -37,7 +47,9 @@ Future<void> main() async {
   await init();
   
   // Set the global navigator key for 401 handling
-  print('Setting navigatorKey: $navigatorKey');
+  if (kDebugMode) {
+    print('Setting navigatorKey: $navigatorKey');
+  }
   AuthInterceptor.setNavigatorKey(navigatorKey);
   
   runApp(
@@ -49,8 +61,8 @@ Future<void> main() async {
         BlocProvider<NotificationBloc>(
           create: (_) => sl<NotificationBloc>()..add(LoadNotifications()),
         ),
-        BlocProvider<CartBloc>(
-          create: (_) => sl<CartBloc>(),
+        BlocProvider<CachedCartBloc>(
+          create: (_) => sl<CachedCartBloc>(),
         ),
         BlocProvider<ProductCategoriesBloc>(
           create: (_) => sl<ProductCategoriesBloc>(),

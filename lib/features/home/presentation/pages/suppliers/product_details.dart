@@ -8,7 +8,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/utils/components/confirmation_alert.dart';
-import '../../bloc/cart/cart_bloc.dart';
+import '../../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../bloc/cart/cart_event.dart';
 import '../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../bloc/product_quantity/product_quantity_event.dart';
@@ -104,7 +104,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
                           leftOnTap: () {
                             Navigator.pop(dialogContext);
-                            context.read<CartBloc>().add(
+                            context.read<CachedCartBloc>().add(
                               CartAddItem(widget.clientProduct!),
                             );
                             Navigator.pop(context);

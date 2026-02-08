@@ -16,7 +16,7 @@ import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
-import '../../../home/presentation/bloc/cart/cart_bloc.dart';
+import '../bloc/cached_cart_bloc.dart';
 import '../../../home/presentation/bloc/cart/cart_state.dart';
 import '../../../home/presentation/bloc/cart/cart_event.dart';
 import '../../../profile/domain/models/client_address.dart';
@@ -143,7 +143,7 @@ class _CartScreenState extends State<CartScreen>
 
 
 
-          context.read<CartBloc>().add(CartClear());
+          context.read<CachedCartBloc>().add(CartClear());
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -166,7 +166,7 @@ class _CartScreenState extends State<CartScreen>
   }
 
   void _createOrderWithPayment(int paymentMethod) async {
-    final cartState = context.read<CartBloc>().state;
+    final cartState = context.read<CachedCartBloc>().state;
 
     if (_selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -252,7 +252,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
           ),
         );
 
-        context.read<CartBloc>().add(CartClear());
+        context.read<CachedCartBloc>().add(CartClear());
 
         if (mounted) {
           Navigator.of(context).pushReplacementNamed('/orders');
@@ -351,7 +351,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              BlocBuilder<CartBloc, CartState>(
+                              BlocBuilder<CachedCartBloc, CartState>(
                                 builder: (context, cartState) {
                                   // Only show CartStoreCard if there are products in cart
                                   if (cartState.cartProducts.isEmpty) {
@@ -404,7 +404,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 padding: EdgeInsets.symmetric(
                                   vertical: screenHeight * .02,
                                 ),
-                                child: BlocBuilder<CartBloc, CartState>(
+                                child: BlocBuilder<CachedCartBloc, CartState>(
                                   builder: (context, cartState) {
                                     if (cartState.cartProducts.isEmpty) {
                                       return Center(
@@ -546,7 +546,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 //                 ],),
                                 //             ),
                               ),
-                              BlocBuilder<CartBloc, CartState>(
+                              BlocBuilder<CachedCartBloc, CartState>(
                                 builder: (context, cartState) {
                                   // Only show OrderSummaryCard if there are products in cart
                                   if (cartState.cartProducts.isEmpty) {
@@ -574,7 +574,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 () {
                                         
                                   // Print all supplier IDs from cart products
-                                  final cartState = context.read<CartBloc>().state;
+                                  final cartState = context.read<CachedCartBloc>().state;
                                   print('🛒 Cart Products Supplier IDs:');
                                   for (final product in cartState.cartProducts) {
                                     if (product is Map<String, dynamic>) {

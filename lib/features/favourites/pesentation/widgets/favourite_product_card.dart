@@ -6,7 +6,7 @@ import '../../../../../../core/theme/colors.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
-import '../../../home/presentation/bloc/cart/cart_bloc.dart';
+import '../../../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../../home/presentation/bloc/cart/cart_event.dart';
 import '../../../home/presentation/pages/suppliers/product_details.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/price_widget.dart';
@@ -68,7 +68,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     if (widget.fromCartScreen) {
       try {
         final productItem = _getProductItemForCart();
-        final cartBloc = context.read<CartBloc>();
+        final cartBloc = context.read<CachedCartBloc>();
 
         // Check if the bloc is properly initialized
         if (cartBloc.isClosed) {
@@ -104,7 +104,7 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     int initialQuantity = 1;
     if (widget.fromCartScreen) {
       try {
-        final cartState = context.read<CartBloc>().state;
+        final cartState = context.read<CachedCartBloc>().state;
         final productKey = _getProductKeyForCurrentItem();
         initialQuantity = cartState.productQuantities?[productKey] ?? 1;
       } catch (e) {

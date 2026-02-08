@@ -5,12 +5,12 @@ import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_co
 import 'package:newwwwwwww/features/home/presentation/provider/supplier_reviews_controller.dart';
 import 'package:newwwwwwww/features/orders/presentation/provider/order_controller.dart';
 import 'features/auth/presentation/bloc/login_bloc.dart';
-import 'features/home/presentation/bloc/cart/cart_bloc.dart';
 import 'features/home/presentation/bloc/product_categories_bloc/product_categories_bloc.dart';
 import 'features/home/presentation/bloc/products_bloc/products_bloc.dart';
 import 'package:newwwwwwww/core/services/dio_service.dart';
 import 'features/notification/presentation/bloc/notification_bloc/bloc.dart';
 import 'features/profile/presentation/provider/address_controller.dart';
+import 'features/cart/presentation/bloc/cached_cart_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -26,7 +26,8 @@ Future<void> init() async {
 
 
 
-  sl.registerFactory<CartBloc>(() => CartBloc());
+  // Cart Bloc
+  sl.registerFactory(() => CachedCartBloc());
   sl.registerFactory<NotificationBloc>(() => NotificationBloc(initialNotifications: []));
 
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/colors.dart';
-import '../bloc/cart/cart_bloc.dart';
+import '../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
 import '../bloc/cart/cart_event.dart';
 
 showSnackBarAddProduct(BuildContext context, double screenWidth, double screenHeight, String title) {
@@ -36,7 +36,7 @@ showSnackBarAddProduct(BuildContext context, double screenWidth, double screenHe
             ),
             GestureDetector(
               onTap: () {
-                context.read<CartBloc>().add(CartAddItem(title));
+                context.read<CachedCartBloc>().add(CartAddItem(title));
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
               child: Text(

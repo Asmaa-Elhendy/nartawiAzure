@@ -11,7 +11,7 @@ import '../../../cart/presentation/screens/cart_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../coupons/presentation/provider/coupon_controller.dart';
-import '../bloc/cart/cart_bloc.dart';
+import '../../../cart/presentation/bloc/cached_cart_bloc.dart';
 import 'dart:io' show Platform;
 import 'fixed_bage_widget.dart';
 import 'package:dio/dio.dart';
@@ -245,7 +245,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => BlocProvider.value(
-                          value: context.read<CartBloc>(),
+                          value: context.read<CachedCartBloc>(),
                           child: CartScreen(),
                         ),
                       ),
@@ -255,7 +255,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     position: badges.BadgePosition.topEnd(top: -8, end: -4),
                     badgeContent: buildFixedBadge(
                       size: screenWidth * .048,
-                      text: context.select<CartBloc, String>((b) => b.state.cartProducts.length.toString()),
+                      text: context.select<CachedCartBloc, String>((b) => b.state.cartProducts.length.toString()),
                       color: AppColors.whiteColor,
                       fontSize: screenWidth * .028,
                     ),
