@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -13,6 +14,8 @@ import '../widgets/custome_button.dart';
 import '../widgets/mark_delivered_alert.dart';
 import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
 import '../../../../../core/services/auth_service.dart';
+import 'package:newwwwwwww/features/orders/presentation/provider/order_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../orders/domain/models/order_model.dart';
 
 
@@ -67,7 +70,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
   @override
   void initState() {
     super.initState();
-    _podDatasource = OrderConfirmationDatasource(dio: Dio());
+    _podDatasource = OrderConfirmationDatasource(dio: DioService.dio,baseUrl: base_url);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 import '../models/scheduled_order_model.dart';
 import '../../../../core/services/auth_service.dart';
 
@@ -12,7 +13,7 @@ abstract class ScheduledOrderRemoteDataSource {
 
 class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSource {
   final Dio dio;
-  static const String baseUrl = 'https://nartawi.smartvillageqatar.com/api';
+
 
   ScheduledOrderRemoteDataSourceImpl({required this.dio});
 
@@ -26,7 +27,7 @@ class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSour
       print('🔵 Creating scheduled order: ${request.toJson()}');
       
       final response = await dio.post(
-        '$baseUrl/v1/client/scheduled-orders',
+        '$base_url/v1/client/scheduled-orders',
         data: request.toJson(),
         options: Options(
           headers: {
@@ -64,7 +65,7 @@ class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSour
       print('🔵 Fetching all scheduled orders');
       
       final response = await dio.get(
-        '$baseUrl/v1/client/scheduled-orders',
+        '$base_url/v1/client/scheduled-orders',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -103,7 +104,7 @@ class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSour
       print('🔵 Fetching scheduled order #$id');
       
       final response = await dio.get(
-        '$baseUrl/v1/client/scheduled-orders/$id',
+        '$base_url/v1/client/scheduled-orders/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -145,7 +146,7 @@ class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSour
       print('🔵 Updating scheduled order #$id: ${request.toJson()}');
       
       final response = await dio.put(
-        '$baseUrl/v1/client/scheduled-orders/$id',
+        '$base_url/v1/client/scheduled-orders/$id',
         data: request.toJson(),
         options: Options(
           headers: {
@@ -186,7 +187,7 @@ class ScheduledOrderRemoteDataSourceImpl implements ScheduledOrderRemoteDataSour
       print('🔵 Deleting scheduled order #$id');
       
       final response = await dio.delete(
-        '$baseUrl/v1/client/scheduled-orders/$id',
+        '$base_url/v1/client/scheduled-orders/$id',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

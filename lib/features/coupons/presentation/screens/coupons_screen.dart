@@ -7,6 +7,8 @@ import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.d
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../provider/coupon_controller.dart';
+import '../../../../core/services/dio_service.dart';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../widgets/coupon_card.dart';
 
 class CouponsScreen extends StatefulWidget {
@@ -32,7 +34,7 @@ class _CouponsScreenState extends State<CouponsScreen>
     _tabController = TabController(length: 4, vsync: this);
     super.initState();
 
-    _couponsController = CouponsController(dio: Dio());
+    _couponsController = CouponsController(dio: DioService.dio);
 
     // ✅ نجيب الكل مرة واحدة عشان آخر delivery_man يبقى صح
     _couponsController.fetchAllCoupons();

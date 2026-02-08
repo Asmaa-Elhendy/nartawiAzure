@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/services/dio_service.dart';
 import 'package:newwwwwwww/features/auth/presentation/screens/login.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
@@ -28,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    profileController = ProfileController(dio: Dio());
+    profileController = ProfileController(dio: DioService.dio);
     profileController.fetchProfile(); // ✅ load profile
   }
 

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../domain/models/dispute_model.dart';
 import '../../../../core/services/auth_service.dart';
 
@@ -11,7 +12,7 @@ class DisputeDatasource {
 
   DisputeDatasource({
     required this.dio,
-    this.baseUrl = 'https://nartawi.smartvillageqatar.com/api',
+    required this.baseUrl ,
   });
 
   Future<Dispute> createDispute({

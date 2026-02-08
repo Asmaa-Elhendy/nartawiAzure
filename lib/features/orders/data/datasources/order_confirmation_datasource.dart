@@ -10,7 +10,7 @@ class OrderConfirmationDatasource {
 
   OrderConfirmationDatasource({
     required this.dio,
-    this.baseUrl = 'https://nartawi.smartvillageqatar.com/api',
+    required this.baseUrl ,
   });
 
   Future<OrderConfirmation> submitPOD({

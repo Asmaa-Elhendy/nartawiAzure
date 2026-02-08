@@ -292,10 +292,10 @@ class OrdersController extends ChangeNotifier {
       }
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 OrdersController token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = _ordersEndpoint;
 
@@ -313,6 +313,9 @@ class OrdersController extends ChangeNotifier {
           },
         ),
       );
+
+      debugPrint('🌐 OrdersController API Response: statusCode=${response.statusCode}');
+      debugPrint('🌐 OrdersController API Response: data=${response.data}');
 
       if (response.statusCode == 200) {
         final data = response.data is Map<String, dynamic>
@@ -368,10 +371,10 @@ class OrdersController extends ChangeNotifier {
       pageIndex += 1;
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 OrdersController token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = _ordersEndpoint;
 
@@ -429,11 +432,10 @@ class OrdersController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        notifyListeners();
-        return false;
-      }
+      debugPrint('🔑 OrdersController cancelOrder token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/orders/$id/cancel';
 
@@ -534,11 +536,10 @@ class OrdersController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        notifyListeners();
-        return null;
-      }
+      debugPrint('🔑 OrdersController createOrder token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/orders';
       debugPrint('🌍 FINAL URL: $url');

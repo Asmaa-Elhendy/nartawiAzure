@@ -1,6 +1,7 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/services/dio_service.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/filter_date_widget.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/transaction_card.dart';
 
@@ -33,7 +34,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
   void initState() {
     super.initState();
 
-    _txController = WalletTransactionsController(dio: Dio());
+    _txController = WalletTransactionsController(dio: DioService.dio);
     _txController.fetchTransactions(reset: true);
 
     _scrollController.addListener(() {

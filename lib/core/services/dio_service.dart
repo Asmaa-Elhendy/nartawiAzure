@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../features/auth/presentation/bloc/login_bloc.dart';
 import '../interceptors/auth_interceptor.dart';
 import 'auth_service.dart';
 import 'dart:developer';
@@ -10,7 +11,7 @@ class DioService {
   static Dio get dio {
     _instance ??= Dio(
       BaseOptions(
-        baseUrl: 'https://nartawi.smartvillageqatar.com/api/v1',
+        baseUrl: '$base_url/v1',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         headers: {

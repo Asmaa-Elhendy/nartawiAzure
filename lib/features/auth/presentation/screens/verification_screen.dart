@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:dio/dio.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
+import '../bloc/login_bloc.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_title_widget.dart';
 
@@ -39,9 +41,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final dio = Dio();
+      final dio = DioService.dio;
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/v1/auth/verify-otp',
+        '$base_url/v1/auth/verify-otp',
         data: {
           'email': widget.email,
           'otp': _otpCode,

@@ -7,7 +7,8 @@ import '../../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../../orders/domain/models/order_model.dart';
-import '../../../../orders/presentation/provider/order_controller.dart';
+import 'package:newwwwwwww/features/orders/presentation/provider/order_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../orders/presentation/widgets/order_card.dart';
 import '../../../../orders/presentation/widgets/payement_status_widget.dart';
 import '../../../../profile/presentation/widgets/filter_date_widget.dart';
@@ -85,7 +86,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-    ordersController = OrdersController(dio: Dio(), userRole: 'Delivery');
+    ordersController = OrdersController(dio: DioService.dio, userRole: 'Delivery');
 
     // Add scroll listener
     _scrollController.addListener(_onScroll);

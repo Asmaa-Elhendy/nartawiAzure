@@ -43,10 +43,10 @@ class AddressController extends ChangeNotifier {
       }
 
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 AddressController fetchAddresses token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/account/addresses';
 
@@ -128,11 +128,10 @@ class AddressController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        createError = 'Authentication required';
-        log('🔥 AddressController: No token found');
-        return false;
-      }
+      debugPrint('🔑 AddressController addNewAddress token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
       
       log('🔥 AddressController: Token found successfully');
 
@@ -152,7 +151,7 @@ class AddressController extends ChangeNotifier {
         ),
       );
 
-      log('🔥 AddressController: Response received!');
+      log('🔥 AddressController: Response received!');//k
       log('🔥 AddressController: Response status: ${response.statusCode}');
       log('🔥 AddressController: Response data: ${response.data}');
 
@@ -228,10 +227,10 @@ class AddressController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        deleteError = 'Authentication required';
-        return false;
-      }
+      debugPrint('🔑 AddressController deleteAddress token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/account/addresses/$id';
 

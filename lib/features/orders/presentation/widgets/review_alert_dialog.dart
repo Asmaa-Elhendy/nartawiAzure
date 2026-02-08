@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../home/presentation/provider/supplier_reviews_controller.dart';
 import 'cancel_order_buttons.dart';
 import 'custom_text_field_alert.dart';
-import '../../../home/presentation/provider/supplier_reviews_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 
 class ReviewAlertDialog extends StatefulWidget {
   final int orderId;
@@ -38,7 +39,7 @@ class _ReviewAlertDialogState extends State<ReviewAlertDialog> {
   @override
   void initState() {
     super.initState();
-    _controller = SupplierReviewsController(dio: Dio());
+    _controller = SupplierReviewsController(dio: DioService.dio);
   }
 
   @override

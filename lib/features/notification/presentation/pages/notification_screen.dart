@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:newwwwwwww/features/notification/presentation/widgets/all_notification_page.dart';
+import 'package:newwwwwwww/features/notification/presentation/provider/notification_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -52,7 +53,7 @@ class _NotificationScreenState extends State<NotificationScreen>
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
     _scrollController = ScrollController();
-    _notificationController = NotificationController(dio: Dio());
+    _notificationController = NotificationController(dio: DioService.dio);
     
     _notificationController.fetchNotifications();
     

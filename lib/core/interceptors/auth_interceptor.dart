@@ -82,27 +82,30 @@ class AuthInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
+    log('AuthInterceptor.onError called: statusCode=${err.response?.statusCode}');
+    
     if (err.response?.statusCode == 401) {
       // Clear the stored token
       await AuthService.deleteToken();
       
       // Navigate to login screen using a more direct approach
-      print('401 detected - attempting direct navigation');
+      log('401 detected - attempting direct navigation');
       
       // Try using the global navigator key first
       if (appNavigatorKey?.currentState != null) {
         try {
+          log('Navigator state available, attempting navigation');
           appNavigatorKey!.currentState!.pushNamedAndRemoveUntil(
             '/login',
             (route) => false,
           );
-          print('Direct navigation successful');
+          log('Direct navigation successful');
           return;
         } catch (e) {
-          print('Direct navigation failed: $e');
+          log('Direct navigation failed: $e');
         }
       } else {
-        print('Navigator state is null');
+        log('Navigator state is null');
       }
       
       // If that fails, try a completely different approach
@@ -110,15 +113,18 @@ class AuthInterceptor extends Interceptor {
         try {
           final context = WidgetsBinding.instance.focusManager.primaryFocus?.context;
           if (context != null) {
+            log('Fallback context available, attempting navigation');
             material.Navigator.of(context).pushNamedAndRemoveUntil(
               '/login',
                 (route) => false,
             );
-            print('Fallback navigation successful');
+            log('Fallback navigation successful');
             return; // Exit callback after successful navigation
+          } else {
+            log('Fallback context is null');
           }
         } catch (e) {
-          print('Fallback navigation failed: $e');
+          log('Fallback navigation failed: $e');
         }
       });
       

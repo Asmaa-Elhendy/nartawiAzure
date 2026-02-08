@@ -7,9 +7,11 @@ import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.da
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/order_summary_card.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
+import '../../../../core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../injection_container.dart';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -143,10 +145,10 @@ class _CartScreenState extends State<CartScreen>
         );
 
         final token = await AuthService.getToken();
-        final dio = Dio();
+        final dio = DioService.dio;
 
         final response = await dio.delete(
-          'https://nartawi.smartvillageqatar.com/api/v1/client/cart/clear',
+          '$base_url/v1/client/cart/clear',
           options: Options(
             headers: {'Authorization': 'Bearer $token'},
           ),

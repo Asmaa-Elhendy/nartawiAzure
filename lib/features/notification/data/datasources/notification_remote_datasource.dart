@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../domain/notification_model.dart';
 import '../../../../core/services/auth_service.dart';
 
@@ -20,7 +21,7 @@ abstract class NotificationRemoteDataSource {
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   final Dio dio;
-  static const String baseUrl = 'https://nartawi.smartvillageqatar.com/api';
+
 
   NotificationRemoteDataSourceImpl({required this.dio});
 
@@ -42,7 +43,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       print('🔵 Fetching notifications: page=$pageNumber, isRead=$isRead');
 
       final response = await dio.get(
-        '$baseUrl/v1/client/notifications',
+        '$base_url/v1/client/notifications',
         queryParameters: queryParams,
         options: Options(
           headers: {
@@ -71,7 +72,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       final token = await AuthService.getToken();
 
       final response = await dio.get(
-        '$baseUrl/v1/client/notifications/unread-count',
+        '$base_url/v1/client/notifications/unread-count',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -97,7 +98,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       final token = await AuthService.getToken();
 
       final response = await dio.post(
-        '$baseUrl/v1/client/notifications/$id/read',
+        '$base_url/v1/client/notifications/$id/read',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -121,7 +122,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       final token = await AuthService.getToken();
 
       final response = await dio.post(
-        '$baseUrl/v1/client/notifications/read-all',
+        '$base_url/v1/client/notifications/read-all',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -151,7 +152,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       final authToken = await AuthService.getToken();
 
       await dio.post(
-        '$baseUrl/v1/client/notifications/push-tokens',
+        '$base_url/v1/client/notifications/push-tokens',
         data: {
           'token': token,
           'deviceType': deviceType,

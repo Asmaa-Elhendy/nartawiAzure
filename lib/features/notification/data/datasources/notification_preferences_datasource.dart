@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../../../core/services/auth_service.dart';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 
 class NotificationPreferences {
   // Only 4 dynamic fields that user can control via UI
@@ -51,7 +52,7 @@ abstract class NotificationPreferencesDataSource {
 class NotificationPreferencesDataSourceImpl 
     implements NotificationPreferencesDataSource {
   final Dio dio;
-  static const String baseUrl = 'https://nartawi.smartvillageqatar.com/api';
+
 
   NotificationPreferencesDataSourceImpl({required this.dio});
 
@@ -61,7 +62,7 @@ class NotificationPreferencesDataSourceImpl
       final token = await AuthService.getToken();
 
       final response = await dio.get(
-        '$baseUrl/v1/client/notifications/preferences',
+        '$base_url/v1/client/notifications/preferences',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -91,7 +92,7 @@ class NotificationPreferencesDataSourceImpl
       final token = await AuthService.getToken();
 
       final response = await dio.put(
-        '$baseUrl/v1/client/notifications/preferences',
+        '$base_url/v1/client/notifications/preferences',
         data: prefs.toJson(),
         options: Options(
           headers: {

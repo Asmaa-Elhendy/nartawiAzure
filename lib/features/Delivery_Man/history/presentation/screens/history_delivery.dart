@@ -7,7 +7,8 @@ import '../../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../../profile/presentation/widgets/filter_date_widget.dart';
-import '../../../../profile/presentation/provider/wallet_transaction_controller.dart';
+import 'package:newwwwwwww/features/profile/presentation/provider/wallet_transaction_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../profile/domain/models/wallet_transaction.dart';
 import '../../../../profile/presentation/widgets/transaction_card.dart';
 
@@ -37,7 +38,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-    transactionController = WalletTransactionsController(dio: Dio());
+    transactionController = WalletTransactionsController(dio: DioService.dio);
     
     // Fetch delivery history transactions
     WidgetsBinding.instance.addPostFrameCallback((_) {

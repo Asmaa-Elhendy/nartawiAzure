@@ -4,12 +4,13 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
-import 'package:newwwwwwww/features/coupons/presentation/provider/coupon_controller.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import 'package:newwwwwwww/features/notification/presentation/pages/notification_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../coupons/presentation/provider/coupon_controller.dart';
 import '../bloc/cart/cart_bloc.dart';
 import 'dart:io' show Platform;
 import 'fixed_bage_widget.dart';
@@ -51,7 +52,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
   @override
   void initState() {
     super.initState();
-    _couponsController = CouponsController(dio: Dio());
+    _couponsController = CouponsController(dio: DioService.dio);
     _fetchBundleCount();
   }
 

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/profile_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/single_settings_profile.dart';
+import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../../profile/presentation/provider/profile_controller.dart';
+
 class DeliveryProfile extends StatefulWidget {
   const DeliveryProfile({super.key});
 
@@ -20,7 +22,7 @@ class _DeliveryProfileState extends State<DeliveryProfile> {
   @override
   void initState() {
     super.initState();
-    profileController = ProfileController(dio: Dio());
+    profileController = ProfileController(dio: DioService.dio);
     profileController.fetchProfile();
   }
 

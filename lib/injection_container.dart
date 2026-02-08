@@ -16,7 +16,7 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // External
-  sl.registerLazySingleton<Dio>(() => Dio());
+  sl.registerLazySingleton<Dio>(() => DioService.dio);
 
   // Blocs
   sl.registerFactory(() => ProductCategoriesBloc(dio: DioService.dio));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-
+import '../../../../core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -38,7 +38,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   @override
   void initState() {
     super.initState();
-    _prefsDataSource = NotificationPreferencesDataSourceImpl(dio: Dio());
+    _prefsDataSource = NotificationPreferencesDataSourceImpl(dio: DioService.dio);
     _loadPreferences();
   }
 

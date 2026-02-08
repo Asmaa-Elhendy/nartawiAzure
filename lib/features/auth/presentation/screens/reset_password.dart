@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import '../../../../core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/components/background_logo.dart';
+import '../bloc/login_bloc.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_custome_full_text_field.dart';
 class ResetPasswordScreen extends StatefulWidget {
@@ -54,9 +56,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       final email = args['email'];
       final verificationToken = args['verificationToken'];
 
-      final dio = Dio();
+      final dio = DioService.dio; // Use DioService.dio for Dio initialization
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/v1/auth/reset-password',
+        '$base_url/v1/auth/reset-password',
         data: {
           'email': email,
           'verificationToken': verificationToken,

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
@@ -90,7 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   // ✅ Prefill only once
   @override
   void initState() {
-    profileController = ProfileController(dio: Dio());
+    profileController = ProfileController(dio: DioService.dio);
     _tabController = TabController(length: 2, vsync: this);
 
     super.initState();

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/services/dio_service.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../domain/models/order_model.dart';
@@ -49,7 +50,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
 
-    ordersController = OrdersController(dio: Dio());
+    ordersController = OrdersController(dio: DioService.dio);
     
     // Add scroll listener
     _scrollController.addListener(_onScroll);

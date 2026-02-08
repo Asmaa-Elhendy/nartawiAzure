@@ -39,10 +39,10 @@ class WalletBalanceController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 WalletBalanceController fetchBalance token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/wallet/balance';
 

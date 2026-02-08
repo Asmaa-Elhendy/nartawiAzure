@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
+import '../../../../core/services/dio_service.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/customer_card_information.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -14,6 +15,7 @@ import 'package:newwwwwwww/features/orders/presentation/widgets/reason_for_cance
 import 'package:newwwwwwww/features/orders/presentation/widgets/seller_information_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../Delivery_Man/orders/presentation/screens/track_order.dart';
+import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/order_card.dart';
@@ -62,7 +64,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     _disputeController = DisputeController(
-      datasource: DisputeDatasource(dio: Dio()),
+      datasource: DisputeDatasource(dio: DioService.dio,baseUrl: base_url),
     );
     
     if (widget.clientOrder.dispute == null && !widget.fromDeliveryMan) {
@@ -207,12 +209,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         builder: (_) => Center(child: CircularProgressIndicator()),
       );
 
-      final dio = Dio();
+      final dio = DioService.dio;
       final token = await AuthService.getToken();
 
       // Call new BE v1.0.21 Start Delivery endpoint
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/v1/delivery/orders/${widget.clientOrder.id}/start',
+        '$base_url/v1/delivery/orders/${widget.clientOrder.id}/start',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -257,11 +259,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
   Future<void> _cancelOrder() async {
     try {
-      final dio = Dio();
+      final dio = DioService.dio;
       final token = await AuthService.getToken();
       
       final response = await dio.post(
-        'https://nartawi.smartvillageqatar.com/api/v1/client/orders/${widget.clientOrder.id}/cancel',
+        '$base_url/v1/client/orders/${widget.clientOrder.id}/cancel',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
         ),
@@ -279,7 +281,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to cancel order: $e'),
+          content: Text('Failed to cancel order: $e'),behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.red,
         ),
       );

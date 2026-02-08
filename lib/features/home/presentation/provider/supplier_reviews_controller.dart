@@ -24,10 +24,10 @@ class SupplierReviewsController extends ChangeNotifier {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        return;
-      }
+      debugPrint('🔑 SupplierReviewsController fetchReviews token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/suppliers/$supplierId/reviews';
 
@@ -78,11 +78,10 @@ class SupplierReviewsController extends ChangeNotifier {
   }) async {
     try {
       final token = await AuthService.getToken();
-      if (token == null) {
-        error = 'Authentication required';
-        notifyListeners();
-        return false;
-      }
+      debugPrint('🔑 SupplierReviewsController submitReview token = $token');
+
+      // Don't check for null token - let the API call happen to trigger 401
+      // This will allow AuthInterceptor to handle the 401 and navigate to login
 
       final url = '$base_url/v1/client/suppliers/$supplierId/reviews';
 
