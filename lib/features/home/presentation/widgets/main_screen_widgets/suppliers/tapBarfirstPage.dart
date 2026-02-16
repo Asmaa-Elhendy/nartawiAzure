@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 import 'package:newwwwwwww/core/theme/colors.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_categories_models/product_category_model.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
@@ -12,6 +13,24 @@ import '../custom_search_bar.dart';
 import '../products/product_card.dart';
 import 'build_filter_button.dart';
 import 'filter_overlay.dart';
+
+// Helper method to safely extract category name
+String _getCategoryName(ProductCategory category) {
+  try {
+    if (category.enName is String) {
+      return category.enName;
+    } else if (category.enName is Map) {
+      final nameMap = category.enName as Map;
+      return nameMap['enName']?.toString() ?? 
+             nameMap['arName']?.toString() ??
+             category.enName.toString();
+    } else {
+      return category.enName.toString();
+    }
+  } catch (e) {
+    return category.enName.toString();
+  }
+}
 
 class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
@@ -35,6 +54,8 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   OverlayEntry? _overlayEntry;
   final GlobalKey _searchBarKey = GlobalKey();
   late TextEditingController _searchController;
+  Timer? _debounceTimer;
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -53,6 +74,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   @override
   void dispose() {
     _searchController.dispose();
+    _debounceTimer?.cancel();
     _hideFilterMenu();
     super.dispose();
   }
@@ -139,6 +161,54 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     _overlayEntry = null;
   }
 
+  void _onSearchChanged(String query) {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+    
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (query.trim().isEmpty) {
+        _clearSearch();
+      } else {
+        _performSearch(query.trim());
+      }
+    });
+  }
+
+  void _performSearch(String query) {
+    setState(() {
+      _isSearching = true;
+    });
+    
+    context.read<ProductsBloc>().add(
+      FetchProducts(
+        categoryId: widget.category?.id,
+        supplierId: widget.supplier?.id,
+        searchTerm: query,
+        executeClear: true,
+      ),
+    );
+  }
+
+  void _clearSearch() {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+    });
+    
+    // Return to normal products view
+    context.read<ProductsBloc>().add(
+      FetchProducts(
+        categoryId: widget.category?.id,
+        supplierId: widget.supplier?.id,
+        executeClear: true,
+      ),
+    );
+  }
+
   /// 🔽 دي اللي هتسمع السكروول وتندهّي loadNextPage من الـ bloc
   bool _onScrollNotification(ScrollNotification scrollInfo) {
     if (scrollInfo.metrics.pixels >=
@@ -175,7 +245,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                 children: [
                   // Search + Filter Button
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomSearchBar(
                         key: _searchBarKey,
@@ -183,23 +253,26 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                         height: screenHeight,
                         width: screenWidth,
                         fromSupplierDetail: true,
+                        hideFliterForNow: true,   //hide search filter for now
+                        onChanged: _onSearchChanged,
+                        onClear: _clearSearch,
                       ),
-                      BuildFilterButton(
-                        screenWidth,
-                        screenHeight,
-                        _toggleFilterMenu,
-                      ),
+                      // BuildFilterButton(
+                      //   screenWidth,
+                      //   screenHeight,
+                      //   _toggleFilterMenu,
+                      // ),
                     ],
                   ),
 
                   // Filter tags
-                  selectedFilters.isNotEmpty
-                      ? Wrap(
-                    spacing: 8.0,
-                    runSpacing: 4.0,
-                    children: generateTags(screenWidth, screenHeight),
-                  )
-                      : const SizedBox(),
+                  // selectedFilters.isNotEmpty
+                  //     ? Wrap(
+                  //   spacing: 8.0,
+                  //   runSpacing: 4.0,
+                  //   children: generateTags(screenWidth, screenHeight),
+                  // )
+                  //     : const SizedBox(),
 
                   // Compare button لو من صفحة All Products
                   widget.fromAllProducts
@@ -217,7 +290,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: screenWidth * 0.04,
-                vertical: screenHeight * 0.01,
+                vertical: screenHeight * 0.0,
               ),
               child: BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {

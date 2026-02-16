@@ -453,8 +453,8 @@ class _MainScreenState extends State<MainScreen> {
                                 } else if (productState is ProductsLoading ||
                                     productState is ProductsInitial) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
+                                    const SnackBar(behavior: SnackBarBehavior.floating,
+                                      content: Text(//
                                           'Products are still loading, please try again.'),
                                     ),
                                   );

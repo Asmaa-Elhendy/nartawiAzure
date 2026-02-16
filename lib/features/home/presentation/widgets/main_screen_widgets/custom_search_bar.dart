@@ -12,6 +12,7 @@ class CustomSearchBar extends StatelessWidget {
   final double height;
   final double width;
   final bool fromSupplierDetail;
+  final bool hideFliterForNow;
 
   const CustomSearchBar({
     Key? key,
@@ -22,18 +23,19 @@ class CustomSearchBar extends StatelessWidget {
     required this.height,
     required this.width,
     this.fromSupplierDetail = false
+    ,this.hideFliterForNow=false
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(//k
       padding:  EdgeInsets.only(bottom: height*.01),
       child: Container(
-        height:fromSupplierDetail?height*.07 :height*.06,
-        width: fromSupplierDetail?width*.75:width,
+        height:hideFliterForNow?height*.06:fromSupplierDetail?height*.07 :height*.06,
+        width: hideFliterForNow?width*.9:fromSupplierDetail?width*.75:width,
 
         child: TextField(
           cursorColor: AppColors.primary,
-//kjik
+
           controller: controller,
           onChanged: onChanged,
           decoration: InputDecoration(

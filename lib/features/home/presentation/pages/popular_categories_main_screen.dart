@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:iconify_flutter/icons/game_icons.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
@@ -28,6 +29,9 @@ class PopularCategoriesMainScreen extends StatefulWidget {
 
 class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScreen> {
   final TextEditingController _searchController = TextEditingController();
+  Timer? _debounceTimer;
+  List<ProductCategory> _filteredCategories = [];
+  
   // final List<Map<String, dynamic>> categories = [
   //   {
   //     'type': 'svg',
@@ -66,8 +70,15 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
   final Set<String> tags = {'small bottles', 'gallons', 'under QAE 50', 'spring water'};
 
   @override
+  void initState() {
+    super.initState();
+    _filteredCategories = widget.categories;
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
   List<Widget> generateTags(double width, double height) {
@@ -145,6 +156,59 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
     _overlayEntry = null;
   }
 
+  void _onSearchChanged(String query) {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+    
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      _filterCategories(query.trim());
+    });
+  }
+
+  void _filterCategories(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _filteredCategories = widget.categories;
+      } else {
+        _filteredCategories = widget.categories
+            .where((category) {
+              final categoryName = _getCategoryName(category);
+              return categoryName.toLowerCase().contains(query.toLowerCase());
+            })
+            .toList();
+      }
+    });
+  }
+
+  void _clearSearch() {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
+    setState(() {
+      _searchController.clear();
+      _filteredCategories = widget.categories;
+    });
+  }
+
+  // Helper method to safely extract category name
+  String _getCategoryName(ProductCategory category) {
+    try {
+      if (category.enName is String) {
+        return category.enName;
+      } else if (category.enName is Map) {
+        final nameMap = category.enName as Map;
+        return nameMap['enName']?.toString() ?? 
+               nameMap['arName']?.toString() ??
+               category.enName.toString();
+      } else {
+        return category.enName.toString();
+      }
+    } catch (e) {
+      return category.enName.toString();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -193,12 +257,15 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                             height: screenHeight,
                             width: screenWidth,
                             fromSupplierDetail: true,
+                            hideFliterForNow: true,
+                            onChanged: _onSearchChanged,
+                            onClear: _clearSearch,
                           ),
-                          BuildFilterButton(
-                            screenWidth,
-                            screenHeight,
-                            _toggleFilterMenu,
-                          ),
+                          // BuildFilterButton(
+                          //   screenWidth,
+                          //   screenHeight,
+                          //   _toggleFilterMenu,
+                          // ),
                         ],
                       ),
 
@@ -221,12 +288,12 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                           mainAxisSpacing: screenWidth * 0.008,
                           childAspectRatio: 1.1,
                         ),
-                        itemCount: widget.categories.length,
+                        itemCount: _filteredCategories.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (_) => PopularCategoryScreen(category:widget.categories[index])));
+                                  builder: (_) => PopularCategoryScreen(category:_filteredCategories[index])));
                             },
 
                             child: CategoryCard(
@@ -234,7 +301,7 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                               screenWidth: screenWidth,
                               screenHeight: screenHeight,
                               icon:'assets/images/home/main_page/bottle.svg', //widget.categories[index]['icon'],
-                              title: widget.categories[index].enName,
+                              title: _getCategoryName(_filteredCategories[index]),
                             ),
                           );
                         },

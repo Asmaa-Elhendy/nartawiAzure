@@ -9,6 +9,24 @@ import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
+// Helper method to safely extract category name
+String _getCategoryName(ProductCategory category) {
+  try {
+    if (category.enName is String) {
+      return category.enName;
+    } else if (category.enName is Map) {
+      final nameMap = category.enName as Map;
+      return nameMap['enName']?.toString() ?? 
+             nameMap['arName']?.toString() ??
+             category.enName.toString();
+    } else {
+      return category.enName.toString();
+    }
+  } catch (e) {
+    return category.enName.toString();
+  }
+}
+
 class PopularCategoryScreen extends StatefulWidget {
 
   ProductCategory category;
@@ -54,7 +72,7 @@ class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: widget.category.enName,
+            title: _getCategoryName(widget.category),
             is_returned: true,
           ),
           Positioned.fill(
