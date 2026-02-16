@@ -107,7 +107,7 @@ class _NotificationScreenState extends State<NotificationScreen>
       builder: (context, child) {
         if (_notificationController.isLoading && 
             _notificationController.allNotifications.isEmpty) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(color: AppColors.primary,));
         }
 
         if (_notificationController.error != null) {

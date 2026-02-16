@@ -123,14 +123,16 @@ class NotificationsPaginatedResponse {
   });
 
   factory NotificationsPaginatedResponse.fromJson(Map<String, dynamic> json) {
+    final pagination = json['pagination'] as Map<String, dynamic>?;
+    
     return NotificationsPaginatedResponse(
       items: (json['items'] as List<dynamic>)
           .map((e) => NotificationModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      currentPage: json['pagination']['currentPage'] as int,
-      totalPages: json['pagination']['totalPages'] as int,
-      totalCount: json['pagination']['totalCount'] as int,
-      hasNextPage: json['pagination']['hasNextPage'] as bool? ?? false,
+      currentPage: pagination?['currentPage'] as int? ?? 1,
+      totalPages: pagination?['totalPages'] as int? ?? 1,
+      totalCount: pagination?['totalCount'] as int? ?? 0,
+      hasNextPage: pagination?['hasNextPage'] as bool? ?? false,
     );
   }
 }

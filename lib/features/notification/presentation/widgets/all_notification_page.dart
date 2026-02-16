@@ -32,7 +32,7 @@ class AllNotificationPage extends StatelessWidget {
                   context,
                   screenWidth,
                   screenHeight,
-                  'Set As Read',
+                  'Mark As Read',
                   'Clear Selection',
                       () {
                     // Set as read for selected notifications

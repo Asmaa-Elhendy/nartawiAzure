@@ -82,7 +82,7 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        return response.data['unreadCount'] as int;
+        return response.data['unreadCount'] as int? ?? 0;
       } else {
         throw Exception('Failed to fetch unread count');
       }
