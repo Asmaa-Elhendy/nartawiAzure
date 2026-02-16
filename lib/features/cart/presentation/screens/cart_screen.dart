@@ -10,9 +10,11 @@ import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/services/auth_service.dart';
+import '../../../../core/utils/components/confirmation_alert.dart';
 import '../../../../injection_container.dart';
 import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
+import '../../../home/presentation/widgets/General_alert.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -198,14 +200,22 @@ class _CartScreenState extends State<CartScreen>
       if (firstSupplierId == null) {
         firstSupplierId = currentSupplierId;
       } else if (firstSupplierId != currentSupplierId) {
-        // Different supplier found
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All order Products Must be from Same Supplier'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
+       // Different supplier found
+       //  ScaffoldMessenger.of(context).showSnackBar(
+       //    const SnackBar(
+       //      content: Text('All order Products Must be from Same Supplier'),
+       //      backgroundColor: Colors.red,
+       //      behavior: SnackBarBehavior.floating,//k
+       //    ),
+       //  );
+        showDialog(
+          context: context,
+          builder: (ctx) => GeneralAlert(
+            width: MediaQuery.of(context).size.width,
+            message: 'All order Products Must be from Same Supplier',
           ),
         );
+
         return;
       }
     }

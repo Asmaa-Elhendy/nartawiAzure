@@ -9,6 +9,7 @@ import '../../../../../cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
 import '../../../bloc/cart/cart_event.dart';
 import '../../../bloc/cart/cart_state.dart';
+import '../../General_alert.dart';
 
 class BuildIconOnProduct extends StatefulWidget {
   final bool fromFavouriteScreen;
@@ -182,6 +183,48 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
             : widget.isPlus
             ? InkWell(
           onTap: () {
+            // Check supplier compatibility before showing dialog
+            final cartState = context.read<CachedCartBloc>().state;
+            bool productAlreadyInCart = false;
+            String? existingSupplierId;
+            
+            if (cartState is CartState) {
+              // Check for existing products and their suppliers
+              for (final item in cartState.cartProducts) {
+                if (item is Map<String, dynamic>) {
+                  final existingProductId = item['id'] as int? ?? 0;
+                  if (existingProductId == widget.productVsId) {
+                    productAlreadyInCart = true;
+                    break;
+                  }
+                  
+                  // Get supplier ID from existing cart items
+                  if (existingSupplierId == null) {
+                    if (item['product'] is Map<String, dynamic>) {
+                      existingSupplierId = item['product']['Supplierid']?.toString() ?? 
+                                        item['product']['SupplierId']?.toString() ?? '0';
+                    } else {
+                      existingSupplierId = item['Supplierid']?.toString() ?? 
+                                        item['SupplierId']?.toString() ?? '0';
+                    }
+                  }
+                }
+              }
+            }
+            
+            // Check supplier compatibility if cart is not empty
+            if (existingSupplierId != null && existingSupplierId != widget.supplierId) {
+              // Different supplier found - show error message immediately
+              showDialog(
+                context: context,
+                builder: (ctx) => GeneralAlert(
+                  width: MediaQuery.of(context).size.width,
+                  message: 'All order Products Must be from Same Supplier',
+                ),
+              );
+              return; // Don't show dialog, don't add product
+            }
+            
             showDialog(
               context: context,
               builder: (dialogContext) => ConfirmationAlert(
@@ -189,23 +232,8 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 centerTitle: 'You\'ve added 1 item',
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
-                  // Add actual product data to cart with full product object
-                  // Check if product already exists in cart to avoid duplicates
-                  final cartState = context.read<CachedCartBloc>().state;
+                  
                   bool productAlreadyInCart = false;
-                  
-                  if (cartState is CartState) {
-                    for (final item in cartState.cartProducts) {
-                      if (item is Map<String, dynamic>) {
-                        final existingProductId = item['id'] as int? ?? 0;
-                        if (existingProductId == widget.productVsId) {
-                          productAlreadyInCart = true;
-                          break;
-                        }
-                      }
-                    }
-                  }
-                  
                   if (widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For favorite products, create full product object
                     if (!productAlreadyInCart) {

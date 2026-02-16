@@ -10,9 +10,11 @@ import '../../../../../core/theme/colors.dart';
 import '../../../../../core/utils/components/confirmation_alert.dart';
 import '../../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../bloc/cart/cart_event.dart';
+import '../../bloc/cart/cart_state.dart';
 import '../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../bloc/product_quantity/product_quantity_event.dart';
 import '../../bloc/product_quantity/product_quantity_state.dart';
+import '../../widgets/General_alert.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
 import '../../widgets/main_screen_widgets/products/icon_on_product_card.dart';
@@ -96,6 +98,43 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     final currentQuantity =
                         int.tryParse(_quantityBloc.state.quantity) ?? 1;
                     if (currentQuantity > 1) {
+                      // Check supplier compatibility before showing dialog
+                      final cartState = context.read<CachedCartBloc>().state;
+                      String? existingSupplierId;
+                      
+                      if (cartState is CartState) {
+                        // Check for existing products and their suppliers
+                        for (final item in cartState.cartProducts) {
+                          if (item is Map<String, dynamic>) {
+                            // Get supplier ID from existing cart items
+                            if (existingSupplierId == null) {
+                              if (item['product'] is Map<String, dynamic>) {
+                                existingSupplierId = item['product']['Supplierid']?.toString() ?? 
+                                                  item['product']['SupplierId']?.toString() ?? '0';
+                              } else {
+                                existingSupplierId = item['Supplierid']?.toString() ?? 
+                                                  item['SupplierId']?.toString() ?? '0';
+                              }
+                            }
+                          } else if (item is ClientProduct) {
+                            existingSupplierId = item.supplierId.toString();
+                          }
+                        }
+                      }
+                      
+                      // Check supplier compatibility if cart is not empty
+                      if (existingSupplierId != null && existingSupplierId != widget.clientProduct!.supplierId.toString()) {
+                        // Different supplier found - show error message immediately
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => GeneralAlert(
+                            width: MediaQuery.of(context).size.width,
+                            message: 'All order Products Must be from Same Supplier',
+                          ),
+                        );
+                        return; // Don't show dialog, don't add product
+                      }
+                      
                       showDialog(
                         context: context,
                         builder: (dialogContext) => ConfirmationAlert(
@@ -104,6 +143,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
                           leftOnTap: () {
                             Navigator.pop(dialogContext);
+                            
                             context.read<CachedCartBloc>().add(
                               CartAddItem(widget.clientProduct!),
                             );
@@ -123,7 +163,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                     }
                   },
                 ),
-                Positioned.fill(
+                Positioned.fill(//k
                   top: MediaQuery.of(context).padding.top + screenHeight * .1,
                   bottom: screenHeight * .05 + screenHeight * .09,
                   child: SingleChildScrollView(
