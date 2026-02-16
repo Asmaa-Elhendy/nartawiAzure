@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
+import 'dart:async';
 import 'package:newwwwwwww/features/coupons/presentation/screens/coupons_screen.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/products_bloc/products_event.dart';
@@ -11,7 +11,6 @@ import 'package:newwwwwwww/features/home/presentation/pages/suppliers/supplier_d
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/category_card.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
-import 'package:iconify_flutter/icons/game_icons.dart';
 import '../../../../core/theme/colors.dart';
 import '../bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../bloc/product_categories_bloc/product_categories_event.dart';
@@ -37,6 +36,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController _SearchController = TextEditingController();
+  Timer? _debounceTimer;
+  bool _isSearching = false;
 
   // ✅ GlobalKey عشان ننادي refresh() في BuildCarousSlider
   final GlobalKey<BuildCarousSliderState> _sliderKey = GlobalKey();
@@ -44,7 +45,52 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _SearchController.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (query.trim().isEmpty) {
+        _clearSearch();
+      } else {
+        _performSearch(query.trim());
+      }
+    });
+  }
+
+  void _performSearch(String query) {
+    setState(() {
+      _isSearching = true;
+    });
+
+    context.read<ProductsBloc>().add(
+      FetchProducts(
+        searchTerm: query,
+        executeClear: true,
+      ),
+    );
+  }
+
+  void _clearSearch() {
+    // Dismiss keyboard
+    FocusScope.of(context).unfocus();
+    
+    setState(() {
+      _isSearching = false;
+      _SearchController.clear();
+    });
+    
+    // Return to normal products view
+    context.read<ProductsBloc>().add(
+      FetchProducts(
+        executeClear: true,
+      ),
+    );
   }
 
   @override
@@ -106,292 +152,321 @@ class _MainScreenState extends State<MainScreen> {
               child: RefreshIndicator(
                 color: AppColors.primary,
                 onRefresh: _onRefresh,
-
-                // ✅ أهم تعديل: امنعي refresh إلا لو المستخدم في أعلى الصفحة
                 notificationPredicate: (notification) {
                   return notification.metrics.pixels <= 0;
                 },
-
                 child: CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
+                    /// ✅ 1) الـ SearchBar دايمًا فوق (مش مربوط بـ _isSearching)
                     SliverPadding(
                       padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * .06,
                       ),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate([
-                          CustomSearchBar(
-                            controller: _SearchController,
-                            height: screenHeight,
-                            width: screenWidth,
-                          ),
-                          SizedBox(height: screenHeight * .02),
-
-                          // ✅ هنا التعديل: key
-                          BuildCarousSlider(key: _sliderKey),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .push(
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          CouponsScreen(fromViewButton: true),
-                                    ),
-                                  )
-                                      .then((_) {
-                                    context.read<ProductsBloc>().refresh();
-                                    // ✅ optional: كمان حدثي السلايدر بعد الرجوع
-                                    // _sliderKey.currentState?.refresh();
-                                  });
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: screenHeight * .01),
-                                  child: BuildTappedTitle(
-                                      'View All Coupons', screenWidth),
-                                ),
-                              ),
-                            ],
-                          ),
-                          BuildStretchTitleHome(
-                            screenWidth,
-                            "Featured Suppliers",
-                                () {
-                              Navigator.of(context)
-                                  .push(
-                                MaterialPageRoute(
-                                  builder: (_) => AllSuppliersScreen(),
-                                ),
-                              )
-                                  .then((_) {
-                                context.read<ProductsBloc>().refresh();
-                                // Refresh featured suppliers when returning
-                                context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            height: screenHeight * 0.18,
-                            child: BlocBuilder<SuppliersBloc, SuppliersState>(
-                              builder: (context, state) {
-                                if (state is SuppliersInitial ||
-                                    state is SuppliersLoading ||
-                                    state is FeaturedSuppliersLoading) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.primary,
-                                    ),
-                                  );
-                                } else if (state is SuppliersError ||
-                                    state is FeaturedSuppliersError) {
-                                  final errorMessage = state is SuppliersError 
-                                    ? state.message 
-                                    : (state as FeaturedSuppliersError).message;
-                                  return Center(
-                                    child: Text(
-                                      errorMessage,
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  );
-                                } else if (state is FeaturedSuppliersLoaded) {
-                                  if (state.featuredSuppliers.isEmpty) {
-                                    return const Center(
-                                      child: Text('No featured suppliers found'),
-                                    );
-                                  }
-
-                                  return ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.featuredSuppliers.length,
-                                    itemBuilder: (context, index) {
-                                      final supplier = state.featuredSuppliers[index];
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context)
-                                              .push(
-                                            MaterialPageRoute(
-                                              builder: (_) => SupplierDetails(
-                                                supplier: supplier,
-                                              ),
-                                            ),
-                                          )
-                                              .then((_) {
-                                            context
-                                                .read<ProductsBloc>()
-                                                .refresh();
-                                          });
-                                        },
-                                        child: StoreCard(
-                                          screenWidth: screenWidth,
-                                          screenHeight: screenHeight,
-                                          supplier: supplier,
-                                        ),
-                                      );
-                                    },
-                                  );
-                                } else if (state is SuppliersLoaded) {
-                                  // Fallback to regular suppliers if featured suppliers not loaded yet
-                                  if (state.suppliers.isEmpty) {
-                                    return const Center(
-                                      child: Text('No suppliers found'),
-                                    );
-                                  }
-
-                                  return ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.suppliers.length,
-                                    itemBuilder: (context, index) {
-                                      final supplier = state.suppliers[index];
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context)
-                                              .push(
-                                            MaterialPageRoute(
-                                              builder: (_) => SupplierDetails(
-                                                supplier: supplier,
-                                              ),
-                                            ),
-                                          )
-                                              .then((_) {
-                                            context
-                                                .read<ProductsBloc>()
-                                                .refresh();
-                                          });
-                                        },
-                                        child: StoreCard(
-                                          screenWidth: screenWidth,
-                                          screenHeight: screenHeight,
-                                          supplier: supplier,
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-
-                                return const SizedBox.shrink();
-                              },
+                      sliver: SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            CustomSearchBar(
+                              controller: _SearchController,
+                              height: screenHeight,
+                              width: screenWidth,
+                              onChanged: _onSearchChanged,
+                              onClear: _clearSearch,
                             ),
-                          ),
-                          BuildStretchTitleHome(
-                            screenWidth,
-                            "Popular Categories",
-                                () {
-                              final state = context
-                                  .read<ProductCategoriesBloc>()
-                                  .state;
+                            SizedBox(height: screenHeight * .02),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                              if (state is ProductCategoriesLoaded) {
+                    /// ✅ 2) لو مش بيسيرش: اعرض باقي الصفحة الطبيعي
+                    if (!_isSearching) ...[
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * .06,
+                        ),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate([
+                            BuildCarousSlider(key: _sliderKey),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(
+                                      MaterialPageRoute(
+                                        builder: (_) => CouponsScreen(
+                                            fromViewButton: true),
+                                      ),
+                                    )
+                                        .then((_) {
+                                      context.read<ProductsBloc>().refresh();
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: screenHeight * .01),
+                                    child: BuildTappedTitle(
+                                        'View All Coupons', screenWidth),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            BuildStretchTitleHome(
+                              screenWidth,
+                              "Featured Suppliers",
+                                  () {
                                 Navigator.of(context)
                                     .push(
                                   MaterialPageRoute(
-                                    builder: (_) => PopularCategoriesMainScreen(
-                                      categories: state.categories,
-                                    ),
+                                    builder: (_) => AllSuppliersScreen(),
                                   ),
                                 )
                                     .then((_) {
                                   context.read<ProductsBloc>().refresh();
+                                  context
+                                      .read<SuppliersBloc>()
+                                      .add(FetchFeaturedSuppliers());
                                 });
-                              }
-                            },
-                          ),
-                          SizedBox(
-                            height: screenHeight * 0.15,
-                            child: BlocBuilder<ProductCategoriesBloc,
-                                ProductCategoriesState>(
-                              builder: (context, state) {
-                                if (state is ProductCategoriesInitial ||
-                                    state is ProductCategoriesLoading) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                        color: AppColors.primary),
-                                  );
-                                } else if (state is ProductCategoriesError) {
-                                  return Center(
-                                    child: Text('Error: ${state.message}'),
-                                  );
-                                } else if (state is ProductCategoriesLoaded) {
-                                  if (state.categories.isEmpty) {
-                                    return const Center(
-                                        child: Text('No categories found'));
-                                  }
-
-                                  return ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.categories.length,
-                                    itemBuilder: (context, index) {
-                                      final category = state.categories[index];
-
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Navigator.of(context)
-                                              .push(
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  PopularCategoryScreen(
-                                                    category: category,
-                                                  ),
-                                            ),
-                                          )
-                                              .then((_) {
-                                            context
-                                                .read<ProductsBloc>()
-                                                .refresh();
-                                          });
-                                        },
-                                        child: CategoryCard(
-                                          screenWidth: screenWidth,
-                                          screenHeight: screenHeight,
-                                          icon: 'assets/images/home/main_page/bottle.svg',
-                                          title: category.enName ?? 'Category',
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-                                return const SizedBox.shrink();
                               },
                             ),
-                          ),
-                          SizedBox(height: screenHeight * .01),
-                          // BuildStretchTitleHome(
-                          //   screenWidth,
-                          //   "Popular Products",
-                          //       () {
-                          //     final productState =
-                          //         context.read<ProductsBloc>().state;
-                          //
-                          //     if (productState is ProductsLoaded) {
-                          //       Navigator.of(context)
-                          //           .push(
-                          //         MaterialPageRoute(
-                          //           builder: (_) => AllProductScreen(),
-                          //         ),
-                          //       )
-                          //           .then((_) {
-                          //         context.read<ProductsBloc>().refresh();
-                          //       });
-                          //     } else if (productState is ProductsLoading ||
-                          //         productState is ProductsInitial) {
-                          //       ScaffoldMessenger.of(context).showSnackBar(
-                          //         const SnackBar(
-                          //           content: Text(
-                          //               'Products are still loading, please try again.'),
-                          //         ),
-                          //       );
-                          //     }
-                          //   },
-                          // ),
-                        ]),
+
+                            SizedBox(
+                              height: screenHeight * 0.18,
+                              child:
+                              BlocBuilder<SuppliersBloc, SuppliersState>(
+                                builder: (context, state) {
+                                  if (state is SuppliersInitial ||
+                                      state is SuppliersLoading ||
+                                      state is FeaturedSuppliersLoading) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.primary,
+                                      ),
+                                    );
+                                  } else if (state is SuppliersError ||
+                                      state is FeaturedSuppliersError) {
+                                    final errorMessage = state is SuppliersError
+                                        ? state.message
+                                        : (state as FeaturedSuppliersError)
+                                        .message;
+                                    return Center(
+                                      child: Text(
+                                        errorMessage,
+                                        style:
+                                        const TextStyle(color: Colors.red),
+                                      ),
+                                    );
+                                  } else if (state
+                                  is FeaturedSuppliersLoaded) {
+                                    if (state.featuredSuppliers.isEmpty) {
+                                      return const Center(
+                                        child: Text(
+                                            'No featured suppliers found'),
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: state.featuredSuppliers.length,
+                                      itemBuilder: (context, index) {
+                                        final supplier =
+                                        state.featuredSuppliers[index];
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .push(
+                                              MaterialPageRoute(
+                                                builder: (_) => SupplierDetails(
+                                                  supplier: supplier,
+                                                ),
+                                              ),
+                                            )
+                                                .then((_) {
+                                              context
+                                                  .read<ProductsBloc>()
+                                                  .refresh();
+                                            });
+                                          },
+                                          child: StoreCard(
+                                            screenWidth: screenWidth,
+                                            screenHeight: screenHeight,
+                                            supplier: supplier,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  } else if (state is SuppliersLoaded) {
+                                    if (state.suppliers.isEmpty) {
+                                      return const Center(
+                                        child: Text('No suppliers found'),
+                                      );
+                                    }
+
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: state.suppliers.length,
+                                      itemBuilder: (context, index) {
+                                        final supplier = state.suppliers[index];
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .push(
+                                              MaterialPageRoute(
+                                                builder: (_) => SupplierDetails(
+                                                  supplier: supplier,
+                                                ),
+                                              ),
+                                            )
+                                                .then((_) {
+                                              context
+                                                  .read<ProductsBloc>()
+                                                  .refresh();
+                                            });
+                                          },
+                                          child: StoreCard(
+                                            screenWidth: screenWidth,
+                                            screenHeight: screenHeight,
+                                            supplier: supplier,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+                            ),
+
+                            BuildStretchTitleHome(
+                              screenWidth,
+                              "Popular Categories",
+                                  () {
+                                final state = context
+                                    .read<ProductCategoriesBloc>()
+                                    .state;
+
+                                if (state is ProductCategoriesLoaded) {
+                                  Navigator.of(context)
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          PopularCategoriesMainScreen(
+                                            categories: state.categories,
+                                          ),
+                                    ),
+                                  )
+                                      .then((_) {
+                                    context.read<ProductsBloc>().refresh();
+                                  });
+                                }
+                              },
+                            ),
+
+                            SizedBox(
+                              height: screenHeight * 0.15,
+                              child: BlocBuilder<ProductCategoriesBloc,
+                                  ProductCategoriesState>(
+                                builder: (context, state) {
+                                  if (state is ProductCategoriesInitial ||
+                                      state is ProductCategoriesLoading) {
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                          color: AppColors.primary),
+                                    );
+                                  } else if (state is ProductCategoriesError) {
+                                    return Center(
+                                      child: Text('Error: ${state.message}'),
+                                    );
+                                  } else if (state
+                                  is ProductCategoriesLoaded) {
+                                    if (state.categories.isEmpty) {
+                                      return const Center(
+                                          child: Text('No categories found'));
+                                    }
+
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: state.categories.length,
+                                      itemBuilder: (context, index) {
+                                        final category = state.categories[index];
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context)
+                                                .push(
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    PopularCategoryScreen(
+                                                      category: category,
+                                                    ),
+                                              ),
+                                            )
+                                                .then((_) {
+                                              context
+                                                  .read<ProductsBloc>()
+                                                  .refresh();
+                                            });
+                                          },
+                                          child: CategoryCard(
+                                            screenWidth: screenWidth,
+                                            screenHeight: screenHeight,
+                                            icon:
+                                            'assets/images/home/main_page/bottle.svg',
+                                            title:
+                                            category.enName ?? 'Category',
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                  return const SizedBox.shrink();
+                                },
+                              ),
+                            ),
+
+                            SizedBox(height: screenHeight * .01),
+
+                            BuildStretchTitleHome(
+                              screenWidth,
+                              "",
+                                  () {
+                                final productState =
+                                    context.read<ProductsBloc>().state;
+
+                                if (productState is ProductsLoaded) {
+                                  Navigator.of(context)
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (_) => AllProductScreen(),
+                                    ),
+                                  )
+                                      .then((_) {
+                                    context.read<ProductsBloc>().refresh();
+                                  });
+                                } else if (productState is ProductsLoading ||
+                                    productState is ProductsInitial) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'Products are still loading, please try again.'),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ]),
+                        ),
                       ),
-                    ),
+                    ],
+
+                    /// ✅ 3) المنتجات تظهر دايمًا تحت (سواء سيرش أو طبيعي)
                     SliverPadding(
                       padding: EdgeInsets.only(
                         left: screenWidth * .06,
@@ -435,7 +510,9 @@ class _MainScreenState extends State<MainScreen> {
                                   child: Padding(
                                     padding: EdgeInsets.only(
                                         top: screenHeight * .02),
-                                    child: const Text('No products found'),
+                                    child: Text(_isSearching
+                                        ? 'No products match your search'
+                                        : 'No products found'),
                                   ),
                                 ),
                               );
@@ -461,7 +538,11 @@ class _MainScreenState extends State<MainScreen> {
                                     'assets/images/home/main_page/product.jpg',
                                   );
                                 },
-                                childCount: products.length.clamp(0, 10),
+                                // ✅ في الوضع الطبيعي ممكن تحبي تحددي 10 بس
+                                // ✅ في وضع السيرش خليها كاملة
+                                childCount: _isSearching
+                                    ? products.length
+                                    : products.length.clamp(0, 10).toInt(),
                               ),
                             );
                           }
@@ -479,21 +560,5 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
     );
-  }
-
-  String _getCategoryIcon(String categoryName) {
-    String casee = categoryName.toLowerCase();
-    switch (casee) {
-      case 'bottle':
-        return 'assets/images/home/main_page/bottle.svg';
-      case 'gallon':
-        return GameIcons.water_gallon;
-      case 'alkaline':
-        return 'assets/images/home/main_page/ph.svg';
-      case 'coupons':
-        return Mdi.coupon_outline;
-      default:
-        return 'assets/images/placeholder_icon.svg';
-    }
   }
 }
