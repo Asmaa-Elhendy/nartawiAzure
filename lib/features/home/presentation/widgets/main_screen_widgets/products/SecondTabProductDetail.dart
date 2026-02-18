@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_reaings_card.dart';
 
-Widget BuildSecondTabProductDetail(double screenWidth, double screenHeight) {
+Widget BuildSecondTabProductDetail(double screenWidth, double screenHeight,BuildContext context) {
   List<int> items = [1, 2, 3, 4, 5];
 
   return Padding(
@@ -9,7 +9,7 @@ Widget BuildSecondTabProductDetail(double screenWidth, double screenHeight) {
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        BuildSupplierRatingCard(
+        BuildSupplierRatingCard(context,
           screenWidth,
           screenHeight,
 
@@ -22,7 +22,7 @@ Widget BuildSecondTabProductDetail(double screenWidth, double screenHeight) {
           deliveryAvg: 1,
         ),
         SizedBox(height: screenHeight * 0.01),
-        BuildSupplierRatingCard(
+        BuildSupplierRatingCard(context,
           screenWidth,
           screenHeight,
           mainTitle: 'User 1',

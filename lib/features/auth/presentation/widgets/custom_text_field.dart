@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 
 class CustomeTextField extends StatefulWidget {
@@ -36,7 +37,7 @@ class _CustomeTextFieldState extends State<CustomeTextField> {
         obscureText: widget.label.toLowerCase().contains('password') ? _obscureText : false,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'This field is required';
+            return AppLocalizations.of(context)!.thisFieldIsRequired;
           }
           return null;
         },cursorColor: AppColors.primary,

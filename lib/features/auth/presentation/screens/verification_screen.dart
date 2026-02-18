@@ -7,6 +7,7 @@ import '../../../../core/theme/colors.dart';
 import '../bloc/login_bloc.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_title_widget.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 
 class VerificationScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     if (_otpCode.length != 4) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter 4-digit OTP'),
+          content: Text(AppLocalizations.of(context)!.pleaseEnter4DigitOTP),
           backgroundColor: Colors.red,
         ),
       );
@@ -55,7 +56,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('OTP verified successfully'),
+            content: Text(AppLocalizations.of(context)!.otpVerifiedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -74,7 +75,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Invalid OTP. Please try again.'),
+          content: Text(AppLocalizations.of(context)!.invalidOTP),
           backgroundColor: Colors.red,
         ),
       );
@@ -93,7 +94,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
 
@@ -110,14 +111,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildTitleWidget(context,width,'Verification'),
+                buildTitleWidget(context,width,AppLocalizations.of(context)!.verification),
                 SizedBox(height:height*.04,),
-                Text("Enter Verification Code",style: TextStyle(
+                Text(AppLocalizations.of(context)!.enterVerificationCode,style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: AppColors.textLight,
                 )),
-                buildFooterInfo(context,"If You Didn’t Receive A Code,"," Resend", (){
+                buildFooterInfo(context,AppLocalizations.of(context)!.ifDidntReceiveCode,AppLocalizations.of(context)!.resend, (){
                   Navigator.pop(context);
 
                 }),
@@ -140,7 +141,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   ),
                 ),
                 SizedBox(height:height*.08,),
-                AuthButton(width,height,'Send',_handleSend),
+                AuthButton(width,height,AppLocalizations.of(context)!.send,_handleSend),
 
               ],
             ),

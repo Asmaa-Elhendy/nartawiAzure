@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../domain/models/product_categories_models/product_category_model.dart';
 import '../bloc/products_bloc/products_bloc.dart';
 import '../bloc/products_bloc/products_event.dart';
@@ -10,20 +11,26 @@ import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 // Helper method to safely extract category name
-String _getCategoryName(ProductCategory category) {
+String _getCategoryName(BuildContext context, ProductCategory category) {
   try {
-    if (category.enName is String) {
-      return category.enName;
-    } else if (category.enName is Map) {
-      final nameMap = category.enName as Map;
-      return nameMap['enName']?.toString() ?? 
-             nameMap['arName']?.toString() ??
-             category.enName.toString();
+    if (AppLocalizations.of(context)!.localeName == 'ar') {
+      return category.arName;
     } else {
-      return category.enName.toString();
+      if (category.enName is String) {
+        return category.enName;
+      } else if (category.enName is Map) {
+        final nameMap = category.enName as Map;
+        return nameMap['enName']?.toString() ?? 
+               nameMap['arName']?.toString() ??
+               category.enName.toString();
+      } else {
+        return category.enName.toString();
+      }
     }
   } catch (e) {
-    return category.enName.toString();
+    return AppLocalizations.of(context)!.localeName == 'ar' 
+        ? category.arName 
+        : category.enName.toString();
   }
 }
 
@@ -72,7 +79,7 @@ class _PopularCategoryScreenState extends State<PopularCategoryScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: _getCategoryName(widget.category),
+            title: _getCategoryName(context, widget.category),
             is_returned: true,
           ),
           Positioned.fill(

@@ -6,6 +6,7 @@ import 'package:newwwwwwww/features/favourites/pesentation/provider/favourite_co
 import 'package:provider/provider.dart';
 
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import 'build_row_raing.dart';
 import 'build_info_button.dart';
 import 'build_verified_widget.dart';
@@ -168,7 +169,9 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                           // اسم الشركة ياخد أكبر مساحة
                           Expanded(
                             child: Text(
-                              widget.supplier.enName,
+                              AppLocalizations.of(context)!.localeName == 'ar' 
+                                  ? widget.supplier.arName 
+                                  : widget.supplier.enName,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: w * .036,
@@ -292,7 +295,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
                             SizedBox(width: w * .02),
                             FittedBox(
                               fit: BoxFit.scaleDown,
-                              child: BuildVerifiedWidget(h, w,widget.supplier.isVerified),
+                              child: BuildVerifiedWidget(h, w,widget.supplier.isVerified,context),
                             ),
                           ],
                         ),
@@ -335,7 +338,7 @@ class _BuildFullCardSupplierState extends State<BuildFullCardSupplier> {
             BuildInfoAndAddToCartButton(
               w,
               h,
-              isExpanded ? 'Show less' : 'Info',
+              isExpanded ?   AppLocalizations.of(context)!.showLess :   AppLocalizations.of(context)!.info,
               true,
                   () {
                 setState(() {

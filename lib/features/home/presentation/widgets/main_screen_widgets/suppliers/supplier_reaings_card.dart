@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../core/theme/colors.dart';
 import '../../../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import 'build_row_of_stars_ratings.dart';
 
 Widget BuildSupplierRatingCard(
+    BuildContext context,
     double screenWidth,
     double screenHeight, {
       required String mainTitle,
@@ -45,12 +47,14 @@ Widget BuildSupplierRatingCard(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            mainTitle,
-            style: TextStyle(
-              fontSize: screenWidth * .04,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+          Center(
+            child: Text(
+              mainTitle,
+              style: TextStyle(
+                fontSize: screenWidth * .04,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
             ),
           ),
           SizedBox(height: screenHeight * .01),
@@ -64,8 +68,8 @@ Widget BuildSupplierRatingCard(
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Over All', style: AppTextStyles.titleRating),
-                    Text('($totalReviews Review)', style: AppTextStyles.titleRating),
+                    Text(AppLocalizations.of(context)!.overAll, style: AppTextStyles.titleRating),
+                    Text('($totalReviews ${AppLocalizations.of(context)!.reviews})', style: AppTextStyles.titleRating),
 
                     // ✅ same function لكن بدل items الثابتة
                     BuildRowOfRatings('', overallStars, screenHeight, screenWidth),
@@ -93,9 +97,9 @@ Widget BuildSupplierRatingCard(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    BuildRowOfRatings('Order Experience', orderStars, screenHeight, screenWidth),
-                    BuildRowOfRatings('Seller Experience', sellerStars, screenHeight, screenWidth),
-                    BuildRowOfRatings('Delivery Experience', deliveryStars, screenHeight, screenWidth),
+                    BuildRowOfRatings(AppLocalizations.of(context)!.orderExperience, orderStars, screenHeight, screenWidth),
+                    BuildRowOfRatings(AppLocalizations.of(context)!.sellerExperience, sellerStars, screenHeight, screenWidth),
+                    BuildRowOfRatings(AppLocalizations.of(context)!.deliveryExperience, deliveryStars, screenHeight, screenWidth),
                   ],
                 ),
               ],

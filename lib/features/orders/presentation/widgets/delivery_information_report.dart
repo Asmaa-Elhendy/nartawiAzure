@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/text_styles.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/models/order_model.dart';
 
 String formatDeliveryAddress(dynamic addr) {
@@ -26,7 +27,7 @@ String formatDeliveryAddress(dynamic addr) {
   return addr.toString();
 }
 
-Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder clientOrder) {
+Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder clientOrder,BuildContext context) {
   return Container(
     margin: EdgeInsets.symmetric(
       vertical: screenHeight * .02,
@@ -54,7 +55,7 @@ Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder cli
         // Title
         Center(
           child: Text(
-            'Delivery Summary',
+            AppLocalizations.of(context)!.deliverySummary,
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: screenWidth * .04,
@@ -69,7 +70,7 @@ Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder cli
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Delivery Address', style: AppTextStyles.textSummaryStyle),
+                Text(AppLocalizations.of(context)!.deliveryAddress),
                 Text(
                   formatDeliveryAddress(clientOrder.deliveryAddress),
                   style: TextStyle(
@@ -88,9 +89,12 @@ Widget OrderDeliveryCard(double screenWidth, double screenHeight,ClientOrder cli
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Estimated Delivery', style: AppTextStyles.textSummaryStyle),
                 Text(
-                  'Within 24-48 hours',
+                  AppLocalizations.of(context)!.estimatedDelivery,
+                  style: AppTextStyles.textSummaryStyle,
+                ),
+                Text(
+                  AppLocalizations.of(context)!.within24Hours,
                   style: TextStyle(
                     color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                     fontWeight: FontWeight.w500,

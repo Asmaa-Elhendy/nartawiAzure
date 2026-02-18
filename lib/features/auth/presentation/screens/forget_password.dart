@@ -6,6 +6,7 @@ import '../bloc/login_event.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_custome_full_text_field.dart';
 import '../widgets/build_title_widget.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -67,12 +68,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildTitleWidget(context,width,'Forget Password'),
+                  buildTitleWidget(context,width,AppLocalizations.of(context)!.forgetPassword),
                   SizedBox(height:height*.04,),
-                  buildCustomeFullTextField('Enter Mobile Number or Email', 'Enter Enter Mobile Number or Email', _emailController, true,height),
+                  buildCustomeFullTextField(AppLocalizations.of(context)!.enterMobileOrEmail, AppLocalizations.of(context)!.enterMobileOrEmailHint, _emailController, true,height),
                   SizedBox(height:height*.08,),
-                  AuthButton(width,height,'Send',_handleSend),
-                  OutlineAuthButton(width,height, 'Back To Login', _handleBackToLogin)
+                  AuthButton(width,height,AppLocalizations.of(context)!.send,_handleSend),
+                  OutlineAuthButton(width,height, AppLocalizations.of(context)!.backToLogin, _handleBackToLogin)
 
                 ],
               ),

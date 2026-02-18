@@ -6,6 +6,7 @@ import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppli
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_card.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../widgets/background_home_Appbar.dart';
 import '../../widgets/build_ForegroundAppBarHome.dart';
 import '../../../../../injection_container.dart';
@@ -75,7 +76,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Water Suppliers',
+            title: AppLocalizations.of(context)!.waterSuppliers,
             is_returned: true,
           ),
           Positioned.fill(
@@ -96,7 +97,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                   } else if (state is SuppliersError) {
                     return Center(
                       child: Text(
-                        'Failed to load suppliers: ${state.message}',
+                        '${AppLocalizations.of(context)!.failedToLoadSuppliers}: ${state.message}',
                         style: const TextStyle(color: Colors.red),
                       ),
                     );

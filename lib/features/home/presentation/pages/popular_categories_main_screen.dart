@@ -5,6 +5,7 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 import '../../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../domain/models/product_categories_models/product_category_model.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
@@ -173,7 +174,7 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
       } else {
         _filteredCategories = widget.categories
             .where((category) {
-              final categoryName = _getCategoryName(category);
+              final categoryName = _getCategoryName(context, category);
               return categoryName.toLowerCase().contains(query.toLowerCase());
             })
             .toList();
@@ -192,20 +193,26 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
   }
 
   // Helper method to safely extract category name
-  String _getCategoryName(ProductCategory category) {
+  String _getCategoryName(BuildContext context, ProductCategory category) {
     try {
-      if (category.enName is String) {
-        return category.enName;
-      } else if (category.enName is Map) {
-        final nameMap = category.enName as Map;
-        return nameMap['enName']?.toString() ?? 
-               nameMap['arName']?.toString() ??
-               category.enName.toString();
+      if (AppLocalizations.of(context)!.localeName == 'ar') {
+        return category.arName;
       } else {
-        return category.enName.toString();
+        if (category.enName is String) {
+          return category.enName;
+        } else if (category.enName is Map) {
+          final nameMap = category.enName as Map;
+          return nameMap['enName']?.toString() ?? 
+                 nameMap['arName']?.toString() ??
+                 category.enName.toString();
+        } else {
+          return category.enName.toString();
+        }
       }
     } catch (e) {
-      return category.enName.toString();
+      return AppLocalizations.of(context)!.localeName == 'ar' 
+          ? category.arName 
+          : category.enName.toString();
     }
   }
 
@@ -231,7 +238,7 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Popular Categories',
+            title: AppLocalizations.of(context)!.popularCategories,
             is_returned: true,
           ),
           Positioned.fill(
@@ -301,7 +308,7 @@ class _PopularCategoriesMainScreenState extends State<PopularCategoriesMainScree
                               screenWidth: screenWidth,
                               screenHeight: screenHeight,
                               icon:'assets/images/home/main_page/bottle.svg', //widget.categories[index]['icon'],
-                              title: _getCategoryName(_filteredCategories[index]),
+                              title: _getCategoryName(context, _filteredCategories[index]),
                             ),
                           );
                         },

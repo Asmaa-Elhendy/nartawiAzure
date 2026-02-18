@@ -12,6 +12,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/utils/components/confirmation_alert.dart';
 import '../../../../injection_container.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/bloc/login_bloc.dart';
 import '../../../favourites/pesentation/widgets/favourite_product_card.dart';
 import '../../../home/presentation/widgets/General_alert.dart';
@@ -28,7 +29,7 @@ import '../widgets/cart_store_card.dart';
 import '../widgets/payment_method_alert.dart';
 
 // Helper function to create ClientOrder from cart items
-ClientOrder _createOrderFromCart(List<Object> cartItems, Map<String, int>? productQuantities) {
+ClientOrder _createOrderFromCart(List<Object> cartItems, Map<String, int>? productQuantities,BuildContext context) {
   double subtotal = 0.0;
   final quantities = productQuantities ?? {};
   List<Object> itemsWithQuantities = [];
@@ -37,12 +38,12 @@ ClientOrder _createOrderFromCart(List<Object> cartItems, Map<String, int>? produ
   for (final item in cartItems) {
     String productKey;
     double price = 0.0;
-    String name = 'Unknown Product';
+    String name = AppLocalizations.of(context)!.unknownProduct;
     
     if (item is Map<String, dynamic>) {
       // Handle new product data structure
       price = (item['price'] as num?)?.toDouble() ?? 0.0;
-      name = (item['name'] ?? item['enName'] ?? item['arName'] ?? 'Unknown Product').toString();
+      name = (item['name'] ?? item['enName'] ?? item['arName'] ?? AppLocalizations.of(context)!.unknownProduct).toString();
       productKey = 'product_${item['id'] ?? 0}';
     } else if (item.toString().contains('Product')) {
       // Handle old string format for backward compatibility
@@ -105,6 +106,8 @@ class _CartScreenState extends State<CartScreen>
   void initState() {
     _tabController = TabController(length: 4, vsync: this);
     super.initState();
+    
+
   }
 
   @override
@@ -113,17 +116,23 @@ class _CartScreenState extends State<CartScreen>
     super.dispose();
   }
 
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   Future<void> _clearCart(double width) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Clear Cart',style: TextStyle(fontSize: width*.036,    fontWeight: FontWeight.w600,
+        title: Text(AppLocalizations.of(context)!.clearCart,style: TextStyle(fontSize: width*.036,    fontWeight: FontWeight.w600,
         ),),
-        content: Text('Remove all items from your cart?',style: TextStyle(  color: Colors.grey[600],),),
+        content: Text(AppLocalizations.of(context)!.removeAllItemsFromCart,style: TextStyle(  color: Colors.grey[600],),),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Cancel',style: TextStyle(color: AppColors.primary),),
+            child: Text(AppLocalizations.of(context)!.cancel,style: TextStyle(color: AppColors.primary),),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -131,7 +140,7 @@ class _CartScreenState extends State<CartScreen>
               backgroundColor: Colors.red,
             ),
             child: Text(
-              'Clear All',
+              AppLocalizations.of(context)!.clearAll,
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -150,7 +159,8 @@ class _CartScreenState extends State<CartScreen>
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Cart cleared successfully'),behavior: SnackBarBehavior.floating,
+              content: Text(AppLocalizations.of(context)!.cartClearedSuccessfully),
+              behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
             ),
           );
@@ -160,7 +170,7 @@ class _CartScreenState extends State<CartScreen>
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to clear cart: ${e.toString()}'),
+            content: Text('${AppLocalizations.of(context)!.failedToClearCart}: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -173,8 +183,8 @@ class _CartScreenState extends State<CartScreen>
 
     if (_selectedAddress == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please Select address'),
+         SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseSelectAddress),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -212,7 +222,7 @@ class _CartScreenState extends State<CartScreen>
           context: context,
           builder: (ctx) => GeneralAlert(
             width: MediaQuery.of(context).size.width,
-            message: 'All order Products Must be from Same Supplier',
+            message: AppLocalizations.of(context)!.allProductsSameSupplier,
           ),
         );
 
@@ -256,8 +266,8 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
       if ((_orderController.error == null) &&
           (createdOrder != null || true)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Order created successfully!'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.orderCreatedSuccessfully),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -271,7 +281,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_orderController.error ?? 'Failed to create order'),
+            content: Text(_orderController.error ?? AppLocalizations.of(context)!.failedToCreateOrder),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -283,8 +293,8 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
 
       final data = e.response?.data;
       final msg = (data is Map)
-          ? (data['message'] ?? data['title'] ?? data['error'] ?? 'Failed to create order').toString()
-          : 'Failed to create order';
+          ? (data['message'] ?? data['title'] ?? data['error'] ?? AppLocalizations.of(context)!.failedToCreateOrder).toString()
+          : AppLocalizations.of(context)!.failedToCreateOrder;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -296,8 +306,8 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
     } catch (e) {
       debugPrint('💥 Unexpected error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to create order'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.failedToCreateOrder),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -334,7 +344,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
             BuildForegroundappbarhome(
               screenHeight: screenHeight,
               screenWidth: screenWidth,
-              title: 'Your Cart',
+              title: AppLocalizations.of(context)!.yourCart,
               is_returned: true,
               disabledCart: 'cart',
             ),
@@ -563,10 +573,10 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                   if (cartState.cartProducts.isEmpty) {
                                     return SizedBox.shrink();
                                   }
-                                  return OrderSummaryCard(
+                                  return OrderSummaryCard(context,
                                     screenWidth, 
                                     screenHeight, 
-                                    _createOrderFromCart(cartState.cartProducts, cartState.productQuantities)
+                                    _createOrderFromCart(cartState.cartProducts, cartState.productQuantities,context)
                                   );
                                 },
                               ),
@@ -580,7 +590,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                               BuildInfoAndAddToCartButton(
                                 screenWidth,
                                 screenHeight,
-                                'Proceed To Checkout',
+                                AppLocalizations.of(context)!.proceedToCheckout,
                                 false,
                                 () {
                                         
@@ -616,7 +626,7 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                   if (_selectedAddress == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('Please Select address'),
+                                        content: Text(AppLocalizations.of(context)!.pleaseSelectAddress),
                                         behavior: SnackBarBehavior.floating,
                                         backgroundColor: Colors.red,
                                       ),
@@ -643,8 +653,8 @@ debugPrint('📦 CREATE ORDER PAYLOAD => ${orderRequest.toJson()}');
                                 context,
                                 screenWidth,
                                 screenHeight,
-                                'Continue Shopping',
-                                'Clear Cart',
+                                  AppLocalizations.of(context)!.continueShopping,
+                                  AppLocalizations.of(context)!.clearCart,
                                 () {
                                   Navigator.pushNamed(context, '/main');
                                 },

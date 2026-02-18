@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/core/theme/text_styles.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 Widget OrderSummaryCard(
+    BuildContext context,
     double screenWidth,
     double screenHeight,
     ClientOrder clientOrder, {
@@ -156,7 +158,7 @@ Widget OrderSummaryCard(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Order Summary',
+          AppLocalizations.of(context)!.orderSummary, // 👈 Use AppLocalizations
           style: AppTextStyles.textSummaryStyle.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -191,9 +193,9 @@ Widget OrderSummaryCard(
                             ),SizedBox(height: screenHeight*.01,),
 
                       Text(
-                              'Item Description',
+                              AppLocalizations.of(context)!.itemDescription, // 👈 Use AppLocalizations
                               style: TextStyle(
-                                color: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                              color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                                 fontWeight: FontWeight.w500,
                                 fontSize: 12,
                               ),
@@ -205,11 +207,11 @@ Widget OrderSummaryCard(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '$quantity * QAR ${price.toStringAsFixed(2)}',
+                            '$quantity * ${AppLocalizations.of(context)!.qar} ${price.toStringAsFixed(2)}',
                             style: AppTextStyles.textSummaryStyle,
                           ),SizedBox(height: screenHeight*.01,),
                           Text(
-                            'Subtotal: ${subtotal.toStringAsFixed(2)}',
+                            '${AppLocalizations.of(context)!.subtotal}: ${subtotal.toStringAsFixed(2)}',
                             style: AppTextStyles.textSummaryStyle,
                           ),
 
@@ -233,7 +235,7 @@ Widget OrderSummaryCard(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Text(
-                'No items found',
+  AppLocalizations.of(context)!.noItemsFound,
                 style: TextStyle(
                   color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                   fontSize: 12,
@@ -253,11 +255,11 @@ Widget OrderSummaryCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Items Subtotal',
+                  Text(AppLocalizations.of(context)!.itemsSubtotal,
                       style: AppTextStyles.textSummaryStyle),
                   SizedBox(height: 4),
                   Text(
-                    'QAR ${itemsSubtotal.toStringAsFixed(2)}',
+                    '${AppLocalizations.of(context)!.qar} ${itemsSubtotal.toStringAsFixed(2)}',
                     style: AppTextStyles.textSummaryStyle,
                   ),
                 ],
@@ -274,11 +276,11 @@ Widget OrderSummaryCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Delivery Fee',
+                  Text(AppLocalizations.of(context)!.deliveryFee,
                       style: AppTextStyles.textSummaryStyle),
                   SizedBox(height: 4),
                  Text(
-  'QAR ${(clientOrder.deliveryCost ?? 0).toStringAsFixed(2)}',
+  '${AppLocalizations.of(context)!.qar} ${(clientOrder.deliveryCost ?? 0).toStringAsFixed(2)}',
   style: AppTextStyles.textSummaryStyle,
 ),
                 ],
@@ -298,11 +300,11 @@ Widget OrderSummaryCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Tax',
+                  Text(AppLocalizations.of(context)!.tax,
                       style: AppTextStyles.textSummaryStyle),
                   SizedBox(height: 4),
                   Text(
-                    'QAR ${tax.toStringAsFixed(2)}',
+                    '${AppLocalizations.of(context)!.qar} ${tax.toStringAsFixed(2)}',
                     style: AppTextStyles.textSummaryStyle,
                   ),
                 ],
@@ -328,11 +330,11 @@ Widget OrderSummaryCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Total',
+                    Text(AppLocalizations.of(context)!.total,
                         style: AppTextStyles.textSummaryStyle),
                     SizedBox(height: 4),
                     Text(
-                      'QAR ${total.toStringAsFixed(2)}',
+                      '${AppLocalizations.of(context)!.qar} ${total.toStringAsFixed(2)}',
                       style: AppTextStyles.textSummaryStyle,
                     ),
                   ],

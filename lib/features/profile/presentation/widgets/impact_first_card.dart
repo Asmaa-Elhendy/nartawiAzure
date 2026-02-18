@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 
-Widget impactFirstCard(double screenWidth,double screenHeight){
+Widget impactFirstCard(BuildContext context,double screenWidth,double screenHeight){
   return   Container(
      width: screenWidth,
       padding:  EdgeInsets.symmetric(vertical: screenHeight*.02,horizontal: screenWidth*.04),
@@ -25,16 +26,16 @@ Widget impactFirstCard(double screenWidth,double screenHeight){
                   width: screenWidth  * .06 ,
                 //   height: screenHeight*.08,
                 ),SizedBox(width: screenWidth*.02,),
-                Text('Bottles Donated',style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
+                Text(AppLocalizations.of(context)!.bottlesDonated,style: TextStyle(color: AppColors.primary,fontWeight: FontWeight.w600,fontSize: screenWidth*.036),),
               ],
             ),
             Padding(
               padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
-              child: customCouponAlertSubTitle('Making A Difference One Bottle At A Time', screenWidth, screenHeight),
+              child: customCouponAlertSubTitle(AppLocalizations.of(context)!.makingDifferenceOneBottle, screenWidth, screenHeight),
             ),
             Row(
               children: [
-                customCouponAlertSubTitle('1 (200ml bottles)', screenWidth, screenHeight),
+                customCouponAlertSubTitle('1 (200ml ${AppLocalizations.of(context)!.bottles})', screenWidth, screenHeight),
               ],
             ),
             Padding(
@@ -50,7 +51,7 @@ Widget impactFirstCard(double screenWidth,double screenHeight){
             ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Progress To Next Milestone',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.034,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
+                Text(AppLocalizations.of(context)!.progressToNextMilestone,style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.034,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
                 Text('1 / 20',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.034,color: AppColors.greyDarktextIntExtFieldAndIconsHome),),
 
               ],

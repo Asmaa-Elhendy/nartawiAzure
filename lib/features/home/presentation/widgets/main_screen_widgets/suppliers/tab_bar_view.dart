@@ -4,6 +4,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
 
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../products/product_card.dart';
 //
 // class StackOver extends StatefulWidget {
@@ -352,11 +353,11 @@ class _StackOverState extends State<StackOver>
               tabs: [
                 SizedBox(
                   width: w * .5,
-                  child: const Tab(text: 'Product Details'),
+                  child:  Tab(text:  AppLocalizations.of(context)!.productDetails),
                 ),
                 SizedBox(
                   width: w * .5,
-                  child: const Tab(text: 'Reviews'),
+                  child:  Tab(text:  AppLocalizations.of(context)!.reviews,)
                 ),
               ],
             ),

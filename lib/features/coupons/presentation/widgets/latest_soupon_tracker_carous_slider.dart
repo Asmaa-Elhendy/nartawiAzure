@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/services/dio_service.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../profile/domain/models/coupon_balance_item.dart';
 import 'custom_text.dart';
 
@@ -13,6 +14,7 @@ import '../../../../../core/services/auth_service.dart';
 import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
 Widget latestCouponTrackerCarousSliderDynamic({
+  required BuildContext context,
   required double screenWidth,
   required double screenHeight,
   required int total,
@@ -49,10 +51,10 @@ Widget latestCouponTrackerCarousSliderDynamic({
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            customCouponPrimaryTitle('Coupon Balance', screenWidth, screenHeight),
+            customCouponPrimaryTitle(AppLocalizations.of(context)!.couponBalance, screenWidth, screenHeight),
             GestureDetector(
               onTap: () => onReorder(),
-              child: CouponStatus(screenHeight, screenWidth, 'Re-Order'),
+              child: CouponStatus(screenHeight, screenWidth, '${AppLocalizations.of(context)!.reOrder}'),
             ),
           ],
         ),
@@ -69,9 +71,9 @@ Widget latestCouponTrackerCarousSliderDynamic({
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            customCouponSecondaryTitleCarous('$total Total', screenWidth, screenHeight),
-            customCouponSecondaryTitleCarous('$used Used', screenWidth, screenHeight),
-            customCouponSecondaryTitleCarous('$remaining Remaining', screenWidth, screenHeight),
+            customCouponSecondaryTitleCarous('$total ${AppLocalizations.of(context)!.total}', screenWidth, screenHeight),
+            customCouponSecondaryTitleCarous('$used ${AppLocalizations.of(context)!.used}', screenWidth, screenHeight),
+            customCouponSecondaryTitleCarous('$remaining ${AppLocalizations.of(context)!.remaining}', screenWidth, screenHeight),
           ],
         ),
         SizedBox(height: screenHeight * .008),
@@ -82,7 +84,7 @@ Widget latestCouponTrackerCarousSliderDynamic({
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customCouponPrimaryTitle('Last Delivered', screenWidth, screenHeight),
+                customCouponPrimaryTitle(AppLocalizations.of(context)!.lastDelivered, screenWidth, screenHeight),
                 Row(
                   children: [
                     SvgPicture.asset(
@@ -99,7 +101,7 @@ Widget latestCouponTrackerCarousSliderDynamic({
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                customCouponPrimaryTitle('Next Refill', screenWidth, screenHeight),
+                customCouponPrimaryTitle(AppLocalizations.of(context)!.nextRefill, screenWidth, screenHeight),
                 Row(
                   children: [
                     SvgPicture.asset(
@@ -231,7 +233,7 @@ class _LatestCouponTrackerFromApiState extends State<LatestCouponTrackerFromApi>
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
-              'No coupon balance found',
+              AppLocalizations.of(context)!.nocCouponBalanceFound,
               style: TextStyle(
                 fontSize: widget.screenWidth * .04,
                 fontWeight: FontWeight.w600,
@@ -240,7 +242,7 @@ class _LatestCouponTrackerFromApiState extends State<LatestCouponTrackerFromApi>
           );
         }
 
-        return latestCouponTrackerCarousSliderDynamic(
+        return latestCouponTrackerCarousSliderDynamic(context: context,
           screenWidth: widget.screenWidth,
           screenHeight: widget.screenHeight,
           total: item.totalCoupons,

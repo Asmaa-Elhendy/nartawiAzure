@@ -10,11 +10,14 @@ import '../../../../core/theme/colors.dart';
 import '../../../cart/presentation/screens/cart_screen.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../coupons/presentation/provider/coupon_controller.dart';
+import 'package:newwwwwwww/features/coupons/presentation/provider/coupon_controller.dart';
+import 'package:newwwwwwww/features/notification/presentation/provider/notification_controller.dart';
 import '../../../cart/presentation/bloc/cached_cart_bloc.dart';
 import 'dart:io' show Platform;
 import 'fixed_bage_widget.dart';
 import 'package:dio/dio.dart';
+import '../../../../../../l10n/app_localizations.dart';
+import '../../../../core/services/language_service.dart';
 
 class BuildForegroundappbarhome extends StatefulWidget {
   double screenHeight;
@@ -46,14 +49,39 @@ class BuildForegroundappbarhome extends StatefulWidget {
 
 class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
   late final CouponsController _couponsController;
+  late final NotificationController _notificationController;
   int _bundleCount = 0;
   bool _isLoading = false;
+  String _currentLanguage = 'en';
 
   @override
   void initState() {
     super.initState();
     _couponsController = CouponsController(dio: DioService.dio);
+    _notificationController = NotificationController(dio: DioService.dio);
     _fetchBundleCount();
+    
+    // Initialize current language
+    _currentLanguage = LanguageService.currentLocale?.languageCode ?? 'en';
+    
+    // Add language change listener using ValueNotifier
+    LanguageService.localeNotifier.addListener(_onLanguageChanged);
+  }
+
+  @override
+  void dispose() {
+    _couponsController.dispose();
+    _notificationController.dispose();
+    LanguageService.localeNotifier.removeListener(_onLanguageChanged);
+    super.dispose();
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {
+        _currentLanguage = LanguageService.currentLocale?.languageCode ?? 'en';
+      });
+    }
   }
 
   Future<void> _fetchBundleCount() async {
@@ -80,12 +108,6 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
         });
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _couponsController.dispose();
-    super.dispose();
   }
 
   @override
@@ -163,7 +185,34 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
               ),
               SizedBox(width: widget.screenWidth * .04),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  // Switch language
+                  String currentLocale = LanguageService.currentLocale?.languageCode ?? 'en';
+                  String newLocale = currentLocale == 'en' ? 'ar' : 'en';
+                  LanguageService.setLanguage(newLocale);
+                  
+                  // Update state to trigger UI rebuild
+                  setState(() {
+                    _currentLanguage = newLocale;
+                  });
+                  
+                  // Wait a moment for the UI to update, then show confirmation message
+                  Future.delayed(Duration(milliseconds: 300), () {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text(
+                            newLocale == 'en' ?
+                            AppLocalizations.of(context)!.languageChangedToEnglish :
+                            AppLocalizations.of(context)!.languageChangedToArabic
+                          ),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  });
+                },
                 child: SvgPicture.asset(
                   "assets/images/home/Language.svg",
                   width: widget.screenWidth * .05,
@@ -209,7 +258,7 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     badgeStyle: badges.BadgeStyle(
                       shape: badges.BadgeShape.circle,
                       badgeColor: AppColors.redColor,
-                      padding: EdgeInsets.zero,//k
+                      padding: EdgeInsets.zero,
                     ),
                     child: Iconify(
                       GameIcons.water_gallon,
@@ -231,10 +280,27 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                             ),
                           );
                   },
-                  child: Icon(
-                    Icons.notifications,
-                    color: AppColors.whiteColor,
-                    size: widget.screenWidth * .05,
+                  child: badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: -8, end: -4),
+                    badgeContent: buildFixedBadge(
+                      size: screenWidth * .048,
+                      text: _notificationController.unreadCount.toString(),
+                      color: AppColors.whiteColor,
+                      fontSize: screenWidth * .028,
+                    ),
+                    badgeStyle: badges.BadgeStyle(
+                      shape: badges.BadgeShape.circle,
+                      badgeColor: AppColors.redColor,
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Padding(
+                      padding:  EdgeInsets.only(right: screenWidth*.02),
+                      child: Icon(
+                        Icons.notifications,
+                        color: AppColors.whiteColor,
+                        size: widget.screenWidth * .05,
+                      ),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -277,9 +343,39 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
 
                 ),
 
-                SvgPicture.asset(
-                  "assets/images/home/Language.svg",
-                  width: widget.screenWidth * .05,
+                GestureDetector(
+                  onTap: () {
+                    // Switch language
+                    String currentLocale = LanguageService.currentLocale?.languageCode ?? 'en';
+                    String newLocale = currentLocale == 'en' ? 'ar' : 'en';
+                    LanguageService.setLanguage(newLocale);
+                    
+                    // Update state to trigger UI rebuild
+                    setState(() {
+                      _currentLanguage = newLocale;
+                    });
+                    
+                    // Wait a moment for the UI to update, then show confirmation message
+                    Future.delayed(Duration(milliseconds: 100), () {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Text(
+                              newLocale == 'en' ?
+                              AppLocalizations.of(context)!.languageChangedToEnglish :
+                              AppLocalizations.of(context)!.languageChangedToArabic
+                            ),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    });
+                  },
+                  child: SvgPicture.asset(
+                    "assets/images/home/Language.svg",
+                    width: widget.screenWidth * .05,
+                  ),
                 ),
                 SvgPicture.asset(
                   "assets/images/home/headphone.svg",

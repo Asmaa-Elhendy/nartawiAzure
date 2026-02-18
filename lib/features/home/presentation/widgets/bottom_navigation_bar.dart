@@ -1,11 +1,12 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/carbon.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import 'dart:io' show Platform;
+
 class CustomBottomNav extends StatefulWidget {
   final int currentIndex;
   final Function(int) onTabSelected;
@@ -40,7 +41,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
       // تبديل التاب المختار مع Home (index = 2)
       List<String> updated = List.from(widget.originalTabs);
       updated[2] = widget.originalTabs[widget.currentIndex];
-      updated[widget.currentIndex] = 'Home';
+      updated[widget.currentIndex] =  AppLocalizations.of(context)!.home;
       myTitle.value=widget.currentIndex;
 
       return updated;
@@ -97,33 +98,41 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           child: Stack(
             alignment: Alignment.center,
             children: [
+              // Custom layout for better RTL spacing
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(
-                    context,
-                    _getTabIcon(0, screenWidth),
-                    dynamicTabOrder[0],
-                    0,
+                  Expanded(
+                    child: _buildNavItem(
+                      context,
+                      _getTabIcon(0, screenWidth),
+                      dynamicTabOrder[0],
+                      0,
+                    ),
                   ),
-                  _buildNavItem(
-                    context,
-                    _getTabIcon(1, screenWidth),
-                    dynamicTabOrder[1],
-                    1,
+                  Expanded(
+                    child: _buildNavItem(
+                      context,
+                      _getTabIcon(1, screenWidth),
+                      dynamicTabOrder[1],
+                      1,
+                    ),
                   ),
                   SizedBox(width: screenWidth * 0.10), // Space for FAB
-                  _buildNavItem(
-                    context,
-                    _getTabIcon(3, screenWidth),
-                    dynamicTabOrder[3],
-                    3,
+                  Expanded(
+                    child: _buildNavItem(
+                      context,
+                      _getTabIcon(3, screenWidth),
+                      dynamicTabOrder[3],
+                      3,
+                    ),
                   ),
-                  _buildNavItem(
-                    context,
-                    _getTabIcon(4, screenWidth),
-                    dynamicTabOrder[4],
-                    4,
+                  Expanded(
+                    child: _buildNavItem(
+                      context,
+                      _getTabIcon(4, screenWidth),
+                      dynamicTabOrder[4],
+                      4,
+                    ),
                   ),
                 ],
               ),

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:newwwwwwww/features/notification/presentation/provider/notification_controller.dart';
 import 'package:newwwwwwww/core/services/dio_service.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../bloc/notification_bloc/bloc.dart';
@@ -26,24 +27,24 @@ class _NotificationScreenState extends State<NotificationScreen>
   late ScrollController _scrollController;
 
   // ✅ Tabs for normal user
-  static const List<String> _tabsUser = [
-    'All',
-    'New',
-    'Read',
-    'Orders',
-    'Coupons',
-    'Promos',
+  List<String> get _tabsUser => [
+    AppLocalizations.of(context)!.all,
+    AppLocalizations.of(context)!.neww,
+    AppLocalizations.of(context)!.read,
+    AppLocalizations.of(context)!.orders,
+    AppLocalizations.of(context)!.coupons,
+    AppLocalizations.of(context)!.promos,
   ];
 
   // ✅ Tabs for delivery man
-  static const List<String> _tabsDelivery = [
-    'All',
-    'New',
-    'Read',
-    'One time',
-    'Coupons',
-    'Disputes',
-    'Canceled',
+  List<String> get _tabsDelivery => [
+    AppLocalizations.of(context)!.all,
+    AppLocalizations.of(context)!.neww,
+    AppLocalizations.of(context)!.read,
+    AppLocalizations.of(context)!.oneTime,
+    AppLocalizations.of(context)!.coupons,
+    AppLocalizations.of(context)!.disputes,
+    AppLocalizations.of(context)!.canceled,
   ];
 
   List<String> get _tabs => widget.fromDeliveryMan ? _tabsDelivery : _tabsUser;
@@ -56,6 +57,7 @@ class _NotificationScreenState extends State<NotificationScreen>
     _notificationController = NotificationController(dio: DioService.dio);
     
     _notificationController.fetchNotifications();
+
     
     _startPolling();
     _scrollController.addListener(_onScroll);
@@ -99,6 +101,12 @@ class _NotificationScreenState extends State<NotificationScreen>
     super.dispose();
   }
 
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   String? imageUrl = null;
 
   Widget _buildTabPage(String tabName) {
@@ -117,11 +125,11 @@ class _NotificationScreenState extends State<NotificationScreen>
               children: [
                 Icon(Icons.error_outline, size: 60, color: Colors.red),
                 SizedBox(height: 16),
-                Text('Error: ${_notificationController.error}'),
+                Text('${AppLocalizations.of(context)!.errorPrefix} ${_notificationController.error}'),
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => _notificationController.fetchNotifications(),
-                  child: Text('Retry'),
+                  child: Text(AppLocalizations.of(context)!.retry),
                 ),
               ],
             ),
@@ -137,7 +145,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               children: [
                 Icon(Icons.notifications_none, size: 80, color: Colors.grey),
                 SizedBox(height: 16),
-                Text('No notifications', style: TextStyle(color: Colors.grey)),
+                Text(AppLocalizations.of(context)!.noNotifications, style: TextStyle(color: Colors.grey)),
               ],
             ),
           );
@@ -154,7 +162,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               if (index >= notifications.length) {
                 return Padding(
                   padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
                 );
               }
 
@@ -267,7 +275,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             fromDeliveryMan: widget.fromDeliveryMan,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Notifications',
+            title: AppLocalizations.of(context)!.notifications,
             is_returned: true,
             disabledNotification: 'notifications',
           ),

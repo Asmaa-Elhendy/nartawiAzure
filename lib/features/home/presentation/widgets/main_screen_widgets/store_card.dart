@@ -3,7 +3,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 
-import '../../pages/suppliers/supplier_detail.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 
 class StoreCard extends StatefulWidget {
@@ -61,7 +61,16 @@ class _StoreCardState extends State<StoreCard> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: widget.screenHeight*.008),
-              child: Text(widget.supplier.enName,style: TextStyle(fontSize: widget.screenWidth*.036,fontWeight: FontWeight.w500,),overflow: TextOverflow.ellipsis,),
+              child: Text(
+                AppLocalizations.of(context)!.localeName == 'ar' 
+                    ? widget.supplier.arName 
+                    : widget.supplier.enName,
+                style: TextStyle(
+                  fontSize: widget.screenWidth*.036,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
 
             Row(mainAxisAlignment: MainAxisAlignment.center,

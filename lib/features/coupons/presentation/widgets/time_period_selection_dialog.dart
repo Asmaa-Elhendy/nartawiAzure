@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import 'custom_text.dart';
 
 class TimePeriodSelectionDialog extends StatefulWidget {
@@ -56,7 +57,7 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 customCouponPrimaryTitle(
-                  'Preferred Times For Refilling',
+                  AppLocalizations.of(context)!.preferredTimesForRefilling,
                   screenWidth,
                   screenHeight,
                 ),

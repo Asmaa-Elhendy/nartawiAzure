@@ -6,6 +6,7 @@ import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppli
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_event.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/suppliers_bloc/suppliers_state.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 import 'outline_buttons.dart';
@@ -135,7 +136,7 @@ Widget CartStoreCard(
                           );
                               }
 
-                        , 'View Details', screenWidth, screenHeight)
+                        , AppLocalizations.of(context)!.viewDetails, screenWidth, screenHeight,context)
 
                       ],
                     ),

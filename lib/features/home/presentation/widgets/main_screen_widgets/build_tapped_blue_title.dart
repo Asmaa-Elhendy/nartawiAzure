@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 Widget BuildTappedTitle(String title,double width){
   return Padding(
@@ -11,13 +12,13 @@ Widget BuildTappedTitle(String title,double width){
 }
 
 
-Widget BuildStretchTitleHome(double screenWidth,String mainTitle,onTap){
+Widget BuildStretchTitleHome(double screenWidth,String mainTitle,onTap,BuildContext context,{String? viewAllText}){
   return   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(mainTitle,style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600)),
       GestureDetector(
           onTap: onTap,
-          child: BuildTappedTitle('View All',screenWidth)),
+          child: BuildTappedTitle(viewAllText ??AppLocalizations.of(context)!.viewAll,screenWidth)),
     ],
   );
 }

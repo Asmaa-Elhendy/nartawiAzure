@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_alert_dialog.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../pages/order_details.dart';
 
 Widget BuildOrderButtons(
@@ -49,7 +50,7 @@ Widget BuildOrderButtons(
                     SizedBox(width: screenWidth * .01),
                     Flexible(
                       child: Text(
-                        'View Details',
+                        AppLocalizations.of(context)!.viewDetails,
                         style: TextStyle(
                           color: AppColors.whiteColor,
                           fontSize: screenWidth * .029,
@@ -95,7 +96,7 @@ Widget BuildOrderButtons(
                 SizedBox(width: screenWidth * .01),
                 Flexible(
                   child: Text(
-                    'Re-Order',
+                    AppLocalizations.of(context)!.reOrder,
                     style: TextStyle(
                       color: AppColors.secondary,
                       fontSize: screenWidth * .029,
@@ -138,7 +139,7 @@ Widget BuildOrderButtons(
                       children: [
                         Flexible(
                             child: Text(
-                              'Cancel',
+                              AppLocalizations.of(context)!.cancel,
                               style: TextStyle(
                                 color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                                 fontSize: screenWidth * .029,

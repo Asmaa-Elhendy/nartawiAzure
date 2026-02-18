@@ -3,8 +3,9 @@ import 'package:newwwwwwww/core/theme/text_styles.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
-Widget ImpactWalletWidget(double screenWidth, double screenHeight,Function()? myImpactFun,Function()? myeWalletFun) {
+Widget ImpactWalletWidget(double screenWidth, double screenHeight,Function()? myImpactFun,Function()? myeWalletFun,BuildContext context) {
   return Container(
 
     padding: EdgeInsets.symmetric(
@@ -31,10 +32,10 @@ Widget ImpactWalletWidget(double screenWidth, double screenHeight,Function()? my
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('My Impact ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
+                        Text(AppLocalizations.of(context)!.myImpact, style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
                         customCouponAlertSubTitle('1', screenWidth, screenHeight)   ,
                         SizedBox(height: screenHeight*.01),
-                        customCouponAlertSubTitle('Bottles Donated', screenWidth, screenHeight)
+                        customCouponAlertSubTitle(AppLocalizations.of(context)!.bottlesDonated, screenWidth, screenHeight)
                       ],
                     ),
                   ),
@@ -60,10 +61,10 @@ Widget ImpactWalletWidget(double screenWidth, double screenHeight,Function()? my
                     child: Column(mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('My e-Wallet ', style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
-                        customCouponAlertSubTitle('QAR 840.00', screenWidth, screenHeight)   ,
+                        Text(AppLocalizations.of(context)!.myEWallet, style: TextStyle(fontSize: screenWidth*.036,fontWeight: FontWeight.w600,color: AppColors.primary)),
+                        customCouponAlertSubTitle('${AppLocalizations.of(context)!.qar} 840.00', screenWidth, screenHeight)   ,
                         SizedBox(height: screenHeight*.01),
-                        customCouponAlertSubTitle('Available Balance', screenWidth, screenHeight)
+                        customCouponAlertSubTitle(AppLocalizations.of(context)!.availableBalance, screenWidth, screenHeight)
                       ],
                     ),
                   ),

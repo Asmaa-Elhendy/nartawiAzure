@@ -7,6 +7,7 @@ import '../../../../core/utils/components/background_logo.dart';
 import '../bloc/login_bloc.dart';
 import '../widgets/auth_buttons.dart';
 import '../widgets/build_custome_full_text_field.dart';
+import '../../../../../../l10n/app_localizations.dart';
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
@@ -32,7 +33,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Passwords do not match'),
+          content: Text(AppLocalizations.of(context)!.passwordsDoNotMatch),
           backgroundColor: Colors.red,
         ),
       );
@@ -42,7 +43,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_passwordController.text.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Password must be at least 8 characters'),
+          content: Text(AppLocalizations.of(context)!.passwordMin8Chars),
           backgroundColor: Colors.red,
         ),
       );
@@ -71,7 +72,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Password reset successfully. Please login.'),
+            content: Text(AppLocalizations.of(context)!.passwordResetSuccess),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
           ),
@@ -90,7 +91,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to reset password. Please try again.'),
+          content: Text(AppLocalizations.of(context)!.passwordResetFailed),
           backgroundColor: Colors.red,
         ),
       );
@@ -107,7 +108,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     if (_isLoading) {
       return Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: AppColors.primary)),
       );
     }
 
@@ -127,10 +128,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   BuildBackgroundLogo(width,height),
-                  buildCustomeFullTextField('Enter New Password', 'Enter NewPassword ', _passwordController, true,height),
-                  buildCustomeFullTextField('Confirm Password', 'Enter Confirmed Password', _confirmPasswordController, true,height),
+                  buildCustomeFullTextField(AppLocalizations.of(context)!.enterNewPassword, AppLocalizations.of(context)!.enterNewPasswordHint, _passwordController, true,height),
+                  buildCustomeFullTextField(AppLocalizations.of(context)!.confirmNewPassword, AppLocalizations.of(context)!.enterConfirmedPassword, _confirmPasswordController, true,height),
                   SizedBox(height:height*.06,),
-                  AuthButton(width,height,'Send',_handleSend),
+                  AuthButton(width,height,AppLocalizations.of(context)!.send,_handleSend),
 
                 ],
               ),

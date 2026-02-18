@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class NextRefillCalendarDialog extends StatefulWidget {
   final List<int> selectedDays; // 0=Sunday, 1=Monday, etc.
@@ -160,7 +161,7 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
               children: [
                 Expanded(
                   child: Text(
-                    'Next Refill Appointment',
+        AppLocalizations.of(context)!.nextRefillAppointment,
                     style: TextStyle(
                       fontSize: screenWidth * 0.04,
                       fontWeight: FontWeight.w600,
@@ -460,7 +461,7 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                       ),
                       child: Center(
                         child: Text(
-                          'Edit Next Refill',
+                          AppLocalizations.of(context)!.editNextRefill,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: screenWidth * .03,
@@ -497,7 +498,7 @@ class _NextRefillCalendarDialogState extends State<NextRefillCalendarDialog> {
                       ),
                       child: Center(
                         child: Text(
-                          'Request New Date',
+    AppLocalizations.of(context)!.requestNewDate,
                           style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: screenWidth * .03,

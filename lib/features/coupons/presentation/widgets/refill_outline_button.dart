@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'calender_dialog.dart';
 
 class NextRefillButton extends StatefulWidget {
@@ -62,23 +63,29 @@ class _NextRefillButtonState extends State<NextRefillButton> {
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
                   "assets/images/orders/calendar.svg",
                   color: AppColors.secondary,
                 ),
                 SizedBox(width: width * .02),
-                Text(
-                  'Next Refill',
-                  style: TextStyle(
-                    color: AppColors.secondary,
-                    fontSize: width * .036,
-                    fontWeight: FontWeight.w600,
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.nextRefill,
+                    style: TextStyle(
+                      color: AppColors.secondary,
+                      fontSize: width * .036,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
                 SizedBox(width: width * .02),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       formatFullDate(displayDate),
@@ -88,7 +95,7 @@ class _NextRefillButtonState extends State<NextRefillButton> {
                       ),
                     ),
                     Text(
-                      'Before Noon',
+                      AppLocalizations.of(context)!.beforeNoon,
                       style: TextStyle(
                         color: AppColors.secondary,
                         fontSize: width * .03,

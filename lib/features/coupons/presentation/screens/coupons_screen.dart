@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/coupons/presentation/widgets/add_coupon_widget.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -91,9 +92,9 @@ class _CouponsScreenState extends State<CouponsScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Coupons',
+            title: AppLocalizations.of(context)!.coupons,
             is_returned: widget.fromViewButton,
-            disabledGallon: 'Coupons',
+            disabledGallon: AppLocalizations.of(context)!.coupons,
           ),
           Positioned.fill(
             top: topOffset,
@@ -117,7 +118,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Your Coupons',
+                              AppLocalizations.of(context)!.yourCoupons,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: screenWidth * .045,
@@ -131,7 +132,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                             vertical: screenHeight * .01,
                           ),
                           child: Text(
-                            'Bundle purchase history and details',
+                            AppLocalizations.of(context)!.bundlePurchaseHistory,
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: screenWidth * .036,
@@ -175,7 +176,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                                 padding: EdgeInsets.only(top: screenHeight * .1),
                                 child: Center(
                                   child: Text(
-                                    'No Bundles found',
+                                    AppLocalizations.of(context)!.noBundlesFound,
                                     style: TextStyle(
                                       fontSize: screenWidth * .04,
                                       fontWeight: FontWeight.w500,

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/icons/healthicons.dart';
 import 'package:iconify_flutter/icons/la.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'impact_single_reward.dart';
 
-Widget impactSecondCard(double screenWidth, double screenHeight) {
+Widget impactSecondCard(BuildContext context,double screenWidth, double screenHeight) {
   return Container(
     width: screenWidth,
     margin: EdgeInsets.symmetric(vertical: screenHeight * .02),
@@ -24,8 +25,8 @@ Widget impactSecondCard(double screenWidth, double screenHeight) {
         ImpactSngleReward(
           screenWidth: screenWidth,
           screenHeight: screenHeight,
-          title: 'Your Achievements',
-          description: 'Milestones you\'ve reached',
+          title:AppLocalizations.of(context)!.yourAchievements,
+          description:AppLocalizations.of(context)!.milestonesReached,
           date: '',
           icon: La.award,
         ),
@@ -33,27 +34,27 @@ Widget impactSecondCard(double screenWidth, double screenHeight) {
         ImpactSngleReward(
           screenWidth: screenWidth,
           screenHeight: screenHeight,
-          title: 'App Explorer',
-          description: 'Explored the MOYAH water delivery_man app features',
-          date: 'Unlocked: Mar 31, 2025',
+          title:AppLocalizations.of(context)!.appExplorer,
+          description: AppLocalizations.of(context)!.appExplorerDesc,
+          date: '${AppLocalizations.of(context)!.unlocked}: Mar 31, 2025',
           icon: Healthicons.award_trophy_outline,
         ),
 
         ImpactSngleReward(
           screenWidth: screenWidth,
           screenHeight: screenHeight,
-          title: 'Water Supporter',
-          description: 'Joined the community supporting clean water access',
-          date: 'Unlocked: Mar 31, 2025',
+          title: AppLocalizations.of(context)!.waterSupporter,
+          description:AppLocalizations.of(context)!.waterSupporterDesc,
+          date: '${AppLocalizations.of(context)!.unlocked}: Mar 31, 2025',
           icon: Healthicons.award_trophy_outline,
         ),
 
         ImpactSngleReward(
           screenWidth: screenWidth,
           screenHeight: screenHeight,
-          title: 'First Steps',
-          description: 'Started your journey to help donate clean water',
-          date: 'Unlocked: Mar 31, 2025',
+          title:AppLocalizations.of(context)!.firstSteps,
+          description: AppLocalizations.of(context)!.firstStepsDesc,
+          date: '${AppLocalizations.of(context)!.unlocked}: Mar 31, 2025',
           icon: Healthicons.award_trophy_outline,
         ),
       ],

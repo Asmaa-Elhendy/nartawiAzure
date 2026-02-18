@@ -4,6 +4,7 @@ import 'package:iconify_flutter/icons/material_symbols.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 Widget buildTitleWidget(BuildContext context,double width,String title){
   return  Row(
@@ -28,7 +29,7 @@ Widget buildTitleWidget(BuildContext context,double width,String title){
 
 Widget buildFooterInfo(BuildContext context,String leftText,String rightText,void Function()? fun,){
   return Row(
-    mainAxisAlignment: rightText==" Resend"?MainAxisAlignment.start:MainAxisAlignment.center,
+    mainAxisAlignment: rightText==AppLocalizations.of(context)!.resend?MainAxisAlignment.start:MainAxisAlignment.center,
     children: [
 
       Text(leftText,style: TextStyle(fontSize: 15,color: AppColors.textLight),),

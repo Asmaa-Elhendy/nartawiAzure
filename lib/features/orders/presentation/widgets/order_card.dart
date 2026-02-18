@@ -5,6 +5,7 @@ import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/orders_buttons.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/payement_status_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'order_image_network_widget.dart';
 import 'order_status_widget.dart';
 
@@ -42,7 +43,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Order #${order!=null?order?.id:0}',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
+                Text('${AppLocalizations.of(context)!.order} #${order!=null?order?.id:0}',style: TextStyle(fontWeight: FontWeight.w700,fontSize: screenWidth*.036),),
                 BuildOrderStatus(screenHeight, screenWidth, orderStatus)
               ],
             ),
@@ -59,7 +60,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                      Text(
                        order != null
                            ? formatOrderDate(order.issueTime)
-                           : 'UNkOWN DATE',
+                           : AppLocalizations.of(context)!.unknownDate,
                        style: TextStyle(
                          fontWeight: FontWeight.w400,
                          fontSize: screenWidth * .036,
@@ -87,11 +88,11 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                        Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
                        Padding(
                          padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
-                         child: Text('Total Order Value',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,
+                         child: Text('${ AppLocalizations.of(context)!.totalOrderValue}',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,
                              color: AppColors.greyDarktextIntExtFieldAndIconsHome
                          ),),
                        ),
-                       Text('QAR ${order!=null?order.total:0}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
+                       Text('${ AppLocalizations.of(context)!.qar} ${order!=null?order.total:0}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
 
                      ],
                    )

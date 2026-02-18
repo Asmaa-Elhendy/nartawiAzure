@@ -74,7 +74,7 @@ class PODDisplayModal extends StatelessWidget {
                         height: screenHeight * .35,
                         color: Colors.grey[200],
                         child: Center(
-                          child: CircularProgressIndicator(
+                          child: CircularProgressIndicator(color: AppColors.primary,
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded /
                                     loadingProgress.expectedTotalBytes!

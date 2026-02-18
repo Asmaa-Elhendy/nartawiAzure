@@ -1,16 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/core/theme/colors.dart';
+import 'package:newwwwwwww/core/theme/text_styles.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_event.dart';
+import 'package:newwwwwwww/features/auth/presentation/widgets/auth_buttons.dart';
+import 'package:newwwwwwww/features/auth/presentation/widgets/custom_text_field.dart';
+import 'package:newwwwwwww/features/splash/splash_screen.dart';
+import 'package:newwwwwwww/features/splash/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
+
 import '../../../../core/utils/components/background_logo.dart';
 import '../../../Delivery_Man/home/presentation/screens/home_delivery.dart';
-import '../bloc/login_bloc.dart';
-import '../bloc/login_event.dart';
 import '../bloc/login_state.dart';
 import '../widgets/build_title_widget.dart';
-import '../widgets/custom_text_field.dart';
-import '../widgets/auth_buttons.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -143,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         CustomeTextField(
                           iconPath: 'assets/images/auth/icon with bg.png',
-                          hintText: 'Enter Email',
+                          hintText: AppLocalizations.of(context)!.enterEmail,
                           controller: _emailController,
                         ),
 
@@ -151,8 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         CustomeTextField(
                           iconPath: 'assets/images/auth/iconwithbgpassword.png',
-                          hintText: 'Enter Password',
-                          label: 'password',
+                          hintText: AppLocalizations.of(context)!.enterPassword,
+                          label: AppLocalizations.of(context)!.password,
                           controller: _passwordController,
                         ),
 
@@ -173,8 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                   ),
-                                  const Text(
-                                    "Remember Me",
+                                  Text(
+                                    AppLocalizations.of(context)!.rememberMe,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
@@ -190,8 +194,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     '/forgetPassword',
                                   );
                                 },
-                                child: const Text(
-                                  "Forgot Password?",
+                                child: Text(
+                                  AppLocalizations.of(context)!.forgotPassword,
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -203,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        AuthButton(width, height, 'Login', () {
+                        AuthButton(width, height, AppLocalizations.of(context)!.login, () {
                           if (_formKey.currentState?.validate() ?? false) {
                             _handleLogin();
                           }
@@ -239,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         //     ],
                         //   ),
                         // ),
-                        _buildDivider('Or Continue As', dividerColor),
+                        _buildDivider(AppLocalizations.of(context)!.orContinueAs, dividerColor),
 
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -252,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               CustomLoginButtons(
                                 width,
                                 height,
-                                'Guest',
+                                AppLocalizations.of(context)!.guest,
                                 () {}, //  _handleLogin,
                               ),
                             ],
@@ -263,8 +267,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         buildFooterInfo(
                           context,
-                          'Don’t have an account?',
-                          " Sign Up",
+                          AppLocalizations.of(context)!.dontHaveAccount,
+                          AppLocalizations.of(context)!.signUp,
                           () {
                             Navigator.pushNamed(context, '/signUp');
                           },
@@ -302,9 +306,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const SelectionContainer.disabled(
-                              child: const Text(
-                                'Logging in...',
+                            SelectionContainer.disabled(
+                              child: Text(
+                                AppLocalizations.of(context)!.loggingIn,
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,

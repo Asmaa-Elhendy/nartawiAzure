@@ -5,6 +5,7 @@ import 'package:newwwwwwww/features/auth/presentation/widgets/buildFloadtActionB
 import 'package:newwwwwwww/features/orders/presentation/pages/orders_screen.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../home/presentation/pages/mainscreen.dart';
 import '../../../../profile/presentation/pages/profile.dart';
 import '../../../history/presentation/screens/history_delivery.dart';
@@ -39,7 +40,8 @@ class _MainScreenDeliveryState extends State<MainScreenDelivery> with SingleTick
   void initState() {
     super.initState();
     pageController = PageController(initialPage: _tabIndex);
-    originalTabs = ['History','Orders', 'Profile'];
+    originalTabs = [       AppLocalizations.of(context)!.history,       AppLocalizations.of(context)!.orders,
+    AppLocalizations.of(context)!.profile];
     _initIconsAndLogo();
   }
 

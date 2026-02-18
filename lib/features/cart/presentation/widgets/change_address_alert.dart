@@ -4,6 +4,7 @@ import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_but
 
 import '../../../../core/theme/colors.dart';
 import '../../../../injection_container.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/auth_buttons.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -205,7 +206,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                       return Padding(
                         padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
                         child: Text(
-                          'No addresses found',
+                          AppLocalizations.of(context)!.noaddressesfound,
                           style: TextStyle(
                             color: AppColors.greyDarktextIntExtFieldAndIconsHome,
                             fontSize: screenWidth * .034,
@@ -248,7 +249,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                 BuildInfoAndAddToCartButton(
                   screenWidth,
                   screenHeight,
-                  'Add New Address',
+                  AppLocalizations.of(context)!.addNewAddress,
                   false,
                       () {
                     showDialog(
@@ -265,7 +266,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                 OutlineAuthButton(
                   screenWidth,
                   screenHeight,
-                  'Use Current Location',
+                    AppLocalizations.of(context)!.useCurrentLocation,
                       () {
                     showDialog(
                       context: context,
@@ -278,7 +279,7 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                 OutlineAuthButton(
                   screenWidth,
                   screenHeight,
-                  'Open Google Map',
+                  AppLocalizations.of(context)!.openGoogleMap,
                       () {
                     showDialog(
                       context: context,
@@ -293,8 +294,8 @@ class _ChangeAddressAlertState extends State<ChangeAddressAlert> {
                   context,
                   screenWidth,
                   screenHeight,
-                  'Confirm',
-                  'Cancel',
+                  AppLocalizations.of(context)!.confirm,
+                  AppLocalizations.of(context)!.cancel,
                   _onConfirm,
                       () => Navigator.pop(context),
                 ),

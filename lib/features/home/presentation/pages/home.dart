@@ -9,6 +9,8 @@ import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:newwwwwwww/features/auth/presentation/widgets/buildFloadtActionButton.dart';
 import 'package:newwwwwwww/features/orders/presentation/pages/orders_screen.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/services/language_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../coupons/presentation/screens/coupons_screen.dart';
 import '../../../favourites/pesentation/screens/favourites_screen.dart';
 import '../../../profile/presentation/pages/profile.dart';
@@ -38,12 +40,43 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         (index) => GlobalKey<NavigatorState>(),
   );
 
+  // Get localized tabs dynamically
+  List<String> get _localizedTabs => [
+    AppLocalizations.of(context)!.orders,
+    AppLocalizations.of(context)!.coupons,
+    AppLocalizations.of(context)!.home,
+    AppLocalizations.of(context)!.favorites,
+    AppLocalizations.of(context)!.profile
+  ];
+
   @override
   void initState() {
     super.initState();
     pageController = PageController(initialPage: _tabIndex);
-    originalTabs = ['Orders', 'Coupons', 'Home', 'Favorites', 'Profile'];
     _initIconsAndLogo();
+    // Add language change listener using ValueNotifier
+    LanguageService.localeNotifier.addListener(_onLanguageChanged);
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    LanguageService.localeNotifier.removeListener(_onLanguageChanged);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    originalTabs = _localizedTabs;
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {
+        originalTabs = _localizedTabs;
+      });
+    }
   }
 
   void _initIconsAndLogo() {

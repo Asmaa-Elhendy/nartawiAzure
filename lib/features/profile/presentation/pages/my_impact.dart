@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/impact_first_card.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/impact_second_card.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 
@@ -47,7 +48,7 @@ class _MyImpactScreenState extends State<MyImpactScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'My Impact',
+            title: AppLocalizations.of(context)!.myImpact,
             is_returned: true, //edit back from orders
           ),
           Positioned.fill(
@@ -67,8 +68,8 @@ class _MyImpactScreenState extends State<MyImpactScreen>
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
 
-                      impactFirstCard(screenWidth, screenHeight),
-                      impactSecondCard(screenWidth, screenHeight)
+                      impactFirstCard(context,screenWidth, screenHeight),
+                      impactSecondCard(context,screenWidth, screenHeight)
 
                     ],
                   ),

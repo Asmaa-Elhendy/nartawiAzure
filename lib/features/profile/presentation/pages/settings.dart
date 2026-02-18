@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/services/dio_service.dart';
+import '../../../../core/services/language_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
@@ -33,13 +35,43 @@ class _SettingsScreenState extends State<SettingsScreen>
   bool _isLoadingPrefs = true;
 
   // Language
-  String _selectedLanguage = 'English'; // ✅ was 'Male'
+  String _selectedLanguage = '';
 
   @override
   void initState() {
     super.initState();
     _prefsDataSource = NotificationPreferencesDataSourceImpl(dio: DioService.dio);
     _loadPreferences();
+    
+    // Add language change listener using ValueNotifier
+    LanguageService.localeNotifier.addListener(_onLanguageChanged);
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    
+    // Initialize selected language after context is available
+    _selectedLanguage = LanguageService.currentLocale?.languageCode == 'en' 
+        ? AppLocalizations.of(context)!.english
+        : AppLocalizations.of(context)!.arabic;
+  }
+  
+  @override
+  void dispose() {
+    LanguageService.localeNotifier.removeListener(_onLanguageChanged);
+    super.dispose();
+  }
+  
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {
+        final currentLocale = LanguageService.currentLocale;
+        _selectedLanguage = currentLocale?.languageCode == 'en' 
+            ? AppLocalizations.of(context)!.english
+            : AppLocalizations.of(context)!.arabic;
+      });
+    }
   }
 
   Future<void> _loadPreferences() async {
@@ -56,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       });
     } catch (e) {
       // ignore: avoid_print
-      print('Error loading preferences: $e');
+      print('${AppLocalizations.of(context)!.errorLoadingPreferences}$e');
       if (!mounted) return;
       setState(() => _isLoadingPrefs = false);
     }
@@ -74,11 +106,11 @@ class _SettingsScreenState extends State<SettingsScreen>
       await _prefsDataSource.updatePreferences(prefs);
     } catch (e) {
       // ignore: avoid_print
-      print('Error updating preferences: $e');
+      print('${AppLocalizations.of(context)!.errorUpdatingPreferences}$e');
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to save preferences')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.failedSavePreferences)),
       );
     }
   }
@@ -102,7 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Settings',
+            title: AppLocalizations.of(context)!.settings,
             is_returned: true,
           ),
 
@@ -125,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Notification Preferences',
+                        AppLocalizations.of(context)!.notificationPreferences,
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: screenWidth * .04,
@@ -137,17 +169,17 @@ class _SettingsScreenState extends State<SettingsScreen>
                         const Center(
                           child: Padding(
                             padding: EdgeInsets.all(20),
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(color: AppColors.primary),
                           ),
                         )
                       else
                         Column(
                           children: [
                             SettingCard(
-                              title: 'Low Coupon Alerts',
+                              title: AppLocalizations.of(context)!.lowCouponAlerts,
                               description:
-                              'Get notified when your coupon balance is running low',
-                              quantityLabel: 'Coupons',
+                              AppLocalizations.of(context)!.couponLowDesc,
+                              quantityLabel: AppLocalizations.of(context)!.coupons,
                               isIncrease: true,
                               initialSwitchValue: _lowCouponsAlerts,
                               initialThresholdValue: _lowCouponsThreshold,
@@ -161,10 +193,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                               },
                             ),
                             SettingCard(
-                              title: 'Wallet Balance Alerts',
+                              title: AppLocalizations.of(context)!.walletBalanceAlerts,
                               description:
-                              'Get alerts when your wallet balance is low',
-                              quantityLabel: 'QAR',
+                              AppLocalizations.of(context)!.walletLowDesc,
+                              quantityLabel: AppLocalizations.of(context)!.qar,
                               isIncrease: true,
                               initialSwitchValue: _walletBalanceAlerts,
                               initialThresholdValue:
@@ -180,9 +212,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                               },
                             ),
                             SettingCard(
-                              title: 'Order Updates',
+                              title: AppLocalizations.of(context)!.orderUpdates,
                               description:
-                              'Receive notifications about your order status',
+                              AppLocalizations.of(context)!.orderUpdatesDesc,
                               quantityLabel: '',
                               isIncrease: false,
                               initialSwitchValue: true,
@@ -192,9 +224,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                               },
                             ),
                             SettingCard(
-                              title: 'Refill Updates',
+                              title: AppLocalizations.of(context)!.refillUpdates,
                               description:
-                              'Get notified when your bottles have been refilled',
+                              AppLocalizations.of(context)!.refillUpdatesDesc,
                               quantityLabel: '',
                               isIncrease: false,
                               initialSwitchValue: true,
@@ -204,9 +236,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                               },
                             ),
                             SettingCard(
-                              title: 'Promotions & Offers',
+                              title: AppLocalizations.of(context)!.promotionsOffers,
                               description:
-                              'Receive notifications about promotions and special offers',
+                              AppLocalizations.of(context)!.promotionsOffersDesc,
                               quantityLabel: '',
                               isIncrease: false,
                               initialSwitchValue: true,
@@ -241,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                               MainAxisAlignment.spaceBetween,
                               children: [
                                 customCouponPrimaryTitle(
-                                  "Language Preference",
+                                  AppLocalizations.of(context)!.languagePreference,
                                   screenWidth,
                                   screenHeight,
                                 ),
@@ -256,13 +288,13 @@ class _SettingsScreenState extends State<SettingsScreen>
                               child: Row(
                                 children: [
                                   _buildLanguageRadio(
-                                    label: 'English',
+                                    label: AppLocalizations.of(context)!.english,
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
                                   ),
                                   SizedBox(width: screenWidth * .08),
                                   _buildLanguageRadio(
-                                    label: 'Arabic',
+                                    label: AppLocalizations.of(context)!.arabic,
                                     screenWidth: screenWidth,
                                     screenHeight: screenHeight,
                                   ),
@@ -277,7 +309,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                         padding:
                         EdgeInsets.symmetric(vertical: screenHeight * .01),
                         child: Text(
-                          'Security',
+                          AppLocalizations.of(context)!.security,
                           style: TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w700,
@@ -289,7 +321,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                       BuildInfoAndAddToCartButton(
                         screenWidth,
                         screenHeight,
-                        'Change Password',
+                        AppLocalizations.of(context)!.changePassword,
                         false,
                             () {
                           showDialog(
@@ -316,12 +348,38 @@ class _SettingsScreenState extends State<SettingsScreen>
     required double screenHeight,
   }) {
     final bool isSelected = _selectedLanguage == label;
+    
+    // Map display labels to locale codes
+    final String localeCode = label == AppLocalizations.of(context)!.english ? 'en' : 'ar';
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedLanguage = label;
-        });
+        // Only proceed if the language is actually different
+        if (_selectedLanguage != label) {
+          setState(() {
+            _selectedLanguage = label;
+          });
+          
+          // Change the app locale using LanguageService
+          LanguageService.setLanguage(localeCode);
+          
+          // Wait a moment for the UI to update, then show confirmation message
+          Future.delayed(Duration(milliseconds: 300), () {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: Text(
+                    localeCode == 'en' ?
+                    AppLocalizations.of(context)!.languageChangedToEnglish :
+                    AppLocalizations.of(context)!.languageChangedToArabic
+                  ),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          });
+        }
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,

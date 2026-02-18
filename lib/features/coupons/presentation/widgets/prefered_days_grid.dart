@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/app_localizations.dart';
 import 'day_card.dart';
 
 class DaySelectionGrid extends StatefulWidget {
@@ -71,7 +72,7 @@ class _DaySelectionGridState extends State<DaySelectionGrid> {
         }
 
         final String timePeriod =
-            _daySelections[dayLabel]?.timePeriod ?? (isSelected ? 'Afternoon' : 'Not Selected');
+            _daySelections[dayLabel]?.timePeriod ?? (isSelected ? 'Afternoon' : AppLocalizations.of(context)!.notSelected);
 
         return DayCard(
           day: dayLabel,

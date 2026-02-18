@@ -4,13 +4,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newwwwwwww/core/theme/colors.dart';
+import 'package:newwwwwwww/core/theme/text_styles.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_event.dart';
+import 'package:newwwwwwww/features/auth/presentation/widgets/auth_buttons.dart';
+import 'package:newwwwwwww/features/auth/presentation/widgets/custom_text_field.dart';
+import 'package:newwwwwwww/features/splash/splash_screen.dart';
+import 'package:newwwwwwww/features/splash/onboarding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/components/background_logo.dart';
-import '../bloc/login_bloc.dart';
-import '../bloc/login_event.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../Delivery_Man/home/presentation/screens/home_delivery.dart';
 import '../bloc/login_state.dart';
-import '../widgets/auth_buttons.dart';
 import '../widgets/build_custome_full_text_field.dart';
 import '../widgets/build_info_phone.dart';
 import '../widgets/build_title_widget.dart';
@@ -37,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  // ✅ Field keys (validate per-field only)
+  // Field keys (validate per-field only)
   final _userNameKey = GlobalKey<FormFieldState>();
   final _firstNameKey = GlobalKey<FormFieldState>();
   final _lastNameKey = GlobalKey<FormFieldState>();
@@ -46,6 +54,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _altPhoneKey = GlobalKey<FormFieldState>();
   final _passwordKey = GlobalKey<FormFieldState>();
   final _confirmPasswordKey = GlobalKey<FormFieldState>();
+
+
+
+  void _onLanguageChanged() {
+    setState(() {});
+  }
 
   @override
   void dispose() {
@@ -63,29 +77,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // --------- validators ----------
   String? _required(String? v, String label) {
-    if ((v ?? '').trim().isEmpty) return '$label is required';
+    if ((v ?? '').trim().isEmpty) return '$label ${     AppLocalizations.of(context)!.fieldIsRequired}';
     return null;
   }
 
   String? _emailValidator(String? v) {
     final value = (v ?? '').trim();
-    if (value.isEmpty) return 'Email Address is required';
+    if (value.isEmpty) return      AppLocalizations.of(context)!.emailAddressRequired;
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+    if (!emailRegex.hasMatch(value)) return AppLocalizations.of(context)!.enterValidEmail;
     return null;
   }
 
   String? _passwordValidator(String? v) {
     final value = (v ?? '');
-    if (value.trim().isEmpty) return 'Password is required';
-    if (value.length < 6) return 'Password must be at least 6 characters';
+    if (value.trim().isEmpty) return AppLocalizations.of(context)!.passwordRequired;
+    if (value.length < 6) return AppLocalizations.of(context)!.passwordMinLength;
     return null;
   }
 
   String? _confirmPasswordValidator(String? v) {
     final confirm = (v ?? '');
-    if (confirm.trim().isEmpty) return 'Confirm Password is required';
-    if (confirm != _passwordController.text) return "Password doesn't match";
+    if (confirm.trim().isEmpty) return AppLocalizations.of(context)!.confirmPasswordRequired;
+    if (confirm != _passwordController.text) return AppLocalizations.of(context)!.passwordMismatch;
     return null;
   }
 
@@ -162,38 +176,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           BuildBackgroundLogo(width, height),
 
                           buildCustomeFullTextField(
-                            'UserName',
-                            'Enter Username',
+                            AppLocalizations.of(context)!.userName,
+                            AppLocalizations.of(context)!.enterUsername,
                             _userNameController,
                             true,
                             height,
                             fieldKey: _userNameKey,
-                            validator: (v) => _required(v, 'UserName'),
+                            validator: (v) => _required(v, AppLocalizations.of(context)!.userName),
                           ),
 
                           buildCustomeFullTextField(
-                            'First Name',
-                            'Enter First Name',
+                            AppLocalizations.of(context)!.firstName,
+                            AppLocalizations.of(context)!.enterFirstName,
                             _firstNameController,
                             true,
                             height,
                             fieldKey: _firstNameKey,
-                            validator: (v) => _required(v, 'First Name'),
+                            validator: (v) => _required(v, AppLocalizations.of(context)!.firstName),
                           ),
 
                           buildCustomeFullTextField(
-                            'Last Name',
-                            'Enter Last Name',
+                            AppLocalizations.of(context)!.lastName,
+                            AppLocalizations.of(context)!.enterLastName,
                             _lastNameController,
                             true,
                             height,
                             fieldKey: _lastNameKey,
-                            validator: (v) => _required(v, 'Last Name'),
+                            validator: (v) => _required(v, AppLocalizations.of(context)!.lastName),
                           ),
 
                           buildCustomeFullTextField(
-                            'Email Address',
-                            'Ex: abc@example.com',
+                            AppLocalizations.of(context)!.emailAddress,
+                            AppLocalizations.of(context)!.exEmail,
                             _emailController,
                             true,
                             height,
@@ -202,32 +216,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
 
                           buildCustomeFullTextField(
-                            'Phone',
-                            'Enter Phone Number',
+                            AppLocalizations.of(context)!.phone,
+                            AppLocalizations.of(context)!.enterPhone,
                             _phoneNumberController,
                             true,
                             height,
                             isNumberKeyboard: true,
                             fieldKey: _phoneKey,
-                            validator: (v) => _required(v, 'Phone'),
+                            validator: (v) => _required(v, AppLocalizations.of(context)!.phone),
                           ),
-                          buildInfoPhoneInfo(width),
+                          buildInfoPhoneInfo(width,context),
 
                           buildCustomeFullTextField(
-                            'Alternative Phone Number',
-                            'Enter Alternative phone number',
+                            AppLocalizations.of(context)!.alternativePhoneNumber,
+                            AppLocalizations.of(context)!.enterAlternativePhone,
                             _emergencyphonenumberController,
                             false,
                             height,
                             isNumberKeyboard: true,
                             fieldKey: _altPhoneKey,
                           ),
-                          buildInfoPhoneInfo(width),
+                          buildInfoPhoneInfo(width,context),
 
                           // ✅ Password: validate itself + revalidate confirm if typed
                           buildCustomeFullTextField(
-                            'Password',
-                            'Enter Password ',
+                            AppLocalizations.of(context)!.password,
+                            AppLocalizations.of(context)!.enterPassword,
                             _passwordController,
                             true,
                             height,
@@ -243,8 +257,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                           // ✅ Confirm Password: validate live mismatch only
                           buildCustomeFullTextField(
-                            'Confirm Password',
-                            'Enter Confirmed Password',
+                            AppLocalizations.of(context)!.confirmPassword,
+                            AppLocalizations.of(context)!.enterConfirmedPassword,
                             _confirmPasswordController,
                             true,
                             height,
@@ -258,14 +272,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           AuthButton(
                             width,
                             height,
-                            'SignUp',
+                            AppLocalizations.of(context)!.signUp,
                             isLoading ? null : _handleSignUp,
                           ),
 
                           buildFooterInfo(
                             context,
-                            'Already have an account?',
-                            " Login",
+                            AppLocalizations.of(context)!.alreadyHaveAccount,
+                            AppLocalizations.of(context)!.login,
                                 () {
                               Navigator.pop(context);
                             },
@@ -289,7 +303,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             SizedBox(
@@ -304,7 +318,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             SizedBox(width: 12),
                             Text(
-                              'Creating account...',
+                              AppLocalizations.of(context)!.creatingAccount,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,

@@ -174,7 +174,7 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
                   ? const SizedBox(
                 width: 22,
                 height: 22,
-                child: CircularProgressIndicator(strokeWidth: 2),
+                child: CircularProgressIndicator(strokeWidth: 2,color: AppColors.primary),
               )
                   : const Icon(Icons.my_location, color: AppColors.primary),
             ),
@@ -193,7 +193,7 @@ class _OsmPickLocationScreenState extends State<OsmPickLocationScreen> {
                     ? const SizedBox(
                   width: 22,
                   height: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(strokeWidth: 2,color: AppColors.primary),
                 )
                     : const Icon(Icons.account_circle, color: AppColors.primary),
               ),

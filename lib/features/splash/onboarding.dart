@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/colors.dart';
+import '../../core/services/language_service.dart';
+import '../../../l10n/app_localizations.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -12,23 +14,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<Map<String, String>> onboardingData = [
+  List<Map<String, String>> get onboardingData => [
     {
       'image': 'assets/images/onboaring/illastorator-man.png',
-      'description':
-      'Pick Your Favorite Water Brand, Coupon Bundle, And Delivery Address',
+      'description': AppLocalizations.of(context)!.onboarding1,
     },
     {
       'image': 'assets/images/onboaring/illastorator-phone.png',
-      'description':
-      'Confirm Your Order And Checkout—All in Few Taps',
+      'description': AppLocalizations.of(context)!.onboarding2,
     },
     {
       'image': 'assets/images/onboaring/illastorator-woman.png',
-      'description':
-      'Stay refreshed. Your water Arrives Straight To Your Door Every Week. Say Goodbye To Paper Coupons',
+      'description': AppLocalizations.of(context)!.onboarding3,
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Add language change listener using ValueNotifier
+    LanguageService.localeNotifier.addListener(_onLanguageChanged);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    LanguageService.localeNotifier.removeListener(_onLanguageChanged);
+    super.dispose();
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   void didChangeDependencies() {
@@ -40,17 +60,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     // Also pre-cache the logo and background
     precacheImage(const AssetImage('assets/images/onboaring/Logo.png'), context);
     precacheImage(const AssetImage('assets/images/splash/background.png'), context);
-  }
-
-  void _goToNextPage() {
-    if (_currentPage < onboardingData.length - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
-      );
-    } else {
-      Navigator.of(context).pushReplacementNamed('/login');
-    }
   }
 
   @override
@@ -107,8 +116,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
-                            "Let's Get Started",
+                          child: Text(
+                            AppLocalizations.of(context)!.letsGetStarted,
                             style: TextStyle(
                               color: AppColors.secondary,
                               fontSize: 16,

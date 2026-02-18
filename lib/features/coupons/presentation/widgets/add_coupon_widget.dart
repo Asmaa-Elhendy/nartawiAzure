@@ -7,6 +7,7 @@ import 'package:newwwwwwww/features/home/presentation/pages/all_product_screen.d
 import 'package:newwwwwwww/features/home/presentation/pages/popular_category_screen.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/components/confirmation_alert.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
   return InkWell(
@@ -14,8 +15,8 @@ Widget AddCoupon(BuildContext context,double screenWidth,double screenHeight){
       showDialog(
         context: context,
         builder: (dialogContext) => ConfirmationAlert(price: 0,
-          centerTitle: 'You Already Have 2 Coupons. Continue To Buy Another One?',
-          leftTtile: 'Continue Shopping',rightTitle: 'Cancel',
+          centerTitle: AppLocalizations.of(context)!.maxCouponsReached,
+          leftTtile: AppLocalizations.of(context)!.continueShopping,rightTitle: AppLocalizations.of(context)!.cancel,
           leftOnTap: () {
             // 👈 ده هيقفل الـ Dialog بس
             Navigator.of(dialogContext).pop();

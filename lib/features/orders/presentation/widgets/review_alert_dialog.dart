@@ -202,7 +202,7 @@ SizedBox(height: screenHeight * .02),
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: AppColors.primary,
                                   strokeWidth: 2,
                                 ),
                               )

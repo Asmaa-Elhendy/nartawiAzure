@@ -8,6 +8,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/products/firstTabProductDetail.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/utils/components/confirmation_alert.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../features/cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../bloc/cart/cart_event.dart';
 import '../../bloc/cart/cart_state.dart';
@@ -92,7 +93,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                 BuildForegroundappbarhome(
                   screenHeight: screenHeight,
                   screenWidth: screenWidth,
-                  title: 'Product Details',
+                  title: AppLocalizations.of(context)!.productDetails,
                   is_returned: true,
                   onReturnFromSupplierDetail: () {
                     final currentQuantity =
@@ -129,7 +130,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                           context: context,
                           builder: (ctx) => GeneralAlert(
                             width: MediaQuery.of(context).size.width,
-                            message: 'All order Products Must be from Same Supplier',
+                            message: AppLocalizations.of(context)!.supplierError,
                           ),
                         );
                         return; // Don't show dialog, don't add product
@@ -140,7 +141,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         builder: (dialogContext) => ConfirmationAlert(
                           price: state.price,
                           centerTitle:
-                              "You Have Selected 1 Item, But You Haven’t Confirmed Your Choice Yet",
+                          AppLocalizations.of(context)!.selectedItemNotConfirmed,
                           leftOnTap: () {
                             Navigator.pop(dialogContext);
                             
@@ -153,8 +154,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                             Navigator.pop(dialogContext);
                             Navigator.pop(context);
                           },
-                          leftTtile: 'Add To Cart',
-                          rightTitle: 'Continue Shopping',
+                          leftTtile: AppLocalizations.of(context)!.addToCart,
+                          rightTitle: AppLocalizations.of(context)!.continueShopping,
                           itemAAdedToCart: true,
                         ),
                       );
@@ -268,11 +269,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                       .favoriteProduct
                                                       ?.product
                                                       ?.description ??
-                                                  'company hand pump dispenser-pure natural...'
+                                                AppLocalizations.of(context)!.companyHandPumpDescription
                                             : widget
                                                       .clientProduct
                                                       ?.description ??
-                                                  'company hand pump dispenser-pure natural...',
+                                                AppLocalizations.of(context)!.companyHandPumpDescription,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -299,11 +300,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                                       .favoriteProduct
                                                       ?.product
                                                       ?.productType ??
-                                                  'one-time purchase'
+                                               AppLocalizations.of(context)!.oneTimePurchase
                                             : widget
-                                                      .clientProduct
+                                                      ?.clientProduct
                                                       ?.productType ??
-                                                  'one-time purchase',
+                                               AppLocalizations.of(context)!.oneTimePurchase,
                                         style: TextStyle(
                                           fontSize: screenWidth * .028,
                                           fontWeight: FontWeight.w500,
@@ -394,13 +395,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           tabs: [
                                             SizedBox(
                                               width: screenWidth * .5,
-                                              child: const Tab(
-                                                text: 'Product Details',
+                                              child: Tab(
+                                                text: AppLocalizations.of(context)!.productDetails,
                                               ),
                                             ),
                                             SizedBox(
                                               width: screenWidth * .5,
-                                              child: const Tab(text: 'Reviews'),
+                                              child: Tab(text: AppLocalizations.of(context)!.reviews),
                                             ),
                                           ],
                                         ),
@@ -419,7 +420,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                           } else {
                                             return BuildSecondTabProductDetail(
                                               screenWidth,
-                                              screenHeight,
+                                              screenHeight,context
                                             );
                                           }
                                         },

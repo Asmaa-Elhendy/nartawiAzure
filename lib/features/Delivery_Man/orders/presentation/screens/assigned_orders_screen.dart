@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -38,13 +39,13 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   String? selectedBuilding;
 
   // ✅ 6 tabs
-  static const List<String> _tabs = [
-    'All',
-    'Pending',
-    'In Progress',
-    'Delivered',
-    'Canceled',
-    'Disputed',
+  List<String> get _tabs => [
+           AppLocalizations.of(context)!.all,
+           AppLocalizations.of(context)!.pending,
+           AppLocalizations.of(context)!.inProgress,
+           AppLocalizations.of(context)!.delivered,
+           AppLocalizations.of(context)!.canceled,
+           AppLocalizations.of(context)!.disputed,
   ];
 
 
@@ -150,9 +151,9 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
     required List<ClientOrder> orders,
   }) {
     if (orders.isEmpty && !ordersController.isLoading && !ordersController.isLoadingMore) {
-      return const Center(
+      return Center(
         child: Text(
-          'No orders found',
+            AppLocalizations.of(context)!.noOrdersFound,
           style: TextStyle(color: Colors.grey),
         ),
       );
@@ -180,8 +181,8 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
           }
 
           final order = orders[index];
-          final statusText = order.statusName ?? 'Unknown';
-          final paymentText = order.isPaid == true ? 'Paid' : 'Pending Payment';
+          final statusText = order.statusName ??        AppLocalizations.of(context)!.unknown;
+          final paymentText = order.isPaid == true ?        AppLocalizations.of(context)!.paid :        AppLocalizations.of(context)!.pendingPayment;
 
           return BuildOrderDeliveryCard(
             order: order,
@@ -215,7 +216,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
           BuildForegroundappbarhome(fromDeliveryMan: true,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Orders',
+            title:        AppLocalizations.of(context)!.orders,
             is_returned: false,
           ),
           Positioned.fill(
@@ -237,7 +238,7 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Assigned Orders',
+                            AppLocalizations.of(context)!.assignedOrders,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: screenWidth * .045,

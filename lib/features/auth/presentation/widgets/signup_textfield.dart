@@ -7,6 +7,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 class SignUpTextField extends StatefulWidget {
   final String hintText;
@@ -49,7 +50,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
   String? _defaultValidator(String? value) {
     if (widget.required == true) {
       if (value == null || value.isEmpty) {
-        return 'This field is required';
+        return AppLocalizations.of(context)!.thisFieldIsRequired;
       }
     }
     return null;

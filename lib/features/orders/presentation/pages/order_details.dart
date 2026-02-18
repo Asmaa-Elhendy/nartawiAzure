@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 import '../../../../core/services/dio_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/custome_button.dart';
 import 'package:newwwwwwww/features/Delivery_Man/orders/presentation/widgets/customer_card_information.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -145,15 +146,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Cancel Order?'),
+        title: Text(AppLocalizations.of(context)!.cancelOrder),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Are you sure you want to cancel this order?'),
+            Text(AppLocalizations.of(context)!.cancelOrderConfirmation),
             SizedBox(height: 12),
             Text(
-              'Your payment will be refunded to your wallet.',
+              AppLocalizations.of(context)!.paymentRefundMessage,
               style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
@@ -161,7 +162,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('No, Keep Order'),
+            child: Text(AppLocalizations.of(context)!.noKeepOrder),
           ),
           ElevatedButton(
             onPressed: () {
@@ -169,7 +170,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
               _cancelOrder();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: Text('Yes, Cancel', style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context)!.yesCancel, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -181,19 +182,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Start Delivery'),
+        title: Text(AppLocalizations.of(context)!.startDelivery),
         content: Text(
-          'Are you ready to start delivery for Order #${widget.clientOrder.id}?',
+          '${AppLocalizations.of(context)!.startDeliveryConfirmation}${widget.clientOrder.id}?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-            child: Text('Start', style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context)!.start, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -206,7 +207,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => Center(child: CircularProgressIndicator()),
+        builder: (_) => Center(child: CircularProgressIndicator(color: AppColors.primary)),
       );
 
       final dio = DioService.dio;
@@ -234,7 +235,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Delivery started successfully'),
+            content: Text(AppLocalizations.of(context)!.deliveryStartedSuccessfully),
             backgroundColor: Colors.green,
           ),
         );
@@ -250,7 +251,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       // Show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to start delivery: $e'),
+          content: Text('${AppLocalizations.of(context)!.failedToStartDelivery}$e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -272,7 +273,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Order cancelled successfully'),
+            content: Text(AppLocalizations.of(context)!.orderCancelledSuccessfully),
             backgroundColor: Colors.green,
           ),
         );
@@ -281,7 +282,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to cancel order: $e'),behavior: SnackBarBehavior.floating,
+          content: Text('${AppLocalizations.of(context)!.failedToCancelOrder}$e'),behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.red,
         ),
       );
@@ -308,7 +309,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           BuildForegroundappbarhome(fromDeliveryMan: widget.fromDeliveryMan,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Order Detail',
+            title: AppLocalizations.of(context)!.orderDetails,
             is_returned: true,
           ),
           Positioned.fill(
@@ -346,7 +347,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
 
                                   children: [
                                     Text(
-                                      'Order #${widget.clientOrder.id ?? 0}',
+                                      '${AppLocalizations.of(context)!.order} #${widget.clientOrder.id ?? 0}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: screenWidth * .045,
@@ -405,7 +406,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
                                     widget.clientOrder,
                                   )
                                 : SizedBox(),
-                            OrderSummaryCard(
+                            OrderSummaryCard(context,
                               screenWidth,
                               screenHeight,
                               widget.clientOrder,
@@ -453,7 +454,7 @@ Navigator.push(
                                       OrderDeliveryCard(
                                         screenWidth,
                                         screenHeight,
-                                        widget.clientOrder,
+                                        widget.clientOrder,context
                                       ),
                                       OrderPaymentCard(
                                         screenWidth,
@@ -475,7 +476,7 @@ Navigator.push(
                                                     child: BuildInfoAndAddToCartButton(
                                                       screenWidth,
                                                       screenHeight,
-                                                      'View Proof of Delivery',
+                                                      AppLocalizations.of(context)!.viewProofOfDelivery,
                                                       false,
                                                       _showPODModal,
                                                       fromOrderDetail: true,
@@ -484,7 +485,7 @@ Navigator.push(
                                                 BuildInfoAndAddToCartButton(
                                                   screenWidth,
                                                   screenHeight,
-                                                  'Leave Review',
+                                                  AppLocalizations.of(context)!.leaveReview,
                                                   false,
                                                   () {
                                                     showDialog(
@@ -504,7 +505,7 @@ Navigator.push(
                                                     child: BuildInfoAndAddToCartButton(
                                                       screenWidth,
                                                       screenHeight,
-                                                      'View Dispute Status',
+                                                      AppLocalizations.of(context)!.viewDisputeStatus,
                                                       false,
                                                       _showDisputeStatus,
                                                       fromOrderDetail: true,

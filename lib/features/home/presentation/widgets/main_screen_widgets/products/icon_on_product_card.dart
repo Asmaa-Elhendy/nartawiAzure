@@ -5,6 +5,7 @@ import 'package:newwwwwwww/core/theme/colors.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import 'package:newwwwwwww/features/home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import 'package:newwwwwwww/core/utils/components/confirmation_alert.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../../cart/presentation/bloc/cached_cart_bloc.dart';
 import '../../../../../favourites/pesentation/provider/favourite_controller.dart';
 import '../../../bloc/cart/cart_event.dart';
@@ -219,7 +220,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 context: context,
                 builder: (ctx) => GeneralAlert(
                   width: MediaQuery.of(context).size.width,
-                  message: 'All order Products Must be from Same Supplier',
+                  message:AppLocalizations.of(context)!.supplierError,
                 ),
               );
               return; // Don't show dialog, don't add product
@@ -229,7 +230,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               context: context,
               builder: (dialogContext) => ConfirmationAlert(
                 price: widget.price,
-                centerTitle: 'You\'ve added 1 item',
+                centerTitle:AppLocalizations.of(context)!.addedToCart,
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
                   
@@ -415,8 +416,8 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 rightOnTap: () {
                   Navigator.pop(dialogContext);
                 },
-                leftTtile: 'Confirm',
-                rightTitle: 'Cancel',
+                leftTtile:AppLocalizations.of(context)!.confirm,
+                rightTitle:AppLocalizations.of(context)!.cancel,
                 itemAAdedToCart: true,
               ),
             );

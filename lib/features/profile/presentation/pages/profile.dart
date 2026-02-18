@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/services/dio_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import 'package:newwwwwwww/features/auth/presentation/screens/login.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/edit_profile.dart';
 import 'package:newwwwwwww/features/profile/presentation/pages/my_ewallet_screen.dart';
@@ -31,12 +33,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     profileController = ProfileController(dio: DioService.dio);
     profileController.fetchProfile(); // ✅ load profile
+
   }
 
   @override
   void dispose() {
     profileController.dispose();
     super.dispose();
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _handleRefresh() async {
@@ -65,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Profile',
+            title:AppLocalizations.of(context)!.profile,
             is_returned: false,
           ),
           Positioned.fill(
@@ -164,7 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => MyImpactScreen(),
+                                      builder: (_) => MyImpactScreen()
+
                                     ),
                                   );
                                 },
@@ -175,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       builder: (_) => MyeWalletScreen(),
                                     ),
                                   );
-                                },
+                                },context
                               ),
                             ),
 
@@ -186,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               screenWidth,
                               screenHeight,
                               'assets/images/profile/edit.svg',
-                              'Edit Profile',
+                             AppLocalizations.of(context)!.editProfile,
                                   () async {
                                 final result = await Navigator.push(
                                   context,
@@ -205,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               screenWidth,
                               screenHeight,
                               'assets/images/profile/gps.svg',
-                              'Delivery Address',
+                             AppLocalizations.of(context)!.deliveryAddresses,
                                   () {
                                 Navigator.push(
                                   context,
@@ -219,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               screenWidth,
                               screenHeight,
                               'assets/images/profile/settings.svg',
-                              'Settings',
+                             AppLocalizations.of(context)!.settings,
                                   () {
                                 Navigator.push(
                                   context,
@@ -233,17 +243,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               screenWidth,
                               screenHeight,
                               'assets/images/profile/logout.svg',
-                              'Log Out',
+                             AppLocalizations.of(context)!.logOut,
                                   () async {
                                 final confirmed = await showDialog<bool>(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                    title: Text('Log Out'),
-                                    content: Text('Are you sure you want to log out?'),
+                                    title: Text( AppLocalizations.of(context)!.logOut),
+                                    content: Text( AppLocalizations.of(context)!.areYouSureLogout),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(ctx, false),
-                                        child: Text('Cancel'),
+                                        child: Text( AppLocalizations.of(context)!.cancel),
                                       ),
                                       ElevatedButton(
                                         onPressed: () => Navigator.pop(ctx, true),
@@ -251,7 +261,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           backgroundColor: Colors.red,
                                         ),
                                         child: Text(
-                                          'Log Out',
+                                         AppLocalizations.of(context)!.logOut,
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),

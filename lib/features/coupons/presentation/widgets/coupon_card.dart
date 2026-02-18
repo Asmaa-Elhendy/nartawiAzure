@@ -14,6 +14,7 @@ import 'package:newwwwwwww/features/coupons/data/models/scheduled_order_model.da
 import 'package:newwwwwwww/core/constants/time_slots.dart';
 import 'package:newwwwwwww/features/coupons/presentation/provider/coupon_controller.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../cart/presentation/widgets/change_address_alert.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
@@ -161,7 +162,7 @@ class _CouponeCardState extends State<CouponeCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customCouponPrimaryTitle(
-                '${widget.bundle.couponsPerBundle} Coupon Bundle',
+                AppLocalizations.of(context)!.couponBundle,
                 screenWidth,
                 screenHeight,
               ),
@@ -183,7 +184,7 @@ class _CouponeCardState extends State<CouponeCard> {
               ),
               SizedBox(width: screenWidth * .02),
               Text(
-                'Purchased On ${formatIssuedDate(widget.bundle.purchasedAt?.toIso8601String())}',
+                '${AppLocalizations.of(context)!.purchasedOn} ${formatIssuedDate(widget.bundle.purchasedAt?.toIso8601String())}',
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: screenWidth * .036,
@@ -217,7 +218,7 @@ class _CouponeCardState extends State<CouponeCard> {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: screenHeight * .01),
                       child: Text(
-                        'Total Order Value',
+                        AppLocalizations.of(context)!.totalOrderValue,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: screenWidth * .032,
@@ -238,14 +239,14 @@ class _CouponeCardState extends State<CouponeCard> {
             ),
           ),
 
-          latestCouponTracker(screenWidth, screenHeight, widget.onReorder, widget.bundle),
+          latestCouponTracker(context,screenWidth, screenHeight, widget.onReorder, widget.bundle),
 
           Padding(
             padding: EdgeInsets.only(top: screenHeight * .01),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                customCouponPrimaryTitle('Auto-Renewal', screenWidth, screenHeight),
+                customCouponPrimaryTitle(AppLocalizations.of(context)!.autoRenewal, screenWidth, screenHeight),
                 Transform.scale(
                   scale: .65,
                   child: CupertinoSwitch(
@@ -261,7 +262,7 @@ class _CouponeCardState extends State<CouponeCard> {
           Padding(
             padding: EdgeInsets.only(bottom: screenHeight * .02),
             child: Text(
-              'Automatically Purchase New Coupons When This Bundle Runs Out',
+              AppLocalizations.of(context)!.autoRenewalDescription,
               style: TextStyle(
                 fontWeight: FontWeight.w400,
                 fontSize: screenWidth * .036,
@@ -273,7 +274,7 @@ class _CouponeCardState extends State<CouponeCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Delivery Address',
+                AppLocalizations.of(context)!.deliveryAddress,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: screenWidth * .036,
@@ -290,7 +291,7 @@ class _CouponeCardState extends State<CouponeCard> {
                   shaderCallback: (bounds) =>
                       AppColors.primaryGradient.createShader(bounds),
                   child: Text(
-                    'Change Address',
+                    AppLocalizations.of(context)!.changeAddress,
                     style: TextStyle(
                       color: AppColors.whiteColor,
                       fontWeight: FontWeight.w600,
@@ -305,7 +306,7 @@ class _CouponeCardState extends State<CouponeCard> {
           SizedBox(height: screenHeight * .01),
 
           Text(
-            locationText.isEmpty ? 'No delivery_man address yet' : locationText,
+            locationText.isEmpty ? AppLocalizations.of(context)!.noDeliveryAddressYet : locationText,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: screenWidth * .032,
@@ -315,7 +316,7 @@ class _CouponeCardState extends State<CouponeCard> {
 
           SizedBox(height: screenHeight * .03),
 
-          customCouponPrimaryTitle('Weekly Deliver frequency', screenWidth, screenHeight),
+          customCouponPrimaryTitle(AppLocalizations.of(context)!.weeklyDeliveryFrequency, screenWidth, screenHeight),
 
           BlocProvider.value(
             value: _quantityBloc,
@@ -342,7 +343,7 @@ class _CouponeCardState extends State<CouponeCard> {
                               context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
                           onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
                           fromDetailedScreen: true,
-                          title: 'Days',
+                          title: AppLocalizations.of(context)!.days,
                         ),
                       ),
                     ],
@@ -352,7 +353,7 @@ class _CouponeCardState extends State<CouponeCard> {
             ),
           ),
 
-          customCouponPrimaryTitle('Bottles Per Delivery', screenWidth, screenHeight),
+          customCouponPrimaryTitle(AppLocalizations.of(context)!.bottlesPerDelivery, screenWidth, screenHeight),
 
           BlocProvider.value(
             value: _quantityTwoBloc,
@@ -379,7 +380,7 @@ class _CouponeCardState extends State<CouponeCard> {
                               context.read<ProductQuantityBloc>().add(QuantityChanged(value)),
                           onDone: () => context.read<ProductQuantityBloc>().add(QuantityEditingComplete()),
                           fromDetailedScreen: true,
-                          title: 'Bottles',
+                          title: AppLocalizations.of(context)!.bottles,
                         ),
                       ),
                     ],
@@ -389,9 +390,9 @@ class _CouponeCardState extends State<CouponeCard> {
             ),
           ),
 
-          customCouponPrimaryTitle('Preferred Refill Times /Week', screenWidth, screenHeight),
+          customCouponPrimaryTitle(AppLocalizations.of(context)!.preferredRefillTimesPerWeek, screenWidth, screenHeight),
           Text(
-            'Used As A Guide, Not Mandatory',
+            AppLocalizations.of(context)!.usedAsGuideNotMandatory,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: screenWidth * .032,
@@ -420,7 +421,7 @@ class _CouponeCardState extends State<CouponeCard> {
                             context,
                             screenWidth,
                             screenHeight,
-                            'You can select up to $maxPreferredDays preferred days only.',
+                            '${AppLocalizations.of(context)!.youCanSelectUpTo}'+ '$maxPreferredDays' +'${AppLocalizations.of(context)!.preferredDaysOnly}',
                           );
                         } else {
                           _selectedPreferredDays.add(dayIndex);
@@ -436,7 +437,7 @@ class _CouponeCardState extends State<CouponeCard> {
           BuildInfoAndAddToCartButton(
             screenWidth,
             screenHeight,
-            'View Last Consumption',
+            AppLocalizations.of(context)!.viewLastConsumption,
             false,
                 () {
               showDialog(
@@ -459,7 +460,7 @@ class _CouponeCardState extends State<CouponeCard> {
 
           SizedBox(height: screenHeight * .02),
 
-          customCouponPrimaryTitle('Preferred Time Slot', screenWidth, screenHeight),
+          customCouponPrimaryTitle(AppLocalizations.of(context)!.preferredTimeSlot, screenWidth, screenHeight),
           SizedBox(height: screenHeight * .01),
           
           DropdownButtonFormField<int>(

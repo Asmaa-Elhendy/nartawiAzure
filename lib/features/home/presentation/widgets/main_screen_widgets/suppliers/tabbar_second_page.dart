@@ -8,6 +8,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 
 import '../../../../../../core/theme/colors.dart';
 import '../../../../../../core/theme/text_styles.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../provider/supplier_reviews_controller.dart';
 import 'build_info_button.dart';
 import 'build_row_raing.dart';
@@ -50,12 +51,12 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
           else if (ctrl.error != null)
             Text(ctrl.error!, style: const TextStyle(color: Colors.red))
           else
-            BuildSupplierRatingCard(
+            BuildSupplierRatingCard(context,
               screenWidth,
               screenHeight,
 
               // ⭐ هنا بقى بنبعت القيم الحقيقة
-              mainTitle: 'Rating Summary',
+              mainTitle: AppLocalizations.of(context)!.ratingSummary,
               overallRating: res?.overallRating ?? 0,
               totalReviews: res?.totalReviews ?? 0,
               orderAvg: res?.orderExperienceAvg ?? 0,
@@ -66,7 +67,7 @@ class _TabBarSecondPageState extends State<TabBarSecondPage> {
           Padding(
             padding: EdgeInsets.only(top: screenHeight * 0.02),
             child: Text(
-              'Customer Reviews',
+    AppLocalizations.of(context)!.customerReviews,
               style: TextStyle(
                 color: AppColors.textLight,
                 fontWeight: FontWeight.w600,

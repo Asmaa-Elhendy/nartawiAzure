@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/services/dio_service.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -52,6 +53,8 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
 
     ordersController = OrdersController(dio: DioService.dio);
     
+
+    
     // Add scroll listener
     _scrollController.addListener(_onScroll);
     
@@ -98,6 +101,12 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
     super.dispose();
   }
 
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   String? imageUrl = null;
 
   Widget _buildOrderList(int? statusId) {
@@ -128,7 +137,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                 SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => ordersController.fetchOrders(executeClear: true),
-                  child: Text('Retry'),
+                  child: Text(AppLocalizations.of(context)!.retry),
                 ),
               ],
             ),
@@ -152,7 +161,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                 Icon(Icons.shopping_bag_outlined, size: 60, color: Colors.grey),
                 SizedBox(height: 16),
                 Text(
-                  'No orders found',
+                  AppLocalizations.of(context)!.noOrdersFound,
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ],
@@ -183,8 +192,9 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                 );
               }
               final order = orders[index];
-              final statusText = order.statusName ?? 'Unknown';
-              final paymentText = order.isPaid == true ? 'Paid' : 'Pending Payment';
+              final statusText = order.statusName ?? AppLocalizations.of(context)!.unknown;
+              final paymentText = order.isPaid == true ? AppLocalizations.of(context)!.paid :
+              AppLocalizations.of(context)!.pendingPayment;
 
               return BuildOrderCard(
                 order: order,
@@ -221,7 +231,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Orders',
+            title: AppLocalizations.of(context)!.orders,
             is_returned: false,//edit back from orders
           ),
           Positioned.fill(
@@ -250,7 +260,7 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(//lkj jk
-                              'My Orders',
+                              AppLocalizations.of(context)!.myOrders,
                               style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
                             ),
                             Container(
@@ -283,11 +293,11 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
                                 ),
                                 unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
                                 tabs: [
-                                  Tab(text: 'All'),
-                                  Tab(text: 'Pending'),
-                                  Tab(text: 'In Progress'),
-                                  Tab(text: 'Delivered'),
-                                  Tab(text: 'Canceled'),
+                                  Tab(text: AppLocalizations.of(context)!.all),
+                                  Tab(text: AppLocalizations.of(context)!.pending),
+                                  Tab(text: AppLocalizations.of(context)!.inProgress),
+                                  Tab(text: AppLocalizations.of(context)!.delivered),
+                                  Tab(text: AppLocalizations.of(context)!.canceled),
                                 ],
                               ),
                             ),

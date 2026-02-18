@@ -3,6 +3,7 @@ import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/build_row_raing.dart';
 
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../pages/suppliers/supplier_detail.dart';
 
 Widget BuildCardSupplier(
@@ -92,7 +93,9 @@ Widget BuildCardSupplier(
                     children: [
                       Expanded(
                         child: Text(
-                         supplier.enName,
+                         AppLocalizations.of(context)!.localeName == 'ar' 
+                             ? supplier.arName 
+                             : supplier.enName,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: screenWidth * .036,
@@ -108,7 +111,7 @@ Widget BuildCardSupplier(
                           screenHeight,
                           screenWidth,
                           supplier.isVerified?'Verified':'Not Verified'//isActive ? 'Featured' : 'Sponsored',
-                        ),
+                        ,  context,),
                       ),
                     ],
                   ),
@@ -145,7 +148,7 @@ Widget BuildCardSupplier(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'View Details',
+                            AppLocalizations.of(context)!.viewDetails,
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: screenWidth * .034,
@@ -170,6 +173,7 @@ Widget BuildFeaturedOrSponsered(
     double screenHeight,
     double screenWidth,
     String title,
+    BuildContext context
     ) {
   return Container(
     padding: EdgeInsets.symmetric(
@@ -183,7 +187,7 @@ Widget BuildFeaturedOrSponsered(
       borderRadius: BorderRadius.circular(8),
     ),
     child: Text(
-      title,
+      title=='Verified'? AppLocalizations.of(context)!.verified: AppLocalizations.of(context)!.notVerified,
       style: TextStyle(
         fontWeight: FontWeight.w600,
         color:title=='Verified'?AppColors.nextRefillTextColor: title == 'Featured'

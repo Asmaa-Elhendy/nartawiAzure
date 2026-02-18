@@ -5,9 +5,10 @@ import 'package:newwwwwwww/features/coupons/domain/models/bundle_purchase.dart';
 
 import '../../../../core/components/coupon_status_widget.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import 'custom_text.dart';
 
-Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReorder,BundlePurchase bundle){
+Widget latestCouponTracker(BuildContext context,double screenWidth,double screenHeight,Function onReorder,BundlePurchase bundle){
   return
       Column(
         mainAxisSize: MainAxisSize.min,
@@ -18,7 +19,7 @@ Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReo
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               customCouponPrimaryTitle(
-                'Coupon Balance',
+                AppLocalizations.of(context)!.couponBalance,
                 screenWidth,
                 screenHeight,
               ),
@@ -26,7 +27,7 @@ Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReo
                 onTap: (){
                   onReorder();
                 },
-                  child: CouponStatus(screenHeight, screenWidth, "Re-Order")),
+                  child: CouponStatus(screenHeight, screenWidth,AppLocalizations.of(context)!.reOrder)),
             ],
           ),//k
 
@@ -47,17 +48,17 @@ Widget latestCouponTracker(double screenWidth,double screenHeight,Function onReo
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               customCouponSecondaryTitle(
-                '${bundle.totalCoupons} Total',
+                '${bundle.totalCoupons} ${AppLocalizations.of(context)!.total}',
                 screenWidth,
                 screenHeight,
               ),
               customCouponSecondaryTitle(
-                '15 Used',
+                '15 ${AppLocalizations.of(context)!.used}',
                 screenWidth,
                 screenHeight,
               ),
               customCouponSecondaryTitle(
-                '10 Remaining',
+                '10 ${AppLocalizations.of(context)!.remaining}',
                 screenWidth,
                 screenHeight,
               ),

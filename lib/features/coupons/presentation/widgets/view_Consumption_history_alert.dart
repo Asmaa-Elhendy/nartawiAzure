@@ -5,6 +5,7 @@ import 'package:newwwwwwww/features/coupons/presentation/widgets/custom_text.dar
 import 'package:newwwwwwww/features/coupons/presentation/widgets/show_delivery_photos.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_order_buttons.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/components/coupon_status_widget.dart';
 import 'dispute_alert.dart';
 import 'oulined_icon_button.dart';
@@ -61,7 +62,7 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   customCouponPrimaryTitle(
-                    'Coupon Details',
+                   AppLocalizations.of(context)!.couponDetails,
                     screenWidth,
                     screenHeight,
                   ),
@@ -89,7 +90,7 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                             color: AppColors.greyDarktextIntExtFieldAndIconsHome),
                         SizedBox(height: screenHeight * .015),
                         Text(
-                          'No consumption history yet',
+                         AppLocalizations.of(context)!.noConsumptionHistory,
                           style: TextStyle(
                             fontSize: screenWidth * .04,
                             fontWeight: FontWeight.w600,
@@ -98,7 +99,7 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                         ),
                         SizedBox(height: screenHeight * .008),
                         Text(
-                          'This bundle has no marked-used coupons.',
+                         AppLocalizations.of(context)!.noMarkedUsedCoupons,
                           style: TextStyle(
                             fontSize: screenWidth * .034,
                             fontWeight: FontWeight.w400,
@@ -111,8 +112,8 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                           context,
                           screenWidth,
                           screenHeight,
-                          'Done',
-                          'Dispute',
+                         AppLocalizations.of(context)!.done,
+                         AppLocalizations.of(context)!.dispute,
                               () => Navigator.pop(context),
                               () {
                             Navigator.pop(context);
@@ -143,7 +144,7 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.currentCoupon.length} Coupon Marked Used',
+                        '${widget.currentCoupon.length} ${AppLocalizations.of(context)!.couponMarkedUsed}',
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w700,
@@ -154,13 +155,13 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
 
                       // ✅ Marked On formatted
                       customCouponAlertSubTitle(
-                        'Marked On ${_formatMarkedOn(first?.markedUsedAt.toString())}',
+                        '${AppLocalizations.of(context)!.markedOn} ${_formatMarkedOn(first?.markedUsedAt.toString())}',
                         screenWidth,
                         screenHeight,
                       ),
 
                       SizedBox(height: screenHeight * .02),
-                      customCouponAlertTitle('Marked By', screenWidth, screenHeight),
+                      customCouponAlertTitle(AppLocalizations.of(context)!.markedBy, screenWidth, screenHeight),
 
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: screenHeight * .01),
@@ -172,7 +173,7 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                               screenWidth,
                               screenHeight,
                             ),
-                            CouponStatus(screenHeight, screenWidth, 'Vendor'),
+                            CouponStatus(screenHeight, screenWidth, AppLocalizations.of(context)!.vendor),
                           ],
                         ),
                       ),
@@ -183,21 +184,21 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                         children: [
                           Divider(color: AppColors.backgrounHome),
                           customCouponAlertTitle(
-                              'Dispute Reason', screenWidth, screenHeight),
+                             AppLocalizations.of(context)!.disputeReason, screenWidth, screenHeight),
                           SizedBox(height: screenHeight * .01),
                           customCouponAlertSubTitle(
-                              'Never Received Water', screenWidth, screenHeight),
+                             AppLocalizations.of(context)!.neverReceivedWater, screenWidth, screenHeight),
                           customCouponAlertTitle(
-                              'Resolution', screenWidth, screenHeight),
+                             AppLocalizations.of(context)!.resolution, screenWidth, screenHeight),
                           SizedBox(height: screenHeight * .01),
                           customCouponAlertSubTitle(
-                              'Returned', screenWidth, screenHeight),
+                             AppLocalizations.of(context)!.returned, screenWidth, screenHeight),
                         ],
                       )
                           : BuildOutlinedIconButton(
                         screenWidth,
                         screenHeight,
-                        'Show Delivery Photos',
+    AppLocalizations.of(context)!.showDeliveryPhotos,
                             () {
                           showDialog(
                             context: context,
@@ -215,8 +216,8 @@ class _ViewConsumptionHistoryAlertState extends State<ViewConsumptionHistoryAler
                   context,
                   screenWidth,
                   screenHeight,
-                  'Dispute Resolved',
-                  'Dispute',
+                 AppLocalizations.of(context)!.disputeResolved,
+                 AppLocalizations.of(context)!.dispute,
                       () => Navigator.pop(context),
                       () {
                     Navigator.pop(context);

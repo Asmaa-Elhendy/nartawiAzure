@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../../core/theme/colors.dart';
 
 class CustomSearchBar extends StatelessWidget {
@@ -39,7 +40,7 @@ class CustomSearchBar extends StatelessWidget {
           controller: controller,
           onChanged: onChanged,
           decoration: InputDecoration(
-            hintText: 'search for water products...',
+            hintText: AppLocalizations.of(context)!.searchWaterProducts,
             hintStyle: TextStyle(color: AppColors.greyDarktextIntExtFieldAndIconsHome,fontSize: 13,),
             prefixIcon: IconButton(
               icon: const Icon(Icons.search,color: AppColors.greyDarktextIntExtFieldAndIconsHome,),

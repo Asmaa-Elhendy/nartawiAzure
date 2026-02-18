@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../../injection_container.dart';
 import '../../../../core/services/maps_screen.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
 import '../../../coupons/presentation/widgets/custom_text.dart';
 import '../../domain/models/address_req.dart';
@@ -320,8 +321,8 @@ class _AddAddressAlertDialogState extends State<AddAddressAlertDialog> {
                     context,
                     screenWidth,
                     screenHeight,
-                    _isSubmitting ? 'Please wait...' : 'Add New Address',
-                    'Cancel',
+                    _isSubmitting ? AppLocalizations.of(context)!.pleaseWait : AppLocalizations.of(context)!.addNewAddress,
+                    AppLocalizations.of(context)!.cancel,
                         () async {
                       if (_isSubmitting) return;
 

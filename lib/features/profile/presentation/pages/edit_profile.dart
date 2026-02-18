@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/services/dio_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../auth/presentation/widgets/build_custome_full_text_field.dart';
@@ -96,6 +98,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
 
     super.initState();
 
+
+
     // ✅ fetch then prefill
     Future.microtask(() async {
       await profileController.fetchProfile();
@@ -152,6 +156,12 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     super.dispose();
   }
 
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   String? imageUrl = null;
 
   @override
@@ -176,7 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
           BuildForegroundappbarhome(fromDeliveryMan: widget.fromDeliveryman,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Profile',
+            title:  AppLocalizations.of(context)!.editProfile,
             is_returned: true,
           ),
           Positioned.fill(
@@ -203,8 +213,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                           ),
                           children: [
                             buildCustomeFullTextField(
-                              widget.fromDeliveryman?'UserName':   'First Name',
-                              widget.fromDeliveryman?'Enter UserName': 'Enter First Name',
+                              widget.fromDeliveryman? AppLocalizations.of(context)!.userName:    AppLocalizations.of(context)!.firstName,
+                              widget.fromDeliveryman? AppLocalizations.of(context)!.enterUserName: AppLocalizations.of(context)!.enterFirstName,
                               _firstNameController,
                               false,
                               screenHeight,
@@ -212,8 +222,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             ),
                             SizedBox(height: screenHeight * .01),
                             buildCustomeFullTextField(
-                              widget.fromDeliveryman?'Name':  'Last Name',
-                              widget.fromDeliveryman?'Enter Name': 'Enter Last Name',
+                              widget.fromDeliveryman? AppLocalizations.of(context)!.lastName:   AppLocalizations.of(context)!.lastName,
+                              widget.fromDeliveryman? AppLocalizations.of(context)!.enterName: AppLocalizations.of(context)!.enterLastName,
                               _lastNameController,
                               false,
                               screenHeight,
@@ -233,8 +243,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             ),
                             SizedBox(height: screenHeight * .01),
                             buildCustomeFullTextField(
-                              'Email Address',
-                              'Ex: abc@example.com',
+                               AppLocalizations.of(context)!.emailAddress,
+                               AppLocalizations.of(context)!.emailExample,
                               _emailController,
                               false,
                               screenHeight,
@@ -245,8 +255,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             // ✅ Phone: controller contains number ONLY
                             // country code is stored in _countryCode
                             buildCustomeFullTextField(
-                              'Phone Number',
-                              'Enter Phone Number',
+                               AppLocalizations.of(context)!.phoneNumber,
+                               AppLocalizations.of(context)!.enterPhoneNumber,
                               _phoneNumberController,
                               false,
                               screenHeight,
@@ -261,8 +271,8 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                         widget.fromDeliveryman?SizedBox():
                         Column(children: [
                           buildCustomeFullTextField(
-                              'Alternative Phone Number',
-                              'Enter Alternative phone number',
+                               AppLocalizations.of(context)!.alternativePhoneNumber,
+                               AppLocalizations.of(context)!.enterAlternativePhoneNumber,
                               _emergencyphonenumberController,
                               false,
                               screenHeight,
@@ -272,7 +282,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                           ),
                           SizedBox(height: screenHeight * .02),
                           Text(
-                            'Gender',
+                             AppLocalizations.of(context)!.gender,
                             style: AppTextStyles.LabelInTextField,
                           ),
                           SizedBox(height: screenHeight * .01),
@@ -284,13 +294,13 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             child: Row(
                               children: [
                                 _buildGenderRadio(
-                                  label: 'Male',
+                                  label:  AppLocalizations.of(context)!.male,
                                   screenWidth: screenWidth,
                                   screenHeight: screenHeight,
                                 ),
                                 SizedBox(width: screenWidth * .08),
                                 _buildGenderRadio(
-                                  label: 'Female',
+                                  label:  AppLocalizations.of(context)!.female,
                                   screenWidth: screenWidth,
                                   screenHeight: screenHeight,
                                 ),
@@ -333,7 +343,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                             BuildInfoAndAddToCartButton(
                               screenWidth,
                               screenHeight,
-                              _isSaving ? 'Saving...' : 'Save',
+                              _isSaving ?  AppLocalizations.of(context)!.saving :  AppLocalizations.of(context)!.save,
                               false,
                                   () async {
                                 if (_isSaving) return;

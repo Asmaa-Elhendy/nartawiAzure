@@ -279,7 +279,7 @@ class _BuildComparedProductCardState extends State<BuildComparedProductCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             BuildRowRating(widget.screenWidth, widget.screenHeight),
-                            BuildVerifiedWidget(widget.screenHeight, widget.screenWidth,false),
+                            BuildVerifiedWidget(widget.screenHeight, widget.screenWidth,false,context),
                           ],
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 
 showSnackBarWarning(BuildContext context, double screenWidth, double screenHeight, String title) {
   ScaffoldMessenger.of(context)
@@ -35,7 +36,7 @@ showSnackBarWarning(BuildContext context, double screenWidth, double screenHeigh
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
               child: Text(
-                "Close",
+                AppLocalizations.of(context)!.close,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: screenWidth * .035,   // 👈 تحكّمي في الحجم

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/app_localizations.dart';
 
 import '../../../../core/theme/colors.dart';
 
@@ -30,7 +31,7 @@ class GeneralAlert extends StatelessWidget {
       ),
       actions: [
         TextButton( onPressed: () => Navigator.pop(context, false),
-          child: Text('OK',style: TextStyle(color: AppColors.primary),), ),
+          child: Text(AppLocalizations.of(context)!.ok,style: TextStyle(color: AppColors.primary),), ),
       ],
     );
   }

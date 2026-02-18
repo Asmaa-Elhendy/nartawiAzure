@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 Widget RowOutlineButtons(
   BuildContext context,
@@ -100,7 +101,7 @@ Widget OutlineButton(void Function()? leftFun,String leftTitle,double screenWidt
   );
 }
 
-Widget OutlineButtonWithoutFlexible(void Function()? rightFun,String leftTitle,double screenWidth,double screenHeight){
+Widget OutlineButtonWithoutFlexible(void Function()? rightFun,String leftTitle,double screenWidth,double screenHeight,BuildContext context){
   return   GestureDetector(
     onTap: rightFun,
     child: Container(
@@ -121,7 +122,7 @@ Widget OutlineButtonWithoutFlexible(void Function()? rightFun,String leftTitle,d
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'View Details',
+          AppLocalizations.of(context)!.viewDetails,
             style: TextStyle(
               color: AppColors.primary,
               fontSize: screenWidth * .034,

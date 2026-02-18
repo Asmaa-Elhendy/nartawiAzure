@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../home/presentation/widgets/main_screen_widgets/suppliers/build_info_button.dart';
@@ -65,7 +66,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Delivery Addresses',
+            title: AppLocalizations.of(context)!.deliveryAddresses,
             is_returned: true,
           ),
 
@@ -93,7 +94,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                           BuildInfoAndAddToCartButton(
                             screenWidth,
                             screenHeight,
-                            'Add New Address',
+                            AppLocalizations.of(context)!.addNewAddress,
                             false,
                                 () {
                               showDialog(
@@ -109,7 +110,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                           OutlineAuthButton(
                             screenWidth,
                             screenHeight,
-                            'Use Current Location',
+                            AppLocalizations.of(context)!.useCurrentLocation,
                                 () {
                               showDialog(
                                 context: context,
@@ -124,7 +125,7 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                           OutlineAuthButton(
                             screenWidth,
                             screenHeight,
-                            'Open Google Map',
+                            AppLocalizations.of(context)!.openGoogleMap,
                                 () {
                               showDialog(
                                 context: context,
@@ -169,8 +170,8 @@ class _DeliveryAddressScreenState extends State<DeliveryAddressScreen>
                               addressController.addresses.isEmpty)
                             Padding(
                               padding: EdgeInsets.only(top: screenHeight * .02),
-                              child: const Center(
-                                child: Text('No addresses found'),
+                              child:  Center(
+                                child: Text(AppLocalizations.of(context)!.noaddressesfound),
                               ),
                             ),
 

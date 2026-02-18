@@ -12,6 +12,7 @@ import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widget
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/custom_search_bar.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/store_card.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../bloc/product_categories_bloc/product_categories_bloc.dart';
 import '../bloc/product_categories_bloc/product_categories_event.dart';
 import '../bloc/product_categories_bloc/product_categories_state.dart';
@@ -43,10 +44,24 @@ class _MainScreenState extends State<MainScreen> {
   final GlobalKey<BuildCarousSliderState> _sliderKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+    context.read<ProductCategoriesBloc>().add(FetchProductCategories());
+    context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
+    context.read<ProductsBloc>().add(FetchProducts(executeClear: true));
+  }
+
+  @override
   void dispose() {
     _SearchController.dispose();
     _debounceTimer?.cancel();
     super.dispose();
+  }
+
+  void _onLanguageChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onSearchChanged(String query) {
@@ -93,14 +108,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<ProductCategoriesBloc>().add(FetchProductCategories());
-    context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
-    context.read<ProductsBloc>().add(FetchProducts(executeClear: true));
-  }
-
   Future<void> _onRefresh() async {
     debugPrint('🔄 PULL TO REFRESH TRIGGERED');
 
@@ -141,7 +148,7 @@ class _MainScreenState extends State<MainScreen> {
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'NARTAWI',
+            title: AppLocalizations.of(context)!.appName,
             is_returned: false,
           ),
           Positioned.fill(
@@ -209,7 +216,7 @@ class _MainScreenState extends State<MainScreen> {
                                     padding: EdgeInsets.symmetric(
                                         vertical: screenHeight * .01),
                                     child: BuildTappedTitle(
-                                        'View All Coupons', screenWidth),
+                                        AppLocalizations.of(context)!.viewAllCoupons, screenWidth),
                                   ),
                                 ),
                               ],
@@ -217,7 +224,8 @@ class _MainScreenState extends State<MainScreen> {
 
                             BuildStretchTitleHome(
                               screenWidth,
-                              "Featured Suppliers",
+                                AppLocalizations.of(context)!.featuredSuppliers,
+                              viewAllText: AppLocalizations.of(context)!.viewAll,
                                   () {
                                 Navigator.of(context)
                                     .push(
@@ -231,7 +239,7 @@ class _MainScreenState extends State<MainScreen> {
                                       .read<SuppliersBloc>()
                                       .add(FetchFeaturedSuppliers());
                                 });
-                              },
+                              },context
                             ),
 
                             SizedBox(
@@ -263,9 +271,9 @@ class _MainScreenState extends State<MainScreen> {
                                   } else if (state
                                   is FeaturedSuppliersLoaded) {
                                     if (state.featuredSuppliers.isEmpty) {
-                                      return const Center(
+                                      return Center(
                                         child: Text(
-                                            'No featured suppliers found'),
+                                            AppLocalizations.of(context)!.noFeaturedSuppliersFound),
                                       );
                                     }
 
@@ -302,8 +310,8 @@ class _MainScreenState extends State<MainScreen> {
                                     );
                                   } else if (state is SuppliersLoaded) {
                                     if (state.suppliers.isEmpty) {
-                                      return const Center(
-                                        child: Text('No suppliers found'),
+                                      return Center(
+                                        child: Text(AppLocalizations.of(context)!.noSuppliersFound),
                                       );
                                     }
 
@@ -346,7 +354,8 @@ class _MainScreenState extends State<MainScreen> {
 
                             BuildStretchTitleHome(
                               screenWidth,
-                              "Popular Categories",
+                             AppLocalizations.of(context)!.popularCategories,
+                              viewAllText:AppLocalizations.of(context)!.viewAll,
                                   () {
                                 final state = context
                                     .read<ProductCategoriesBloc>()
@@ -366,7 +375,7 @@ class _MainScreenState extends State<MainScreen> {
                                     context.read<ProductsBloc>().refresh();
                                   });
                                 }
-                              },
+                              },context
                             ),
 
                             SizedBox(
@@ -382,13 +391,13 @@ class _MainScreenState extends State<MainScreen> {
                                     );
                                   } else if (state is ProductCategoriesError) {
                                     return Center(
-                                      child: Text('Error: ${state.message}'),
+                                      child: Text('${AppLocalizations.of(context)!.errorPrefix} ${state.message}'),
                                     );
                                   } else if (state
                                   is ProductCategoriesLoaded) {
                                     if (state.categories.isEmpty) {
-                                      return const Center(
-                                          child: Text('No categories found'));
+                                      return Center(
+                                          child: Text(AppLocalizations.of(context)!.noCategoriesFound));
                                     }
 
                                     return ListView.builder(
@@ -420,7 +429,9 @@ class _MainScreenState extends State<MainScreen> {
                                             icon:
                                             'assets/images/home/main_page/bottle.svg',
                                             title:
-                                            category.enName ?? 'Category',
+                                            AppLocalizations.of(context)!.localeName == 'ar' 
+                                                ? category.arName 
+                                                : category.enName,
                                           ),
                                         );
                                       },
@@ -436,6 +447,7 @@ class _MainScreenState extends State<MainScreen> {
                             BuildStretchTitleHome(
                               screenWidth,
                               "",
+                              viewAllText: AppLocalizations.of(context)!.viewAll,
                                   () {
                                 final productState =
                                     context.read<ProductsBloc>().state;
@@ -453,13 +465,14 @@ class _MainScreenState extends State<MainScreen> {
                                 } else if (productState is ProductsLoading ||
                                     productState is ProductsInitial) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(behavior: SnackBarBehavior.floating,
-                                      content: Text(//
-                                          'Products are still loading, please try again.'),
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      content: Text(
+                                          AppLocalizations.of(context)!.productsStillLoading),
                                     ),
                                   );
                                 }
-                              },
+                              },context
                             ),
                           ]),
                         ),
@@ -494,8 +507,8 @@ class _MainScreenState extends State<MainScreen> {
                                 child: Padding(
                                   padding:
                                   EdgeInsets.only(top: screenHeight * .02),
-                                  child: const Text(
-                                    'Failed to load products',
+                                  child: Text(
+                                      AppLocalizations.of(context)!.failedToLoadProducts,
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
@@ -511,8 +524,8 @@ class _MainScreenState extends State<MainScreen> {
                                     padding: EdgeInsets.only(
                                         top: screenHeight * .02),
                                     child: Text(_isSearching
-                                        ? 'No products match your search'
-                                        : 'No products found'),
+                                        ? AppLocalizations.of(context)!.noProductsMatchSearch
+                                        : AppLocalizations.of(context)!.noProductsFound),
                                   ),
                                 ),
                               );

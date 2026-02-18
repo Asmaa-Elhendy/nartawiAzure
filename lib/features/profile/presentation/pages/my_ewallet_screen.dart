@@ -1,7 +1,9 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/services/dio_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/filter_date_widget.dart';
 import 'package:newwwwwwww/features/profile/presentation/widgets/transaction_card.dart';
 
@@ -83,7 +85,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'My e-Wallet',
+            title:  AppLocalizations.of(context)!.myEWallet,
             is_returned: true,
           ),
           Positioned.fill(
@@ -122,7 +124,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                 vertical: screenHeight * .02,
                               ),
                               child: customCouponAlertTitle(
-                                'Transaction History',
+                                 AppLocalizations.of(context)!.transactionHistory,
                                 screenWidth,
                                 screenHeight,
                               ),
@@ -137,7 +139,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     customCouponAlertTitle(
-                                      'From',
+                                       AppLocalizations.of(context)!.from,
                                       screenWidth,
                                       screenHeight,//j
                                     ),
@@ -206,7 +208,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     customCouponAlertTitle(
-                                      'To',
+                                       AppLocalizations.of(context)!.to,
                                       screenWidth,
                                       screenHeight,
                                     ),
@@ -245,9 +247,9 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                                               picked.isBefore(selectedFromDate!)) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
-                                              const SnackBar(
+                                              SnackBar(
                                                 content: Text(
-                                                    'To date cannot be before From date'),
+                                                     AppLocalizations.of(context)!.toDateCannotBeBeforeFrom),
                                                 behavior:
                                                 SnackBarBehavior.floating,
                                               ),
@@ -310,7 +312,7 @@ class _MyeWalletScreenState extends State<MyeWalletScreen>
                               Padding(
                                 padding: EdgeInsets.only(top: screenHeight * .12),
                                 child: Text(
-                                  'No transactions found',
+                                   AppLocalizations.of(context)!.noTransactionsFound,
                                   style: TextStyle(
                                     fontSize: screenWidth * .04,
                                     fontWeight: FontWeight.w500,

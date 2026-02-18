@@ -7,6 +7,7 @@ import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 import 'package:newwwwwwww/features/home/presentation/widgets/main_screen_widgets/suppliers/supplier_full_card.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/pages/suppliers/supplier_detail.dart';
 import '../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -86,7 +87,7 @@ class _FavouritesScreenState extends State<FavouritesScreen>
           BuildForegroundappbarhome(
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Favorites',
+            title:        AppLocalizations.of(context)!.favorites,
             is_returned: false,
           ),
           Positioned.fill(
@@ -131,11 +132,11 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                       tabs: [
                         SizedBox(
                           width: screenWidth * .5,
-                          child: const Tab(text: 'Products'),
+                          child: Tab(text:        AppLocalizations.of(context)!.products),
                         ),
                         SizedBox(
                           width: screenWidth * .5,
-                          child: const Tab(text: 'Stores'),
+                          child: Tab(text:        AppLocalizations.of(context)!.stores),
                         ),
                       ],
                     ),
@@ -196,9 +197,9 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                                     return ListView(
                                       controller: _productsScroll,
                                       physics: const AlwaysScrollableScrollPhysics(),
-                                      children: const [
+                                      children: [
                                         SizedBox(height: 120),
-                                        Center(child: Text('No favourite products')),
+                                        Center(child: Text(       AppLocalizations.of(context)!.noFavouriteProducts)),
                                       ],
                                     );
                                   }
@@ -271,9 +272,9 @@ class _FavouritesScreenState extends State<FavouritesScreen>
                                     return ListView(
                                       controller: _storesScroll,
                                       physics: const AlwaysScrollableScrollPhysics(),
-                                      children: const [
+                                      children: [
                                         SizedBox(height: 120),
-                                        Center(child: Text('No favourite stores')),
+                                        Center(child: Text(       AppLocalizations.of(context)!.noFavouriteStores)),
                                       ],
                                     );
                                   }
