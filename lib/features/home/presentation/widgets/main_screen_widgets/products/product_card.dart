@@ -4,6 +4,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../../domain/models/product_categories_models/product_category_model.dart';
 import '../../../bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../bloc/product_quantity/product_quantity_event.dart';
@@ -133,7 +134,9 @@ class _ProductCardState extends State<ProductCard> {
                                 ),
                                 child: Text(
                                   widget.product != null
-                                      ? widget.product!.enName
+                                      ? (AppLocalizations.of(context)!.localeName == 'ar' 
+                                          ? widget.product!.arName 
+                                          : widget.product!.enName)
                                       : 'Hand Pump Dispenser',
                                   style: TextStyle(
                                     color: AppColors.primary,
@@ -255,7 +258,9 @@ class _ProductCardState extends State<ProductCard> {
                           BuildIconOnProduct(
                             false,
                             widget.product!.vsId,
-                            widget.product!.enName,
+                            AppLocalizations.of(context)!.localeName == 'ar' 
+                                ? widget.product!.arName 
+                                : widget.product!.enName,
                             state.price,
                             widget.screenWidth,
                             widget.screenHeight,
@@ -271,7 +276,9 @@ class _ProductCardState extends State<ProductCard> {
                           BuildIconOnProduct(
                             false,
                             widget.product!.vsId,
-                            widget.product!.enName,
+                            AppLocalizations.of(context)!.localeName == 'ar' 
+                                ? widget.product!.arName 
+                                : widget.product!.enName,
                             state.price,
                             widget.screenWidth,
                             widget.screenHeight,

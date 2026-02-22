@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/favourites/domain/models/favorite_product.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../../core/theme/colors.dart';
+import '../../../../../../l10n/app_localizations.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_bloc.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_event.dart';
 import '../../../home/presentation/bloc/product_quantity/product_quantity_state.dart';
@@ -46,7 +47,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
     if (widget.favouriteProduct.product != null) {
       return {
         'id': widget.favouriteProduct.product!.id,
-        'name': widget.favouriteProduct.product!.enName,
+        'name': AppLocalizations.of(context)!.localeName == 'ar' 
+            ? widget.favouriteProduct.product!.arName 
+            : widget.favouriteProduct.product!.enName,
         'price': widget.favouriteProduct.product!.price,
       };
     } else {
@@ -88,7 +91,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
       // This should match exactly what's added to cart
       return {
         'id': widget.favouriteProduct.product!.id,
-        'name': widget.favouriteProduct.product!.enName,
+        'name': AppLocalizations.of(context)!.localeName == 'ar' 
+            ? widget.favouriteProduct.product!.arName 
+            : widget.favouriteProduct.product!.enName,
         'price': widget.favouriteProduct.product!.price,
       };
     } else {
@@ -245,7 +250,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                       // fromFavouriteScreen
                                       widget.favouriteProduct.productVsId,
                                       // productVsا
-                                      widget.favouriteProduct.product?.enName,
+                                      AppLocalizations.of(context)!.localeName == 'ar' 
+                                          ? widget.favouriteProduct.product?.arName
+                                          : widget.favouriteProduct.product?.enName,
                                       // productName
                                       state.price,
 
@@ -277,10 +284,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                         BuildIconOnProduct(
                                           true,
                                           widget.favouriteProduct.productVsId,
-                                          widget
-                                              .favouriteProduct
-                                              .product
-                                              ?.enName,
+                                          AppLocalizations.of(context)!.localeName == 'ar' 
+                                              ? widget.favouriteProduct.product?.arName
+                                              : widget.favouriteProduct.product?.enName,
                                           (widget
                                                       .favouriteProduct
                                                       .product
@@ -301,10 +307,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                         BuildIconOnProduct(
                                           true,
                                           widget.favouriteProduct.productVsId,
-                                          widget
-                                              .favouriteProduct
-                                              .product
-                                              ?.enName,
+                                          AppLocalizations.of(context)!.localeName == 'ar' 
+                                              ? widget.favouriteProduct.product?.arName
+                                              : widget.favouriteProduct.product?.enName,
                                           (widget
                                                       .favouriteProduct
                                                       .product
@@ -367,8 +372,9 @@ class _FavouriteProductCardState extends State<FavouriteProductCard> {
                                     bottom: widget.screenHeight * .01,
                                   ),
                                   child: Text(
-                                    widget.favouriteProduct.product?.enName ??
-                                        'Product',
+                                    AppLocalizations.of(context)!.localeName == 'ar' 
+                                        ? widget.favouriteProduct.product?.arName ?? 'منتج'
+                                        : widget.favouriteProduct.product?.enName ?? 'Product',
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       fontSize: widget.screenWidth * .03, //.028

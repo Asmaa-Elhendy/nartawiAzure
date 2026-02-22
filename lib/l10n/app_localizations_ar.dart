@@ -359,7 +359,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get send => 'إرسال';
 
   @override
-  String get products => 'النتجات';
+  String get products => 'المنتجات';
 
   @override
   String get stores => 'المتاجر';
