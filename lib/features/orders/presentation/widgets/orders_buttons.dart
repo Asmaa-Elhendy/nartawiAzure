@@ -18,7 +18,7 @@ Future<void> _reorderOrder(BuildContext context, ClientOrder order) async {
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const AlertDialog(
+    builder: (context) => AlertDialog(
       content: Row(
         children: [
           CircularProgressIndicator(color: AppColors.primary,),

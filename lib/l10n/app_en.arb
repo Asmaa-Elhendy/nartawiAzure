@@ -486,7 +486,10 @@
   "lastDelivered": "Last Delivered",
   "remaining": "Remaining",
   "used": "Used",
-  "couponBalance": "Coupon Balance"
+  "couponBalance": "Coupon Balance",
+  "creatingReorder": "Creating reorder...",
+  "reorderCreatedSuccessfully": "Reorder created successfully!",
+  "failedToCreateReorder": "Failed to create reorder"
 
 
 

@@ -1277,4 +1277,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get couponBalance => 'Coupon Balance';
+
+  @override
+  String get creatingReorder => 'Creating reorder...';
+
+  @override
+  String get reorderCreatedSuccessfully => 'Reorder created successfully!';
+
+  @override
+  String get failedToCreateReorder => 'Failed to create reorder';
 }

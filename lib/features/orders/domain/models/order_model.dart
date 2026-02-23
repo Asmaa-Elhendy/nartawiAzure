@@ -14,11 +14,13 @@ class ClientOrder {
 
   final bool? isPaid;
 
+  final int? supplierId;
+  final String? supplierName;
   final String? paymentMethod;
   final String? transactionReference;
 
   // nullable fields from API (keep as dynamic or specific models later)
-final List<dynamic>? items;
+  final List<dynamic>? items;
   final dynamic eventLogs;
   final dynamic deliveryAddress;
   final String? customerName;
@@ -43,6 +45,8 @@ final List<dynamic>? items;
     this.deliveryCost,
     this.total,
     this.isPaid,
+    this.supplierId,
+    this.supplierName,
     this.paymentMethod,
     this.transactionReference,
     this.items,
@@ -100,6 +104,8 @@ final List<dynamic>? items;
       deliveryCost: parseNum(json['deliveryCost']),
       total: parseNum(json['total']),
       isPaid: json['isPaid'] as bool?,
+      supplierId: json['supplierId'] as int?,
+      supplierName: json['supplierName'] as String?,
       paymentMethod: json['paymentMethod'] as String?,
       transactionReference: json['transactionReference'] as String?,
       items: json['items'],

@@ -85,7 +85,7 @@ Widget BuildOrderCard(BuildContext context,double screenHeight,double screenWidt
                      crossAxisAlignment: CrossAxisAlignment.start,
                      mainAxisAlignment: MainAxisAlignment.start,
                      children: [
-                       Text('Company 1',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
+                       Text(order?.supplierName??'UnKnown',style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.037),),
                        Padding(
                          padding:  EdgeInsets.symmetric(vertical: screenHeight*.01),
                          child: Text('${ AppLocalizations.of(context)!.totalOrderValue}',style: TextStyle(fontWeight: FontWeight.w400,fontSize: screenWidth*.032,

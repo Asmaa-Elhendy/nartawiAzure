@@ -1266,4 +1266,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get couponBalance => 'رصيد الكوبونات';
+
+  @override
+  String get creatingReorder => 'جاري إعادة الطلب...';
+
+  @override
+  String get reorderCreatedSuccessfully => 'تم إنشاء إعادة الطلب بنجاح!';
+
+  @override
+  String get failedToCreateReorder => 'فشل في إنشاء إعادة الطلب';
 }

@@ -2569,6 +2569,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coupon Balance'**
   String get couponBalance;
+
+  /// No description provided for @creatingReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating reorder...'**
+  String get creatingReorder;
+
+  /// No description provided for @reorderCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder created successfully!'**
+  String get reorderCreatedSuccessfully;
+
+  /// No description provided for @failedToCreateReorder.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create reorder'**
+  String get failedToCreateReorder;
 }
 
 class _AppLocalizationsDelegate

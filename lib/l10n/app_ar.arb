@@ -485,7 +485,10 @@
   "lastDelivered": "آخر توصيل",
   "remaining": "المتبقي",
   "used": "المستخدم",
-  "couponBalance": "رصيد الكوبونات"
+  "couponBalance": "رصيد الكوبونات",
+  "creatingReorder": "جاري إعادة الطلب...",
+  "reorderCreatedSuccessfully": "تم إنشاء إعادة الطلب بنجاح!",
+  "failedToCreateReorder": "فشل في إنشاء إعادة الطلب"
 
 
 }
