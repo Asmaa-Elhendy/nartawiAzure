@@ -121,14 +121,14 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               context: context,
               builder: (dialogContext) => AlertDialog(
                 title: Text(
-                  'Remove from cart',
+                  AppLocalizations.of(context)!.removeFromCart,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: widget.width * .036,
                   ),
                 ),
                 content: Text(
-                  'Are you sure you want to remove this item from cart?\nThis action cannot be undone.',
+                  AppLocalizations.of(context)!.removeFromCartConfirmation,
                   style: TextStyle(
                     color: Colors.grey[600],
                   ),
@@ -136,7 +136,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(dialogContext, false),
-                    child: Text('Cancel', style: TextStyle(color: AppColors.primary)),
+                    child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: AppColors.primary)),
                   ),
                   TextButton(
                     onPressed: () {
@@ -169,7 +169,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                         }
                       }
                     },
-                    child: Text('Remove', style: TextStyle(color: Colors.red)),
+                    child: Text(AppLocalizations.of(context)!.remove, style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
@@ -492,8 +492,8 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
               setState(() => isFavourite = oldValue);
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Something went wrong, please try again'),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.unexpectedError),
                   behavior: SnackBarBehavior.floating,
                 ),
               );

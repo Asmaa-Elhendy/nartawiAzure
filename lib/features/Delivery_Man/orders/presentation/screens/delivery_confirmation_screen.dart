@@ -13,6 +13,7 @@ import 'package:newwwwwwww/core/services/dio_service.dart';
 
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/services/auth_service.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
 import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
@@ -104,7 +105,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to get location: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.failedToGetLocation}: $e')),
       );
     }
   }
@@ -115,7 +116,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     if (_currentPosition == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enable location services')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.pleaseEnableLocationServices)),
       );
       return;
     }
@@ -150,7 +151,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to capture photo: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.failedCapturePhoto}: $e')),
       );
     }
   }
@@ -175,13 +176,13 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
       setState(() => _isSubmitting = false);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Delivery confirmed successfully'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.deliveryConfirmedSuccessfully),
           backgroundColor: Colors.green,
         ),
       );
 
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
 
@@ -189,7 +190,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to submit POD: $e'),
+          content: Text('${AppLocalizations.of(context)!.failedToSubmitPOD}: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -201,20 +202,20 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text(
-          'Cancel Order',
+          AppLocalizations.of(context)!.cancelOrder,
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: MediaQuery.of(context).size.width * .036,
           ),
         ),
         content: Text(
-          'Are you sure you want to mark this order as cancelled?\nThis action cannot be undone.',
+          AppLocalizations.of(context)!.cancelOrderConfirmation,
           style: TextStyle(color: Colors.grey[600]),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text('No', style: TextStyle(color: AppColors.primary)),
+            child: Text(AppLocalizations.of(context)!.no, style: TextStyle(color: AppColors.primary)),
           ),
           TextButton(
             onPressed: () {
@@ -222,7 +223,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
               _cancelOrder(_commentCtrl.text.trim());
             },
             style: TextButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Yes', style: TextStyle(color: Colors.white)),
+            child: Text(AppLocalizations.of(context)!.yes, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -244,17 +245,17 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Order cancelled successfully'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.orderCancelledSuccessfully),
           backgroundColor: Colors.green,
           behavior: SnackBarBehavior.floating,
         ),
       );
-      Navigator.pop(context, true);
+      Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(ctrl.error ?? 'Failed to cancel order'),
+          content: Text(ctrl.error ?? AppLocalizations.of(context)!.failedToCancelOrder),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
 
@@ -283,7 +284,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
             fromDeliveryMan: widget.fromDeliveryMan,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'Delivery Confirmation',
+            title: AppLocalizations.of(context)!.deliveryConfirmation,
             is_returned: true,
           ),
           Positioned.fill(
@@ -305,7 +306,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                         Padding(
                           padding: EdgeInsets.only(bottom: screenHeight * .015),
                           child: Text(
-                            'Delivery Confirmation',
+                            AppLocalizations.of(context)!.deliveryConfirmation,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: screenWidth * .045,
@@ -400,7 +401,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                               ),
                               Center(
                                 child: Text(
-                                  'Confirm Delivery',
+                                  AppLocalizations.of(context)!.confirmDelivery,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: screenWidth * .038,
@@ -410,7 +411,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                               ),
                               SizedBox(height: screenHeight * .02),
                               Text(
-                                'Write Comment Here',
+                                AppLocalizations.of(context)!.writeCommentHere,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: screenWidth * .034,
@@ -438,14 +439,14 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     fontSize: screenWidth * .032,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  decoration: const InputDecoration(
-                                    hintText: 'Write A Comment Here If Applicable',
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.writeCommentApplicable,
                                     border: InputBorder.none,
                                     hintStyle: TextStyle(color: Colors.grey),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Comment is required';
+                                      return AppLocalizations.of(context)!.writeCommentApplicable;
                                     }
                                     return null;
                                   },
@@ -458,7 +459,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                     child: CustomContainerButton(
                                       icon:
                                       "assets/images/delivery_man/orders/package-delivered.svg",
-                                      title: "Mark As Delivered",
+                                      title: AppLocalizations.of(context)!.confirmDelivery,
                                       screenWidth: screenWidth,
                                       screenHeight: screenHeight,
                                       isRed: false,
@@ -476,7 +477,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
                                   Expanded(
                                     child: CustomContainerButton(
                                       icon: "",
-                                      title: "Mark As Canceled",
+                                      title: AppLocalizations.of(context)!.cancelOrder,
                                       screenWidth: screenWidth,
                                       screenHeight: screenHeight,
                                       isRed: true,

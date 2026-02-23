@@ -492,7 +492,8 @@
   "couponBalance": "Coupon Balance",
   "creatingReorder": "Creating reorder...",
   "reorderCreatedSuccessfully": "Reorder created successfully!",
-  "failedToCreateReorder": "Failed to create reorder"
+  "failedToCreateReorder": "Failed to create reorder",
+  "productAlreadyInCart": "Product already in cart. Quantity updated to {quantity}."
 
 
 

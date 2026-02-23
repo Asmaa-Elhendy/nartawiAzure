@@ -491,7 +491,8 @@
   "couponBalance": "رصيد الكوبونات",
   "creatingReorder": "جاري إعادة الطلب...",
   "reorderCreatedSuccessfully": "تم إنشاء إعادة الطلب بنجاح!",
-  "failedToCreateReorder": "فشل في إنشاء إعادة الطلب"
+  "failedToCreateReorder": "فشل في إنشاء إعادة الطلب",
+  "productAlreadyInCart": "المنتج موجود بالفعل في السلة. تم تحديث الكمية إلى {quantity}."
 
 
 }
