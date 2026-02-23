@@ -38,16 +38,8 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   String? selectedStreet;
   String? selectedBuilding;
 
-  // ✅ 6 tabs
-  List<String> get _tabs => [
-           AppLocalizations.of(context)!.all,
-           AppLocalizations.of(context)!.pending,
-           AppLocalizations.of(context)!.inProgress,
-           AppLocalizations.of(context)!.delivered,
-           AppLocalizations.of(context)!.canceled,
-           AppLocalizations.of(context)!.disputed,
-  ];
-
+  // ✅ 6 tabs - will be initialized in didChangeDependencies
+  List<String> _tabs = ['', '', '', '', '', ''];
 
 // مثال بيانات (بدلها من API أو حسب orders)
   final List<String> zones = ['Zone A', 'Zone B', 'Zone C'];
@@ -57,16 +49,34 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
   final TextEditingController zoneCtrl = TextEditingController();
   final TextEditingController streetCtrl = TextEditingController();
   final TextEditingController buildingCtrl = TextEditingController();
-  // Get status ID based on tab index
+  // Get status ID based on tab name (supports both English and Arabic)
   int? _getStatusIdForTab(String tabName) {
-    switch (tabName.toLowerCase()) {
-      case 'all': return null;
-      case 'pending': return 1;
-      case 'in progress': return 3;
-      case 'delivered': return 4;
-      case 'canceled': return 5;
-      case 'disputed': return 6; // Adjust this ID based on your API
-      default: return null;
+    // Normalize the tab name for comparison
+    final normalizedTab = tabName.toLowerCase().trim();
+    
+    // English tab names
+    switch (normalizedTab) {
+      case 'all':
+      case 'الكل':
+        return null;
+      case 'pending':
+      case 'في الانتظار':
+        return 1;
+      case 'in progress':
+      case 'قيد التنفيذ':
+        return 3;
+      case 'delivered':
+      case 'تم التوصيل':
+        return 4;
+      case 'canceled':
+      case 'ملغي':
+      case 'cancelled':
+        return 5;
+      case 'disputed':
+      case 'متنازع عليه':
+        return 6;
+      default:
+        return null;
     }
   }
 
@@ -110,6 +120,22 @@ class _AssignedOrderedScreenState extends State<AssignedOrderedScreen>
         _fetchOrdersForTab();
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize tabs with localization when dependencies change
+    if (context.mounted) {
+      _tabs = [
+        AppLocalizations.of(context)!.all,
+        AppLocalizations.of(context)!.pending,
+        AppLocalizations.of(context)!.inProgress,
+        AppLocalizations.of(context)!.delivered,
+        AppLocalizations.of(context)!.canceled,
+        AppLocalizations.of(context)!.disputed,
+      ];
+    }
   }
 
   // Handle scroll events

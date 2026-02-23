@@ -135,7 +135,7 @@ class ClientProduct extends Equatable {
       supplierLogo: _asNullableString(json['supplierLogo']),
       // خليها nullable بس لو مش موجودة ترجع null أو 0.0 حسب ما تحبي
       supplierRating: json['supplierRating'] == null
-          ? null
+          ? 0
           : _asDouble(json['supplierRating']),
       supplierIsVerified: _asBool(json['supplierIsVerified']),
       description: _asNullableString(json['description']),

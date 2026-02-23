@@ -40,9 +40,22 @@ class _MainScreenDeliveryState extends State<MainScreenDelivery> with SingleTick
   void initState() {
     super.initState();
     pageController = PageController(initialPage: _tabIndex);
-    originalTabs = [       AppLocalizations.of(context)!.history,       AppLocalizations.of(context)!.orders,
-    AppLocalizations.of(context)!.profile];
+    // Initialize with empty strings first, will update in didChangeDependencies
+    originalTabs = ['', '', ''];
     _initIconsAndLogo();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Now it's safe to access AppLocalizations
+    if (context.mounted) {
+      originalTabs = [
+        AppLocalizations.of(context)!.history,
+        AppLocalizations.of(context)!.orders,
+        AppLocalizations.of(context)!.profile
+      ];
+    }
   }
 
   void _initIconsAndLogo() {
