@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../../../../../core/services/auth_service.dart';
@@ -659,5 +661,93 @@ class OrdersController extends ChangeNotifier {
       return null;
     }
   }
+  /// ✅ POST /api/Orders/{id}/Cancel
+  /// Cancel order as Delivery Man (used in DeliveryConfirmationScreen)
+  /// Returns true if canceled successfully.
+  Future<bool> cancelOrderAsDelivery({
+    required int id,
+    required String reason,
+    bool refreshAfter = true,
+  }) async {
+    log("order id ${id} and reason ${reason}");
+    error = null;
+    notifyListeners();
 
+    try {
+      final token = await AuthService.getToken();
+      debugPrint('🔑 OrdersController cancelOrderAsDelivery token = $token');
+
+      final response = await dio.post(
+        '$base_url/Orders/$id/Cancel',
+        data: {
+          'reason': reason,
+        },
+        options: Options(
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: (code) => code != null && code < 500,
+        ),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        log('✅ Delivery order #$id canceled successfully');
+
+        if (refreshAfter) {
+          await refresh();
+        }
+        return true;
+      }
+
+      if (response.statusCode == 400) {
+        log('❌ 400 Order cannot be canceled in its current state');
+        error = 'Order cannot be canceled in its current state';
+        return false;
+      }
+
+      log('${response.statusCode.toString()} ${response.toString()}');
+
+      final data = response.data;
+      String msg = 'Order cannot be canceled';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (data is String && data.trim().isNotEmpty) {
+        msg = data;
+      } else {
+        msg = 'Order cannot be canceled (status: ${response.statusCode})';
+      }
+
+      error = msg;
+      notifyListeners();
+      return false;
+    } on DioException catch (e) {
+      final data = e.response?.data;
+      String msg = 'Failed to cancel order';
+
+      if (data is Map && data['title'] != null) {
+        msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
+      } else if (data is Map && data['message'] != null) {
+        msg = data['message'].toString();
+      } else if (e.message != null) {
+        msg = e.message!;
+      }
+
+      error = msg;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      error = 'An unexpected error occurred: $e';
+      notifyListeners();
+      return false;
+    }
+  }
 }

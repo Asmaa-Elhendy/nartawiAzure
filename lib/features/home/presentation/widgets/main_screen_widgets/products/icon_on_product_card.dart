@@ -55,7 +55,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
 
   // ✅ يمنع الضغط المتكرر بسرعة (optional)
   bool _isToggling = false;
-  
+
   // ✅ Store controller reference to avoid context issues in dispose
   FavoritesController? _favoritesController;
 
@@ -71,7 +71,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
       // In other screens, check from controller
       _favoritesController = context.read<FavoritesController>();
       isFavourite = _favoritesController!.isFavoritedVsId(widget.productVsId);
-      
+
       // ✅ Listen for changes to update UI automatically
       _favoritesController!.addListener(_onFavoritesChanged);
     }
@@ -146,7 +146,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       if (cartState is CartState) {
                         // Find the exact item to remove
                         Object? itemToRemove;
-                        
+
                         for (final item in cartState.cartProducts) {
                           if (item is Map<String, dynamic>) {
                             // For Map items, match by ID exactly
@@ -162,7 +162,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                             }
                           }
                         }
-                        
+
                         // Remove only the specific item
                         if (itemToRemove != null) {
                           context.read<CachedCartBloc>().add(CartRemoveItem(itemToRemove));
@@ -188,7 +188,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
             final cartState = context.read<CachedCartBloc>().state;
             bool productAlreadyInCart = false;
             String? existingSupplierId;
-            
+
             if (cartState is CartState) {
               // Check for existing products and their suppliers
               for (final item in cartState.cartProducts) {
@@ -198,21 +198,21 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                     productAlreadyInCart = true;
                     break;
                   }
-                  
+
                   // Get supplier ID from existing cart items
                   if (existingSupplierId == null) {
                     if (item['product'] is Map<String, dynamic>) {
-                      existingSupplierId = item['product']['Supplierid']?.toString() ?? 
-                                        item['product']['SupplierId']?.toString() ?? '0';
+                      existingSupplierId = item['product']['Supplierid']?.toString() ??
+                          item['product']['SupplierId']?.toString() ?? '0';
                     } else {
-                      existingSupplierId = item['Supplierid']?.toString() ?? 
-                                        item['SupplierId']?.toString() ?? '0';
+                      existingSupplierId = item['Supplierid']?.toString() ??
+                          item['SupplierId']?.toString() ?? '0';
                     }
                   }
                 }
               }
             }
-            
+
             // Check supplier compatibility if cart is not empty
             if (existingSupplierId != null && existingSupplierId != widget.supplierId) {
               // Different supplier found - show error message immediately
@@ -223,18 +223,48 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                   message:AppLocalizations.of(context)!.supplierError,
                 ),
               );
-              return; // Don't show dialog, don't add product
+              return; // 
             }
-            
+
+            // Get quantity for the message before showing dialog
+            int quantity = 1;
+            try {
+              final quantityBloc = context.read<ProductQuantityBloc>();
+              quantity = int.tryParse(quantityBloc.state.quantity) ?? 1;
+            } catch (e) {
+              quantity = 1;
+            }
+
             showDialog(
               context: context,
               builder: (dialogContext) => ConfirmationAlert(
                 price: widget.price,
-                centerTitle:AppLocalizations.of(context)!.addedToCart,
+                centerTitle: AppLocalizations.of(context)!.addedToCart(quantity),
                 leftOnTap: () {
                   Navigator.pop(dialogContext);
-                  
+
+                  // Determine if product already exists in cart (prevents dead code)
+                  final cartStateCheck = context.read<CachedCartBloc>().state;
                   bool productAlreadyInCart = false;
+
+                  if (cartStateCheck is CartState) {
+                    for (final item in cartStateCheck.cartProducts) {
+                      if (item is Map<String, dynamic>) {
+                        final existingId = item['id'] as int?;
+                        if (existingId == widget.productVsId) {
+                          productAlreadyInCart = true;
+                          break;
+                        }
+                      } else {
+                        // fallback for any non-map structure
+                        if (item.toString().contains('${widget.productVsId}')) {
+                          productAlreadyInCart = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+
                   if (widget.fromFavouriteScreen && widget.isDelete == false) {
                     // For favorite products, create full product object
                     if (!productAlreadyInCart) {
@@ -247,7 +277,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         quantity = 1;
                       }
-                      
+
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
@@ -259,18 +289,18 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                           'vsId': widget.productVsId,
                           'enName': widget.productName ?? 'Product ${widget.productVsId}',
                           'arName': widget.productName ?? 'منتج ${widget.productVsId}',
-                          'Supplierid':widget.supplierId,
-                          'SupplierName':widget.supplierName,
-                          'SupplierRating':widget.supplierRating,
-                          'SupplierLogo':widget.supplierLogo,
+                          'Supplierid': widget.supplierId,
+                          'SupplierName': widget.supplierName,
+                          'SupplierRating': widget.supplierRating,
+                          'SupplierLogo': widget.supplierLogo,
                           'price': widget.price,
                           'isActive': true,
                           'isCurrent': true,
                         }
                       };
-                      
+
                       context.read<CachedCartBloc>().add(CartAddItem(productItem));
-                      
+
                       // Reset controller to 1
                       try {
                         final quantityBloc = context.read<ProductQuantityBloc>();
@@ -288,13 +318,13 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         controllerQuantity = 1;
                       }
-                      
+
                       // Get current quantity from cart
                       final cartState = context.read<CachedCartBloc>().state;
                       final productKey = 'product_${widget.productVsId}';
                       final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
                       final newQuantity = currentQuantity + controllerQuantity;
-                      
+
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
@@ -302,10 +332,10 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                         'fromFavorite': true,
                         'quantity': newQuantity, // Use new total quantity
                       };
-                      
+
                       // Update with new total quantity
                       context.read<CachedCartBloc>().add(CartUpdateQuantity(productItem, newQuantity));
-                      
+
                       // Reset controller to 1
                       try {
                         final quantityBloc = context.read<ProductQuantityBloc>();
@@ -313,7 +343,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         // Ignore if can't reset
                       }
-                      
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Product already in cart. Quantity updated to $newQuantity.'),
@@ -335,7 +365,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         quantity = 1;
                       }
-                      
+
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
@@ -345,10 +375,10 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                         'product': {
                           'id': widget.productVsId,
                           'vsId': widget.productVsId,
-                          'SupplierId':widget.supplierId,
-                          'SupplierName':widget.supplierName,
-                          'SupplierRating':widget.supplierRating,
-                          'SupplierLogo':widget.supplierLogo,
+                          'SupplierId': widget.supplierId,
+                          'SupplierName': widget.supplierName,
+                          'SupplierRating': widget.supplierRating,
+                          'SupplierLogo': widget.supplierLogo,
                           'enName': widget.productName ?? 'Product ${widget.productVsId}',
                           'arName': widget.productName ?? 'منتج ${widget.productVsId}',
                           'price': widget.price,
@@ -356,9 +386,9 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                           'isCurrent': true,
                         }
                       };
-                      
+
                       context.read<CachedCartBloc>().add(CartAddItem(productItem));
-                      
+
                       // Reset controller to 1
                       try {
                         final quantityBloc = context.read<ProductQuantityBloc>();
@@ -376,13 +406,13 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         controllerQuantity = 1;
                       }
-                      
+
                       // Get current quantity from cart
                       final cartState = context.read<CachedCartBloc>().state;
                       final productKey = 'product_${widget.productVsId}';
                       final currentQuantity = cartState.productQuantities?[productKey] ?? 1;
                       final newQuantity = currentQuantity + controllerQuantity;
-                      
+
                       final productItem = {
                         'id': widget.productVsId,
                         'name': widget.productName ?? 'Product ${widget.productVsId}',
@@ -390,10 +420,10 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                         'fromFavorite': false,
                         'quantity': newQuantity, // Use new total quantity
                       };
-                      
+
                       // Update with new total quantity
                       context.read<CachedCartBloc>().add(CartUpdateQuantity(productItem, newQuantity));
-                      
+
                       // Reset controller to 1
                       try {
                         final quantityBloc = context.read<ProductQuantityBloc>();
@@ -401,7 +431,7 @@ class _BuildIconOnProductState extends State<BuildIconOnProduct> {
                       } catch (e) {
                         // Ignore if can't reset
                       }
-                      
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Product already in cart. Quantity updated to $newQuantity.'),
@@ -510,8 +540,8 @@ Widget BuildRoundedIconOnProduct({
         ? width * .55
         : isPlus
         ? fromCartScreen
-              ? width * .26
-              : width * .21
+        ? width * .26
+        : width * .21
         : width * .15,
     // الحجم العرض
     height: height * .045,
@@ -530,62 +560,62 @@ Widget BuildRoundedIconOnProduct({
     ),
     child: Center(
       child:
-          //  isPlus?
-          Row(
-            mainAxisAlignment: fromDetailedScreen || fromCartScreen
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: onDecrease,
-                child: Icon(
-                  Icons.remove,
-                  size: height * .03,
-                  color: AppColors.redColor,
-                ),
-              ),
-              // Center(
-              //   child: Padding(
-              //     padding:  EdgeInsets.symmetric(horizontal: width*.014),
-              //     child: Text('$quantity',style: TextStyle(fontWeight: FontWeight.w700),),
-              //   ),
-              // ),
-              Container(
-                width: width * 0.07,
-                height: height * 0.04,
-                alignment: Alignment.center,
-                child: TextField(
-                  controller: quantityCntroller,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: width * 0.034,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onChanged: onTextfieldChanged,
-                  onEditingComplete: onDone,
-                  onSubmitted: (value) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: onIncrease,
-                child: Icon(
-                  Icons.add, // استبدلها بالأيقونة اللي تحبها
-                  size: height * .03,
-                  color: AppColors.greenColor,
-                ),
-              ),
-            ],
+      //  isPlus?
+      Row(
+        mainAxisAlignment: fromDetailedScreen || fromCartScreen
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.center,
+        children: [
+          GestureDetector(
+            onTap: onDecrease,
+            child: Icon(
+              Icons.remove,
+              size: height * .03,
+              color: AppColors.redColor,
+            ),
           ),
+          // Center(
+          //   child: Padding(
+          //     padding:  EdgeInsets.symmetric(horizontal: width*.014),
+          //     child: Text('$quantity',style: TextStyle(fontWeight: FontWeight.w700),),
+          //   ),
+          // ),
+          Container(
+            width: width * 0.07,
+            height: height * 0.04,
+            alignment: Alignment.center,
+            child: TextField(
+              controller: quantityCntroller,
+              textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: width * 0.034,
+                overflow: TextOverflow.ellipsis,
+              ),
+              onChanged: onTextfieldChanged,
+              onEditingComplete: onDone,
+              onSubmitted: (value) {
+                FocusScope.of(context).unfocus();
+              },
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: onIncrease,
+            child: Icon(
+              Icons.add, // استبدلها بالأيقونة اللي تحبها
+              size: height * .03,
+              color: AppColors.greenColor,
+            ),
+          ),
+        ],
+      ),
       //:
       // Row(
       //   mainAxisAlignment: MainAxisAlignment.center,

@@ -191,7 +191,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get remove => 'Delete';
 
   @override
-  String get addedToCart => 'You\'ve added 1 item';
+  String addedToCart(Object quantity) {
+    return 'You\'ve added $quantity item';
+  }
 
   @override
   String get selectedItemNotConfirmed =>
@@ -797,6 +799,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToStartDelivery => 'Failed to start delivery: ';
 
   @override
+  String get orderMustBeConfirmedToStart =>
+      'Order must be confirmed before starting delivery';
+
+  @override
+  String get orderNotAssignedToYou => 'This order is not assigned to you';
+
+  @override
   String get orderSummary => 'Order Summary';
 
   @override
@@ -1195,6 +1204,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get transactionHistory => 'Transaction History';
+
+  @override
+  String get orderHistory => 'Order History';
 
   @override
   String get from => 'From';

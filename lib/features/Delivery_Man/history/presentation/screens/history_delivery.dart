@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 import '../../../../../core/theme/colors.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../../coupons/presentation/widgets/custom_text.dart';
 import '../../../../home/presentation/widgets/background_home_Appbar.dart';
 import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
@@ -27,12 +28,8 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   late final TabController _tabController;
   late WalletTransactionsController transactionController;
 
-  static const List<String> _tabs = [
-    'All',
-    'Delivered',
-    'Canceled',
-    'Disputed',
-  ];
+  // Tabs will be initialized in didChangeDependencies
+  List<String> _tabs = ['', '', '', ''];
 
   @override
   void initState() {
@@ -49,6 +46,20 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize tabs with localization when dependencies change
+    if (context.mounted) {
+      _tabs = [
+        AppLocalizations.of(context)!.all,
+        AppLocalizations.of(context)!.delivered,
+        AppLocalizations.of(context)!.canceled,
+        AppLocalizations.of(context)!.disputed,
+      ];
+    }
+  }
+
+  @override
   void dispose() {
     _tabController.dispose();
     transactionController.dispose();
@@ -58,19 +69,20 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
   List<WalletTransaction> _filterByTab(List<WalletTransaction> all, int tabIndex) {
     if (tabIndex == 0) return all;
 
-    final tab = _tabs[tabIndex].toLowerCase();
+    final tab = _tabs[tabIndex].toLowerCase().trim();
 
     return all.where((t) {
       final s = t.status.toLowerCase();
 
-      if (tab == 'delivered') {
-        return s.contains('delivered') || s.contains('completed');
+      // Support both English and Arabic tab names
+      if (tab == 'delivered' || tab == 'تم التوصيل') {
+        return s.contains('delivered') || s.contains('completed') || s.contains('تم التوصيل');
       }
-      if (tab == 'canceled') {
-        return s.contains('cancel');
+      if (tab == 'canceled' || tab == 'ملغي' || tab == 'cancelled') {
+        return s.contains('cancel') || s.contains('ملغي');
       }
-      if (tab == 'disputed') {
-        return s.contains('dispute');
+      if (tab == 'disputed' || tab == 'متنازع عليه') {
+        return s.contains('dispute') || s.contains('متنازع');
       }
       return true;
     }).toList();
@@ -126,7 +138,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
             fromDeliveryMan: true,
             screenHeight: screenHeight,
             screenWidth: screenWidth,
-            title: 'History',
+            title: AppLocalizations.of(context)!.history,
             is_returned: true,
           ),
           Positioned.fill(
@@ -179,7 +191,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
                     Padding(
                       padding: EdgeInsets.only(bottom: screenHeight * .02),
                       child: customCouponAlertTitle(
-                        'Orders History',
+                        AppLocalizations.of(context)!.orderHistory,
                         screenWidth,
                         screenHeight,
                       ),
@@ -191,7 +203,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            customCouponAlertTitle('From', screenWidth, screenHeight),
+                            customCouponAlertTitle(AppLocalizations.of(context)!.from, screenWidth, screenHeight),
                             GestureDetector(
                               onTap: () async {
                                 final now = DateTime.now();
@@ -233,7 +245,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            customCouponAlertTitle('To', screenWidth, screenHeight),
+                            customCouponAlertTitle(AppLocalizations.of(context)!.to, screenWidth, screenHeight),
                             GestureDetector(
                               onTap: () async {
                                 final now = DateTime.now();
@@ -330,7 +342,7 @@ class _HistoryDeliveryState extends State<HistoryDelivery>
                               if (finalList.isEmpty) {
                                 return Center(
                                   child: Text(
-                                    'No transactions found',
+                                    AppLocalizations.of(context)!.noTransactionsFound,
                                     style: TextStyle(
                                       fontSize: screenWidth * .04,
                                       fontWeight: FontWeight.w500,

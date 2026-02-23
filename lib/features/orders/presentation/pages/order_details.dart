@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -203,12 +205,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     if (confirmed != true) return;
 
     try {
-      // Show loading
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => Center(child: CircularProgressIndicator(color: AppColors.primary)),
-      );
+      // // Show loading
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (_) => Center(child: CircularProgressIndicator(color: AppColors.primary)),
+      // );
 
       final dio = DioService.dio;
       final token = await AuthService.getToken();
@@ -223,9 +225,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           },
         ),
       );
-
-      // Close loading
-      Navigator.pop(context);
+      //
+      // // Close loading
+      // Navigator.pop(context);
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         // Success - update UI
@@ -237,22 +239,59 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           SnackBar(
             content: Text(AppLocalizations.of(context)!.deliveryStartedSuccessfully),
             backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       } else {
-        throw Exception('Failed to start delivery');
+
       }
     } catch (e) {
       // Close loading if still open
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
+      } else {
+        // Force close loading dialog if it can't be popped normally
+        Navigator.of(context, rootNavigator: false).pop();
+      }
+
+      // Show specific error message for status validation
+      String errorMessage = e.toString();
+      String userMessage;
+      
+      // Debug logging to understand exact error format
+      log('🔍 Delivery start error: $errorMessage');
+      log('🔍 Delivery start error: $errorMessage');
+      
+      // Check for various possible error message formats
+      if (errorMessage.contains('Order must be in \'Confirmed\' status') || 
+          errorMessage.contains('Order must be in "Confirmed" status') ||
+          errorMessage.contains('Order must be in \'Confirmed\' status to start delivery') ||
+          errorMessage.contains('Order must be in "Confirmed" status to start delivery')) {
+        userMessage = AppLocalizations.of(context)!.orderMustBeConfirmedToStart;
+        log('✅ Using confirmed status error message');
+      } else if (errorMessage.contains('Order must be assigned to this driver')) {
+        userMessage = AppLocalizations.of(context)!.orderNotAssignedToYou;
+        log('✅ Using driver assignment error message');
+      } else if (errorMessage.contains('DioException') && errorMessage.contains('status code of 400')) {
+        // Handle DioException with 400 status code specifically
+        userMessage = AppLocalizations.of(context)!.orderMustBeConfirmedToStart;
+        log('✅ Using DioException 400 handling for confirmed status');
+      } else if (errorMessage.contains('DioException [bad response]') && errorMessage.contains('status code of 400')) {
+        // Handle DioException [bad response] with 400 status code specifically
+        userMessage = AppLocalizations.of(context)!.orderMustBeConfirmedToStart;
+        log('✅ Using DioException [bad response] 400 handling for confirmed status');
+      } else {
+        userMessage = '${AppLocalizations.of(context)!.failedToStartDelivery}$e';
+        log('⚠️ Using generic error message $userMessage');
       }
 
       // Show error
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${AppLocalizations.of(context)!.failedToStartDelivery}$e'),
+          content: Text(userMessage),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+
         ),
       );
     }
@@ -275,6 +314,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
           SnackBar(
             content: Text(AppLocalizations.of(context)!.orderCancelledSuccessfully),
             backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+
           ),
         );
         Navigator.pop(context, true);

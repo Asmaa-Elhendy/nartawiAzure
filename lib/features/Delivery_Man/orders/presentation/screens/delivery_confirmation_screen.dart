@@ -1,23 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 
-import '../../../../../core/theme/colors.dart';
-import '../../../../home/presentation/widgets/background_home_Appbar.dart';
-import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
-import '../widgets/custome_button.dart';
-import '../widgets/mark_delivered_alert.dart';
-import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
-import '../../../../../core/services/auth_service.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:newwwwwwww/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:newwwwwwww/features/orders/presentation/provider/order_controller.dart';
 import 'package:newwwwwwww/core/services/dio_service.dart';
-import '../../../../orders/domain/models/order_model.dart';
 
+import '../../../../../core/theme/colors.dart';
+import '../../../../../core/services/auth_service.dart';
+import '../../../../home/presentation/widgets/background_home_Appbar.dart';
+import '../../../../home/presentation/widgets/build_ForegroundAppBarHome.dart';
+import '../../../../orders/data/datasources/order_confirmation_datasource.dart';
+import '../../../../orders/domain/models/order_model.dart';
+import '../widgets/custome_button.dart';
+import '../widgets/mark_delivered_alert.dart';
 
 class DeliveryConfirmationScreen extends StatefulWidget {
   final bool fromDeliveryMan;
@@ -29,20 +30,19 @@ class DeliveryConfirmationScreen extends StatefulWidget {
     required this.order,
   });
 
-  // Helper getters for backward compatibility
   int get orderId => order.id ?? 0;
   DateTime get orderDate => order.issueTime ?? DateTime.now();
+
   String get address {
     final addr = order.deliveryAddress;
     if (addr == null) return 'No address provided';
-    
-    // Handle both Map and Address object cases
+
     final building = addr is Map ? addr['building'] : addr.building;
     final address = addr is Map ? addr['address'] : addr.address;
     final floor = addr is Map ? addr['floor'] : addr.floor;
     final apartment = addr is Map ? addr['apartment'] : addr.apartment;
     final notes = addr is Map ? addr['notes'] : addr.notes;
-    
+
     final parts = [
       building,
       address,
@@ -50,7 +50,7 @@ class DeliveryConfirmationScreen extends StatefulWidget {
       apartment,
       notes,
     ].where((part) => part != null && part.toString().isNotEmpty).toList();
-    
+
     return parts.join(', ');
   }
 
@@ -62,15 +62,18 @@ class DeliveryConfirmationScreen extends StatefulWidget {
 class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen> {
   final TextEditingController _commentCtrl = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  late OrderConfirmationDatasource _podDatasource;
-  
+  late final OrderConfirmationDatasource _podDatasource;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   Position? _currentPosition;
   bool _isSubmitting = false;
 
   @override
   void initState() {
     super.initState();
-    _podDatasource = OrderConfirmationDatasource(dio: DioService.dio,baseUrl: base_url);
+    _podDatasource =
+        OrderConfirmationDatasource(dio: DioService.dio, baseUrl: base_url);
   }
 
   @override
@@ -99,6 +102,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
         desiredAccuracy: LocationAccuracy.high,
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to get location: $e')),
       );
@@ -109,8 +113,9 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     await _getCurrentLocation();
 
     if (_currentPosition == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enable location services')),
+        const SnackBar(content: Text('Please enable location services')),
       );
       return;
     }
@@ -143,6 +148,7 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
         await _submitPOD(photo);
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to capture photo: $e')),
       );
@@ -164,10 +170,12 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
         notes: _commentCtrl.text.trim().isEmpty ? null : _commentCtrl.text.trim(),
       );
 
+      if (!mounted) return;
+
       setState(() => _isSubmitting = false);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Delivery confirmed successfully'),
           backgroundColor: Colors.green,
         ),
@@ -175,12 +183,81 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
 
       Navigator.pop(context, true);
     } catch (e) {
+      if (!mounted) return;
+
       setState(() => _isSubmitting = false);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to submit POD: $e'),
           backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _showCancelOrderDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(
+          'Cancel Order',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: MediaQuery.of(context).size.width * .036,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to mark this order as cancelled?\nThis action cannot be undone.',
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text('No', style: TextStyle(color: AppColors.primary)),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext, true);
+              _cancelOrder(_commentCtrl.text.trim());
+            },
+            style: TextButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Yes', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _cancelOrder([String? cancellationReason]) async {
+    final ctrl = context.read<OrdersController>();
+
+    final success = await ctrl.cancelOrderAsDelivery(
+      id: widget.orderId,
+      reason: (cancellationReason == null || cancellationReason.trim().isEmpty)
+          ? 'Cancelled by delivery driver'
+          : cancellationReason.trim(),
+      refreshAfter: true,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Order cancelled successfully'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(ctrl.error ?? 'Failed to cancel order'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+
         ),
       );
     }
@@ -220,217 +297,206 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * .06),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title like screenshot
-                      Padding(
-                        padding: EdgeInsets.only(bottom: screenHeight * .015),
-                        child: Text(
-                          'Delivery Confirmation',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: screenWidth * .045,
+                  child: Form(
+                    key: _formKey, // ✅ now formKey is actually used
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: screenHeight * .015),
+                          child: Text(
+                            'Delivery Confirmation',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: screenWidth * .045,
+                            ),
                           ),
                         ),
-                      ),
-
-                      // White card container
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * .04,
-                          vertical: screenHeight * .02,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Order#3
-                            Text(
-                              'Order#${widget.orderId}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: screenWidth * .042,
-                              ),
-                            ),
-
-                            SizedBox(height: screenHeight * .012),
-
-                            // Date row
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/orders/calendar.svg",
-                                  width: screenWidth * .042,
-                                  color: AppColors.textLight,
-                                ),
-                                SizedBox(width: screenWidth * .02),
-                                Expanded(
-                                  child: Text(
-                                    formatDateOnly(widget.orderDate),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: screenWidth * .034,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: screenHeight * .01),
-
-                            // Address row
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  size: screenWidth * .05,
-                                  color: AppColors.textLight,
-                                ),
-                                SizedBox(width: screenWidth * .02),
-                                Expanded(
-                                  child: Text(
-                                    widget.address,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: screenWidth * .034,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: screenHeight * .03),
-
-                            // Big check + small avatar bubble
-                            Center(
-                              child: SizedBox(
-                                width: screenWidth * .36,
-                                height: screenWidth * .36,
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      width: screenWidth * .28,
-                                      height: screenWidth * .28,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.check_rounded,
-                                        size: screenWidth * .16,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            Center(
-                              child: Text(
-                                'Confirm Delivery',
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * .04,
+                            vertical: screenHeight * .02,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.whiteColor,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Order#${widget.orderId}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  fontSize: screenWidth * .038,
-                                  color: AppColors.primary,
+                                  fontSize: screenWidth * .042,
                                 ),
                               ),
-                            ),
-
-                            SizedBox(height: screenHeight * .02),
-
-                            Text(
-                              'Write Comment Here',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: screenWidth * .034,
-                                color: AppColors.textLight,
+                              SizedBox(height: screenHeight * .012),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/images/orders/calendar.svg",
+                                    width: screenWidth * .042,
+                                    color: AppColors.textLight,
+                                  ),
+                                  SizedBox(width: screenWidth * .02),
+                                  Expanded(
+                                    child: Text(
+                                      formatDateOnly(widget.orderDate),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: screenWidth * .034,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-
-                            SizedBox(height: screenHeight * .012),
-
-                            // Comment field (with small avatar to right)
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth * .03,
-                                    vertical: screenHeight * .004,
+                              SizedBox(height: screenHeight * .01),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: screenWidth * .05,
+                                    color: AppColors.textLight,
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.favouriteProductCard,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: AppColors.BorderAnddividerAndIconColor,
+                                  SizedBox(width: screenWidth * .02),
+                                  Expanded(
+                                    child: Text(
+                                      widget.address,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: screenWidth * .034,
+                                      ),
                                     ),
                                   ),
-                                  child:TextField(
-                                    controller: _commentCtrl,
-                                    maxLines: 4, // ✅ يكبر مساحة الـ textarea
-                                    minLines: 3, // (اختياري) أقل ارتفاع
-                                    style: TextStyle(
-                                      fontSize: screenWidth * .032, // ✅ خط أصغر شوية
-                                      fontWeight: FontWeight.w400,
+                                ],
+                              ),
+                              SizedBox(height: screenHeight * .03),
+                              Center(
+                                child: SizedBox(
+                                  width: screenWidth * .36,
+                                  height: screenWidth * .36,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        width: screenWidth * .28,
+                                        height: screenWidth * .28,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.check_rounded,
+                                          size: screenWidth * .16,
+                                          color: AppColors.whiteColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Center(
+                                child: Text(
+                                  'Confirm Delivery',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: screenWidth * .038,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: screenHeight * .02),
+                              Text(
+                                'Write Comment Here',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: screenWidth * .034,
+                                  color: AppColors.textLight,
+                                ),
+                              ),
+                              SizedBox(height: screenHeight * .012),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * .03,
+                                  vertical: screenHeight * .004,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.favouriteProductCard,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColors.BorderAnddividerAndIconColor,
+                                  ),
+                                ),
+                                child: TextFormField(
+                                  controller: _commentCtrl,
+                                  maxLines: 4,
+                                  minLines: 3,
+                                  style: TextStyle(
+                                    fontSize: screenWidth * .032,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    hintText: 'Write A Comment Here If Applicable',
+                                    border: InputBorder.none,
+                                    hintStyle: TextStyle(color: Colors.grey),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Comment is required';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              SizedBox(height: screenHeight * .03),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomContainerButton(
+                                      icon:
+                                      "assets/images/delivery_man/orders/package-delivered.svg",
+                                      title: "Mark As Delivered",
+                                      screenWidth: screenWidth,
+                                      screenHeight: screenHeight,
+                                      isRed: false,
+                                      onTap: _isSubmitting
+                                          ? () {}
+                                          : () {
+                                        final ok = _formKey.currentState?.validate() ?? false;
+                                        if (!ok) return;
+
+                                        _capturePhotoAndSubmit();
+                                      },
                                     ),
-                                    decoration: TextFieldDecoration(
-                                      hintText: 'Write A Comment Here If Applicable',
-                                    ),
                                   ),
+                                  SizedBox(width: screenWidth * .02),
+                                  Expanded(
+                                    child: CustomContainerButton(
+                                      icon: "",
+                                      title: "Mark As Canceled",
+                                      screenWidth: screenWidth,
+                                      screenHeight: screenHeight,
+                                      isRed: true,
+                                      onTap: _isSubmitting
+                                          ? () {}
+                                          : () {
+                                        final ok = _formKey.currentState?.validate() ?? false;
+                                        if (!ok) return;
 
-                                ),
-
-                              ],
-                            ),
-
-                            SizedBox(height: screenHeight * .03),
-
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CustomContainerButton(
-                                    icon: "assets/images/delivery_man/orders/package-delivered.svg",
-                                    title: "Mark As Delivered",
-                                    screenWidth: screenWidth,
-                                    screenHeight: screenHeight,
-                                    isRed: false,
-                                    onTap: _isSubmitting ? (){} : _capturePhotoAndSubmit,
+                                        _showCancelOrderDialog();
+                                      },                                    ),
                                   ),
-                                ),
-                                SizedBox(width: screenWidth * .02),
-                                Expanded(
-                                  child: CustomContainerButton(
-                                    icon: "",
-                                    title: "Mark As Canceled",
-                                    screenWidth: screenWidth,
-                                    screenHeight: screenHeight,
-                                    isRed: true,
-                                    onTap: () {
-                                      // TODO
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-
-
-
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-
-                      SizedBox(height: screenHeight * .12), // space (bottom nav)
-                    ],
+                        SizedBox(height: screenHeight * .12),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -441,13 +507,3 @@ class _DeliveryConfirmationScreenState extends State<DeliveryConfirmationScreen>
     );
   }
 }
-
-// Keeps your TextField look clean (no design change)
-InputDecoration TextFieldDecoration({required String hintText}) {
-  return InputDecoration(
-    border: InputBorder.none,
-    hintText: hintText,
-    hintStyle: const TextStyle(color: Colors.grey),
-  );
-}
-

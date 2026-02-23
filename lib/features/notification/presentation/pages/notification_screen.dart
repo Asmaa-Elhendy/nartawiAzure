@@ -26,33 +26,19 @@ class _NotificationScreenState extends State<NotificationScreen>
   late NotificationController _notificationController;
   late ScrollController _scrollController;
 
-  // ✅ Tabs for normal user
-  List<String> get _tabsUser => [
-    AppLocalizations.of(context)!.all,
-    AppLocalizations.of(context)!.neww,
-    AppLocalizations.of(context)!.read,
-    AppLocalizations.of(context)!.orders,
-    AppLocalizations.of(context)!.coupons,
-    AppLocalizations.of(context)!.promos,
-  ];
+  // ✅ Tabs for normal user - will be initialized in didChangeDependencies
+  List<String> _tabsUser = ['', '', '', '', '', ''];
 
-  // ✅ Tabs for delivery man
-  List<String> get _tabsDelivery => [
-    AppLocalizations.of(context)!.all,
-    AppLocalizations.of(context)!.neww,
-    AppLocalizations.of(context)!.read,
-    AppLocalizations.of(context)!.oneTime,
-    AppLocalizations.of(context)!.coupons,
-    AppLocalizations.of(context)!.disputes,
-    AppLocalizations.of(context)!.canceled,
-  ];
+  // ✅ Tabs for delivery man - will be initialized in didChangeDependencies
+  List<String> _tabsDelivery = ['', '', '', '', '', '', ''];
 
-  List<String> get _tabs => widget.fromDeliveryMan ? _tabsDelivery : _tabsUser;
+  // ✅ Current tabs - will be initialized in didChangeDependencies
+  List<String> _tabs = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController = TabController(length: 7, vsync: this); // Max length for both user types
     _scrollController = ScrollController();
     _notificationController = NotificationController(dio: DioService.dio);
     
@@ -61,6 +47,39 @@ class _NotificationScreenState extends State<NotificationScreen>
     
     _startPolling();
     _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize tabs with localization when dependencies change
+    if (context.mounted) {
+      _tabsUser = [
+        AppLocalizations.of(context)!.all,
+        AppLocalizations.of(context)!.neww,
+        AppLocalizations.of(context)!.read,
+        AppLocalizations.of(context)!.orders,
+        AppLocalizations.of(context)!.coupons,
+        AppLocalizations.of(context)!.promos,
+      ];
+
+      _tabsDelivery = [
+        AppLocalizations.of(context)!.all,
+        AppLocalizations.of(context)!.neww,
+        AppLocalizations.of(context)!.read,
+        AppLocalizations.of(context)!.oneTime,
+        AppLocalizations.of(context)!.coupons,
+        AppLocalizations.of(context)!.disputes,
+        AppLocalizations.of(context)!.canceled,
+      ];
+
+      // Set current tabs based on user type
+      _tabs = widget.fromDeliveryMan ? _tabsDelivery : _tabsUser;
+      
+      // ✅ DO NOT recreate TabController here to avoid multiple tickers
+      // The TabController will use the initial length from initState()
+      // Tab content will adapt to the actual tabs available
+    }
   }
 
   void _startPolling() {

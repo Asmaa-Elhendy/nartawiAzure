@@ -26,13 +26,15 @@ class NotificationModel {
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
-      id: json['id'] as int,
+      id: json['id'] is String ? int.parse(json['id'] as String) : json['id'] as int,
       title: json['title'] as String,
       message: json['message'] as String,
       type: json['type'] as String,
       isRead: json['isRead'] as bool? ?? false,
       relatedEntityType: json['relatedEntityType'] as String?,
-      relatedEntityId: json['relatedEntityId'] as int?,
+      relatedEntityId: json['relatedEntityId'] is String 
+          ? int.tryParse(json['relatedEntityId'] as String) 
+          : json['relatedEntityId'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       readAt: json['readAt'] != null 
           ? DateTime.parse(json['readAt'] as String) 

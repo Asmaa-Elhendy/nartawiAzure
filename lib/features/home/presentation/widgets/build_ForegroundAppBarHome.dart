@@ -53,6 +53,8 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
   int _bundleCount = 0;
   bool _isLoading = false;
   String _currentLanguage = 'en';
+  int _consecutive400Errors = 0;
+  static const int _max400Errors = 3;
 
   @override
   void initState() {
@@ -87,6 +89,12 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
   Future<void> _fetchBundleCount() async {
     if (_isLoading) return;
     
+    // Prevent infinite 400 error loops
+    if (_consecutive400Errors >= _max400Errors) {
+      debugPrint('🚫 Too many consecutive 400 errors, stopping bundle count fetch');
+      return;
+    }
+    
     setState(() {
       _isLoading = true;
     });
@@ -96,10 +104,18 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
       if (mounted) {
         setState(() {
           _bundleCount = _couponsController.bundlePurchases.length;
+          _consecutive400Errors = 0; // Reset counter on success
         });
       }
     } catch (e) {
-      // Handle error silently or show debug print
+      // Check if it's a 400 error
+      if (e.toString().contains('statusCode=400')) {
+        _consecutive400Errors++;
+        debugPrint('🚫 400 error detected ($_consecutive400Errors/$_max400Errors): $e');
+      } else {
+        _consecutive400Errors = 0; // Reset for other errors
+      }
+      
       debugPrint('Error fetching bundle count: $e');
     } finally {
       if (mounted) {
@@ -177,10 +193,24 @@ class _BuildForegroundappbarhomeState extends State<BuildForegroundappbarhome> {
                     MaterialPageRoute(builder: (_) => NotificationScreen(fromDeliveryMan:widget.fromDeliveryMan)),
                   );
                 },
-                child: Icon(
-                  Icons.notifications,
-                  color: AppColors.whiteColor,
-                  size: widget.screenWidth * .05,
+                child: badges.Badge(
+                  position: badges.BadgePosition.topEnd(top: -8, end: -4),
+                  badgeContent: buildFixedBadge(
+                    size: screenWidth * .048,
+                    text: _notificationController.unreadCount.toString(),
+                    color: AppColors.whiteColor,
+                    fontSize: screenWidth * .028,
+                  ),
+                  badgeStyle: badges.BadgeStyle(
+                    shape: badges.BadgeShape.circle,
+                    badgeColor: AppColors.redColor,
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Icon(
+                    Icons.notifications,
+                    color: AppColors.whiteColor,
+                    size: widget.screenWidth * .05,
+                  ),
                 ),
               ),
               SizedBox(width: widget.screenWidth * .04),

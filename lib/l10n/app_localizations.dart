@@ -461,8 +461,8 @@ abstract class AppLocalizations {
   /// No description provided for @addedToCart.
   ///
   /// In en, this message translates to:
-  /// **'You\'ve added 1 item'**
-  String get addedToCart;
+  /// **'You\'ve added {quantity} item'**
+  String addedToCart(Object quantity);
 
   /// No description provided for @selectedItemNotConfirmed.
   ///
@@ -1628,6 +1628,18 @@ abstract class AppLocalizations {
   /// **'Failed to start delivery: '**
   String get failedToStartDelivery;
 
+  /// No description provided for @orderMustBeConfirmedToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Order must be confirmed before starting delivery'**
+  String get orderMustBeConfirmedToStart;
+
+  /// No description provided for @orderNotAssignedToYou.
+  ///
+  /// In en, this message translates to:
+  /// **'This order is not assigned to you'**
+  String get orderNotAssignedToYou;
+
   /// No description provided for @orderSummary.
   ///
   /// In en, this message translates to:
@@ -2407,6 +2419,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Transaction History'**
   String get transactionHistory;
+
+  /// No description provided for @orderHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Order History'**
+  String get orderHistory;
 
   /// No description provided for @from.
   ///
