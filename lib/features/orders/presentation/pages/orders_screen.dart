@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../core/services/dio_service.dart';
@@ -215,114 +216,117 @@ class _OrdersScreenState extends State<OrdersScreen>  with SingleTickerProviderS
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
-      backgroundColor: Colors.transparent,
-      // في حالة الصورة في الخلفية
-      body: Stack(
-        children: [
-          Container(
-            width: screenWidth,
-            height: screenHeight,
-            color: AppColors.backgrounHome,
-          ),
-          buildBackgroundAppbar(screenWidth),
-          BuildForegroundappbarhome(
-            screenHeight: screenHeight,
-            screenWidth: screenWidth,
-            title: AppLocalizations.of(context)!.orders,
-            is_returned: false,//edit back from orders
-          ),
-          Positioned.fill(
-            top: MediaQuery.of(context).padding.top + screenHeight * .1,
-            bottom: screenHeight*.05,
-            child: Padding(
-              padding: EdgeInsets.only(
-              //  top: screenHeight * .03,//04 handle design shimaa
-                bottom: screenHeight * .1,
-              ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * .06,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(//lkj jk
-                              AppLocalizations.of(context)!.myOrders,
-                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: screenHeight * .004,
-                                horizontal: screenWidth * .004,
+    return ChangeNotifierProvider(
+      create: (_) => ordersController,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        // 🔥 يخلي الجسم يبدأ من أعلى الشاشة خلف الـ AppBar
+        backgroundColor: Colors.transparent,
+        // في حالة الصورة في الخلفية
+        body: Stack(
+          children: [
+            Container(
+              width: screenWidth,
+              height: screenHeight,
+              color: AppColors.backgrounHome,
+            ),
+            buildBackgroundAppbar(screenWidth),
+            BuildForegroundappbarhome(
+              screenHeight: screenHeight,
+              screenWidth: screenWidth,
+              title: AppLocalizations.of(context)!.orders,
+              is_returned: false,//edit back from orders
+            ),
+            Positioned.fill(
+              top: MediaQuery.of(context).padding.top + screenHeight * .1,
+              bottom: screenHeight*.05,
+              child: Padding(
+                padding: EdgeInsets.only(
+                //  top: screenHeight * .03,//04 handle design shimaa
+                  bottom: screenHeight * .1,
+                ),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * .06,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(//lkj jk
+                                AppLocalizations.of(context)!.myOrders,
+                                style: TextStyle(fontWeight: FontWeight.w600,fontSize: screenWidth*.045),
                               ),
-                              margin: EdgeInsets.only(
-                                bottom: screenHeight * .02,
-                              ),
-                              height: screenHeight * .05,
-                              decoration: BoxDecoration(
-                                color: AppColors.tabViewBackground,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: TabBar(
-                                isScrollable: true, // Make tabs scrollable
-                                padding: EdgeInsets.zero,
-                                labelPadding: EdgeInsets.symmetric(horizontal: screenWidth * .03),
-                                controller: _tabController,
-                                indicator: BoxDecoration(
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: screenHeight * .004,
+                                  horizontal: screenWidth * .004,
+                                ),
+                                margin: EdgeInsets.only(
+                                  bottom: screenHeight * .02,
+                                ),
+                                height: screenHeight * .05,
+                                decoration: BoxDecoration(
+                                  color: AppColors.tabViewBackground,
                                   borderRadius: BorderRadius.circular(8),
-                                  color: AppColors.whiteColor,
                                 ),
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                dividerColor: Colors.transparent,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.primary,
+                                child: TabBar(
+                                  isScrollable: true, // Make tabs scrollable
+                                  padding: EdgeInsets.zero,
+                                  labelPadding: EdgeInsets.symmetric(horizontal: screenWidth * .03),
+                                  controller: _tabController,
+                                  indicator: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.whiteColor,
+                                  ),
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  dividerColor: Colors.transparent,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.primary,
+                                  ),
+                                  unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
+                                  tabs: [
+                                    Tab(text: AppLocalizations.of(context)!.all),
+                                    Tab(text: AppLocalizations.of(context)!.pending),
+                                    Tab(text: AppLocalizations.of(context)!.inProgress),
+                                    Tab(text: AppLocalizations.of(context)!.delivered),
+                                    Tab(text: AppLocalizations.of(context)!.canceled),
+                                  ],
                                 ),
-                                unselectedLabelColor: AppColors.greyDarktextIntExtFieldAndIconsHome,
-                                tabs: [
-                                  Tab(text: AppLocalizations.of(context)!.all),
-                                  Tab(text: AppLocalizations.of(context)!.pending),
-                                  Tab(text: AppLocalizations.of(context)!.inProgress),
-                                  Tab(text: AppLocalizations.of(context)!.delivered),
-                                  Tab(text: AppLocalizations.of(context)!.canceled),
-                                ],
                               ),
-                            ),
-                            SizedBox(height: screenHeight*.65,
-                              child: TabBarView(
-                                controller: _tabController,
-                                children: [
-                                  _buildOrderList(null),     // All orders
-                                  _buildOrderList(1),        // Pending (statusId = 1)
-                                  _buildOrderList(3),        // In Progress (statusId = 3)
-                                  _buildOrderList(4),        // Delivered (statusId = 4)
-                                  _buildOrderList(5),        // Canceled (statusId = 5)
-                                ],
+                              SizedBox(height: screenHeight*.65,
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: [
+                                    _buildOrderList(null),     // All orders
+                                    _buildOrderList(1),        // Pending (statusId = 1)
+                                    _buildOrderList(3),        // In Progress (statusId = 3)
+                                    _buildOrderList(4),        // Delivered (statusId = 4)
+                                    _buildOrderList(5),        // Canceled (statusId = 5)
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

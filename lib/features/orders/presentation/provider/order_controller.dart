@@ -71,7 +71,11 @@ class OrdersQuery {
 class OrdersController extends ChangeNotifier {
   final Dio dio;
   final String? userRole; // 'Delivery' or null/other for client
-
+  
+  // Add retry protection
+  static int _consecutive400Errors = 0;
+  static const int _max400Errors = 3;
+  
   OrdersController({required this.dio, this.userRole}) {
     debugPrint('🔥 OrdersController created for role: ${userRole ?? "Client"}');
   }
@@ -277,6 +281,12 @@ class OrdersController extends ChangeNotifier {
   Future<void> fetchOrders({OrdersQuery? query, bool executeClear = true}) async {
     if (isLoading) return;
 
+    // Add retry protection - don't fetch if we have too many consecutive 400 errors
+    if (_consecutive400Errors >= _max400Errors) {
+      debugPrint('🚨 Blocked fetchOrders due to too many consecutive 400 errors');
+      return;
+    }
+
     isLoading = true;
     error = null;
     notifyListeners();
@@ -332,13 +342,24 @@ class OrdersController extends ChangeNotifier {
         orders.addAll(parsed.items);
       } else {
         error = 'Failed to load orders (status: ${response.statusCode})';
+        _consecutive400Errors = 0; // Reset on successful non-400 response
       }
     } on DioException catch (e) {
       final data = e.response?.data;
       String msg = 'Failed to load orders';
 
+      // Track 400 errors specifically
+      if (e.response?.statusCode == 400) {
+        _consecutive400Errors++;
+        debugPrint('🚨 400 error count: $_consecutive400Errors');
+      } else {
+        _consecutive400Errors = 0; // Reset on other errors
+      }
+
       if (data is Map && data['title'] != null) {
         msg = data['title'].toString();
+      } else if (data is Map && data['detail'] != null) {
+        msg = data['detail'].toString();
       } else if (data is Map && data['message'] != null) {
         msg = data['message'].toString();
       } else if (e.message != null) {
@@ -348,6 +369,7 @@ class OrdersController extends ChangeNotifier {
       error = msg;
     } catch (e) {
       error = 'An unexpected error occurred: $e';
+      _consecutive400Errors = 0; // Reset on unexpected errors
     } finally {
       isLoading = false;
       notifyListeners();

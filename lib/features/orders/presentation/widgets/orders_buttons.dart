@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newwwwwwww/features/orders/domain/models/order_model.dart';
 import 'package:newwwwwwww/features/orders/presentation/widgets/cancel_alert_dialog.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../pages/order_details.dart';
+import '../provider/order_controller.dart';
 
 Widget BuildOrderButtons(
   BuildContext context,
@@ -113,11 +115,23 @@ Widget BuildOrderButtons(
           ? Expanded(
               child: InkWell(
                 onTap: (){
-                  showDialog(
-                    context: context,
-                    builder: (ctx) =>
-                    CancelAlertDialog(orderId: clientOrder!.id.toString(),),
-                  );
+
+                    showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => CancelAlertDialog(
+                        orderId: clientOrder!.id.toString(),
+                      ),
+                    ).then((success) async {
+                      if (success == true) {
+                        final ctrl = context.read<OrdersController>();
+
+                        // ✅ Ensure we refresh the pending list (because cancel appears only on Pending)
+                        ctrl.setQuery(OrdersQuery(statusId: 1));
+
+                        await ctrl.fetchOrders(executeClear: true);
+                      }
+                    });
+
 
                 },
                 child: Padding(

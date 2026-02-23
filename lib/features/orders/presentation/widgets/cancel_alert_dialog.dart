@@ -55,7 +55,7 @@ class _CancelAlertDialogState extends State<CancelAlertDialog> {
     if (!mounted) return;
 
     if (success) {
-      Navigator.pop(context); // close dialog
+      Navigator.pop(context, true); // ✅ return success result to caller
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Order canceled successfully'),

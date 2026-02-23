@@ -46,7 +46,7 @@ class OrderDetailScreen extends StatefulWidget {
   bool fromDeliveryMan;
 
   OrderDetailScreen({
-    required this.orderStatus,
+    required this.orderStatus,//k
     required this.paymentStatus,
     required this.clientOrder,
     this.fromDeliveryMan = false,
@@ -67,11 +67,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     _disputeController = DisputeController(
       datasource: DisputeDatasource(dio: DioService.dio,baseUrl: base_url),
     );
-    
+
     if (widget.clientOrder.dispute == null && !widget.fromDeliveryMan) {
       _disputeController.fetchDisputeByOrderId(widget.clientOrder.id!);
     }
-    
+
     super.initState();
   }
 
@@ -262,7 +262,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen>
     try {
       final dio = DioService.dio;
       final token = await AuthService.getToken();
-      
+
       final response = await dio.post(
         '$base_url/v1/client/orders/${widget.clientOrder.id}/cancel',
         options: Options(
@@ -469,64 +469,45 @@ Navigator.push(
                                       ),
                                       widget.orderStatus == 'Delivered'
                                           ? Column(
-                                              children: [
-                                                if (widget.clientOrder.orderConfirmation != null)
-                                                  Padding(
-                                                    padding: EdgeInsets.only(bottom: screenHeight * .01),
-                                                    child: BuildInfoAndAddToCartButton(
-                                                      screenWidth,
-                                                      screenHeight,
-                                                      AppLocalizations.of(context)!.viewProofOfDelivery,
-                                                      false,
-                                                      _showPODModal,
-                                                      fromOrderDetail: true,
-                                                    ),
-                                                  ),
-                                                BuildInfoAndAddToCartButton(
-                                                  screenWidth,
-                                                  screenHeight,
-                                                  AppLocalizations.of(context)!.leaveReview,
-                                                  false,
-                                                  () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (ctx) => ReviewAlertDialog(
-                                                        orderId: widget.clientOrder.id ?? 0,
-                                                        supplierId: _getSupplierId(widget.clientOrder),
-                                                        supplierName: _getSupplierName(widget.clientOrder),
-                                                      ),
-                                                    );
-                                                  },
-                                                  fromOrderDetail: true,
+                                        children: [
+                                          BuildInfoAndAddToCartButton(
+                                            screenWidth,
+                                            screenHeight,
+                                            AppLocalizations.of(context)!.leaveReview,
+                                            false,
+                                                () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (ctx) => ReviewAlertDialog(
+                                                  orderId: widget.clientOrder.id ?? 0,
+                                                  supplierId: _getSupplierId(widget.clientOrder),
+                                                  supplierName: _getSupplierName(widget.clientOrder),
                                                 ),
-                                                if (widget.clientOrder.dispute != null || _disputeController.currentDispute != null)
-                                                  Padding(
-                                                    padding: EdgeInsets.only(top: screenHeight * .01),
-                                                    child: BuildInfoAndAddToCartButton(
-                                                      screenWidth,
-                                                      screenHeight,
-                                                      AppLocalizations.of(context)!.viewDisputeStatus,
-                                                      false,
-                                                      _showDisputeStatus,
-                                                      fromOrderDetail: true,
-                                                    ),
-                                                  ),
-                                              ],
-                                            )
-                                          : widget.orderStatus == 'Canceled'
-                                          ? ReasonForCancellationCard(
-                                              screenWidth,
-                                              screenHeight,
-                                            )
-                                          : (widget.orderStatus == 'Pending' || widget.orderStatus == 'Accepted')
-                                          ? BuildInfoAndAddToCartButton(
-                                              screenWidth,
-                                              screenHeight,
-                                              'Cancel Order',
-                                              false,
-                                              _showCancelConfirmation,
-                                              fromOrderDetail: true,
-                                            )
+                                              );
+                                            },
+                                            fromOrderDetail: true,
+                                          ),
+
+                                          if (widget.clientOrder.dispute != null ||
+                                              _disputeController.currentDispute != null)
+                                            Padding(
+                                              padding: EdgeInsets.only(top: screenHeight * .01),
+                                              child: BuildInfoAndAddToCartButton(
+                                                screenWidth,
+                                                screenHeight,
+                                                AppLocalizations.of(context)!.viewDisputeStatus,
+                                                false,
+                                                _showDisputeStatus,
+                                                fromOrderDetail: true,
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                          : widget.orderStatus == 'Canceled'||widget.orderStatus == 'Cancelled'?
+                                          ReasonForCancellationCard(
+                                        screenWidth,
+                                        screenHeight,
+                                      )
                                           : SizedBox(),
                                       SizedBox(height: screenHeight * .04),
                                     ],
