@@ -161,10 +161,12 @@ class _CouponeCardState extends State<CouponeCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              customCouponPrimaryTitle(
-                AppLocalizations.of(context)!.couponBundle,
-                screenWidth,
-                screenHeight,
+              Expanded(
+                child: customCouponPrimaryTitle(
+                  widget.bundle.productName,
+                  screenWidth,
+                  screenHeight,
+                ),
               ),
               CouponStatus(
                 screenHeight,
@@ -460,42 +462,42 @@ class _CouponeCardState extends State<CouponeCard> {
 
           SizedBox(height: screenHeight * .02),
 
-          customCouponPrimaryTitle(AppLocalizations.of(context)!.preferredTimeSlot, screenWidth, screenHeight),
-          SizedBox(height: screenHeight * .01),
-          
-          DropdownButtonFormField<int>(
-            value: _selectedTimeSlotId,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: screenWidth * .04,
-                vertical: screenHeight * .015,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
-              ),
-            ),
-            items: TimeSlots.all.map((slot) {
-              return DropdownMenuItem(
-                value: slot.id,
-                child: Text(
-                  slot.displayTime,
-                  style: TextStyle(fontSize: screenWidth * .036),
-                ),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() => _selectedTimeSlotId = value);
-              }
-            },
-          ),
-
-          SizedBox(height: screenHeight * .02),
+          // customCouponPrimaryTitle(AppLocalizations.of(context)!.preferredTimeSlot, screenWidth, screenHeight),
+          // SizedBox(height: screenHeight * .01),
+          //
+          // DropdownButtonFormField<int>(
+          //   value: _selectedTimeSlotId,
+          //   decoration: InputDecoration(
+          //     contentPadding: EdgeInsets.symmetric(
+          //       horizontal: screenWidth * .04,
+          //       vertical: screenHeight * .015,
+          //     ),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(10),
+          //       borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
+          //     ),
+          //     enabledBorder: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(10),
+          //       borderSide: BorderSide(color: AppColors.BorderAnddividerAndIconColor),
+          //     ),
+          //   ),
+          //   items: TimeSlots.all.map((slot) {
+          //     return DropdownMenuItem(
+          //       value: slot.id,
+          //       child: Text(
+          //         slot.displayTime,
+          //         style: TextStyle(fontSize: screenWidth * .036),
+          //       ),
+          //     );
+          //   }).toList(),
+          //   onChanged: (value) {
+          //     if (value != null) {
+          //       setState(() => _selectedTimeSlotId = value);
+          //     }
+          //   },
+          // ),
+          //
+          // SizedBox(height: screenHeight * .02),
 
           if (_existingSchedule != null) ...[
             Container(

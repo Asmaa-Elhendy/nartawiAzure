@@ -37,10 +37,10 @@ class _CouponsScreenState extends State<CouponsScreen>
 
     _couponsController = CouponsController(dio: DioService.dio);
 
-    // ✅ نجيب الكل مرة واحدة عشان آخر delivery_man يبقى صح
-    _couponsController.fetchAllCoupons();
+
+    _couponsController.fetchAllCoupons(); //get all coupons and filter with current  bundlePurchaseId last date
     _couponsController.fetchBundlePurchases();
-    _couponsController.fetchScheduledOrders();
+    _couponsController.fetchScheduledOrders();//consider not used
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -124,7 +124,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                                 fontSize: screenWidth * .045,
                               ),
                             ),
-                            AddCoupon(context, screenWidth, screenHeight),
+                            AddCoupon(),
                           ],
                         ),
                         Padding(

@@ -5,7 +5,24 @@ import 'day_card.dart';
 
 class DaySelectionGrid extends StatefulWidget {
   /// الأيام المختارة جاية من فوق (CouponeCard)
-  /// 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+ /*
+ Time Slot IDs:
+
+1: Early Morning (6:00-9:00)
+2: Before Noon (10:00-13:00)
+3: Afternoon (13:00-17:00)
+4: Evening (17:00-21:00)
+5: Night (20:00-23:59)
+Day of Week:
+
+0: Sunday
+1: Monday
+2: Tuesday
+3: Wednesday
+4: Thursday
+5: Friday
+6: Saturday
+  */
   final Set<int> selectedDays;
 
   /// يتنادي لما اليوم يتضغط
@@ -68,6 +85,7 @@ class _DaySelectionGridState extends State<DaySelectionGrid> {
           _daySelections[dayLabel] = DaySelection(
             isSelected: true,
             timePeriod: 'Afternoon',
+            timeSlotId: 3, // Afternoon ID
           );
         }
 
@@ -83,16 +101,36 @@ class _DaySelectionGridState extends State<DaySelectionGrid> {
             widget.onDayTapped(index);
             setState(() {});
           },
-          onTimePeriodChanged: (newTimePeriod) {
+          onTimePeriodChanged: (newTimePeriod, newTimeSlotId) {
             setState(() {
               _daySelections[dayLabel] = DaySelection(
                 isSelected: isSelected,
                 timePeriod: newTimePeriod,
+                timeSlotId: newTimeSlotId,
               );
             });
           },
         );
       },
     );
+  }
+  
+  /// Get schedule data for API call
+  List<Map<String, int>> getScheduleData() {
+    final List<Map<String, int>> scheduleData = [];
+    
+    for (int i = 0; i < daysOfWeek.length; i++) {
+      final dayLabel = daysOfWeek[i];
+      final selection = _daySelections[dayLabel];
+      
+      if (selection != null && selection.isSelected) {
+        scheduleData.add({
+          'dayOfWeek': i,           // 0=Sunday, 1=Monday, etc.
+          'timeSlotId': selection.timeSlotId,
+        });
+      }
+    }
+    
+    return scheduleData;
   }
 }

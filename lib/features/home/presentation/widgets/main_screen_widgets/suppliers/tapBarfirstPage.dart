@@ -35,8 +35,16 @@ String _getCategoryName(ProductCategory category) {
 class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
   ProductCategory? category;
-Supplier? supplier;
-   TabBarFirstPage({super.key, required this.category,required this.supplier,this.fromAllProducts = false});
+  Supplier? supplier;
+  final bool? isBundle;
+  
+  TabBarFirstPage({
+    super.key, 
+    required this.category,
+    required this.supplier,
+    this.fromAllProducts = false,
+    this.isBundle,
+  });
 
   @override
   State<TabBarFirstPage> createState() => _TabBarFirstPageState();
@@ -65,8 +73,9 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     // أول تحميل للـ products
     context.read<ProductsBloc>().add(
         FetchProducts(
-          categoryId: widget.category?.id,
+          categoryId: widget.category?.id,//j
           supplierId: widget.supplier?.id,
+          isBundle: widget.isBundle,
           executeClear: true, // 👈 مهم
         ));
   }
@@ -76,6 +85,12 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     _searchController.dispose();
     _debounceTimer?.cancel();
     _hideFilterMenu();
+    // ✅ Reload products (first page)
+    context.read<ProductsBloc>().refresh(
+      supplierId: null,
+      categoryId: null,
+    );
+
     super.dispose();
   }
 
@@ -184,6 +199,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       FetchProducts(
         categoryId: widget.category?.id,
         supplierId: widget.supplier?.id,
+        isBundle: widget.isBundle,
         searchTerm: query,
         executeClear: true,
       ),
@@ -204,12 +220,13 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       FetchProducts(
         categoryId: widget.category?.id,
         supplierId: widget.supplier?.id,
+        isBundle: widget.isBundle,
         executeClear: true,
       ),
     );
   }
 
-  /// 🔽 دي اللي هتسمع السكروول وتندهّي loadNextPage من الـ bloc
+  /// ⬇ استدعائها من السكروول عشان تجيب الصفحة اللي بعدها
   bool _onScrollNotification(ScrollNotification scrollInfo) {
     if (scrollInfo.metrics.pixels >=
         scrollInfo.metrics.maxScrollExtent - 200) {
@@ -220,6 +237,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
         bloc.loadNextPage(
           categoryId: widget.category?.id,
           supplierId: widget.supplier?.id,
+          isBundle: widget.isBundle,
         );
       }
     }
@@ -275,7 +293,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                   //     : const SizedBox(),
 
                   // Compare button لو من صفحة All Products
-                  widget.fromAllProducts
+                  widget.fromAllProducts&&widget.isBundle == false
                       ? BuildCompareButton(
                     screenWidth,
                     screenHeight,
@@ -350,7 +368,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                             screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             icon: 'assets/images/home/main_page/product.jpg',
-                            fromAllProducts: widget.fromAllProducts,
+                            fromAllProducts: (widget.fromAllProducts&&widget.isBundle == false),
                           );
                         },
                       ),

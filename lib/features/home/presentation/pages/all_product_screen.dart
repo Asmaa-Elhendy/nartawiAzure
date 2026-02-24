@@ -7,9 +7,12 @@ import '../bloc/products_bloc/products_event.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
+import '../../../../../../l10n/app_localizations.dart';
 
 class AllProductScreen extends StatefulWidget {
+  final bool? isBundle;
 
+  const AllProductScreen({super.key, this.isBundle});
 
   @override
   State<AllProductScreen> createState() => _AllProductScreenState();
@@ -47,7 +50,11 @@ class _AllProductScreenState extends State<AllProductScreen> {
               buildBackgroundAppbar(screenWidth),
               BuildForegroundappbarhome(
                 screenHeight: screenHeight,
-                screenWidth: screenWidth,title: 'All Products',is_returned: true,
+                screenWidth: screenWidth,
+                title: widget.isBundle == true 
+                    ? AppLocalizations.of(context)!.allBundles 
+                    : AppLocalizations.of(context)!.allProducts,
+                is_returned: true,
               ),
               Positioned.fill(
                   top: MediaQuery.of(context).padding.top + screenHeight * .1,
@@ -60,7 +67,12 @@ class _AllProductScreenState extends State<AllProductScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          TabBarFirstPage(fromAllProducts:true,category: null,supplier: null,),
+                          TabBarFirstPage(
+                            fromAllProducts: true,
+                            category: null,
+                            supplier: null,
+                            isBundle: widget.isBundle,
+                          ),
 
                         ],
                       ),

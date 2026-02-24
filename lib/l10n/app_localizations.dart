@@ -794,6 +794,18 @@ abstract class AppLocalizations {
   /// **'Products'**
   String get products;
 
+  /// No description provided for @allProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'All Products'**
+  String get allProducts;
+
+  /// No description provided for @allBundles.
+  ///
+  /// In en, this message translates to:
+  /// **'All Bundles'**
+  String get allBundles;
+
   /// No description provided for @stores.
   ///
   /// In en, this message translates to:
@@ -2605,6 +2617,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to create reorder'**
   String get failedToCreateReorder;
+
+  /// No description provided for @productAlreadyInCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Product already in cart. Quantity updated to {quantity}.'**
+  String productAlreadyInCart(Object quantity);
 }
 
 class _AppLocalizationsDelegate

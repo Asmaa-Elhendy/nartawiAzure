@@ -10,7 +10,7 @@ class DayCard extends StatelessWidget {
   final bool isSelected;
   final String timePeriod;
   final VoidCallback onToggle;
-  final Function(String) onTimePeriodChanged; // Add this callback
+  final Function(String, int) onTimePeriodChanged; // Add this callback
 
   const DayCard({
     Key? key,
@@ -126,9 +126,11 @@ class DayCard extends StatelessWidget {
 class DaySelection {
   final bool isSelected;
   final String timePeriod;
+  final int timeSlotId;
 
   DaySelection({
     required this.isSelected,
     required this.timePeriod,
+    required this.timeSlotId,
   });
 }

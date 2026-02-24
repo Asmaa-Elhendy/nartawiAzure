@@ -6,7 +6,7 @@ import 'custom_text.dart';
 
 class TimePeriodSelectionDialog extends StatefulWidget {
   final String currentTimePeriod;
-  final Function(String) onTimePeriodSelected;
+  final Function(String, int) onTimePeriodSelected;
 
   const TimePeriodSelectionDialog({
     Key? key,
@@ -28,6 +28,19 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
     'Evening',
     'Night',
   ];
+
+  static const List<int> timeSlotIds = [
+    1, // Early Morning
+    2, // Before Noon
+    3, // Afternoon
+    4, // Evening
+    5, // Night
+  ];
+
+  int getTimeSlotId(String periodName) {
+    final index = timePeriods.indexOf(periodName);
+    return index >= 0 ? timeSlotIds[index] : 3; // Default to Afternoon (3)
+  }
 
   @override
   void initState() {
@@ -99,7 +112,7 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
         setState(() {
           selectedPeriod = period;
         });
-        widget.onTimePeriodSelected(period);
+        widget.onTimePeriodSelected(period, getTimeSlotId(period));
         Navigator.of(context).pop();
       },
       child: Container(
@@ -134,7 +147,7 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
             // Label
             customCouponAlertTitle(
               period,
-            screenWidth,screenHeight
+              screenWidth,screenHeight
             ),
           ],
         ),
@@ -147,7 +160,7 @@ class _TimePeriodSelectionDialogState extends State<TimePeriodSelectionDialog> {
 void showTimePeriodDialog({
   required BuildContext context,
   required String currentTimePeriod,
-  required Function(String) onTimePeriodSelected,
+  required Function(String, int) onTimePeriodSelected,
 }) {
   showDialog(
     context: context,

@@ -368,6 +368,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get products => 'Products';
 
   @override
+  String get allProducts => 'All Products';
+
+  @override
+  String get allBundles => 'All Bundles';
+
+  @override
   String get stores => 'Stores';
 
   @override
@@ -1298,4 +1304,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToCreateReorder => 'Failed to create reorder';
+
+  @override
+  String productAlreadyInCart(Object quantity) {
+    return 'Product already in cart. Quantity updated to $quantity.';
+  }
 }

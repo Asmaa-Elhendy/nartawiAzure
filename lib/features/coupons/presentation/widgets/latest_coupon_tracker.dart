@@ -35,7 +35,7 @@ Widget latestCouponTracker(BuildContext context,double screenWidth,double screen
           Padding(
             padding: EdgeInsets.symmetric(vertical: screenHeight * .02),
             child: LinearProgressIndicator(
-              value: 0.4,
+              value:(bundle.totalCoupons-bundle.couponsPerBundle).toDouble(),
               backgroundColor: AppColors.primaryLight,
               minHeight: screenHeight * .012,
               borderRadius: BorderRadius.circular(10),
@@ -53,12 +53,12 @@ Widget latestCouponTracker(BuildContext context,double screenWidth,double screen
                 screenHeight,
               ),
               customCouponSecondaryTitle(
-                '15 ${AppLocalizations.of(context)!.used}',
+                '${bundle.couponsPerBundle} ${AppLocalizations.of(context)!.used}',
                 screenWidth,
                 screenHeight,
               ),
               customCouponSecondaryTitle(
-                '10 ${AppLocalizations.of(context)!.remaining}',
+                '${bundle.totalCoupons-bundle.couponsPerBundle} ${AppLocalizations.of(context)!.remaining}',
                 screenWidth,
                 screenHeight,
               ),

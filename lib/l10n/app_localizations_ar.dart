@@ -364,6 +364,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get products => 'المنتجات';
 
   @override
+  String get allProducts => 'جميع المنتجات';
+
+  @override
+  String get allBundles => 'جميع الحزم';
+
+  @override
   String get stores => 'المتاجر';
 
   @override
@@ -1286,4 +1292,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get failedToCreateReorder => 'فشل في إنشاء إعادة الطلب';
+
+  @override
+  String productAlreadyInCart(Object quantity) {
+    return 'المنتج موجود بالفعل في السلة. تم تحديث الكمية إلى $quantity.';
+  }
 }
