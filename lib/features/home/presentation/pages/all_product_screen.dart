@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_model.dart';
 import '../../../../../core/theme/colors.dart';
-import '../bloc/products_bloc/products_bloc.dart';
-import '../bloc/products_bloc/products_event.dart';
 import '../widgets/background_home_Appbar.dart';
 import '../widgets/build_ForegroundAppBarHome.dart';
 import '../widgets/main_screen_widgets/suppliers/tapBarfirstPage.dart';
@@ -28,6 +25,10 @@ class _AllProductScreenState extends State<AllProductScreen> {
   @override
   void dispose() {
     _SearchController.dispose();
+    
+    // Note: Removed BLoC refresh from dispose to avoid "deactivated widget" error
+    // The refresh is now handled by MainScreen's didChangeDependencies method
+    
     super.dispose();
   }
   String? imageUrl=null;
@@ -35,7 +36,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    return  Scaffold(
+    return Scaffold(
         extendBody: true,
         backgroundColor: Colors.transparent, // في حالة الصورة في الخلفية
 

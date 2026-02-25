@@ -85,12 +85,10 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     _searchController.dispose();
     _debounceTimer?.cancel();
     _hideFilterMenu();
-    // ✅ Reload products (first page)
-    context.read<ProductsBloc>().refresh(
-      supplierId: null,
-      categoryId: null,
-    );
-
+    
+    // Note: Removed BLoC refresh from dispose to avoid "deactivated widget" error
+    // The refresh is now handled by AllProductScreen and MainScreen lifecycle methods
+    
     super.dispose();
   }
 

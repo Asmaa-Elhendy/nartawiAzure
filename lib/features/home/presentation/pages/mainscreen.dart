@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
@@ -49,6 +51,15 @@ class _MainScreenState extends State<MainScreen> {
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());
     context.read<SuppliersBloc>().add(FetchFeaturedSuppliers());
     context.read<ProductsBloc>().add(FetchProducts(executeClear: true));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh products when screen becomes visible again (after navigation back)
+    // Explicitly clear bundle filter to ensure all products are shown
+    debugPrint(' MainScreen didChangeDependencies - refreshing products with isBundle: false');
+    context.read<ProductsBloc>().refresh(isBundle: false);
   }
 
   @override
@@ -109,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _onRefresh() async {
-    debugPrint('🔄 PULL TO REFRESH TRIGGERED');
+    log('🔄 PULL TO REFRESH TRIGGERED');
 
     // ✅ Reload categories
     context.read<ProductCategoriesBloc>().add(FetchProductCategories());

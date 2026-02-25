@@ -124,7 +124,7 @@ class _CouponsScreenState extends State<CouponsScreen>
                                 fontSize: screenWidth * .045,
                               ),
                             ),
-                            AddCoupon(),
+                            AddCoupon(context,screenWidth,screenHeight),
                           ],
                         ),
                         Padding(
