@@ -38,14 +38,14 @@ class TabBarFirstPage extends StatefulWidget {
   final bool fromAllProducts;
   ProductCategory? category;
   Supplier? supplier;
-  final bool? isBundle;
+
 
   TabBarFirstPage({
     super.key,
     required this.category,
     required this.supplier,
     this.fromAllProducts = false,
-    this.isBundle,
+
   });
 
   @override
@@ -89,7 +89,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       FetchProducts(
         categoryId: widget.category?.id,
         supplierId: widget.supplier?.id,
-        isBundle: widget.isBundle,
+
         executeClear: true,
       ),
     );
@@ -114,7 +114,6 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     context.read<ProductsBloc>().loadNextPage(
       categoryId: widget.category?.id,
       supplierId: widget.supplier?.id,
-      isBundle: widget.isBundle,
       searchTerm: _isSearching ? _searchController.text.trim() : null,
     );
   }
@@ -179,7 +178,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       FetchProducts(
         categoryId: widget.category?.id,
         supplierId: widget.supplier?.id,
-        isBundle: widget.isBundle,
+
         searchTerm: query,
         executeClear: true,
       ),
@@ -198,7 +197,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       FetchProducts(
         categoryId: widget.category?.id,
         supplierId: widget.supplier?.id,
-        isBundle: widget.isBundle,
+
         executeClear: true,
       ),
     );
@@ -254,7 +253,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-                child: Column(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -271,7 +270,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                         ),
                       ],
                     ),
-                    if (widget.fromAllProducts && widget.isBundle == false)
+                    if (widget.fromAllProducts )
                       BuildCompareButton(screenWidth, screenHeight, context),
                     SizedBox(height: screenHeight * 0.01),
                   ],
@@ -290,7 +289,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
                       screenHeight: screenHeight,
                       icon: 'assets/images/home/main_page/product.jpg',
                       fromAllProducts:
-                      (widget.fromAllProducts && widget.isBundle == false),
+                      (widget.fromAllProducts ),
                     );
                   },
                   childCount: products.length,

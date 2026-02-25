@@ -61,7 +61,7 @@ class _AllProductScreenState extends State<AllProductScreen> {
                 fromAllProducts: true,
                 category: null,
                 supplier: null,
-                isBundle: widget.isBundle,
+
               ),
             ),
           ),
