@@ -1,6 +1,7 @@
 // lib/features/home/presentation/bloc/products_bloc/products_bloc.dart
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
@@ -53,6 +54,9 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       // ⬅️ نحسب الصفحة الأول
       final int pageToFetch = event.pageIndex ?? _currentPage;
       final int pageSize = event.pageSize ?? _defaultPageSize;
+
+      debugPrint('🔍 BLoC Fetch: pageToFetch=$pageToFetch, currentPage=$_currentPage, pageSize=$pageSize');
+      debugPrint('🔍 BLoC Fetch: shouldClear=$shouldClear, isFirstLoad=${shouldClear || _currentResponse == null || pageToFetch == 1}');
 
       // ⬅️ تعريف أدق لأول تحميل
       final bool isFirstLoad =
@@ -129,8 +133,13 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           );
         }
 
+        debugPrint('🔍 BLoC Response: hasNextPage=${productsResponse.hasNextPage}, totalPages=${productsResponse.totalPages}');
+        debugPrint('🔍 BLoC Before: currentPage=$_currentPage, hasReachedMax=$_hasReachedMax');
+
         _hasReachedMax = !productsResponse.hasNextPage;
         _currentPage = pageToFetch + 1;
+
+        debugPrint('🔍 BLoC After: currentPage=$_currentPage, hasReachedMax=$_hasReachedMax');
 
         emit(ProductsLoaded(
           response: _currentResponse!,
@@ -194,7 +203,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     bool? isDescending,
     bool? isBundle,
   }) {
+    debugPrint('🔍 loadNextPage called: hasReachedMax=$_hasReachedMax, currentPage=$_currentPage');
+    
     if (!_hasReachedMax) {
+      debugPrint('🔍 loadNextPage: Adding FetchProducts event');
       add(FetchProducts(
         pageIndex: _currentPage,
         pageSize: _currentResponse?.pageSize ?? _defaultPageSize,
@@ -208,6 +220,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         isDescending: isDescending,
         isBundle: isBundle,
       ));
+    } else {
+      debugPrint('🔍 loadNextPage: Already reached max, skipping');
     }
   }
 }

@@ -806,6 +806,12 @@ abstract class AppLocalizations {
   /// **'All Bundles'**
   String get allBundles;
 
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get loadMore;
+
   /// No description provided for @stores.
   ///
   /// In en, this message translates to:

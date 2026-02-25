@@ -1,11 +1,13 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'dart:async';
+
 import 'package:newwwwwwww/core/theme/colors.dart';
 import 'package:newwwwwwww/features/home/domain/models/product_categories_models/product_category_model.dart';
 import 'package:newwwwwwww/features/home/domain/models/supplier_model.dart';
 
-import '../../../../domain/models/product_model.dart';
 import '../../../bloc/products_bloc/products_bloc.dart';
 import '../../../bloc/products_bloc/products_event.dart';
 import '../../../bloc/products_bloc/products_state.dart';
@@ -21,9 +23,9 @@ String _getCategoryName(ProductCategory category) {
       return category.enName;
     } else if (category.enName is Map) {
       final nameMap = category.enName as Map;
-      return nameMap['enName']?.toString() ?? 
-             nameMap['arName']?.toString() ??
-             category.enName.toString();
+      return nameMap['enName']?.toString() ??
+          nameMap['arName']?.toString() ??
+          category.enName.toString();
     } else {
       return category.enName.toString();
     }
@@ -37,9 +39,9 @@ class TabBarFirstPage extends StatefulWidget {
   ProductCategory? category;
   Supplier? supplier;
   final bool? isBundle;
-  
+
   TabBarFirstPage({
-    super.key, 
+    super.key,
     required this.category,
     required this.supplier,
     this.fromAllProducts = false,
@@ -61,23 +63,60 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
 
   OverlayEntry? _overlayEntry;
   final GlobalKey _searchBarKey = GlobalKey();
+  final ScrollController _scrollController = ScrollController();
+
+  bool _isLoadingMore = false;
   late TextEditingController _searchController;
   Timer? _debounceTimer;
   bool _isSearching = false;
+
+  // ✅ Cache علشان حتى لو البلوك عمل Loading نفضل عارضين الجريد
+  List<dynamic> _cachedProducts = [];
+  bool _cachedHasReachedMax = false;
 
   @override
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _scrollController.addListener(_scrollListener);
 
-    // أول تحميل للـ products
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      log('🔍 ScrollController attached: ${_scrollController.hasClients}');
+    });
+
+    // أول تحميل
     context.read<ProductsBloc>().add(
-        FetchProducts(
-          categoryId: widget.category?.id,//j
-          supplierId: widget.supplier?.id,
-          isBundle: widget.isBundle,
-          executeClear: true, // 👈 مهم
-        ));
+      FetchProducts(
+        categoryId: widget.category?.id,
+        supplierId: widget.supplier?.id,
+        isBundle: widget.isBundle,
+        executeClear: true,
+      ),
+    );
+  }
+
+  void _scrollListener() {
+    if (!_scrollController.hasClients) return;
+
+    final pos = _scrollController.position.pixels;
+    final max = _scrollController.position.maxScrollExtent;
+
+    if (pos >= max - 250 && !_isLoadingMore && !_cachedHasReachedMax) {
+      _loadMoreProducts();
+    }
+  }
+
+  void _loadMoreProducts() {
+    if (_isLoadingMore || _cachedHasReachedMax) return;
+
+    setState(() => _isLoadingMore = true);
+
+    context.read<ProductsBloc>().loadNextPage(
+      categoryId: widget.category?.id,
+      supplierId: widget.supplier?.id,
+      isBundle: widget.isBundle,
+      searchTerm: _isSearching ? _searchController.text.trim() : null,
+    );
   }
 
   @override
@@ -85,59 +124,8 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     _searchController.dispose();
     _debounceTimer?.cancel();
     _hideFilterMenu();
-    
-    // Note: Removed BLoC refresh from dispose to avoid "deactivated widget" error
-    // The refresh is now handled by AllProductScreen and MainScreen lifecycle methods
-    
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  List<Widget> generateTags(double width, double height) {
-    return tags.map((tag) => getChip(tag, width, height)).toList();
-  }
-
-  Widget getChip(String name, double width, double height) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: width * .015,
-        vertical: height * .008,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.greyDarktextIntExtFieldAndIconsHome,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            name,
-            style: TextStyle(
-              color: AppColors.whiteColor,
-              fontSize: width * .031,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                tags.remove(name);
-              });
-            },
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: width * .01,
-                left: width * .02,
-              ),
-              child: Icon(
-                Icons.close,
-                color: AppColors.whiteColor,
-                size: width * .042,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   void _toggleFilterMenu() {
@@ -161,9 +149,7 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
       height: size.height,
       selectedFilters: selectedFilters,
       onClose: _hideFilterMenu,
-      onChanged: () {
-        setState(() {});
-      },
+      onChanged: () => setState(() {}),
     );
 
     Overlay.of(context).insert(_overlayEntry!);
@@ -175,24 +161,20 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   }
 
   void _onSearchChanged(String query) {
-    if (_debounceTimer?.isActive ?? false) {
-      _debounceTimer!.cancel();
-    }
-    
+    _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      if (query.trim().isEmpty) {
+      final q = query.trim();
+      if (q.isEmpty) {
         _clearSearch();
       } else {
-        _performSearch(query.trim());
+        _performSearch(q);
       }
     });
   }
 
   void _performSearch(String query) {
-    setState(() {
-      _isSearching = true;
-    });
-    
+    setState(() => _isSearching = true);
+
     context.read<ProductsBloc>().add(
       FetchProducts(
         categoryId: widget.category?.id,
@@ -205,15 +187,13 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
   }
 
   void _clearSearch() {
-    // Dismiss keyboard
     FocusScope.of(context).unfocus();
-    
+
     setState(() {
       _isSearching = false;
       _searchController.clear();
     });
-    
-    // Return to normal products view
+
     context.read<ProductsBloc>().add(
       FetchProducts(
         categoryId: widget.category?.id,
@@ -224,170 +204,150 @@ class _TabBarFirstPageState extends State<TabBarFirstPage> {
     );
   }
 
-  /// ⬇ استدعائها من السكروول عشان تجيب الصفحة اللي بعدها
-  bool _onScrollNotification(ScrollNotification scrollInfo) {
-    if (scrollInfo.metrics.pixels >=
-        scrollInfo.metrics.maxScrollExtent - 200) {
-      final bloc = context.read<ProductsBloc>();
-      final state = bloc.state;
-
-      if (state is ProductsLoaded && !state.hasReachedMax) {
-        bloc.loadNextPage(
-          categoryId: widget.category?.id,
-          supplierId: widget.supplier?.id,
-          isBundle: widget.isBundle,
-        );
-      }
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: _onScrollNotification,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔹 Search + Filter + Tags + Compare
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Search + Filter Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomSearchBar(
-                        key: _searchBarKey,
-                        controller: _searchController,
-                        height: screenHeight,
-                        width: screenWidth,
-                        fromSupplierDetail: true,
-                        hideFliterForNow: true,   //hide search filter for now
-                        onChanged: _onSearchChanged,
-                        onClear: _clearSearch,
-                      ),
-                      // BuildFilterButton(
-                      //   screenWidth,
-                      //   screenHeight,
-                      //   _toggleFilterMenu,
-                      // ),
-                    ],
-                  ),
+    return BlocConsumer<ProductsBloc, ProductsState>(
+      listener: (context, state) {
+        if (state is ProductsLoaded) {
+          _cachedProducts = state.response.items;
+          _cachedHasReachedMax = state.hasReachedMax;
 
-                  // Filter tags
-                  // selectedFilters.isNotEmpty
-                  //     ? Wrap(
-                  //   spacing: 8.0,
-                  //   runSpacing: 4.0,
-                  //   children: generateTags(screenWidth, screenHeight),
-                  // )
-                  //     : const SizedBox(),
+          if (_isLoadingMore) setState(() => _isLoadingMore = false);
+        }
 
-                  // Compare button لو من صفحة All Products
-                  widget.fromAllProducts&&widget.isBundle == false
-                      ? BuildCompareButton(
-                    screenWidth,
-                    screenHeight,
-                    context,
-                  )
-                      : const SizedBox(),
-                ],
+        if (state is ProductsError) {
+          if (_isLoadingMore) setState(() => _isLoadingMore = false);
+        }
+      },
+      builder: (context, state) {
+        // ✅ First load فقط (لو مفيش cache)
+        if ((state is ProductsInitial || (state is ProductsLoading && state.isFirstFetch)) &&
+            _cachedProducts.isEmpty) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          );
+        }
+
+        // ✅ لو Error ومفيش بيانات
+        if (state is ProductsError && _cachedProducts.isEmpty) {
+          return Center(
+            child: Text(
+              'Failed to load products: ${state.message}',
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
+        }
+
+        final products = (state is ProductsLoaded)
+            ? state.response.items
+            : _cachedProducts;
+
+        final hasReachedMax =
+        (state is ProductsLoaded) ? state.hasReachedMax : _cachedHasReachedMax;
+
+        return CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomSearchBar(
+                          key: _searchBarKey,
+                          controller: _searchController,
+                          height: screenHeight,
+                          width: screenWidth,
+                          fromSupplierDetail: true,
+                          hideFliterForNow: true,
+                          onChanged: _onSearchChanged,
+                          onClear: _clearSearch,
+                        ),
+                      ],
+                    ),
+                    if (widget.fromAllProducts && widget.isBundle == false)
+                      BuildCompareButton(screenWidth, screenHeight, context),
+                    SizedBox(height: screenHeight * 0.01),
+                  ],
+                ),
               ),
             ),
 
-            /// 🔹 Products Grid من الـ Bloc + Load More
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.04,
-                vertical: screenHeight * 0.0,
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+              sliver: SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    return ProductCard(
+                      product: products[index],
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight,
+                      icon: 'assets/images/home/main_page/product.jpg',
+                      fromAllProducts:
+                      (widget.fromAllProducts && widget.isBundle == false),
+                    );
+                  },
+                  childCount: products.length,
+                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: screenWidth * .03,
+                  mainAxisSpacing: screenWidth * .03,
+                  childAspectRatio: 0.49,
+                ),
               ),
-              child: BlocBuilder<ProductsBloc, ProductsState>(
-                builder: (context, state) {
-                  // First Load
-                  if (state is ProductsInitial ||
-                      (state is ProductsLoading && state.isFirstFetch)) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: screenHeight * .02),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: screenHeight * .015,
+                  bottom: screenHeight * .03,
+                ),
+                child: Column(
+                  children: [
+                    if (_isLoadingMore)
+                      const Center(
                         child: CircularProgressIndicator(color: AppColors.primary),
                       ),
-                    );
-                  }
 
-                  // Errors
-                  if (state is ProductsError) {
-                    return Center(
-                      child: Text(state.message, style: TextStyle(color: Colors.red)),
-                    );
-                  }
-
-                  // Get latest loaded products
-                  ProductsLoaded? loadedState;
-
-                  if (state is ProductsLoaded) {
-                    loadedState = state;
-                  } else if (state is ProductsLoading) {
-                    final blocState = context.read<ProductsBloc>().state;
-                    if (blocState is ProductsLoaded) {
-                      loadedState = blocState;
-                    }
-                  }
-
-                  if (loadedState == null) return const SizedBox.shrink();
-
-                  final products = loadedState.response.items;
-
-                  if (products.isEmpty) {
-                    return const Center(child: Text("No Products Found"));
-                  }
-
-                  return Column(
-                    children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: screenWidth * .03,
-                          mainAxisSpacing: screenWidth * .03,
-                          childAspectRatio: 0.49,
-                        ),
-                        itemCount: products.length,
-                        itemBuilder: (_, index) {
-                          return ProductCard(
-                            product: products[index],
-                            screenWidth: screenWidth,
-                            screenHeight: screenHeight,
-                            icon: 'assets/images/home/main_page/product.jpg',
-                            fromAllProducts: (widget.fromAllProducts&&widget.isBundle == false),
-                          );
-                        },
-                      ),
-
-                      // Loader for pagination
-                      if (state is ProductsLoading && !state.isFirstFetch)
-                        Padding(
-                          padding: EdgeInsets.only(top: screenHeight * .015),
-                          child: Center(
-                            child: CircularProgressIndicator(color: AppColors.primary),
+                    if (!hasReachedMax && !_isLoadingMore)
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: _loadMoreProducts,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth * .08,
+                              vertical: screenHeight * .015,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                          child: Text(
+                            'Load More',
+                            style: TextStyle(
+                              fontSize: screenWidth * .04,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                    ],
-                  );
-                },
-              )
-
+                      ),
+                  ],
+                ),
+              ),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }

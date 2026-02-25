@@ -370,6 +370,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get allBundles => 'جميع الحزم';
 
   @override
+  String get loadMore => 'تحميل المزيد';
+
+  @override
   String get stores => 'المتاجر';
 
   @override

@@ -374,6 +374,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allBundles => 'All Bundles';
 
   @override
+  String get loadMore => 'Load More';
+
+  @override
   String get stores => 'Stores';
 
   @override
